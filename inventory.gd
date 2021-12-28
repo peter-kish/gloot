@@ -6,6 +6,10 @@ signal item_removed;
 signal contents_changed;
 
 
+func get_items() -> Array:
+    return get_children();
+
+
 func has_item(item: InventoryItem) -> bool:
     return get_children().find(item) != -1;
 
