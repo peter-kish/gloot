@@ -15,6 +15,7 @@ func _set_capacity(new_capacity: float) -> void:
 
 
 func _ready():
+    update_occupied_space();
     connect("contents_changed", self, "_on_contents_changed");
 
 
@@ -22,6 +23,7 @@ func update_occupied_space() -> void:
     occupied = 0.0;
     for item in get_items():
         occupied += item.get_weight();
+    assert(occupied <= capacity);
 
 
 func _on_contents_changed():
