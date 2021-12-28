@@ -4,8 +4,25 @@ class_name InventoryGrid
 signal size_changed;
 
 
-export(int) var width: int = 10;
-export(int) var height: int = 10;
+export(int) var width: int = 10 setget _set_width;
+export(int) var height: int = 10 setget _set_height;
+
+
+func _ready():
+    assert(width > 0, "Inventory width must be positive!");
+    assert(height > 0, "Inventory height must be positive!");
+
+
+func _set_width(new_width: int) -> void:
+    assert(new_width > 0, "Inventory width must be positive!");
+    width = new_width;
+    emit_signal("size_changed");
+
+
+func _set_height(new_height: int) -> void:
+    assert(new_height > 0, "Inventory height must be positive!");
+    height = new_height;
+    emit_signal("size_changed");
 
 
 func add_item(item: InventoryItem) -> bool:
