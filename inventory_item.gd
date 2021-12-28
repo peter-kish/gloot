@@ -1,6 +1,8 @@
 extends Node
 class_name InventoryItem
 
+signal weight_changed;
+
 
 export(String) var item_name;
 

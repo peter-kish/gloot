@@ -6,6 +6,12 @@ signal item_removed;
 signal contents_changed;
 
 
+func _ready():
+    for item in get_items():
+        if item is InventoryItem:
+            item.connect("weight_changed", self, "_on_item_weight_changed");
+
+
 func get_items() -> Array:
     return get_children();
 
@@ -24,7 +30,12 @@ func add_item(item: InventoryItem) -> bool:
     add_child(item);
     emit_signal("item_added", item);
     emit_signal("contents_changed");
+    item.connect("weight_changed", self, "_on_item_weight_changed");
     return true;
+
+
+func _on_item_weight_changed(_new_weight: float):
+    emit_signal("contents_changed");
 
 
 func remove_item(item: InventoryItem) -> bool:
@@ -34,6 +45,7 @@ func remove_item(item: InventoryItem) -> bool:
     remove_child(item);
     emit_signal("item_removed", item);
     emit_signal("contents_changed");
+    item.disconnect("weight_changed", self, "_on_item_weight_changed");
     return true;
 
     
