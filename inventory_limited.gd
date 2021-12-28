@@ -1,9 +1,17 @@
 extends Inventory
 class_name InventoryLimited
 
+signal capacity_changed;
 
-var capacity: float;
+
+export(float) var capacity: float setget _set_capacity;
 var occupied: float;
+
+
+func _set_capacity(new_capacity: float) -> void:
+    assert(new_capacity >= 0, "Capacity must be greater or equal to 0!");
+    capacity = new_capacity;
+    emit_signal("capacity_changed", capacity);
 
 
 func _ready():
