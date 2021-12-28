@@ -12,7 +12,7 @@ func get_weight() -> float:
 func _set_stack_size(new_stack_size: int) -> void:
     assert(new_stack_size >= 1, "Stack size must be greater or equal to 1!");
     stack_size = new_stack_size;
-    emit_signal("weight_changed", stack_size);
+    emit_signal("weight_changed", get_weight());
     
     
 func split(new_stack_size: int) -> bool:
