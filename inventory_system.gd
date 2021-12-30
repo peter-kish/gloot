@@ -12,6 +12,8 @@ func _enter_tree():
     add_custom_type("InventoryLimited", "Node", preload("inventory_limited.gd"), null);
     add_custom_type("InventoryGrid", "Node", preload("inventory_grid.gd"), null);
 
+    add_custom_type("InventorySlot", "Node", preload("inventory_slot.gd"), null);
+
 
 func _exit_tree():
     remove_custom_type("InventoryItem");
@@ -22,3 +24,5 @@ func _exit_tree():
     remove_custom_type("Inventory");
     remove_custom_type("InventoryLimited");
     remove_custom_type("InventoryGrid");
+
+    remove_custom_type("InventorySlot");
