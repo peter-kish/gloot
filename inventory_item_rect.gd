@@ -5,8 +5,8 @@ signal rotated;
 signal moved;
 
 
-var x: int = 0;
-var y: int = 0;
+export(int) var x: int = 0;
+export(int) var y: int = 0;
 export(int) var width: int = 1;
 export(int) var height: int = 1;
 var rotated: bool = false;
