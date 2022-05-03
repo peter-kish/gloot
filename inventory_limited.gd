@@ -2,6 +2,7 @@ extends Inventory
 class_name InventoryLimited
 
 signal capacity_changed;
+signal occupied_space_changed;
 
 
 export(float) var capacity: float setget _set_capacity;
@@ -20,9 +21,13 @@ func _ready():
 
 
 func update_occupied_space() -> void:
+    var old_occupied_space = occupied;
     occupied = 0.0;
     for item in get_items():
         occupied += item.get_weight();
+
+    if occupied != old_occupied_space:
+        emit_signal("occupied_space_changed");
     assert(occupied <= capacity);
 
 
@@ -50,3 +55,11 @@ func add_item(item: InventoryItem) -> bool:
         return .add_item(item);
 
     return false;
+
+
+func transfer(item: InventoryItem, destination: Inventory) -> bool:
+    assert(destination.get_class() == get_class())
+    if !destination.has_place_for(item):
+        return false;
+    
+    return .transfer(item, destination);
