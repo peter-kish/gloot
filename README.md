@@ -32,8 +32,6 @@ TODO: Make slots of given sizes?
 
 TODO: Introduce item classes? (weapon, armor, potion etc.)
 
-TODO: Also hold a reference to an inventory and remove the item from the slot in case it's removed from the inventory.
-
 ### TODO: Item Definition File
 
 ## How to install

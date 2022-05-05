@@ -1,8 +1,8 @@
 extends Node
-class_name InventorySlot
+class_name ItemSlot
 
-signal item_bound;
-signal cleared;
+signal item_set;
+signal item_cleared;
 signal inventory_changed;
 
 
@@ -11,20 +11,12 @@ var item: InventoryItem setget _set_item;
 
 
 func _set_inventory(new_inv: Inventory) -> void:
-    set_inventory(new_inv);
-
-
-func _set_item(new_item: InventoryItem) -> void:
-    assert(set_item(new_item));
-
-    
-func set_inventory(new_inv: Inventory) -> void:
     if inventory != null:
         inventory.disconnect("tree_exiting", self, "_on_inventory_tree_exiting");
         inventory.disconnect("item_removed", self, "_on_item_removed");
 
     if new_inv != inventory:
-        set_item(null);
+        _set_item(null);
 
     inventory = new_inv;
     if inventory != null:
@@ -34,12 +26,13 @@ func set_inventory(new_inv: Inventory) -> void:
     emit_signal("inventory_changed", inventory);
 
 
-func set_item(new_item: InventoryItem) -> bool:
+func _set_item(new_item: InventoryItem) -> void:
+    assert(can_hold_item(new_item));
     if inventory == null:
-        return false;
+        return;
 
     if new_item && !inventory.has_item(new_item):
-        return false;
+        return;
 
     if item != null:
         item.disconnect("tree_exiting", self, "_on_item_tree_exiting");
@@ -47,23 +40,32 @@ func set_item(new_item: InventoryItem) -> bool:
     item = new_item;
     if item != null:
         item.connect("tree_exiting", self, "_on_item_tree_exiting");
-        emit_signal("item_bound", item);
+        emit_signal("item_set", item);
     else:
-        emit_signal("cleared");
+        emit_signal("item_cleared");
+
+
+func can_hold_item(new_item: InventoryItem) -> bool:
+    if new_item == null:
+        return true;
+    if inventory == null:
+        return false;
+    if !inventory.has_item(new_item):
+        return false;
 
     return true;
 
 
 func _on_inventory_tree_exiting():
     inventory = null;
-    set_item(null);
+    _set_item(null);
 
 
 func _on_item_removed(pItem: InventoryItem) -> void:
     if pItem == item:
-        set_item(null);
+        _set_item(null);
 
 
 func _on_item_tree_exiting():
-    set_item(null);
+    _set_item(null);
 
