@@ -16,11 +16,11 @@ func _set_capacity(new_capacity: float) -> void:
 
 
 func _ready():
-    update_occupied_space();
+    _update_occupied_space();
     connect("contents_changed", self, "_on_contents_changed");
 
 
-func update_occupied_space() -> void:
+func _update_occupied_space() -> void:
     var old_occupied_space = occupied;
     occupied = 0.0;
     for item in get_items():
@@ -32,7 +32,7 @@ func update_occupied_space() -> void:
 
 
 func _on_contents_changed():
-    update_occupied_space();
+    _update_occupied_space();
 
 
 func get_occupied_space() -> float:
