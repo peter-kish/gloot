@@ -18,10 +18,23 @@ func _set_stack_size(new_stack_size: int) -> void:
 func split(new_stack_size: int) -> bool:
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!");
     assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!");
+    assert(get_inventory() != null, "The stack doesn't belong to an inventory!")
 
     var new_item = duplicate();
     new_item._set_stack_size(new_stack_size);
     _set_stack_size(stack_size - new_stack_size);
     return get_inventory().add_item(new_item);
 
-# TODO: implement join()
+
+func join(new_stack: InventoryItem) -> bool:
+    assert(get_inventory() == new_stack.get_inventory(), "The two stacks must be in the same inventory!");
+    assert(get_inventory() != null, "The stack doesn't belong to an inventory!");
+    # TODO: Check item type id instead (requires item definitions implemented):
+    assert(new_stack.item_name == item_name, "The two stacks must be of the same type!");
+
+    if get_inventory().remove_item(new_stack):
+        _set_stack_size(new_stack.stack_size);
+        return true;
+
+    return false;
+
