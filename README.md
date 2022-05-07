@@ -21,12 +21,6 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 * ![](icon_item_slot.svg "ItemSlot icon") `ItemSlot` - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
 
-## Class Diagrams
-
-![InventoryItem class diagram](cd_inventory_item.png "InventoryItem class diagram")
-![Inventory class diagram](cd_inventory.png "Inventory class diagram")
-![ItemSlot class diagram](cd_item_slot.png "ItemSlot class diagram")
-
 ## How to install
 
 1. Create an `addons` directory inside your project directory.
@@ -39,6 +33,12 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 * Create an inventory node inside a scene and create items as child nodes to add them to the inventory. Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 * Optionally, create item slots that will hold various items (for example the currently equipped weapon or armor).
 * Call `add_item()`, `remove_item()` or `transfer_item()` from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
+
+## Class Diagrams
+
+![InventoryItem class diagram](cd_inventory_item.png "InventoryItem class diagram")
+![Inventory class diagram](cd_inventory.png "Inventory class diagram")
+![ItemSlot class diagram](cd_item_slot.png "ItemSlot class diagram")
 
 ## Examples
 

@@ -15,7 +15,7 @@ func _enter_tree():
     add_custom_type("InventoryLimited", "Node", preload("inventory_limited.gd"), preload("icon_inventory_limited.svg"));
     add_custom_type("InventoryGrid", "Node", preload("inventory_grid.gd"), preload("icon_inventory_grid.svg"));
 
-    add_custom_type("ItemSlot", "Node", preload("item_slot.gd"), null);
+    add_custom_type("ItemSlot", "Node", preload("item_slot.gd"), preload("icon_item_slot.svg"));
 
 
 func _exit_tree():
