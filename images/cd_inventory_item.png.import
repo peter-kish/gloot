@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/cd_inventory.png-a80b547c0e6581129fbbee44835020db.stex"
+path="res://.import/cd_inventory_item.png-60a10a15eccbaf7c2bafee1419514ead.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/inventory_system/cd_inventory.png"
-dest_files=[ "res://.import/cd_inventory.png-a80b547c0e6581129fbbee44835020db.stex" ]
+source_file="res://addons/inventory_system/images/cd_inventory_item.png"
+dest_files=[ "res://.import/cd_inventory_item.png-60a10a15eccbaf7c2bafee1419514ead.stex" ]
 
 [params]
 
