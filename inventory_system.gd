@@ -1,6 +1,8 @@
 tool
 extends EditorPlugin
 
+# TODO: Item description files
+
 
 func _enter_tree():
     add_custom_type("InventoryItem", "Node", preload("inventory_item.gd"), preload("icon_item.svg"));
