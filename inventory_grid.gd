@@ -3,14 +3,13 @@ class_name InventoryGrid
 
 signal size_changed;
 
-# TODO: Assert if the inventory is full when the node is ready
-
-
 export(int) var width: int = 10 setget _set_width;
 export(int) var height: int = 10 setget _set_height;
 
 
 func _ready():
+    if !_is_sorted():
+        assert(sort(), "Item sorting failed! Too many items?");
     assert(width > 0, "Inventory width must be positive!");
     assert(height > 0, "Inventory height must be positive!");
 
@@ -95,7 +94,7 @@ static func _sort_items(item1: InventoryItemRect, item2: InventoryItemRect) -> b
     return rect1.get_area() > rect2.get_area();
 
 
-func sort() -> void:
+func sort() -> bool:
     var item_array: Array;
     for item in get_items():
         item_array.append(item);
@@ -106,6 +105,16 @@ func sort() -> void:
 
     for item in item_array:
         var free_place: Dictionary = find_free_place(item);
-        assert(free_place.x != null, "Unexpected error in sort()! No free space!");
-        assert(free_place.y != null, "Unexpected error in sort()! No free space!");
+        if free_place.empty():
+            return false;
         add_item_at(item, free_place.x, free_place.y);
+
+    return true;
+
+
+func _is_sorted() -> bool:
+    for item in get_items():
+        if !rect_free(item.x, item.y, item.width, item.height, item):
+            return false;
+
+    return true;

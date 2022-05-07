@@ -2,7 +2,7 @@ tool
 extends EditorPlugin
 
 # TODO: Item description files
-# TODO: Item limbo
+# TODO: Item sprites
 
 
 func _enter_tree():
