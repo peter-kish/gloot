@@ -28,9 +28,9 @@ Has a limited item capacity in terms of space (width*height) and each item has a
 
 Holds a reference to a given item.
 
-TODO: Make slots of given sizes?
-
 TODO: Introduce item classes? (weapon, armor, potion etc.)
+
+TODO: Item description files
 
 ### TODO: Item Definition File
 
