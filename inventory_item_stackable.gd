@@ -23,3 +23,5 @@ func split(new_stack_size: int) -> bool:
     new_item._set_stack_size(new_stack_size);
     _set_stack_size(stack_size - new_stack_size);
     return get_inventory().add_item(new_item);
+
+# TODO: implement join()

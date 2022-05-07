@@ -13,3 +13,6 @@ func get_weight() -> float:
 
 func get_inventory() -> Node:
     return get_parent();
+
+
+# TODO: Introduce item classes? (weapon, armor, potion etc.)

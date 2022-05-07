@@ -4,6 +4,8 @@ class_name InventoryLimited
 signal capacity_changed;
 signal occupied_space_changed;
 
+# TODO: Assert if the inventory is full when the node is ready
+
 
 export(float) var capacity: float setget _set_capacity;
 var occupied: float;
