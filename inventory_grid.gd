@@ -3,6 +3,8 @@ class_name InventoryGrid
 
 signal size_changed;
 
+# TODO: Assert if the inventory is full when the node is ready
+
 
 export(int) var width: int = 10 setget _set_width;
 export(int) var height: int = 10 setget _set_height;
