@@ -3,9 +3,12 @@ extends EditorPlugin
 
 # TODO: Item description files
 # TODO: Item sprites
+# TODO: Basic UI elements
 
 
 func _enter_tree():
+    add_autoload_singleton("ItemDefinitions", "res://addons/inventory_system/item_definitions.gd");
+
     add_custom_type("InventoryItem", "Node", preload("inventory_item.gd"), preload("images/icon_item.svg"));
     add_custom_type("InventoryItemStackable", "Node", preload("inventory_item_stackable.gd"), preload("images/icon_item_stackable.svg"));
     add_custom_type("InventoryItemWeight", "Node", preload("inventory_item_weight.gd"), preload("images/icon_item_weight.svg"));
@@ -19,6 +22,8 @@ func _enter_tree():
 
 
 func _exit_tree():
+    remove_autoload_singleton("ItemDefinitions");
+
     remove_custom_type("InventoryItem");
     remove_custom_type("InventoryItemStackable");
     remove_custom_type("InventoryItemWeight");
