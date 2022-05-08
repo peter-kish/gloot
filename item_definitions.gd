@@ -106,6 +106,5 @@ static func create(item_def: Dictionary):
     item.item_id = item_def[KEY_ID];
     if item_def.has(KEY_NAME):
         item.item_name = item_def[KEY_NAME];
-    # TODO: Read category, sprite_scene and description
 
     return item;

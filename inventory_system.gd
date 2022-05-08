@@ -1,7 +1,6 @@
 tool
 extends EditorPlugin
 
-# TODO: Item description files
 # TODO: Item sprites
 # TODO: Basic UI elements
 
