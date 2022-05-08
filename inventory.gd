@@ -5,11 +5,27 @@ signal item_added;
 signal item_removed;
 signal contents_changed;
 
+export(Resource) var item_definitions;
+export(Array, String) var contents;
 
-func _ready():
+
+func _ready() -> void:
+    if item_definitions:
+        assert(item_definitions is ItemDefinitions, "item_definitions must be an ItemDefinitions resource!");
+        item_definitions.parse(item_definitions.json_data);
+        _populate();
+
     for item in get_items():
         if item is InventoryItem:
             item.connect("weight_changed", self, "_on_item_weight_changed");
+
+
+func _populate() -> void:
+    for item_id in contents:
+        var item_def: Dictionary = item_definitions.get(item_id);
+        assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
+        var item = ItemDefinitions.create(item_def);
+        add_child(item);
 
 
 func get_items() -> Array:
@@ -21,7 +37,7 @@ func has_item(item: InventoryItem) -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if has_item(item):
+    if item == null || has_item(item):
         return false;
 
     if item.get_parent():
@@ -34,7 +50,7 @@ func add_item(item: InventoryItem) -> bool:
     return true;
 
 
-func _on_item_weight_changed(_new_weight: float):
+func _on_item_weight_changed(_new_weight: float) -> void:
     emit_signal("contents_changed");
 
 

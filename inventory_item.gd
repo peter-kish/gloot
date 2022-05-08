@@ -5,6 +5,7 @@ signal weight_changed;
 
 
 export(String) var item_name;
+var item_id: String;
 
 
 func get_weight() -> float:

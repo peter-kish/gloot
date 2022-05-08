@@ -1,4 +1,5 @@
-extends Node
+class_name ItemDefinitions
+extends Resource
 
 enum ItemType {Unknown = 0, Basic = 1, Stackable = 2, Weight = 3, Rect = 4};
 
@@ -11,10 +12,18 @@ const ITEM_TYPE_NAMES: Array = [
 ];
 const KEY_ID: String = "id";
 const KEY_TYPE: String = "type";
+const KEY_NAME: String = "name";
 const KEY_STACK_SIZE: String = "default_stack_size";
 const KEY_WEIGHT: String = "weight";
 const KEY_WIDTH: String = "width";
 const KEY_HEIGHT: String = "height";
+
+const inventory_item = preload("inventory_item.gd");
+const inventory_item_stackable = preload("inventory_item_stackable.gd");
+const inventory_item_weight = preload("inventory_item_weight.gd");
+const inventory_item_rect = preload("inventory_item_rect.gd");
+
+export(String, MULTILINE) var json_data;
 
 var definitions: Dictionary = {};
 
@@ -76,3 +85,27 @@ func get(id: String) -> Dictionary:
         return definitions[id];
 
     return {};
+
+
+static func create(item_def: Dictionary):
+    var item = null;
+    if item_def[KEY_TYPE] == ItemType.Weight:
+        item = inventory_item_weight.new();
+        item.stack_size = item_def[KEY_STACK_SIZE];
+        item.unit_weight = item_def[KEY_WEIGHT];
+    elif item_def[KEY_TYPE] == ItemType.Stackable:
+        item = inventory_item_stackable.new();
+        item.stack_size = item_def[KEY_STACK_SIZE];
+    elif item_def[KEY_TYPE] == ItemType.Rect:
+        item = inventory_item_rect.new();
+        item.width = item_def[KEY_WIDTH];
+        item.height = item_def[KEY_HEIGHT];
+    elif item_def[KEY_TYPE] == ItemType.Basic:
+        item = inventory_item.new();
+
+    item.item_id = item_def[KEY_ID];
+    if item_def.has(KEY_NAME):
+        item.item_name = item_def[KEY_NAME];
+    # TODO: Read category, sprite_scene and description
+
+    return item;
