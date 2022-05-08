@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -42,7 +42,7 @@
      id="namedview6"
      showgrid="true"
      inkscape:zoom="5.2149125"
-     inkscape:cx="52.790832"
+     inkscape:cx="20.096132"
      inkscape:cy="91.197489"
      inkscape:window-x="54"
      inkscape:window-y="-8"
@@ -57,18 +57,18 @@
        id="grid4520" />
   </sodipodi:namedview>
   <path
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:1;fill:#fdd483;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      d="M 2 2 L 2 14 L 9 14 L 9 12 L 4 12 L 4 4 L 12 4 L 12 9 L 14 9 L 14 2 L 2 2 z "
      id="rect3700" />
   <rect
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:1;fill:#fdd483;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect3728"
      width="2"
      height="10"
      x="7"
      y="3" />
   <rect
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     style="opacity:1;fill:#fdd483;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
      id="rect3730"
      width="10"
      height="2"
