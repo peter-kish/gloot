@@ -4,6 +4,8 @@ class_name InventoryLimited
 signal capacity_changed;
 signal occupied_space_changed;
 
+const KEY_WEIGHT: String = "weight";
+
 export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
 
@@ -56,7 +58,7 @@ func has_place_for(item: InventoryItem) -> bool:
 func _get_item_weight(item: InventoryItem) -> float:
     var item_id = item.item_id;
     if item_definitions:
-        return item_definitions.get_item_property(item_id, "weight", 1.0);
+        return item_definitions.get_item_property(item_id, KEY_WEIGHT, 1.0);
     else:
         return 1.0;
 

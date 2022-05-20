@@ -1,8 +1,14 @@
 extends InventoryItem
 class_name InventoryItemStackable
 
+const KEY_STACK_SIZE: String = "default_stack_size";
 
 export(int) var stack_size = 1;
+
+
+func apply(item_definition: Dictionary) -> void:
+    .apply(item_definition);
+    stack_size = item_definition[KEY_STACK_SIZE];
     
     
 func split(new_stack_size: int) -> bool:

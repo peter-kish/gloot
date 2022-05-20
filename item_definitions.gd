@@ -5,10 +5,6 @@ const KEY_SYSTEM: String = "system";
 const KEY_ITEMS: String = "items_prototypes";
 const KEY_ID: String = "id";
 const KEY_TYPE: String = "type";
-const KEY_STACK_SIZE: String = "default_stack_size";
-const KEY_WEIGHT: String = "weight";
-const KEY_WIDTH: String = "width";
-const KEY_HEIGHT: String = "height";
 
 export(String, MULTILINE) var json_data setget _set_json_data;
 

@@ -3,6 +3,9 @@ class_name InventoryGrid
 
 signal size_changed;
 
+const KEY_WIDTH: String = "width";
+const KEY_HEIGHT: String = "height";
+
 export(int) var width: int = 10 setget _set_width;
 export(int) var height: int = 10 setget _set_height;
 
@@ -17,8 +20,8 @@ func _get_item_position(item: InventoryItem) -> Vector2:
 func _get_item_size(item: InventoryItemRect) -> Vector2:
     assert(item_positions.has(item), "The inventory does not contain this item!");
     if item_definitions:
-        var width = item_definitions.get_item_property(item.item_id, "width", 1.0);
-        var height = item_definitions.get_item_property(item.item_id, "height", 1.0);
+        var width = item_definitions.get_item_property(item.item_id, KEY_WIDTH, 1.0);
+        var height = item_definitions.get_item_property(item.item_id, KEY_HEIGHT, 1.0);
         if item.rotated:
             var temp = width;
             width = height;

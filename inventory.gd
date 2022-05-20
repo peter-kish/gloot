@@ -35,6 +35,7 @@ func _populate() -> void:
         var item_def: Dictionary = item_definitions.get(item_id);
         assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
         var item = get_item_script().new();
+        item.apply(item_def);
         add_child(item);
 
 
