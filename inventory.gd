@@ -9,15 +9,23 @@ export(Resource) var item_definitions;
 export(Array, String) var contents;
 
 
-func get_type() -> int:
-    return ItemDefinitions.InventoryType.Basic;
+static func get_type() -> String:
+    return "basic";
+
+
+static func get_item_script() -> Script:
+    return preload("inventory_item.gd");
 
 
 func _ready() -> void:
     if item_definitions:
-        assert(item_definitions.inventory_type == get_type(), "Incompatible inventory types!");
+        assert(item_definitions.inventory_type == get_type(), \
+            "Incompatible inventory types ('%s' and '%s')!" % \
+            [item_definitions.inventory_type, get_type()]);
+
         assert(item_definitions is ItemDefinitions, \
             "item_definitions must be an ItemDefinitions resource!");
+            
         item_definitions.parse(item_definitions.json_data);
         _populate();
 
@@ -26,7 +34,7 @@ func _populate() -> void:
     for item_id in contents:
         var item_def: Dictionary = item_definitions.get(item_id);
         assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
-        var item = ItemDefinitions.create(item_def);
+        var item = get_item_script().new();
         add_child(item);
 
 

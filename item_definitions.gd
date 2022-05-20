@@ -1,21 +1,6 @@
 class_name ItemDefinitions
 extends Resource
 
-enum ItemType {Unknown = 0, Basic = 1, Stackable = 2, Rect = 3};
-enum InventoryType {Unknown = 0, Basic = 1, Stack = 2, Grid = 3};
-
-const ITEM_TYPE_NAMES: Array = [
-    "unknown",
-    "basic",
-    "stackable",
-    "rect"
-];
-const IVENTORY_TYPE_NAMES: Array = [
-    "unknown",
-    "basic",
-    "stack",
-    "grid"
-]
 const KEY_SYSTEM: String = "system";
 const KEY_ITEMS: String = "items_prototypes";
 const KEY_ID: String = "id";
@@ -25,14 +10,10 @@ const KEY_WEIGHT: String = "weight";
 const KEY_WIDTH: String = "width";
 const KEY_HEIGHT: String = "height";
 
-const inventory_item = preload("inventory_item.gd");
-const inventory_item_stackable = preload("inventory_item_stackable.gd");
-const inventory_item_rect = preload("inventory_item_rect.gd");
-
 export(String, MULTILINE) var json_data setget _set_json_data;
 
 var definitions: Dictionary = {};
-var inventory_type: int = InventoryType.Basic;
+var inventory_type: String = "";
 
 
 func _set_json_data(new_json_data: String) -> void:
@@ -41,33 +22,15 @@ func _set_json_data(new_json_data: String) -> void:
         parse(json_data);
 
 
-func strToItemType(item_type_string: String) -> int:
-    for i in range(ITEM_TYPE_NAMES.size()):
-        if ITEM_TYPE_NAMES[i] == item_type_string:
-            return i;
-
-    return ItemType.Unknown;
-
-
-func strToInventoryType(inventory_type_string: String) -> int:
-    for i in range(IVENTORY_TYPE_NAMES.size()):
-        if IVENTORY_TYPE_NAMES[i] == inventory_type_string:
-            return i;
-
-    return InventoryType.Unknown;
-
-
 func parse(json: String) -> void:
     definitions.clear();
 
     var def = parse_json(json);
     assert(def is Dictionary, "JSON file must contain an object!");
 
-    inventory_type = InventoryType.Basic;
-    if def.has(KEY_SYSTEM):
-        strToInventoryType(def[KEY_SYSTEM]);
-    assert(inventory_type != InventoryType.Unknown, \
-        "Unknown inventory system type '%s'!" % def[KEY_SYSTEM]);
+    assert(def.has(KEY_SYSTEM), "Item definitions must have a '%s' property" % KEY_SYSTEM);
+    inventory_type = def[KEY_SYSTEM];
+    assert(!inventory_type.empty(), "Invalid inventory type (empty string)!");
     assert(def.has(KEY_ITEMS), "Item definition must have an '%s' property!" % KEY_ITEMS);
 
     var items = def[KEY_ITEMS];
@@ -96,20 +59,3 @@ func get_item_property(id: String, property_name: String, default_value):
         return item_def[property_name];
     
     return default_value;
-
-
-static func create(item_def: Dictionary):
-    var item = null;
-    if item_def[KEY_TYPE] == ItemType.Stackable:
-        item = inventory_item_stackable.new();
-        item.stack_size = item_def[KEY_STACK_SIZE];
-    elif item_def[KEY_TYPE] == ItemType.Rect:
-        item = inventory_item_rect.new();
-        item.width = item_def[KEY_WIDTH];
-        item.height = item_def[KEY_HEIGHT];
-    elif item_def[KEY_TYPE] == ItemType.Basic:
-        item = inventory_item.new();
-
-    item.item_id = item_def[KEY_ID];
-
-    return item;

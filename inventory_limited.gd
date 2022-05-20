@@ -8,8 +8,12 @@ export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
 
 
-func get_type() -> int:
-    return ItemDefinitions.InventoryType.Stack;
+static func get_type() -> String:
+    return "stack";
+
+
+static func get_item_script() -> Script:
+    return preload("inventory_item_stackable.gd");
 
 
 func _set_capacity(new_capacity: float) -> void:

@@ -28,8 +28,12 @@ func _get_item_size(item: InventoryItemRect) -> Vector2:
         return Vector2(1, 1);
 
 
-func get_type() -> int:
-    return ItemDefinitions.InventoryType.Grid;
+static func get_type() -> String:
+    return "grid";
+
+
+static func get_item_script() -> Script:
+    return preload("inventory_item_rect.gd");
 
 
 func _ready():
