@@ -21,6 +21,10 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 * ![](images/icon_item_slot.svg "ItemSlot icon") `ItemSlot` - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
 
+### Item Definitions
+
+* ![](images/icon_item_definitions.svg "ItemDefinitions icon") `ItemDefinitions` - A resource type holding an array of inventory item prototypes in JSON format.
+
 ## How to install
 
 1. Create an `addons` directory inside your project directory.
@@ -30,8 +34,14 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## How to use
 
-* Create an inventory node inside a scene and create items as child nodes to add them to the inventory. Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
-* Optionally, create item slots that will hold various items (for example the currently equipped weapon or armor).
+* Create an inventory node in your scene and set its capacity property if needed (required for `InventoryLimited` and `InventoryGrid`).
+* (*Optional*) Create an `ItemDefinitions` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
+* Adding items to the inventory can be done in two ways:
+    * Creating items as child nodes of the inventory node.
+    * Using the `contents` property in the inspector. Simply list all the IDs (defined in the previously created `ItemDefinitions` resource) of items that you want to be added to the inventory.
+
+    **NOTE**: In both cases pay attention to the inventory capacity to avoid assertions when the scene is loaded.
+* (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 * Call `add_item()`, `remove_item()` or `transfer_item()` from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
 
 ## Class Diagrams

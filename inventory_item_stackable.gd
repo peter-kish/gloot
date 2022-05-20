@@ -2,17 +2,7 @@ extends InventoryItem
 class_name InventoryItemStackable
 
 
-export(int) var stack_size = 1 setget _set_stack_size;
-
-
-func get_weight() -> float:
-    return stack_size;
-
-
-func _set_stack_size(new_stack_size: int) -> void:
-    assert(new_stack_size >= 1, "Stack size must be greater or equal to 1!");
-    stack_size = new_stack_size;
-    emit_signal("weight_changed", get_weight());
+export(int) var stack_size = 1;
     
     
 func split(new_stack_size: int) -> bool:
@@ -22,7 +12,7 @@ func split(new_stack_size: int) -> bool:
 
     var new_item = duplicate();
     new_item._set_stack_size(new_stack_size);
-    _set_stack_size(stack_size - new_stack_size);
+    stack_size = stack_size - new_stack_size;
     return get_inventory().add_item(new_item);
 
 
@@ -32,7 +22,7 @@ func join(new_stack: InventoryItem) -> bool:
     assert(new_stack.item_id == item_id, "The two stacks must be of the same type!");
 
     if get_inventory().remove_item(new_stack):
-        _set_stack_size(new_stack.stack_size);
+        stack_size = new_stack.stack_size;
         return true;
 
     return false;

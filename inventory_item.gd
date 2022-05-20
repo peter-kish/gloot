@@ -1,15 +1,8 @@
 extends Node
 class_name InventoryItem
 
-signal weight_changed;
 
-
-export(String) var item_name;
-var item_id: String;
-
-
-func get_weight() -> float:
-    return 1.0;
+export(String) var item_id: String;
 
 
 func get_inventory() -> Node:

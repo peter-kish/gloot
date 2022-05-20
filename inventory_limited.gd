@@ -5,7 +5,11 @@ signal capacity_changed;
 signal occupied_space_changed;
 
 export(float) var capacity: float setget _set_capacity;
-var occupied: float;
+var occupied_space: float;
+
+
+func get_type() -> int:
+    return ItemDefinitions.InventoryType.Stack;
 
 
 func _set_capacity(new_capacity: float) -> void:
@@ -20,36 +24,41 @@ func _ready():
 
 
 func _update_occupied_space() -> void:
-    var old_occupied_space = occupied;
-    occupied = 0.0;
+    var old_occupied_space = occupied_space;
+    occupied_space = 0.0;
     for item in get_items():
-        occupied += item.get_weight();
+        occupied_space += item.get_weight();
 
-    if occupied != old_occupied_space:
+    if occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed");
-    assert(occupied <= capacity);
+    assert(occupied_space <= capacity);
 
 
 func _on_contents_changed():
     _update_occupied_space();
 
 
-func get_occupied_space() -> float:
-    return occupied;
-
-
 func get_free_space() -> float:
-    var free_space: float = capacity - occupied;
+    var free_space: float = capacity - occupied_space;
     if free_space < 0.0:
         free_space = 0.0
     return free_space;
 
 
 func has_place_for(item: InventoryItem) -> bool:
-    return get_free_space() >= item.get_weight();
+    return get_free_space() >= _get_item_weight(item);
+
+
+func _get_item_weight(item: InventoryItem) -> float:
+    var item_id = item.item_id;
+    if item_definitions:
+        return item_definitions.get_item_property(item_id, "weight", 1.0);
+    else:
+        return 1.0;
 
 
 func add_item(item: InventoryItem) -> bool:
+    assert(item is InventoryItemStackable, "InventoryLimited can only hold InventoryItemStackable")
     if has_place_for(item):
         return .add_item(item);
 
