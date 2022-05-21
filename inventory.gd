@@ -32,17 +32,11 @@ func _ready() -> void:
 
 func _populate() -> void:
     for item_id in contents:
-        create_item(item_id);
-
-
-func create_item(item_id: String, insert: bool = true) -> Node:
-    var item_def: Dictionary = item_definitions.get(item_id);
-    assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
-    var item = get_item_script().new();
-    item.apply(item_def);
-    if insert:
-        add_child(item);
-    return item;
+        var item_def: Dictionary = item_definitions.get(item_id);
+        assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
+        var item = get_item_script().new();
+        item.apply(item_def);
+        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.item_id);
 
 
 func get_items() -> Array:
