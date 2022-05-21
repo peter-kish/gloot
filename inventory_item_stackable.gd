@@ -29,7 +29,8 @@ func join(new_stack: InventoryItem) -> bool:
     assert(new_stack.item_id == item_id, "The two stacks must be of the same type!");
 
     if get_inventory().remove_item(new_stack):
-        stack_size = new_stack.stack_size;
+        stack_size += new_stack.stack_size;
+        new_stack.queue_free();
         return true;
 
     return false;
