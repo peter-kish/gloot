@@ -13,8 +13,8 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 ### Inventory Types
 
 * ![](images/icon_inventory.svg "Inventory icon") `Inventory` - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
-* ![](images/icon_inventory_limited.svg "InventoryLimited icon") `InventoryLimited` - Has a limited item capacity in terms of weight. Inherits Inventory.
-* ![](images/icon_inventory_grid.svg "InventoryGrid icon") `InventoryGrid` - Has a limited item capacity in terms of space. The inventory capacity is defined by its width and height. Can only contain `InventoryItemRect` items.
+* ![](images/icon_inventory_limited.svg "InventoryLimited icon") `InventoryLimited` - Contains `InventoryItemStackable` items and has a limited item capacity in terms of weight. Inherits Inventory.
+* ![](images/icon_inventory_grid.svg "InventoryGrid icon") `InventoryGrid` - Contains `InventoryItemRect` items and has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
 
 ### Item Slots
 
@@ -36,9 +36,13 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 * Create an inventory node in your scene and set its capacity if needed (required for `InventoryLimited` and `InventoryGrid`).
 * Create an `ItemDefinitions` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
 * To add items to the inventory set its 'contents' property. List the prototype IDs of the items that you want added to the inventory.
-    **NOTE**: In both cases pay attention to the inventory capacity to avoid assertions when the scene is loaded.
+    **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 * (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 * Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
+
+## Creating Item Definitions
+
+TODO
 
 ## Class Diagrams
 
