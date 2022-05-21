@@ -18,7 +18,7 @@ func split(new_stack_size: int) -> bool:
     assert(get_inventory() != null, "The stack doesn't belong to an inventory!")
 
     var new_item = duplicate();
-    new_item._set_stack_size(new_stack_size);
+    new_item.stack_size = new_stack_size;
     stack_size = stack_size - new_stack_size;
     return get_inventory().add_item(new_item);
 
