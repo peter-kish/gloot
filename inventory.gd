@@ -31,12 +31,12 @@ func _ready() -> void:
 
 
 func _populate() -> void:
-    for item_id in contents:
-        var item_def: Dictionary = item_definitions.get(item_id);
-        assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
+    for prototype_id in contents:
+        var item_def: Dictionary = item_definitions.get(prototype_id);
+        assert(!item_def.empty(), "Undefined item id '%s'" % prototype_id);
         var item = get_item_script().new();
         item.apply(item_def);
-        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.item_id);
+        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
 
 
 func get_items() -> Array:
@@ -72,7 +72,7 @@ func remove_item(item: InventoryItem) -> bool:
     
 func get_item_by_name(name: String) -> InventoryItem:
     for item in get_children():
-        if item_definitions.get_item_property(item.item_id, "name", "") == name:
+        if item_definitions.get_item_property(item.prototype_id, "name", "") == name:
             return item;
             
     return null;
@@ -84,7 +84,7 @@ func has_item_by_name(name: String) -> bool:
 
 func get_item_by_id(id: String) -> InventoryItem:
     for item in get_children():
-        if item.item_id == id:
+        if item.prototype_id == id:
             return item;
             
     return null;

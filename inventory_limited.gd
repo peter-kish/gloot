@@ -57,7 +57,7 @@ func has_place_for(item: InventoryItem) -> bool:
 
 func _get_item_unit_weight(item: InventoryItem) -> float:
     if item_definitions:
-        var weight = item_definitions.get_item_property(item.item_id, KEY_WEIGHT, 1.0);
+        var weight = item_definitions.get_item_property(item.prototype_id, KEY_WEIGHT, 1.0);
         if weight is float:
             return weight;
     return 1.0;
@@ -79,7 +79,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false;
 
-    var target_item = get_item_by_id(item.item_id);
+    var target_item = get_item_by_id(item.prototype_id);
     if target_item:
         add_item(item);
         target_item.join(item);

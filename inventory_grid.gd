@@ -27,8 +27,8 @@ func get_item_position(item: InventoryItem) -> Vector2:
 
 func get_item_size(item: InventoryItemRect) -> Vector2:
     if item_definitions:
-        var width = item_definitions.get_item_property(item.item_id, KEY_WIDTH, 1.0);
-        var height = item_definitions.get_item_property(item.item_id, KEY_HEIGHT, 1.0);
+        var width = item_definitions.get_item_property(item.prototype_id, KEY_WIDTH, 1.0);
+        var height = item_definitions.get_item_property(item.prototype_id, KEY_HEIGHT, 1.0);
         if item.rotated:
             var temp = width;
             width = height;

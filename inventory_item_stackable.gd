@@ -36,7 +36,7 @@ func split(new_stack_size: int) -> InventoryItem:
 func join(new_stack: InventoryItem) -> bool:
     assert(get_inventory() == new_stack.get_inventory(), "The two stacks must be in the same inventory!");
     assert(get_inventory() != null, "The stack doesn't belong to an inventory!");
-    assert(new_stack.item_id == item_id, "The two stacks must be of the same type!");
+    assert(new_stack.prototype_id == prototype_id, "The two stacks must be of the same type!");
 
     if new_stack.get_inventory().remove_item(new_stack):
         _set_stack_size(stack_size + new_stack.stack_size);

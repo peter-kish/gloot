@@ -2,7 +2,7 @@ extends Node
 class_name InventoryItem
 
 
-export(String) var item_id: String;
+export(String) var prototype_id: String;
 
 
 func get_inventory() -> Node:
@@ -10,4 +10,4 @@ func get_inventory() -> Node:
 
 
 func apply(item_definition: Dictionary) -> void:
-    item_id = item_definition[ItemDefinitions.KEY_ID];
+    prototype_id = item_definition[ItemDefinitions.KEY_ID];
