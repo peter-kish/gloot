@@ -33,7 +33,7 @@ func _update_occupied_space() -> void:
     var old_occupied_space = occupied_space;
     occupied_space = 0.0;
     for item in get_items():
-        occupied_space += item.get_weight();
+        occupied_space += _get_item_weight(item);
 
     if occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed");
