@@ -56,12 +56,10 @@ func has_place_for(item: InventoryItem) -> bool:
 
 
 func _get_item_weight(item: InventoryItem) -> float:
-    var item_id = item.item_id;
+    var weight = 1.0;
     if item_definitions:
-        return item_definitions.get_item_property(item_id, KEY_WEIGHT, 1.0);
-    else:
-        return 1.0;
-
+        weight = item_definitions.get_item_property(item.item_id, KEY_WEIGHT, 1.0);
+    return item.stack_size * weight;
 
 func add_item(item: InventoryItem) -> bool:
     assert(item is InventoryItemStackable, "InventoryLimited can only hold InventoryItemStackable")
