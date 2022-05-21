@@ -9,23 +9,34 @@ export(Resource) var item_definitions;
 export(Array, String) var contents;
 
 
+static func get_type() -> String:
+    return "basic";
+
+
+static func get_item_script() -> Script:
+    return preload("inventory_item.gd");
+
+
 func _ready() -> void:
     if item_definitions:
-        assert(item_definitions is ItemDefinitions, "item_definitions must be an ItemDefinitions resource!");
+        assert(item_definitions.inventory_type == get_type(), \
+            "Incompatible inventory types ('%s' and '%s')!" % \
+            [item_definitions.inventory_type, get_type()]);
+
+        assert(item_definitions is ItemDefinitions, \
+            "item_definitions must be an ItemDefinitions resource!");
+            
         item_definitions.parse(item_definitions.json_data);
         _populate();
 
-    for item in get_items():
-        if item is InventoryItem:
-            item.connect("weight_changed", self, "_on_item_weight_changed");
-
 
 func _populate() -> void:
-    for item_id in contents:
-        var item_def: Dictionary = item_definitions.get(item_id);
-        assert(!item_def.empty(), "Undefined item id '%s'" % item_id);
-        var item = ItemDefinitions.create(item_def);
-        add_child(item);
+    for prototype_id in contents:
+        var item_def: Dictionary = item_definitions.get(prototype_id);
+        assert(!item_def.empty(), "Undefined item id '%s'" % prototype_id);
+        var item = get_item_script().new();
+        item.apply(item_def);
+        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
 
 
 func get_items() -> Array:
@@ -46,12 +57,7 @@ func add_item(item: InventoryItem) -> bool:
     add_child(item);
     emit_signal("item_added", item);
     emit_signal("contents_changed");
-    item.connect("weight_changed", self, "_on_item_weight_changed");
     return true;
-
-
-func _on_item_weight_changed(_new_weight: float) -> void:
-    emit_signal("contents_changed");
 
 
 func remove_item(item: InventoryItem) -> bool:
@@ -61,20 +67,19 @@ func remove_item(item: InventoryItem) -> bool:
     remove_child(item);
     emit_signal("item_removed", item);
     emit_signal("contents_changed");
-    item.disconnect("weight_changed", self, "_on_item_weight_changed");
     return true;
 
-    
-func get_item_by_name(name: String) -> InventoryItem:
+
+func get_item_by_id(id: String) -> InventoryItem:
     for item in get_children():
-        if item.name == name:
+        if item.prototype_id == id:
             return item;
             
     return null;
 
 
-func has_item_by_name(name: String) -> bool:
-    return get_item_by_name(name) != null;
+func has_item_by_id(id: String) -> bool:
+    return get_item_by_id(id) != null;
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:

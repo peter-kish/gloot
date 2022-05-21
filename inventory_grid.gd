@@ -3,9 +3,40 @@ class_name InventoryGrid
 
 signal size_changed;
 
+const KEY_WIDTH: String = "width";
+const KEY_HEIGHT: String = "height";
+
 export(int) var width: int = 10 setget _set_width;
 export(int) var height: int = 10 setget _set_height;
 
+var item_positions: Dictionary = {};
+
+
+static func get_type() -> String:
+    return "grid";
+
+
+static func get_item_script() -> Script:
+    return preload("inventory_item_rect.gd");
+
+
+func get_item_position(item: InventoryItem) -> Vector2:
+    assert(item_positions.has(item), "The inventory does not contain this item!");
+    return item_positions[item];
+
+
+func get_item_size(item: InventoryItemRect) -> Vector2:
+    if item_definitions:
+        var width = item_definitions.get_item_property(item.prototype_id, KEY_WIDTH, 1.0);
+        var height = item_definitions.get_item_property(item.prototype_id, KEY_HEIGHT, 1.0);
+        if item.rotated:
+            var temp = width;
+            width = height;
+            height = temp;
+        return Vector2(width, height);
+    else:
+        return Vector2(1, 1);
+    
 
 func _ready():
     if !_is_sorted():
@@ -27,23 +58,32 @@ func _set_height(new_height: int) -> void:
 
 
 func add_item(item: InventoryItem) -> bool:
-    assert(false, "Can't use add_item() with InventoryGrid! Use add_item_at() instead!");
-    return false;
+    assert(item is InventoryItemRect, "InventoryGrid can only hold InventoryItemRect");
+    var free_place = find_free_place(item);
+    return add_item_at(item, free_place.x, free_place.y);
 
 
 func add_item_at(item: InventoryItemRect, x: int, y: int) -> bool:
-    if rect_free(x, y, item.width, item.height):
-        item.x = x;
-        item.y = y;
+    var item_size = get_item_size(item);
+    if rect_free(x, y, item_size.x, item_size.y):
+        item_positions[item] = Vector2(x, y);
         return .add_item(item);
 
     return false;
 
 
+func remove_item(item: InventoryItem) -> bool:
+    if .remove_item(item):
+        assert(item_positions.has(item));
+        item_positions.erase(item);
+        return true;
+    return false;
+
+
 func move_item(item: InventoryItemRect, x: int, y: int) -> bool:
-    if rect_free(x, y, item.width, item.height, item):
-        item.x = x;
-        item.y = y;
+    var item_size = get_item_size(item);
+    if rect_free(x, y, item_size.x, item_size.y, item):
+        item_positions[item] = Vector2(x, y);
         emit_signal("contents_changed");
         return true;
 
@@ -51,12 +91,12 @@ func move_item(item: InventoryItemRect, x: int, y: int) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    assert(false, "Can't use transfer() with InventoryGrid! Use transfer_to() instead!");
-    return false;
+    return transfer_to(item, destination, 0, 0);
 
 
 func transfer_to(item: InventoryItemRect, destination: InventoryGrid, x: int, y: int) -> bool:
-    if destination.rect_free(x, y, item.width, item.height):
+    var item_size = get_item_size(item);
+    if destination.rect_free(x, y, item_size.x, item_size.y):
         return .transfer(item, destination);
 
     return false;
@@ -71,8 +111,10 @@ func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItemRect = nu
     for item in get_items():
         if item == exception:
             continue;
+        var item_pos: Vector2 = get_item_position(item);
+        var item_size: Vector2 = get_item_size(item);
         var rect1: Rect2 = Rect2(Vector2(x, y), Vector2(w, h));
-        var rect2: Rect2 = Rect2(Vector2(item.x, item.y), Vector2(item.width, item.height));
+        var rect2: Rect2 = Rect2(item_pos, item_size);
         if rect1.intersects(rect2):
             return false;
 
@@ -80,17 +122,18 @@ func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItemRect = nu
 
 
 func find_free_place(item: InventoryItemRect) -> Dictionary:
-    for y in range(width - (item.width - 1)):
-        for x in range(height - (item.height - 1)):
-            if rect_free(x, y, item.width, item.height):
+    var item_size = get_item_size(item);
+    for y in range(width - (item_size.x - 1)):
+        for x in range(height - (item_size.y - 1)):
+            if rect_free(x, y, item_size.x, item_size.y):
                 return {x = x, y = y};
 
     return {};
 
 
-static func _sort_items(item1: InventoryItemRect, item2: InventoryItemRect) -> bool:
-    var rect1: Rect2 = Rect2(Vector2(item1.x, item1.y), Vector2(item1.width, item1.height));
-    var rect2: Rect2 = Rect2(Vector2(item2.x, item2.y), Vector2(item2.width, item2.height));
+func _sort_items(item1: InventoryItemRect, item2: InventoryItemRect) -> bool:
+    var rect1: Rect2 = Rect2(get_item_position(item1), get_item_size(item1));
+    var rect2: Rect2 = Rect2(get_item_position(item2), get_item_size(item2));
     return rect1.get_area() > rect2.get_area();
 
 
@@ -114,7 +157,9 @@ func sort() -> bool:
 
 func _is_sorted() -> bool:
     for item in get_items():
-        if !rect_free(item.x, item.y, item.width, item.height, item):
+        var item_pos = get_item_position(item);
+        var item_size = get_item_size(item);
+        if !rect_free(item_pos.x, item_pos.y, item_size.x, item_size.y, item):
             return false;
 
     return true;
