@@ -6,7 +6,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Inventory Items
 
-* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Basic inventory item class. Has a constant weight of 1.0.
+* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Basic inventory item class. Nameless, weightless and shapeless.
 * ![](images/icon_item_stackable.svg "InventoryItemStackable icon") `InventoryItemStackable` - Represents a stack of inventory items. Item stacks can be split up and joined together. The total weight of a stack equals its size multiplied by the unit weight of the item. Inherits InventoryItem.
 * ![](images/icon_item_rect.svg "InventoryItemRect icon") `InventoryItemRect` - Inventory item that takes up a predefined amount of 2d space in a grid-based inventory (see `InventoryGrid` below). The size of the item is defined by its weight and height, while its position is defined by x and y coordinates. Rectangular items can also be rotated by 90 degrees for easier inventory organization. In case the item has been rotated, its width and height values are swapped and its "rotated" flag is set. Inherits InventoryItem.
 
@@ -24,23 +24,37 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 * ![](images/icon_item_definitions.svg "ItemDefinitions icon") `ItemDefinitions` - A resource type holding an array of inventory item prototypes in JSON format.
 
-## How to install
+## Installation
 
 1. Create an `addons` directory inside your project directory.
 2. Run `git clone` from the `addons` directory.
 3. Enable the plugin in `Project Settings > Plugins`.
 4. Done.
 
-## How to use
+## Usage
 
-* Create an inventory node in your scene and set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`).
-* Create an `ItemDefinitions` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
-* To add items to the inventory set its 'contents' property. List the prototype IDs of the items that you want added to the inventory.
+1. Create an `ItemDefinitions` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
+2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_definitions` property (the resource created in the previous step).
+3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
     **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
-* (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
-* Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
+4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
+5. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Definitions
+
+TODO:
+* Minimal item definitions JSON
+* Item definitions for `InventoryStacked`
+* Item definitions for `InventoryGrid`
+* Custom prototype fields
+
+## Extending Functionality
+
+TODO:
+* Inheriting from InventoryItem
+* Inheriting from Inventory
+
+## The API
 
 TODO
 
