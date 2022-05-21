@@ -69,18 +69,6 @@ func remove_item(item: InventoryItem) -> bool:
     emit_signal("contents_changed");
     return true;
 
-    
-func get_item_by_name(name: String) -> InventoryItem:
-    for item in get_children():
-        if item_definitions.get_item_property(item.prototype_id, "name", "") == name:
-            return item;
-            
-    return null;
-
-
-func has_item_by_name(name: String) -> bool:
-    return get_item_by_name(name) != null;
-
 
 func get_item_by_id(id: String) -> InventoryItem:
     for item in get_children():
