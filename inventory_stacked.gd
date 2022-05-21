@@ -1,5 +1,5 @@
 extends Inventory
-class_name InventoryLimited
+class_name InventoryStacked
 
 signal capacity_changed;
 signal occupied_space_changed;
@@ -68,7 +68,7 @@ func _get_item_weight(item: InventoryItem) -> float:
 
 
 func add_item(item: InventoryItem) -> bool:
-    assert(item is InventoryItemStackable, "InventoryLimited can only hold InventoryItemStackable")
+    assert(item is InventoryItemStackable, "InventoryStacked can only hold InventoryItemStackable")
     if has_place_for(item):
         return .add_item(item);
 
