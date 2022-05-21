@@ -1,8 +1,8 @@
 class_name ItemDefinitions
 extends Resource
 
-const KEY_SYSTEM: String = "system";
-const KEY_ITEMS: String = "items_prototypes";
+const KEY_INV_TYPE: String = "inventory_type";
+const KEY_ITEM_PROTOTYPES: String = "items_prototypes";
 const KEY_ID: String = "id";
 const KEY_TYPE: String = "type";
 
@@ -24,13 +24,14 @@ func parse(json: String) -> void:
     var def = parse_json(json);
     assert(def is Dictionary, "JSON file must contain an object!");
 
-    assert(def.has(KEY_SYSTEM), "Item definitions must have a '%s' property" % KEY_SYSTEM);
-    inventory_type = def[KEY_SYSTEM];
+    assert(def.has(KEY_INV_TYPE), "Item definitions must have a '%s' property" % KEY_INV_TYPE);
+    inventory_type = def[KEY_INV_TYPE];
     assert(!inventory_type.empty(), "Invalid inventory type (empty string)!");
-    assert(def.has(KEY_ITEMS), "Item definition must have an '%s' property!" % KEY_ITEMS);
+    assert(def.has(KEY_ITEM_PROTOTYPES), \
+        "Item definition must have an '%s' property!" % KEY_ITEM_PROTOTYPES);
 
-    var items = def[KEY_ITEMS];
-    assert(items is Array, "'%s' property must be an array!" % KEY_ITEMS);
+    var items = def[KEY_ITEM_PROTOTYPES];
+    assert(items is Array, "'%s' property must be an array!" % KEY_ITEM_PROTOTYPES);
 
     for item_def in items:
         assert(item_def is Dictionary, "Item definition must be a dictionary!");
