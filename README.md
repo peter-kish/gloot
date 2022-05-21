@@ -47,8 +47,12 @@ TODO
 ## Class Diagrams
 
 ![InventoryItem class diagram](images/cd_inventory_item.png "InventoryItem class diagram")
+
 ![Inventory class diagram](images/cd_inventory.png "Inventory class diagram")
+
 ![ItemSlot class diagram](images/cd_item_slot.png "ItemSlot class diagram")
+
+![ItemDefinitions class diagram](images/cd_item_definitions.png "ItemDefinitions class diagram")
 
 ## Examples
 
