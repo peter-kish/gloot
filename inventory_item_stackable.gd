@@ -21,7 +21,7 @@ func apply(item_definition: Dictionary) -> void:
         stack_size = item_definition[KEY_STACK_SIZE];
     
     
-func split(new_stack_size: int) -> bool:
+func split(new_stack_size: int) -> InventoryItem:
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!");
     assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!");
     assert(get_inventory() != null, "The stack doesn't belong to an inventory!")
@@ -29,7 +29,8 @@ func split(new_stack_size: int) -> bool:
     var new_item = duplicate();
     new_item._set_stack_size(new_stack_size);
     _set_stack_size(stack_size - new_stack_size);
-    return get_inventory().add_item(new_item);
+    assert(get_inventory().add_item(new_item));
+    return new_item;
 
 
 func join(new_stack: InventoryItem) -> bool:
@@ -37,7 +38,7 @@ func join(new_stack: InventoryItem) -> bool:
     assert(get_inventory() != null, "The stack doesn't belong to an inventory!");
     assert(new_stack.item_id == item_id, "The two stacks must be of the same type!");
 
-    if get_inventory().remove_item(new_stack):
+    if new_stack.get_inventory().remove_item(new_stack):
         _set_stack_size(stack_size + new_stack.stack_size);
         new_stack.queue_free();
         return true;

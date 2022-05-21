@@ -55,11 +55,17 @@ func has_place_for(item: InventoryItem) -> bool:
     return get_free_space() >= _get_item_weight(item);
 
 
-func _get_item_weight(item: InventoryItem) -> float:
-    var weight = 1.0;
+func _get_item_unit_weight(item: InventoryItem) -> float:
     if item_definitions:
-        weight = item_definitions.get_item_property(item.item_id, KEY_WEIGHT, 1.0);
-    return item.stack_size * weight;
+        var weight = item_definitions.get_item_property(item.item_id, KEY_WEIGHT, 1.0);
+        if weight is float:
+            return weight;
+    return 1.0;
+
+
+func _get_item_weight(item: InventoryItem) -> float:
+    return item.stack_size * _get_item_unit_weight(item);
+
 
 func add_item(item: InventoryItem) -> bool:
     assert(item is InventoryItemStackable, "InventoryLimited can only hold InventoryItemStackable")
@@ -69,9 +75,55 @@ func add_item(item: InventoryItem) -> bool:
     return false;
 
 
+func add_item_automerge(item: InventoryItem) -> bool:
+    if !has_place_for(item):
+        return false;
+
+    var target_item = get_item_by_id(item.item_id);
+    if target_item:
+        add_item(item);
+        target_item.join(item);
+        return true;
+    else:
+        return add_item(item);
+
+
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    assert(destination.get_class() == get_class())
+    assert(destination.get_class() == get_class());
     if !destination.has_place_for(item):
         return false;
     
     return .transfer(item, destination);
+
+
+func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
+    if destination.has_place_for(item):
+        return transfer(item, destination);
+
+    var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item));
+    if count > 0:
+        var new_item: InventoryItem = item.split(count);
+        assert(new_item != null);
+        return transfer(new_item, destination);
+
+    return false;
+
+
+func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
+    if destination.has_place_for(item) && remove_item(item):
+        return destination.add_item_automerge(item);
+
+    return false;
+
+
+func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
+    if destination.has_place_for(item):
+        return transfer_automerge(item, destination);
+
+    var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item));
+    if count > 0:
+        var new_item: InventoryItem = item.split(count);
+        assert(new_item != null);
+        return transfer_automerge(new_item, destination);
+
+    return false;
