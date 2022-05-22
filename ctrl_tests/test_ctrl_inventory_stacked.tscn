@@ -14,7 +14,6 @@ margin_right = 305.0
 margin_bottom = 290.0
 script = ExtResource( 2 )
 inventory_path = NodePath("../InventoryStacked")
-percent_visible = true
 
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource( 1 )

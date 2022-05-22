@@ -18,8 +18,8 @@ func _enter_tree():
 
     add_custom_type("ItemSlot", "Node", preload("item_slot.gd"), preload("images/icon_item_slot.svg"));
 
-    add_custom_type("CtrlInventory", "VBoxContainer", preload("ctrl_inventory.gd"), null);
-    add_custom_type("CtrlInventoryStacked", "CtrlInventory", preload("ctrl_inventory_stacked.gd"), null);
+    add_custom_type("CtrlInventory", "VBoxContainer", preload("ctrl_inventory.gd"), preload("images/icon_ctrl_inventory.svg"));
+    add_custom_type("CtrlInventoryStacked", "CtrlInventory", preload("ctrl_inventory_stacked.gd"), preload("images/icon_ctrl_inventory_stacked.svg"));
 
 
 func _exit_tree():
