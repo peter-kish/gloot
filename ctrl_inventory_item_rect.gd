@@ -1,0 +1,57 @@
+class_name CtrlInventoryItemRect
+extends Control
+
+signal grabbed;
+
+var item: InventoryItemRect setget _set_item;
+var ctrl_inventory;
+
+
+func _set_item(new_item: InventoryItemRect) -> void:
+    item = new_item;
+    if item && ctrl_inventory:
+        var item_size = _get_item_size();
+        var item_pos = _get_item_position();
+        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
+            item_size.y * ctrl_inventory.field_dimensions.y);
+        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
+            item_pos.y * ctrl_inventory.field_dimensions.y);
+
+
+func _get_item_size() -> Vector2:
+    if item && item.get_inventory():
+        return item.get_inventory().get_item_size(item);
+    return Vector2(1, 1);
+
+
+func _get_item_position() -> Vector2:
+    if item && item.get_inventory():
+        return item.get_inventory().get_item_position(item);
+    return Vector2(0, 0);
+
+
+func _ready() -> void:
+    if item && ctrl_inventory:
+        var item_size = _get_item_size();
+        var item_pos = _get_item_position();
+        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
+            item_size.y * ctrl_inventory.field_dimensions.y);
+        rect_min_size = rect_size;
+        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
+            item_pos.y * ctrl_inventory.field_dimensions.y);
+        print("Creating a ctrl item at %s, size %s" % [str(rect_position), str(rect_size)]);
+
+
+func _draw() -> void:
+    var rect = Rect2(Vector2.ZERO, rect_size);
+    draw_rect(rect, Color.white, false);
+    draw_rect(rect, Color.gray, true);
+
+
+func _input(event: InputEvent) -> void:
+    if event is InputEventMouseButton:
+        var mb_event: InputEventMouseButton = event;
+        if mb_event.is_pressed() && mb_event.button_index == BUTTON_LEFT:
+            if get_global_rect().has_point(get_global_mouse_position()):
+                var offset: Vector2 = get_global_mouse_position() - get_global_rect().position;
+                emit_signal("grabbed", self, offset);

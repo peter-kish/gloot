@@ -20,6 +20,7 @@ func _enter_tree():
 
     add_custom_type("CtrlInventory", "VBoxContainer", preload("ctrl_inventory.gd"), preload("images/icon_ctrl_inventory.svg"));
     add_custom_type("CtrlInventoryStacked", "CtrlInventory", preload("ctrl_inventory_stacked.gd"), preload("images/icon_ctrl_inventory_stacked.svg"));
+    add_custom_type("CtrlInventoryGrid", "Container", preload("ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"));
 
 
 func _exit_tree():
@@ -37,3 +38,4 @@ func _exit_tree():
 
     remove_custom_type("CtrlInventory");
     remove_custom_type("CtrlInventoryStacked");
+    remove_custom_type("CtrlInventoryGrid");
