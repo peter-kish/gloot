@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/inventory_system/inventory_stacked.gd" type="Script" id=1]
+[ext_resource path="res://addons/inventory_system/ctrl_inventory_stacked.gd" type="Script" id=2]
+[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_stack.tres" type="Resource" id=3]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
+margin_top = -1.0
+margin_right = 305.0
+margin_bottom = 290.0
+script = ExtResource( 2 )
+inventory_path = NodePath("../InventoryStacked")
+percent_visible = true
+
+[node name="InventoryStacked" type="Node" parent="."]
+script = ExtResource( 1 )
+item_definitions = ExtResource( 3 )
+contents = [ "minimal_item", "stackable_item" ]
+capacity = 20.0
