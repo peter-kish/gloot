@@ -1,0 +1,96 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_stack.tres" type="Resource" id=1]
+[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_basic.tres" type="Resource" id=2]
+[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_grid.tres" type="Resource" id=3]
+[ext_resource path="res://addons/inventory_system/inventory_item_stackable.gd" type="Script" id=4]
+[ext_resource path="res://addons/inventory_system/inventory_item_rect.gd" type="Script" id=5]
+[ext_resource path="res://addons/inventory_system/inventory.gd" type="Script" id=6]
+[ext_resource path="res://addons/inventory_system/tests/item_slot_tests.gd" type="Script" id=7]
+[ext_resource path="res://addons/inventory_system/inventory_grid.gd" type="Script" id=8]
+[ext_resource path="res://addons/inventory_system/tests/inventory_grid_tests.gd" type="Script" id=9]
+[ext_resource path="res://addons/inventory_system/tests/item_definitions_test.gd" type="Script" id=10]
+[ext_resource path="res://addons/inventory_system/tests/inventory_stacked_tests.gd" type="Script" id=11]
+[ext_resource path="res://addons/inventory_system/inventory_stacked.gd" type="Script" id=12]
+[ext_resource path="res://addons/inventory_system/tests/inventory_tests.gd" type="Script" id=13]
+[ext_resource path="res://addons/inventory_system/item_slot.gd" type="Script" id=14]
+[ext_resource path="res://addons/inventory_system/tests/inventory_item_stackable_tests.gd" type="Script" id=15]
+
+[node name="InventorySystemTests" type="Node"]
+
+[node name="ItemDefinitionsTest" type="Node" parent="."]
+script = ExtResource( 10 )
+
+[node name="Inventory" type="Node" parent="ItemDefinitionsTest"]
+script = ExtResource( 6 )
+item_definitions = ExtResource( 2 )
+contents = [ "minimal_item", "minimal_item_2" ]
+
+[node name="InventoryTests" type="Node" parent="."]
+script = ExtResource( 13 )
+
+[node name="Inventory1" type="Node" parent="InventoryTests"]
+script = ExtResource( 6 )
+item_definitions = ExtResource( 2 )
+contents = [ "minimal_item" ]
+
+[node name="Inventory2" type="Node" parent="InventoryTests"]
+script = ExtResource( 6 )
+item_definitions = ExtResource( 2 )
+
+[node name="InventoryStackedTests" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="InventoryStacked" type="Node" parent="InventoryStackedTests"]
+script = ExtResource( 12 )
+item_definitions = ExtResource( 1 )
+capacity = 10.0
+
+[node name="MinimalItem" type="Node" parent="InventoryStackedTests"]
+script = ExtResource( 4 )
+prototype_id = "minimal_item"
+
+[node name="BigItem" type="Node" parent="InventoryStackedTests"]
+script = ExtResource( 4 )
+prototype_id = "big_item"
+
+[node name="InventoryGridTests" type="Node" parent="."]
+script = ExtResource( 9 )
+
+[node name="InventoryGrid3x3" type="Node" parent="InventoryGridTests"]
+script = ExtResource( 8 )
+item_definitions = ExtResource( 3 )
+width = 3
+height = 3
+
+[node name="Item_1x1" type="Node" parent="InventoryGridTests"]
+script = ExtResource( 5 )
+prototype_id = "item_1x1"
+
+[node name="Item_2x2" type="Node" parent="InventoryGridTests"]
+script = ExtResource( 5 )
+prototype_id = "item_2x2"
+
+[node name="InventoryItemStackableTests" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="InventoryStacked" type="Node" parent="InventoryItemStackableTests"]
+script = ExtResource( 12 )
+item_definitions = ExtResource( 1 )
+contents = [ "stackable_item" ]
+capacity = 10.0
+
+[node name="ItemSlotTests" type="Node" parent="."]
+script = ExtResource( 7 )
+
+[node name="Inventory1" type="Node" parent="ItemSlotTests"]
+script = ExtResource( 6 )
+item_definitions = ExtResource( 2 )
+contents = [ "minimal_item" ]
+
+[node name="Inventory2" type="Node" parent="ItemSlotTests"]
+script = ExtResource( 6 )
+item_definitions = ExtResource( 2 )
+
+[node name="ItemSlot" type="Node" parent="ItemSlotTests"]
+script = ExtResource( 14 )

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/inventory_system/item_definitions.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+json_data = "{
+    \"inventory_type\": \"stack\",
+    \"items_prototypes\": [
+        {
+            \"id\": \"minimal_item\"
+        },
+        {
+            \"id\": \"big_item\",
+		    \"weight\": 20
+        },
+		{
+		    \"id\": \"stackable_item\",
+			\"default_stack_size\": 10
+		}
+    ]
+}"

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/inventory_system/item_definitions.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+json_data = "{
+    \"inventory_type\": \"grid\",
+    \"items_prototypes\": [
+        {
+            \"id\": \"item_1x1\",
+			\"width\": 1,
+			\"height\": 1
+        },
+        {
+            \"id\": \"item_2x2\",
+			\"width\": 2,
+			\"height\": 2
+        },
+    ]
+}"
