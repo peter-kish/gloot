@@ -27,7 +27,6 @@ func _set_capacity(new_capacity: float) -> void:
 func _ready():
     _update_occupied_space();
     connect("contents_changed", self, "_on_contents_changed");
-    emit_signal("contents_changed");
 
 
 func _update_occupied_space() -> void:

@@ -13,6 +13,16 @@ func _ready():
     add_child(progress_bar);
 
 
+func _connect_signals() -> void:
+    inventory.connect("capacity_changed", self, "_refresh");
+    inventory.connect("occupied_space_changed", self, "_refresh");
+
+
+func _disconnect_signals() -> void:
+    inventory.disconnect("capacity_changed", self, "_refresh");
+    inventory.disconnect("occupied_space_changed", self, "_refresh");
+
+
 func _refresh():
     ._refresh();
     if progress_bar:
