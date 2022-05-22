@@ -7,11 +7,20 @@ var inventory: Inventory = null setget _set_inventory;
 var item_list: ItemList;
 
 
+func _get_configuration_warning() -> String:
+    if inventory_path.is_empty():
+        return "This node is not linked to an inventory, so it can't display any content.\n" + \
+               "Set the inventory_path property to point to an Inventory node."
+    return "";
+
+
 func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path;
 
     if has_node(inventory_path):
         _set_inventory(get_node(inventory_path));
+
+    update_configuration_warning();
 
 
 func _set_inventory(new_inventory: Inventory) -> void:
