@@ -39,7 +39,6 @@ func _ready() -> void:
         rect_min_size = rect_size;
         rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
             item_pos.y * ctrl_inventory.field_dimensions.y);
-        print("Creating a ctrl item at %s, size %s" % [str(rect_position), str(rect_size)]);
 
 
 func _draw() -> void:

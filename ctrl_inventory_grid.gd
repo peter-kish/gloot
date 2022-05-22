@@ -102,7 +102,6 @@ func _refresh_grid_container() -> void:
 
 func _clear_list() -> void:
     for ctrl_inventory_item in get_children():
-        print("Removing ctrl item");
         remove_child(ctrl_inventory_item);
         ctrl_inventory_item.queue_free();
 
@@ -115,7 +114,6 @@ func _populate_list() -> void:
         return;
 
     for item in inventory.get_items():
-        print("Creating ctrl item");
         var ctrl_inventory_item = ctrl_inventory_item_script.new();
         ctrl_inventory_item.ctrl_inventory = self;
         ctrl_inventory_item.item = item;
