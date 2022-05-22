@@ -54,6 +54,9 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
+    if Engine.editor_hint:
+        return;
+
     if inventory == null:
         return;
 
