@@ -16,10 +16,7 @@ func _get_configuration_warning() -> String:
 
 func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path;
-
-    if has_node(inventory_path):
-        _set_inventory(get_node(inventory_path));
-
+    _set_inventory(get_node_or_null(inventory_path));
     update_configuration_warning();
 
 
