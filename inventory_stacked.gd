@@ -18,6 +18,10 @@ static func get_item_script() -> Script:
     return preload("inventory_item_stackable.gd");
 
 
+func has_unlimited_capacity() -> bool:
+    return capacity == 0.0;
+
+
 func _set_capacity(new_capacity: float) -> void:
     assert(new_capacity >= 0, "Capacity must be greater or equal to 0!");
     capacity = new_capacity;
@@ -37,7 +41,7 @@ func _update_occupied_space() -> void:
 
     if occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed");
-    assert(occupied_space <= capacity);
+    assert(has_unlimited_capacity() || occupied_space <= capacity);
 
 
 func _on_contents_changed():
@@ -45,6 +49,9 @@ func _on_contents_changed():
 
 
 func get_free_space() -> float:
+    if has_unlimited_capacity():
+        return capacity;
+
     var free_space: float = capacity - occupied_space;
     if free_space < 0.0:
         free_space = 0.0
@@ -52,6 +59,9 @@ func get_free_space() -> float:
 
 
 func has_place_for(item: InventoryItem) -> bool:
+    if has_unlimited_capacity():
+        return true;
+
     return get_free_space() >= _get_item_weight(item);
 
 
