@@ -22,4 +22,12 @@ func run_tests():
     assert(!inventory.has_place_for(item));
     assert(!inventory.add_item(item));
 
+    inventory.capacity = 10.0;
+    assert(inventory.add_item(item));
+    assert(inventory.occupied_space == 1.0);
+    item.queue_free();
+    yield(item, "tree_exited");
+    assert(inventory.occupied_space == 0.0);
+
+
 
