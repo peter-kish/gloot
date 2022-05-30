@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/inventory_system/ctrl_inventory.gd" type="Script" id=1]
+[ext_resource path="res://addons/inventory_system/inventory.gd" type="Script" id=2]
+[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_basic.tres" type="Resource" id=3]
+[ext_resource path="res://addons/inventory_system/examples/inventory_transfer.gd" type="Script" id=4]
+
+[node name="InventoryTransfer" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 4 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 558.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CtrlInventory" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+margin_right = 510.0
+margin_bottom = 558.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+inventory_path = NodePath("../../../Inventory")
+
+[node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 558.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+inventory_path = NodePath("../../../Inventory2")
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_top = 562.0
+margin_right = 1024.0
+margin_bottom = 576.0
+text = "Use the buttons below to transfer items from one inventory to the other."
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 580.0
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
+margin_right = 510.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "<<<"
+
+[node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = ">>>"
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource( 2 )
+item_definitions = ExtResource( 3 )
+contents = [ "item1", "item2" ]
+
+[node name="Inventory2" type="Node" parent="."]
+script = ExtResource( 2 )
+item_definitions = ExtResource( 3 )
+contents = [ "item1", "item2" ]
