@@ -1,12 +1,12 @@
 extends Control
 
 
-onready var inventory_left: Inventory = $Inventory;
-onready var inventory_right: Inventory = $Inventory2;
+onready var inventory_left: InventoryStacked = $InventoryStackedLeft;
+onready var inventory_right: InventoryStacked = $InventoryStackedRight;
 onready var btn_left_to_right: Button = $VBoxContainer/HBoxContainer2/BtnLToR;
 onready var btn_right_to_left: Button = $VBoxContainer/HBoxContainer2/BtnRToL;
-onready var ctrl_inventory_left: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventory;
-onready var ctrl_inventory_right: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventory2;
+onready var ctrl_inventory_left: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventoryStackedLeft;
+onready var ctrl_inventory_right: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventoryStackedRight;
 
 
 func _ready() -> void:
@@ -20,7 +20,7 @@ func _on_ltor_pressed() -> void:
         return;
 
     for item in items:
-        inventory_left.transfer(item, inventory_right);
+        inventory_left.transfer_autosplitmerge(item, inventory_right);
 
 
 func _on_rtol_pressed() -> void:
@@ -29,4 +29,4 @@ func _on_rtol_pressed() -> void:
         return;
 
     for item in items:
-        inventory_right.transfer(item, inventory_left);
+        inventory_right.transfer_autosplitmerge(item, inventory_left);
