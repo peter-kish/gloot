@@ -2,6 +2,8 @@ class_name CtrlInventoryGrid
 extends Container
 tool
 
+signal item_dropped;
+
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32);
 export(Color) var grid_color: Color = Color.black;
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
@@ -68,16 +70,7 @@ func _process(_delta):
 func _draw():
     if !inventory:
         return;
-        
     _draw_grid(Vector2.ZERO, inventory.width, inventory.height, field_dimensions);
-    if grabbed_ctrl_inventory_item:
-        var relative_mouse_pos: Vector2 = get_global_mouse_position() - get_global_rect().position;
-        relative_mouse_pos -= grab_offset;
-        var grabbed_ctrl_item_size = inventory.get_item_size(grabbed_ctrl_inventory_item.item);
-        var item_size: Vector2 = Vector2(grabbed_ctrl_item_size.x * field_dimensions.x, \
-            grabbed_ctrl_item_size.y * field_dimensions.y);
-        var rect: Rect2 = Rect2(relative_mouse_pos, item_size);
-        draw_rect(rect, Color.white, 0);
 
 
 func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
@@ -138,6 +131,8 @@ func _input(event: InputEvent) -> void:
                 inventory.move_item(grabbed_ctrl_inventory_item.item, \
                     field_coords.x, \
                     field_coords.y);
+            else:
+                emit_signal("item_dropped", grabbed_ctrl_inventory_item.item, get_global_mouse_position() - grab_offset);
             grabbed_ctrl_inventory_item = null;
 
 

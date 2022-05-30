@@ -97,7 +97,9 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 func transfer_to(item: InventoryItemRect, destination: InventoryGrid, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if destination.rect_free(x, y, item_size.x, item_size.y):
-        return .transfer(item, destination);
+        if .transfer(item, destination):
+            destination.move_item(item, x, y);
+            return true;
 
     return false;
 

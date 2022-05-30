@@ -5,8 +5,8 @@ onready var inventory_left: InventoryStacked = $InventoryStackedLeft;
 onready var inventory_right: InventoryStacked = $InventoryStackedRight;
 onready var btn_left_to_right: Button = $VBoxContainer/HBoxContainer2/BtnLToR;
 onready var btn_right_to_left: Button = $VBoxContainer/HBoxContainer2/BtnRToL;
-onready var ctrl_inventory_left: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventoryStackedLeft;
-onready var ctrl_inventory_right: CtrlInventory = $VBoxContainer/HBoxContainer/CtrlInventoryStackedRight;
+onready var ctrl_inventory_left: CtrlInventoryStacked = $VBoxContainer/HBoxContainer/CtrlInventoryStackedLeft;
+onready var ctrl_inventory_right: CtrlInventoryStacked = $VBoxContainer/HBoxContainer/CtrlInventoryStackedRight;
 
 
 func _ready() -> void:
