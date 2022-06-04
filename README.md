@@ -4,9 +4,9 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Features
 
-### Item Definitions
+### Item Prototypes
 
-* ![](images/icon_item_definitions.svg "ItemDefinitions icon") `ItemDefinitions` - A resource type holding an array of inventory item prototypes in JSON format.
+* ![](images/icon_item_protoset.svg "ItemProtoset icon") `ItemProtoset` - A resource type holding a set of inventory item prototypes in JSON format.
 
 ### Inventory Items
 
@@ -38,45 +38,37 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Usage
 
-1. Create an `ItemDefinitions` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
-2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_definitions` property (previously created).
+1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
+2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_protoset` property (previously created).
 3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
     **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 5. Create some UI controls to display the created inventory and its contents.
 6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
 
-## Creating Item Definitions
+## Creating Item Prototypes
 
-Item definitions represent a number of item prototypes based on which future inventory items will be created.
+Item protosets represent a number of item prototypes based on which future inventory items will be created.
 It also defines the type of the inventory these items will be contained in.
 
-### Minimal Item Definition JSON
+### Minimal Item Protoset JSON
 
-There are a few requirements each item definitions JSON must fulfill:
+There are a few requirements each protoset JSON must fulfill:
 
-* The JSON must be a JSON object.
-* The JSON must contain the `inventory_type` property. It represents the type of inventory the items prototypes are defined for. It can have on of the following values:
-    * `basic` - for basic inventories (`Inventory`)
-    * `stack` - for stack based inventories (`InventoryStacked`)
-    * `grid` - for grid based inventories (`InventoryGrid`)
-* The JSON must also contain the `items_prototypes` array.
-* Each `items_prototypes` element must contain the `id` property uniquely identifying the prototype.
+* The JSON must be a JSON array.
+* Each element of the array must contain the `id` property uniquely identifying the prototype.
 
-Below is an example of a minimal item definitions JSON:
+Below is an example of a minimal item protoset JSON:
 
 ```json
-{
-    "inventory_type": "basic",
-    "items_prototypes": [
-        {
-            "id": "minimal_item"
-        }
-    ]
-}
+[
+    {
+        "id": "minimal_item"
+    }
+]
 ```
 
-### Item Definitions for a Stack Based Inventory
+### Item prototypes for a Stack Based Inventory
 
 Prototypes of items contained in stack based inventories support the following additional properties:
 
@@ -106,7 +98,7 @@ Example:
 }
 ```
 
-### Item Definitions for a Grid Based Inventory
+### Item prototypes for a Grid Based Inventory
 
 Prototypes of items contained in stack based inventories support the following additional properties:
 
@@ -156,20 +148,17 @@ Example:
 }
 ```
 
-Any of the item properties can be access from code through the `item_definitions` property of the `Inventory` classes:
+Any of the item properties can be access from code through the `get_prototype()` and `get_prototype_property()` methods of the `InventoryItem` classes:
 ```
 var item_name = ""
-if item.prototype.has("name"):
-    item_name = item_definitions["name"]
-var item_description = ""
-if item.prototype.has("description"):
-    item_description = item_definitions["description"]
+if item.get_prototype().has("name"):
+    item_name = item.get_prototype()["name"]
+var item_description = item.get_prototype_property("description", "")
 ```
 
 ## Creating New Inventory Types
 
-Coming up with new inventory types that can also be used in item definition JSON structures (`inventory_type` property) requires inheriting from on of the available inventory classes (`Inventory`, `InventoryStacked` or `InventoryGrid`) and overriding the `get_type()` method. The `get_type()` method should always return a string that uniquely defines the inventory type.
-
+Coming up with new inventory types can be done by inheriting from one of the available inventory classes (`Inventory`, `InventoryStacked` or `InventoryGrid`).
 In case the new inventory type is also meant to be used with a custom inventory item type (derived from `InventoryItem`), the `get_item_script()` should also be overridden so that it returns the script from which these custom items can be instantiated from.
 
 Example custom_inventory.gd
@@ -177,21 +166,8 @@ Example custom_inventory.gd
 extends Inventory
 class_name CustomInventory
 
-func get_type() -> String:
-    return "custom"
-
 static func get_item_script() -> Script:
     return preload("res://custom_item.gd")
-```
-
-Example item definitions JSON
-```json
-{
-    "inventory_type": "custom",
-    "item_prototypes": [
-        "id": "custom_item_01",
-    ]
-}
 ```
 
 ## The API
@@ -206,7 +182,7 @@ TODO
 
 ![ItemSlot class diagram](images/cd_item_slot.png "ItemSlot class diagram")
 
-![ItemDefinitions class diagram](images/cd_item_definitions.png "ItemDefinitions class diagram")
+![ItemProtoset class diagram](images/cd_item_protoset.png "ItemProtoset class diagram")
 
 ## Examples
 
