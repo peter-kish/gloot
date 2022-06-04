@@ -35,7 +35,8 @@ func _populate() -> void:
         var item_def: Dictionary = item_definitions.get(prototype_id);
         assert(!item_def.empty(), "Undefined item id '%s'" % prototype_id);
         var item = get_item_script().new();
-        item.apply(item_def);
+        item.prototype = item_def;
+        item.prototype_id = item_def[ItemDefinitions.KEY_ID];
         assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
 
 

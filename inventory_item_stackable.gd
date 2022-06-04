@@ -8,17 +8,16 @@ const KEY_STACK_SIZE: String = "default_stack_size";
 export(int) var stack_size = 1 setget _set_stack_size;
 
 
+func _ready():
+    if !prototype.empty() && prototype.has(KEY_STACK_SIZE):
+        stack_size = prototype[KEY_STACK_SIZE];
+
+
 func _set_stack_size(new_stack_size: int) -> void:
     stack_size = new_stack_size;
     emit_signal("stack_size_changed");
     if get_inventory():
         get_inventory().emit_signal("contents_changed");
-
-
-func apply(item_prototype: Dictionary) -> void:
-    .apply(item_prototype);
-    if item_prototype.has(KEY_STACK_SIZE):
-        stack_size = item_prototype[KEY_STACK_SIZE];
     
     
 func split(new_stack_size: int) -> InventoryItem:
