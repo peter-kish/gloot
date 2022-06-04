@@ -79,7 +79,7 @@ func _populate_list() -> void:
 
 
 func _get_item_title(item: InventoryItem) -> String:
-    var title = inventory.item_definitions.get_item_property(item.prototype_id, "name", item.prototype_id);
+    var title = item.get_prototype_property("name", item.prototype_id);
     if !(title is String):
         title = item.prototype_id;
 

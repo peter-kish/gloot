@@ -12,10 +12,6 @@ export(int) var height: int = 10 setget _set_height;
 var item_positions: Dictionary = {};
 
 
-static func get_type() -> String:
-    return "grid";
-
-
 static func get_item_script() -> Script:
     return preload("inventory_item_rect.gd");
 
@@ -26,16 +22,13 @@ func get_item_position(item: InventoryItem) -> Vector2:
 
 
 func get_item_size(item: InventoryItemRect) -> Vector2:
-    if item_definitions:
-        var width = item_definitions.get_item_property(item.prototype_id, KEY_WIDTH, 1.0);
-        var height = item_definitions.get_item_property(item.prototype_id, KEY_HEIGHT, 1.0);
-        if item.rotated:
-            var temp = width;
-            width = height;
-            height = temp;
-        return Vector2(width, height);
-    else:
-        return Vector2(1, 1);
+    var width = item.get_prototype_property(KEY_WIDTH, 1);
+    var height = item.get_prototype_property(KEY_HEIGHT, 1);
+    if item.rotated:
+        var temp = width;
+        width = height;
+        height = temp;
+    return Vector2(width, height);
     
 
 func _ready():

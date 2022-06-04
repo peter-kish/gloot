@@ -48,10 +48,12 @@ capacity = 10.0
 
 [node name="MinimalItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource( 4 )
+item_definitions = ExtResource( 1 )
 prototype_id = "minimal_item"
 
 [node name="BigItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource( 4 )
+item_definitions = ExtResource( 1 )
 prototype_id = "big_item"
 
 [node name="InventoryGridTests" type="Node" parent="."]
@@ -65,10 +67,12 @@ height = 3
 
 [node name="Item_1x1" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 5 )
+item_definitions = ExtResource( 3 )
 prototype_id = "item_1x1"
 
 [node name="Item_2x2" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 5 )
+item_definitions = ExtResource( 3 )
 prototype_id = "item_2x2"
 
 [node name="InventoryItemStackableTests" type="Node" parent="."]

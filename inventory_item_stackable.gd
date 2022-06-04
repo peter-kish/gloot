@@ -3,14 +3,8 @@ class_name InventoryItemStackable
 
 signal stack_size_changed
 
-const KEY_STACK_SIZE: String = "default_stack_size";
 
 export(int) var stack_size = 1 setget _set_stack_size;
-
-
-func _ready():
-    if !prototype.empty() && prototype.has(KEY_STACK_SIZE):
-        stack_size = prototype[KEY_STACK_SIZE];
 
 
 func _set_stack_size(new_stack_size: int) -> void:

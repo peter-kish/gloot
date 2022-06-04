@@ -5,17 +5,21 @@ signal capacity_changed;
 signal occupied_space_changed;
 
 const KEY_WEIGHT: String = "weight";
+const KEY_STACK_SIZE: String = "default_stack_size";
 
 export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
 
 
-static func get_type() -> String:
-    return "stack";
-
-
 static func get_item_script() -> Script:
     return preload("inventory_item_stackable.gd");
+
+
+func _populate() -> void:
+    ._populate();
+    for item in get_items():
+        if !item.get_prototype().empty() && item.get_prototype().has(KEY_STACK_SIZE):
+            item.stack_size = item.get_prototype()[KEY_STACK_SIZE];
 
 
 func has_unlimited_capacity() -> bool:
@@ -66,10 +70,9 @@ func has_place_for(item: InventoryItem) -> bool:
 
 
 func _get_item_unit_weight(item: InventoryItem) -> float:
-    if item_definitions:
-        var weight = item_definitions.get_item_property(item.prototype_id, KEY_WEIGHT, 1.0);
-        if weight is float:
-            return weight;
+    var weight = item.get_prototype_property(KEY_WEIGHT, 1.0);
+    if weight is float:
+        return weight;
     return 1.0;
 
 

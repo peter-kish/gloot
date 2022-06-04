@@ -4,7 +4,6 @@ extends Resource
 const KEY_INV_TYPE: String = "inventory_type";
 const KEY_ITEM_PROTOTYPES: String = "items_prototypes";
 const KEY_ID: String = "id";
-const KEY_TYPE: String = "type";
 
 export(String, MULTILINE) var json_data setget _set_json_data;
 
@@ -44,10 +43,16 @@ func parse(json: String) -> void:
 
 
 func get(id: String) -> Dictionary:
-    if definitions.has(id):
-        return definitions[id];
+    assert(has(id), "No prototype for ID %s" % id);
+    return definitions[id];
 
-    return {};
+
+func has(id: String) -> bool:
+    return definitions.has(id);
+
+
+func empty() -> bool:
+    return definitions.empty();
 
 
 func get_item_property(id: String, property_name: String, default_value):
