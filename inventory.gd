@@ -5,15 +5,15 @@ signal item_added;
 signal item_removed;
 signal contents_changed;
 
-export(Resource) var item_definitions setget _set_item_definitions;
+export(Resource) var item_protoset setget _set_item_protoset;
 export(Array, String) var contents;
 
 
-func _set_item_definitions(new_item_definitions: Resource) -> void:
-    item_definitions = new_item_definitions;
+func _set_item_protoset(new_item_protoset: Resource) -> void:
+    item_protoset = new_item_protoset;
 
-    assert(item_definitions is ItemDefinitions, \
-            "item_definitions must be an ItemDefinitions resource!");
+    assert(item_protoset is ItemProtoset, \
+            "item_protoset must be an ItemProtoset resource!");
 
 
 static func get_item_script() -> Script:
@@ -26,11 +26,11 @@ func _ready() -> void:
 
 func _populate() -> void:
     for prototype_id in contents:
-        var item_def: Dictionary = item_definitions.get(prototype_id);
-        assert(!item_def.empty(), "Undefined item id '%s'" % prototype_id);
+        var prototype: Dictionary = item_protoset.get(prototype_id);
+        assert(!prototype.empty(), "Undefined item id '%s'" % prototype_id);
         var item = get_item_script().new();
         item.prototype_id = prototype_id;
-        item.item_definitions = item_definitions;
+        item.protoset = item_protoset;
         assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
 
 

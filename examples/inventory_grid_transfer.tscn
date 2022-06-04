@@ -72,12 +72,12 @@ Press the 'Sort' buttons to sort the inventories."
 
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 1 )
+item_protoset = ExtResource( 1 )
 contents = [ "item_1x1", "item_2x2" ]
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 1 )
+item_protoset = ExtResource( 1 )
 contents = [ "item_1x1", "item_2x2" ]
 
 [node name="ColorRect" type="ColorRect" parent="."]

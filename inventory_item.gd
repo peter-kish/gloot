@@ -1,7 +1,7 @@
 extends Node
 class_name InventoryItem
 
-export(Resource) var item_definitions;
+export(Resource) var protoset;
 export(String) var prototype_id: String;
 
 
@@ -10,9 +10,9 @@ func get_inventory() -> Node:
 
 
 func get_prototype() -> Dictionary:
-    assert(item_definitions, "item_definitions must be set in order to get the prototype!");
+    assert(protoset, "Item protoset must be set in order to get its prototype!");
     assert(!prototype_id.empty(), "Item prototype_id must be set in order to get its prototype!");
-    return item_definitions.get(prototype_id);
+    return protoset.get(prototype_id);
 
 
 func get_prototype_property(property_name: String, default_value = null):

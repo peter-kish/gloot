@@ -159,10 +159,10 @@ Example:
 Any of the item properties can be access from code through the `item_definitions` property of the `Inventory` classes:
 ```
 var item_name = ""
-if item.prototype && item.prototype.has("name"):
+if item.prototype.has("name"):
     item_name = item_definitions["name"]
 var item_description = ""
-if item.prototype && item.prototype.has("description"):
+if item.prototype.has("description"):
     item_description = item_definitions["description"]
 ```
 

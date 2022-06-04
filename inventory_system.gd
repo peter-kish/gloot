@@ -6,7 +6,7 @@ extends EditorPlugin
 
 
 func _enter_tree():
-    add_custom_type("ItemDefinitions", "Resource", preload("item_definitions.gd"), preload("images/icon_item_definitions.svg"));
+    add_custom_type("ItemProtoSet", "Resource", preload("item_protoset.gd"), preload("images/icon_item_protoset.svg"));
 
     add_custom_type("InventoryItem", "Node", preload("inventory_item.gd"), preload("images/icon_item.svg"));
     add_custom_type("InventoryItemStackable", "Node", preload("inventory_item_stackable.gd"), preload("images/icon_item_stackable.svg"));
@@ -24,7 +24,7 @@ func _enter_tree():
 
 
 func _exit_tree():
-    remove_custom_type("ItemDefinitions");
+    remove_custom_type("ItemProtoSet");
 
     remove_custom_type("InventoryItem");
     remove_custom_type("InventoryItemStackable");

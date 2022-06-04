@@ -63,10 +63,10 @@ text = ">>>"
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 contents = [ "item1", "item2" ]
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 contents = [ "item1", "item2" ]
