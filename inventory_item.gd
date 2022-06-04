@@ -9,5 +9,5 @@ func get_inventory() -> Node:
     return get_parent();
 
 
-func apply(item_definition: Dictionary) -> void:
-    prototype_id = item_definition[ItemDefinitions.KEY_ID];
+func apply(item_prototype: Dictionary) -> void:
+    prototype_id = item_prototype[ItemDefinitions.KEY_ID];

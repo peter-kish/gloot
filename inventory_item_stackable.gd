@@ -15,10 +15,10 @@ func _set_stack_size(new_stack_size: int) -> void:
         get_inventory().emit_signal("contents_changed");
 
 
-func apply(item_definition: Dictionary) -> void:
-    .apply(item_definition);
-    if item_definition.has(KEY_STACK_SIZE):
-        stack_size = item_definition[KEY_STACK_SIZE];
+func apply(item_prototype: Dictionary) -> void:
+    .apply(item_prototype);
+    if item_prototype.has(KEY_STACK_SIZE):
+        stack_size = item_prototype[KEY_STACK_SIZE];
     
     
 func split(new_stack_size: int) -> InventoryItem:
