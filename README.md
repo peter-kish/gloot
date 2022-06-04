@@ -48,11 +48,124 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Creating Item Definitions
 
-TODO:
-* Minimal item definitions JSON
-* Item definitions for `InventoryStacked`
-* Item definitions for `InventoryGrid`
-* Custom prototype fields
+Item definitions represent a number of item prototypes based on which future inventory items will be created.
+It also defines the type of the inventory these items will be contained in.
+
+### Minimal Item Definition JSON
+
+There are a few requirements each item definitions JSON must fulfill:
+
+* The JSON must be a JSON object.
+* The JSON must contain the `inventory_type` property. It represents the type of inventory the items prototypes are defined for. It can have on of the following values:
+    * `basic` - for basic inventories (`Inventory`)
+    * `stack` - for stack based inventories (`InventoryStacked`)
+    * `grid` - for grid based inventories (`InventoryGrid`)
+* The JSON must also contain the `items_prototypes` array.
+* Each `items_prototypes` element must contain the `id` property uniquely identifying the prototype.
+
+Below is an example of a minimal item definitions JSON:
+
+```json
+{
+    "inventory_type": "basic",
+    "items_prototypes": [
+        {
+            "id": "minimal_item"
+        }
+    ]
+}
+```
+
+### Item Definitions for a Stack Based Inventory
+
+Prototypes of items contained in stack based inventories support the following additional properties:
+
+* `default_stack_size` - Defines the default stack size of the item. Newly created items that use this prototype will have this stack size. Has the value of 1 if not defined.
+* `weight` - Defines the unit weight of the item. Has the value of 1.0 if not defined.
+    **NOTE**: The total weight of an item is defined as its unit weight multiplied by its stack size.
+
+Example:
+```json
+{
+    "inventory_type": "stack",
+    "items_prototypes": [
+		{
+		    "id": "stackable_item",
+			"default_stack_size": 10
+		},
+        {
+            "id": "heavy_item",
+		    "weight": 20
+        },
+        {
+		    "id": "very_heavy_item",
+			"default_stack_size": 10
+            "weight": 20
+		}
+    ]
+}
+```
+
+### Item Definitions for a Grid Based Inventory
+
+Prototypes of items contained in stack based inventories support the following additional properties:
+
+* `width` - Defines the width of the item. Has the value of 1 if not defined.
+* `height` - Defines the height of the item. Has the value of 1 if not defined.
+
+Example:
+```json
+{
+    "inventory_type": "grid",
+    "items_prototypes": [
+        {
+            "id": "1x1_knife",
+			"width": 1,
+			"height": 1
+        },
+        {
+            "id": "1x3_spear",
+			"width": 1,
+			"height": 3
+        },
+        {
+            "id": "2x2_bomb",
+			"width": 2,
+			"height": 2
+        },
+    ]
+}
+```
+
+### Additional Prototype Fields
+
+Apart from the previously mentioned properties, item prototypes can hold all kinds of additional user-defined data. Properties like item name or item description are often used and can be easily added alongside the predefined properties.
+
+Example:
+```json
+{
+    "inventory_type": "stack",
+    "item_prototypes": [
+        {
+            "id": "knife_01",
+            "weight": "2.0",
+            "name": "Kitchen Knife",
+            "description": "A knife intended to be used in food preparation."
+        }
+    ]
+}
+```
+
+Any of the item properties can be access from code through the `item_definitions` property of the `Inventory` classes:
+```python
+var item_definitions = item.get_inventory().item_definitions
+var item_name = ""
+if item_definitions.has("name"):
+    item_name = item_definitions["name"]
+var item_description = ""
+if item_definitions.has("description"):
+    item_description = item_definitions["description"]
+```
 
 ## Extending Functionality
 
