@@ -89,19 +89,19 @@ Example:
 {
     "inventory_type": "stack",
     "items_prototypes": [
-		{
-		    "id": "stackable_item",
-			"default_stack_size": 10
-		},
         {
-            "id": "heavy_item",
-		    "weight": 20
+            "id": "stackable_item",
+            "default_stack_size": 10
         },
         {
-		    "id": "very_heavy_item",
-			"default_stack_size": 10
+            "id": "heavy_item",
             "weight": 20
-		}
+        },
+        {
+            "id": "very_heavy_item",
+            "default_stack_size": 10
+            "weight": 20
+        }
     ]
 }
 ```
@@ -120,18 +120,18 @@ Example:
     "items_prototypes": [
         {
             "id": "1x1_knife",
-			"width": 1,
-			"height": 1
+            "width": 1,
+            "height": 1
         },
         {
             "id": "1x3_spear",
-			"width": 1,
-			"height": 3
+            "width": 1,
+            "height": 3
         },
         {
             "id": "2x2_bomb",
-			"width": 2,
-			"height": 2
+            "width": 2,
+            "height": 2
         },
     ]
 }
@@ -139,7 +139,7 @@ Example:
 
 ### Additional Prototype Fields
 
-Apart from the previously mentioned properties, item prototypes can hold all kinds of additional user-defined data. Properties like item name or item description are often used and can be easily added alongside the predefined properties.
+Apart from the previously mentioned properties, item prototypes can hold all kinds of additional user-defined data. Properties like "name" or "description" are often used and can be easily added alongside the predefined properties.
 
 Example:
 ```json
@@ -157,7 +157,7 @@ Example:
 ```
 
 Any of the item properties can be access from code through the `item_definitions` property of the `Inventory` classes:
-```python
+```
 var item_definitions = item.get_inventory().item_definitions
 var item_name = ""
 if item_definitions.has("name"):
@@ -167,11 +167,33 @@ if item_definitions.has("description"):
     item_description = item_definitions["description"]
 ```
 
-## Extending Functionality
+## Creating New Inventory Types
 
-TODO:
-* Inheriting from InventoryItem
-* Inheriting from Inventory
+Coming up with new inventory types that can also be used in item definition JSON structures (`inventory_type` property) requires inheriting from on of the available inventory classes (`Inventory`, `InventoryStacked` or `InventoryGrid`) and overriding the `get_type()` method. The `get_type()` method should always return a string that uniquely defines the inventory type.
+
+In case the new inventory type is also meant to be used with a custom inventory item type (derived from `InventoryItem`), the `get_item_script()` should also be overridden so that it returns the script from which these custom items can be instantiated from.
+
+Example custom_inventory.gd
+```
+extends Inventory
+class_name CustomInventory
+
+func get_type() -> String:
+    return "custom"
+
+static func get_item_script() -> Script:
+    return preload("res://custom_item.gd")
+```
+
+Example item definitions JSON
+```json
+{
+    "inventory_type": "custom",
+    "item_prototypes": [
+        "id": "custom_item_01",
+    ]
+}
+```
 
 ## The API
 
