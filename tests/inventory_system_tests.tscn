@@ -23,7 +23,7 @@ script = ExtResource( 10 )
 
 [node name="Inventory" type="Node" parent="ItemDefinitionsTest"]
 script = ExtResource( 6 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 contents = [ "minimal_item", "minimal_item_2" ]
 
 [node name="InventoryTests" type="Node" parent="."]
@@ -31,27 +31,29 @@ script = ExtResource( 13 )
 
 [node name="Inventory1" type="Node" parent="InventoryTests"]
 script = ExtResource( 6 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 contents = [ "minimal_item" ]
 
 [node name="Inventory2" type="Node" parent="InventoryTests"]
 script = ExtResource( 6 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 
 [node name="InventoryStackedTests" type="Node" parent="."]
 script = ExtResource( 11 )
 
 [node name="InventoryStacked" type="Node" parent="InventoryStackedTests"]
 script = ExtResource( 12 )
-item_definitions = ExtResource( 1 )
+item_protoset = ExtResource( 1 )
 capacity = 10.0
 
 [node name="MinimalItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource( 4 )
+protoset = ExtResource( 1 )
 prototype_id = "minimal_item"
 
 [node name="BigItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource( 4 )
+protoset = ExtResource( 1 )
 prototype_id = "big_item"
 
 [node name="InventoryGridTests" type="Node" parent="."]
@@ -59,16 +61,18 @@ script = ExtResource( 9 )
 
 [node name="InventoryGrid3x3" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 8 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 width = 3
 height = 3
 
 [node name="Item_1x1" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 5 )
+protoset = ExtResource( 3 )
 prototype_id = "item_1x1"
 
 [node name="Item_2x2" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 5 )
+protoset = ExtResource( 3 )
 prototype_id = "item_2x2"
 
 [node name="InventoryItemStackableTests" type="Node" parent="."]
@@ -76,7 +80,7 @@ script = ExtResource( 15 )
 
 [node name="InventoryStacked" type="Node" parent="InventoryItemStackableTests"]
 script = ExtResource( 12 )
-item_definitions = ExtResource( 1 )
+item_protoset = ExtResource( 1 )
 contents = [ "stackable_item" ]
 capacity = 10.0
 
@@ -85,12 +89,12 @@ script = ExtResource( 7 )
 
 [node name="Inventory1" type="Node" parent="ItemSlotTests"]
 script = ExtResource( 6 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 contents = [ "minimal_item" ]
 
 [node name="Inventory2" type="Node" parent="ItemSlotTests"]
 script = ExtResource( 6 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 
 [node name="ItemSlot" type="Node" parent="ItemSlotTests"]
 script = ExtResource( 14 )

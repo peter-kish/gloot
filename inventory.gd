@@ -5,12 +5,15 @@ signal item_added;
 signal item_removed;
 signal contents_changed;
 
-export(Resource) var item_definitions;
+export(Resource) var item_protoset setget _set_item_protoset;
 export(Array, String) var contents;
 
 
-static func get_type() -> String:
-    return "basic";
+func _set_item_protoset(new_item_protoset: Resource) -> void:
+    item_protoset = new_item_protoset;
+
+    assert(item_protoset is ItemProtoset, \
+            "item_protoset must be an ItemProtoset resource!");
 
 
 static func get_item_script() -> Script:
@@ -18,25 +21,16 @@ static func get_item_script() -> Script:
 
 
 func _ready() -> void:
-    if item_definitions:
-        assert(item_definitions.inventory_type == get_type(), \
-            "Incompatible inventory types ('%s' and '%s')!" % \
-            [item_definitions.inventory_type, get_type()]);
-
-        assert(item_definitions is ItemDefinitions, \
-            "item_definitions must be an ItemDefinitions resource!");
-            
-        item_definitions.parse(item_definitions.json_data);
-        _populate();
+    _populate();
 
 
 func _populate() -> void:
     for prototype_id in contents:
-        var item_def: Dictionary = item_definitions.get(prototype_id);
-        assert(!item_def.empty(), "Undefined item id '%s'" % prototype_id);
+        var prototype: Dictionary = item_protoset.get(prototype_id);
+        assert(!prototype.empty(), "Undefined item id '%s'" % prototype_id);
         var item = get_item_script().new();
-        item.prototype = item_def;
-        item.prototype_id = item_def[ItemDefinitions.KEY_ID];
+        item.prototype_id = prototype_id;
+        item.protoset = item_protoset;
         assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
 
 

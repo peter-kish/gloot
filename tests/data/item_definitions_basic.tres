@@ -1,25 +1,22 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://addons/inventory_system/item_definitions.gd" type="Script" id=1]
+[ext_resource path="res://addons/inventory_system/item_protoset.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
-json_data = "{
-    \"inventory_type\": \"basic\",
-    \"items_prototypes\": [
-        {
-            \"id\": \"minimal_item\"
-        },
-        {
-            \"id\": \"minimal_item_2\"
-        },
-		{
-		    \"id\": \"item1\",
-			\"name\": \"item 1\"
-		},
-		{
-		    \"id\": \"item2\",
-			\"name\": \"item 2\"
-		}
-    ]
-}"
+json_data = "[
+    {
+        \"id\": \"minimal_item\"
+    },
+    {
+        \"id\": \"minimal_item_2\"
+    },
+    {
+        \"id\": \"item1\",
+        \"name\": \"item 1\"
+    },
+    {
+        \"id\": \"item2\",
+        \"name\": \"item 2\"
+    }
+]"

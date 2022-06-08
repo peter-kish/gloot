@@ -9,12 +9,14 @@ var progress_bar: ProgressBar;
 
 func _set_progress_bar_visible(new_progress_bar_visible: bool) -> void:
     progress_bar_visible = new_progress_bar_visible
-    progress_bar.visible = progress_bar_visible;
+    if progress_bar:
+        progress_bar.visible = progress_bar_visible;
 
 
 func _set_percent_visible(new_percent_visible: bool) -> void:
     percent_visible = new_percent_visible;
-    progress_bar.percent_visible = percent_visible;
+    if progress_bar:
+        progress_bar.percent_visible = percent_visible;
 
 
 func _ready():

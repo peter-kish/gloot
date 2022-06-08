@@ -65,12 +65,12 @@ text = ">>>"
 
 [node name="InventoryStackedLeft" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 contents = [ "minimal_item", "big_item", "stackable_item" ]
 capacity = 50.0
 
 [node name="InventoryStackedRight" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 contents = [ "minimal_item", "big_item", "stackable_item" ]
 capacity = 50.0
