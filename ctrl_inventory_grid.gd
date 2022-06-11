@@ -4,13 +4,18 @@ tool
 
 signal item_dropped;
 
-export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32);
+export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions;
 export(Color) var grid_color: Color = Color.black;
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
 var inventory: InventoryGrid = null setget _set_inventory;
 var grabbed_ctrl_inventory_item = null;
 var grab_offset: Vector2;
 var ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd");
+
+
+func _set_field_dimensions(new_field_dimensions) -> void:
+    field_dimensions = new_field_dimensions;
+    _refresh_grid_container();
 
 
 func _get_configuration_warning() -> String:
@@ -26,7 +31,7 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path;
     var node: Node = get_node_or_null(inventory_path);
 
-    if !Engine.editor_hint && is_inside_tree():
+    if is_inside_tree():
         assert(node is InventoryGrid);
         
     _set_inventory(node);
@@ -38,7 +43,6 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
         _disconnect_signals();
 
     inventory = new_inventory;
-    _refresh_grid_container();
     _refresh();
     _connect_signals();
 
@@ -88,9 +92,9 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
 
 func _refresh_grid_container() -> void:
     if inventory:
-        rect_size = Vector2(inventory.width * field_dimensions.x, \
+        rect_min_size = Vector2(inventory.width * field_dimensions.x, \
                                            inventory.height * field_dimensions.y);
-        rect_min_size = rect_size;
+        rect_size = rect_min_size;
 
 
 func _clear_list() -> void:

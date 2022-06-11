@@ -1,5 +1,6 @@
 class_name ItemProtoset
 extends Resource
+tool
 
 const KEY_ID: String = "id";
 
@@ -44,8 +45,9 @@ func empty() -> bool:
 
 
 func get_item_property(id: String, property_name: String, default_value):
-    var prototype = get(id);
-    if !prototype.empty() && prototype.has(property_name):
-        return prototype[property_name];
+    if has(id):
+        var prototype = get(id);
+        if !prototype.empty() && prototype.has(property_name):
+            return prototype[property_name];
     
     return default_value;

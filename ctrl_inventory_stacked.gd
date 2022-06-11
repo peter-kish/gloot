@@ -40,10 +40,9 @@ func _disconnect_signals() -> void:
 func _refresh():
     ._refresh();
     if progress_bar:
-        var inventory_stacked: InventoryStacked = inventory;
         progress_bar.percent_visible = percent_visible;
         progress_bar.visible = progress_bar_visible;
         progress_bar.min_value = 0;
-        progress_bar.max_value = inventory_stacked.capacity;
-        progress_bar.value = inventory_stacked.occupied_space;
+        progress_bar.max_value = inventory.capacity;
+        progress_bar.value = inventory.occupied_space;
 

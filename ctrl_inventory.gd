@@ -20,7 +20,7 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path;
     var node: Node = get_node_or_null(inventory_path);
 
-    if !Engine.editor_hint && is_inside_tree():
+    if is_inside_tree():
         assert(node is Inventory);
         
     _set_inventory(node);

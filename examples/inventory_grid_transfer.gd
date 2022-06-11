@@ -1,12 +1,10 @@
 extends Control
 
-onready var inventory_left: InventoryGrid = $InventoryGridLeft;
-onready var inventory_right: InventoryGrid = $InventoryGridRight;
-onready var ctrl_inventory_left: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/PanelContainer/CtrlInventoryGridLeft;
-onready var ctrl_inventory_right: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/PanelContainer2/CtrlInventoryGridRight;
+onready var ctrl_inventory_left: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/CtrlInventoryGridLeft;
+onready var ctrl_inventory_right: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2/CtrlInventoryGridRight;
 onready var rect: ColorRect = $ColorRect;
-onready var btn_sort_left: Button = $VBoxContainer/HBoxContainer2/BtnSortLeft;
-onready var btn_sort_right: Button = $VBoxContainer/HBoxContainer2/BtnSortRight;
+onready var btn_sort_left: Button = $VBoxContainer/HBoxContainer/VBoxContainer/BtnSortLeft;
+onready var btn_sort_right: Button = $VBoxContainer/HBoxContainer/VBoxContainer2/BtnSortRight;
 
 
 func _ready() -> void:
