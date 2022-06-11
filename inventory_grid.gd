@@ -119,19 +119,15 @@ func _get_prototype_size(prototype_id: String) -> Vector2i:
     return Vector2i.new(1, 1);
 
 
-static func get_item_script() -> Script:
-    return preload("inventory_item_rect.gd");
-
-
 func get_item_position(item: InventoryItem) -> Vector2:
     assert(item_positions.has(item), "The inventory does not contain this item!");
     return item_positions[item];
 
 
-func get_item_size(item: InventoryItemRect) -> Vector2:
-    var item_width: int = item.get_prototype_property(KEY_WIDTH, 1);
-    var item_height: int = item.get_prototype_property(KEY_HEIGHT, 1);
-    if item.rotated:
+func get_item_size(item: InventoryItem) -> Vector2:
+    var item_width: int = item.get_property(KEY_WIDTH, 1);
+    var item_height: int = item.get_property(KEY_HEIGHT, 1);
+    if item.get_property("rotated", false):
         var temp = item_width;
         item_width = item_height;
         item_height = temp;
@@ -174,7 +170,6 @@ func _compare_prototypes(prototype_id_1: String, prototype_id_2: String) -> bool
 
 
 func add_item(item: InventoryItem) -> bool:
-    assert(item is InventoryItemRect, "InventoryGrid can only hold InventoryItemRect");
     var free_place = find_free_place(item);
     if free_place.empty():
         return false;
@@ -182,7 +177,7 @@ func add_item(item: InventoryItem) -> bool:
     return add_item_at(item, free_place.x, free_place.y);
 
 
-func add_item_at(item: InventoryItemRect, x: int, y: int) -> bool:
+func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y):
         item_positions[item] = Vector2(x, y);
@@ -199,7 +194,7 @@ func remove_item(item: InventoryItem) -> bool:
     return false;
 
 
-func move_item(item: InventoryItemRect, x: int, y: int) -> bool:
+func move_item(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y, item):
         item_positions[item] = Vector2(x, y);
@@ -213,7 +208,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
     return transfer_to(item, destination, 0, 0);
 
 
-func transfer_to(item: InventoryItemRect, destination: InventoryGrid, x: int, y: int) -> bool:
+func transfer_to(item: InventoryItem, destination: InventoryGrid, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if destination.rect_free(x, y, item_size.x, item_size.y):
         if .transfer(item, destination):
@@ -223,7 +218,7 @@ func transfer_to(item: InventoryItemRect, destination: InventoryGrid, x: int, y:
     return false;
 
 
-func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItemRect = null) -> bool:
+func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItem = null) -> bool:
     if x + w > width:
         return false;
     if y + h > height:
@@ -242,7 +237,7 @@ func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItemRect = nu
     return true;
 
 
-func find_free_place(item: InventoryItemRect) -> Dictionary:
+func find_free_place(item: InventoryItem) -> Dictionary:
     var item_size = get_item_size(item);
     for x in range(width - (item_size.x - 1)):
         for y in range(height - (item_size.y - 1)):
@@ -252,7 +247,7 @@ func find_free_place(item: InventoryItemRect) -> Dictionary:
     return {};
 
 
-func _compare_items(item1: InventoryItemRect, item2: InventoryItemRect) -> bool:
+func _compare_items(item1: InventoryItem, item2: InventoryItem) -> bool:
     var rect1: Rect2 = Rect2(get_item_position(item1), get_item_size(item1));
     var rect2: Rect2 = Rect2(get_item_position(item2), get_item_size(item2));
     return rect1.get_area() > rect2.get_area();

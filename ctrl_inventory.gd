@@ -79,12 +79,14 @@ func _populate_list() -> void:
 
 
 func _get_item_title(item: InventoryItem) -> String:
-    var title = item.get_prototype_property("name", item.prototype_id);
+    var title = item.get_property("name", item.prototype_id);
     if !(title is String):
         title = item.prototype_id;
 
-    if item is InventoryItemStackable && item.stack_size > 1:
-        title = "%s (x%d)" % [title, item.stack_size]
+    var stack_size: int = item.get_property(InventoryStacked.KEY_STACK_SIZE, \
+            InventoryStacked.DEFAULT_STACK_SIZE);
+    if stack_size > 1:
+        title = "%s (x%d)" % [title, stack_size];
 
     return title;
 

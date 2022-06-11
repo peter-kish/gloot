@@ -14,7 +14,7 @@ func _ready() -> void:
     btn_sort_right.connect("pressed", self, "_on_btn_sort", [ctrl_inventory_right]);
 
 
-func _on_item_dropped(item: InventoryItemRect, drop_pos: Vector2, ctrl_source_inventory: CtrlInventoryGrid) -> void:
+func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_inventory: CtrlInventoryGrid) -> void:
     var ctrl_dest_inventory: CtrlInventoryGrid = null;
     if ctrl_source_inventory == ctrl_inventory_left:
         ctrl_dest_inventory = ctrl_inventory_right;

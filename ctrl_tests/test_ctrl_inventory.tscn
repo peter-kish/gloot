@@ -16,5 +16,5 @@ inventory_path = NodePath("../Inventory")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource( 2 )
-item_definitions = ExtResource( 1 )
+item_protoset = ExtResource( 1 )
 contents = [ "item1", "item2" ]

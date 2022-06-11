@@ -6,7 +6,8 @@ signal capacity_changed;
 signal occupied_space_changed;
 
 const KEY_WEIGHT: String = "weight";
-const KEY_STACK_SIZE: String = "default_stack_size";
+const KEY_STACK_SIZE: String = "stack_size";
+const DEFAULT_STACK_SIZE: int = 1;
 
 export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
@@ -32,17 +33,6 @@ func _get_default_item_weight(prototype_id: String) -> float:
         var stack_size = item_protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0);
         return weight * stack_size;
     return 1.0;
-
-
-static func get_item_script() -> Script:
-    return preload("inventory_item_stackable.gd");
-
-
-func _populate() -> void:
-    ._populate();
-    for item in get_items():
-        if !item.get_prototype().empty() && item.get_prototype().has(KEY_STACK_SIZE):
-            item.stack_size = item.get_prototype()[KEY_STACK_SIZE];
 
 
 func has_unlimited_capacity() -> bool:
@@ -101,14 +91,22 @@ func has_place_for(item: InventoryItem) -> bool:
 
 
 func _get_item_unit_weight(item: InventoryItem) -> float:
-    var weight = item.get_prototype_property(KEY_WEIGHT, 1.0);
+    var weight = item.get_property(KEY_WEIGHT, 1.0);
     if weight is float:
         return weight;
     return 1.0;
 
 
+func _get_item_stack_size(item: InventoryItem) -> int:
+    return item.get_property(KEY_STACK_SIZE, DEFAULT_STACK_SIZE);
+
+
+func _set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
+    item.set_property(KEY_STACK_SIZE, stack_size);
+
+
 func _get_item_weight(item: InventoryItem) -> float:
-    return item.stack_size * _get_item_unit_weight(item);
+    return _get_item_stack_size(item) * _get_item_unit_weight(item);
 
 
 func add_item(item: InventoryItem) -> bool:
@@ -125,7 +123,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
     var target_item = get_item_by_id(item.prototype_id);
     if target_item:
         add_item(item);
-        target_item.join(item);
+        join(target_item, item);
         return true;
     else:
         return add_item(item);
@@ -138,6 +136,35 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
     
     return .transfer(item, destination);
 
+    
+func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
+    assert(has_item(item) != null, "The inventory does not contain the given item!")
+    assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!");
+
+    var stack_size = _get_item_stack_size(item);
+    assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!");
+
+    var new_item = item.duplicate();
+    _set_item_stack_size(new_item, new_stack_size);
+    _set_item_stack_size(item, stack_size - new_stack_size);
+    emit_signal("contents_changed");
+    assert(add_item(new_item));
+    return new_item;
+
+
+func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
+    assert(has_item(stack_1) != null, "The inventory does not contain the given item!")
+    assert(has_item(stack_2) != null, "The inventory does not contain the given item!")
+    assert(stack_1.prototype_id == stack_2.prototype_id, "The two stacks must be of the same type!");
+
+    if remove_item(stack_2):
+        _set_item_stack_size(stack_1, _get_item_stack_size(stack_1) + _get_item_stack_size(stack_2))
+        emit_signal("contents_changed");
+        stack_2.queue_free();
+        return true;
+
+    return false;
+
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
     if destination.has_place_for(item):
@@ -145,7 +172,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
     var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item));
     if count > 0:
-        var new_item: InventoryItem = item.split(count);
+        var new_item: InventoryItem = split(item, count);
         assert(new_item != null);
         return transfer(new_item, destination);
 
@@ -165,7 +192,7 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 
     var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item));
     if count > 0:
-        var new_item: InventoryItem = item.split(count);
+        var new_item: InventoryItem = split(item, count);
         assert(new_item != null);
         return transfer_automerge(new_item, destination);
 

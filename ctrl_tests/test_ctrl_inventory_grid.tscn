@@ -17,5 +17,5 @@ inventory_path = NodePath("../InventoryGrid")
 
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource( 3 )
-item_definitions = ExtResource( 2 )
+item_protoset = ExtResource( 2 )
 contents = [ "item_1x1", "item_2x2" ]

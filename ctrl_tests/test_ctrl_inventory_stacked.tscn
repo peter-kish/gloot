@@ -17,6 +17,6 @@ inventory_path = NodePath("../InventoryStacked")
 
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource( 1 )
-item_definitions = ExtResource( 3 )
+item_protoset = ExtResource( 3 )
 contents = [ "minimal_item", "stackable_item" ]
 capacity = 20.0
