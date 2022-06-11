@@ -13,6 +13,6 @@ func run_tests():
     assert(!inventory_3x3.add_item_at(item_2x2, 0, 0));
     assert(!inventory_3x3.add_item_at(item_2x2, 2, 2));
     var free_place: Dictionary = inventory_3x3.find_free_place(item_2x2);
-    assert(free_place.x == 1);
-    assert(free_place.y == 0);
+    assert(free_place.x == 0);
+    assert(free_place.y == 1);
     assert(inventory_3x3.add_item_at(item_2x2, 1, 0));
