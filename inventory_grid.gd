@@ -17,69 +17,80 @@ class Vector2i:
     var x: int;
     var y: int;
 
+
     func _init(x_: int, y_:int):
         x = x_;
         y = y_;
 
+
     func _to_string():
         return "(%s, %s)" % [x, y];
+
 
     func area() -> int:
         return x * y;
 
 
-class Block:
+class Rect2i:
     var position: Vector2i;
     var size: Vector2i;
+
 
     func _init(position_: Vector2i, size_: Vector2i):
         position = position_;
         size = size_;
 
+
     func _to_string():
         return "(%s, %s, %s, %s)" % [position.x, position.y, size.x, size.y];
 
-    func to_rect() -> Rect2:
+
+    func to_rect2() -> Rect2:
         return Rect2(position.x, position.y, size.x, size.y);
 
-    func intersects(b: Block) -> bool:
-        var rect1 = b.to_rect();
-        var rect2 = to_rect();
+
+    func intersects(r: Rect2i) -> bool:
+        var rect1 = r.to_rect2();
+        var rect2 = to_rect2();
         return rect1.intersects(rect2);
 
 
 class Space:
     var capacity: Vector2i;
-    var reserved_blocks: Array;
+    var reserved_rects: Array;
+
 
     func _init(capacity_: Vector2i):
         capacity = capacity_;
 
+
     func reserve(size: Vector2i) -> bool:
-        var block = _find_space(size);
-        if block:
-            reserved_blocks.append(block);
+        var free_rect = _find_free_space(size);
+        if free_rect:
+            reserved_rects.append(free_rect);
             return true;
         return false;
 
-    func _find_space(size: Vector2i) -> Block:
+
+    func _find_free_space(size: Vector2i) -> Rect2i:
         for x in range(capacity.x - (size.x - 1)):
             for y in range(capacity.y - (size.y - 1)):
-                var block_pos: Vector2i = Vector2i.new(x, y);
-                var block_size: Vector2i = Vector2i.new(size.x, size.y);
-                var block: Block = Block.new(block_pos, block_size);
-                if _rect_free(block):
-                    return block;
+                var space_pos: Vector2i = Vector2i.new(x, y);
+                var space_size: Vector2i = Vector2i.new(size.x, size.y);
+                var space: Rect2i = Rect2i.new(space_pos, space_size);
+                if _rect_free(space):
+                    return space;
         return null;
 
-    func _rect_free(block: Block) -> bool:
-        if block.position.x + block.size.x > capacity.x:
+        
+    func _rect_free(rect: Rect2i) -> bool:
+        if rect.position.x + rect.size.x > capacity.x:
             return false;
-        if block.position.y + block.size.y > capacity.y:
+        if rect.position.y + rect.size.y > capacity.y:
             return false;
     
-        for item_block in reserved_blocks:
-            if block.intersects(item_block):
+        for item_rect in reserved_rects:
+            if rect.intersects(item_rect):
                 return false;
     
         return true;
