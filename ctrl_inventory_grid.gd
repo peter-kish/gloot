@@ -4,13 +4,18 @@ tool
 
 signal item_dropped;
 
-export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32);
+export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions;
 export(Color) var grid_color: Color = Color.black;
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
 var inventory: InventoryGrid = null setget _set_inventory;
 var grabbed_ctrl_inventory_item = null;
 var grab_offset: Vector2;
 var ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd");
+
+
+func _set_field_dimensions(new_field_dimensions) -> void:
+    field_dimensions = new_field_dimensions;
+    _refresh_grid_container();
 
 
 func _get_configuration_warning() -> String:
