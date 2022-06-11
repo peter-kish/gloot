@@ -14,6 +14,6 @@ json_data = "[
     },
     {
         \"id\": \"stackable_item\",
-        \"default_stack_size\": 10
+        \"stack_size\": 10
     }
 ]"

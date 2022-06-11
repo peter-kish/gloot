@@ -5,6 +5,7 @@ func run_tests():
     var inventory = $InventoryStacked;
     var item = $MinimalItem;
     var big_item = $BigItem;
+    var stackable_item = $StackableItem;
 
     assert(inventory.capacity == 10.0);
     assert(inventory.get_free_space() == 10.0);
@@ -37,5 +38,14 @@ func run_tests():
     yield(inventory, "contents_changed");
     assert(inventory.occupied_space == 0.0);
 
-
+    assert(inventory.add_item(stackable_item));
+    assert(inventory.split(stackable_item, 5) != null);
+    assert(inventory.get_items().size() == 2);
+    var item1 = inventory.get_items()[0];
+    var item2 = inventory.get_items()[1];
+    assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 5);
+    assert(item2.get_property(InventoryStacked.KEY_STACK_SIZE) == 5);
+    assert(item1.join(item2));
+    assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 10);
+    assert(inventory.get_items().size() == 1);
 

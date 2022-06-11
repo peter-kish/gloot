@@ -3,11 +3,11 @@ extends Control
 
 signal grabbed;
 
-var item: InventoryItemRect setget _set_item;
+var item: InventoryItem setget _set_item;
 var ctrl_inventory;
 
 
-func _set_item(new_item: InventoryItemRect) -> void:
+func _set_item(new_item: InventoryItem) -> void:
     item = new_item;
     if item && ctrl_inventory:
         var item_size = _get_item_size();
