@@ -13,20 +13,20 @@ var occupied_space: float;
 
 
 func _get_configuration_warning() -> String:
-    var space = _estimate_space();
+    var space = _get_default_occupied_space();
     if space > capacity:
         return "Inventory capacity exceeded! %f/%f" % [space, capacity];
     return "";
 
 
-func _estimate_space() -> float:
+func _get_default_occupied_space() -> float:
     var space = 0.0;
     for prototype_id in contents:
-        space += _estimate_item_weight(prototype_id);
+        space += _get_default_item_weight(prototype_id);
     return space;
 
 
-func _estimate_item_weight(prototype_id: String) -> float:
+func _get_default_item_weight(prototype_id: String) -> float:
     if item_protoset && item_protoset.has(prototype_id):
         var weight = item_protoset.get_item_property(prototype_id, KEY_WEIGHT, 1.0);
         var stack_size = item_protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0);

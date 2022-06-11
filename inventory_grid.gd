@@ -97,18 +97,18 @@ class Space:
 
 
 func _get_configuration_warning() -> String:
-    if !_estimate_fullness():
+    if _is_full_by_default():
         return "Inventory capacity exceeded!";
     return "";
 
 
-func _estimate_fullness() -> bool:
+func _is_full_by_default() -> bool:
     var space: Space = Space.new(Vector2i.new(width, height));
     for prototype_id in contents:
         var prototype_size = _get_prototype_size(prototype_id);
         if !space.reserve(prototype_size):
-            return false;
-    return true;
+            return true;
+    return false;
 
 
 func _get_prototype_size(prototype_id: String) -> Vector2i:
