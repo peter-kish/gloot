@@ -82,7 +82,7 @@ class Space:
                     return space;
         return null;
 
-        
+
     func _rect_free(rect: Rect2i) -> bool:
         if rect.position.x + rect.size.x > capacity.x:
             return false;
@@ -272,15 +272,5 @@ func sort() -> bool:
         if free_place.empty():
             return false;
         add_item_at(item, free_place.x, free_place.y);
-
-    return true;
-
-
-func _is_sorted() -> bool:
-    for item in get_items():
-        var item_pos = get_item_position(item);
-        var item_size = get_item_size(item);
-        if !rect_free(item_pos.x, item_pos.y, item_size.x, item_size.y, item):
-            return false;
 
     return true;
