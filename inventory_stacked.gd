@@ -1,5 +1,6 @@
 extends Inventory
 class_name InventoryStacked
+tool
 
 signal capacity_changed;
 signal occupied_space_changed;
@@ -9,6 +10,28 @@ const KEY_STACK_SIZE: String = "default_stack_size";
 
 export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
+
+
+func _get_configuration_warning() -> String:
+    var space = _estimate_space();
+    if space > capacity:
+        return "Inventory capacity exceeded! %f/%f" % [space, capacity];
+    return "";
+
+
+func _estimate_space() -> float:
+    var space = 0.0;
+    for prototype_id in contents:
+        space += _estimate_item_weight(prototype_id);
+    return space;
+
+
+func _estimate_item_weight(prototype_id: String) -> float:
+    if item_protoset && item_protoset.has(prototype_id):
+        var weight = item_protoset.get_item_property(prototype_id, KEY_WEIGHT, 1.0);
+        var stack_size = item_protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0);
+        return weight * stack_size;
+    return 1.0;
 
 
 static func get_item_script() -> Script:
@@ -29,7 +52,13 @@ func has_unlimited_capacity() -> bool:
 func _set_capacity(new_capacity: float) -> void:
     assert(new_capacity >= 0, "Capacity must be greater or equal to 0!");
     capacity = new_capacity;
-    emit_signal("capacity_changed", capacity);
+    update_configuration_warning();
+    emit_signal("capacity_changed");
+
+
+func _set_contents(new_contents: Array) -> void:
+    ._set_contents(new_contents);
+    update_configuration_warning();
 
 
 func _ready():
@@ -45,7 +74,9 @@ func _update_occupied_space() -> void:
 
     if occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed");
-    assert(has_unlimited_capacity() || occupied_space <= capacity);
+
+    if !Engine.editor_hint:
+        assert(has_unlimited_capacity() || occupied_space <= capacity);
 
 
 func _on_contents_changed():

@@ -26,7 +26,7 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path;
     var node: Node = get_node_or_null(inventory_path);
 
-    if !Engine.editor_hint && is_inside_tree():
+    if is_inside_tree():
         assert(node is InventoryGrid);
         
     _set_inventory(node);
@@ -38,7 +38,6 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
         _disconnect_signals();
 
     inventory = new_inventory;
-    _refresh_grid_container();
     _refresh();
     _connect_signals();
 
@@ -88,9 +87,9 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
 
 func _refresh_grid_container() -> void:
     if inventory:
-        rect_size = Vector2(inventory.width * field_dimensions.x, \
+        rect_min_size = Vector2(inventory.width * field_dimensions.x, \
                                            inventory.height * field_dimensions.y);
-        rect_min_size = rect_size;
+        rect_size = rect_min_size;
 
 
 func _clear_list() -> void:

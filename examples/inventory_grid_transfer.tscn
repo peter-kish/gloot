@@ -15,70 +15,80 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 672.0
-margin_bottom = 334.0
+margin_right = 352.0
+margin_bottom = 198.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
-margin_right = 334.0
-margin_bottom = 334.0
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+margin_right = 174.0
+margin_bottom = 198.0
 
-[node name="CtrlInventoryGridLeft" type="Container" parent="VBoxContainer/HBoxContainer/PanelContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+margin_right = 174.0
+margin_bottom = 174.0
+
+[node name="CtrlInventoryGridLeft" type="Container" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 327.0
-margin_bottom = 327.0
-rect_min_size = Vector2( 320, 320 )
+margin_right = 167.0
+margin_bottom = 167.0
+rect_min_size = Vector2( 160, 160 )
 script = ExtResource( 3 )
-inventory_path = NodePath("../../../../InventoryGridLeft")
+inventory_path = NodePath("../../../../../InventoryGridLeft")
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer"]
-margin_left = 338.0
-margin_right = 672.0
-margin_bottom = 334.0
-
-[node name="CtrlInventoryGridRight" type="Container" parent="VBoxContainer/HBoxContainer/PanelContainer2"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 327.0
-margin_bottom = 327.0
-rect_min_size = Vector2( 320, 320 )
-script = ExtResource( 3 )
-inventory_path = NodePath("../../../../InventoryGridRight")
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 338.0
-margin_right = 672.0
-margin_bottom = 358.0
-
-[node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer2"]
-margin_right = 334.0
-margin_bottom = 20.0
+[node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+margin_top = 178.0
+margin_right = 174.0
+margin_bottom = 198.0
 size_flags_horizontal = 3
 text = "Sort"
 
-[node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer2"]
-margin_left = 338.0
-margin_right = 672.0
-margin_bottom = 20.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+margin_left = 178.0
+margin_right = 352.0
+margin_bottom = 198.0
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+margin_right = 174.0
+margin_bottom = 174.0
+
+[node name="CtrlInventoryGridRight" type="Container" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 167.0
+margin_bottom = 167.0
+rect_min_size = Vector2( 160, 160 )
+script = ExtResource( 3 )
+inventory_path = NodePath("../../../../../InventoryGridRight")
+
+[node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+margin_top = 178.0
+margin_right = 174.0
+margin_bottom = 198.0
 size_flags_horizontal = 3
 text = "Sort"
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_top = 362.0
-margin_right = 672.0
-margin_bottom = 393.0
+margin_top = 202.0
+margin_right = 448.0
+margin_bottom = 233.0
 text = "Drag and drop items to transfer them from one inventory to the other.
 Press the 'Sort' buttons to sort the inventories."
 
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 1 )
-contents = [ "item_1x1", "item_2x2" ]
+contents = [ "item_2x2", "item_2x2" ]
+width = 5
+height = 5
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 1 )
-contents = [ "item_1x1", "item_2x2" ]
+contents = [ "item_2x2", "item_1x1" ]
+width = 5
+height = 5
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

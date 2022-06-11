@@ -1,12 +1,13 @@
 extends Node
 class_name Inventory
+tool
 
 signal item_added;
 signal item_removed;
 signal contents_changed;
 
-export(Resource) var item_protoset setget _set_item_protoset;
-export(Array, String) var contents;
+export(Resource) var item_protoset: Resource setget _set_item_protoset;
+export(Array, String) var contents: Array setget _set_contents;
 
 
 func _set_item_protoset(new_item_protoset: Resource) -> void:
@@ -14,6 +15,10 @@ func _set_item_protoset(new_item_protoset: Resource) -> void:
 
     assert(item_protoset is ItemProtoset, \
             "item_protoset must be an ItemProtoset resource!");
+
+
+func _set_contents(new_contents: Array) -> void:
+    contents = new_contents;
 
 
 static func get_item_script() -> Script:
