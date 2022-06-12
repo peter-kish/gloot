@@ -13,10 +13,12 @@ json_data = "[
     },
     {
         \"id\": \"item1\",
-        \"name\": \"item 1\"
+        \"name\": \"item 1\",
+		\"image\": \"res://addons/inventory_system/images/item_book_blue.png\"
     },
     {
         \"id\": \"item2\",
-        \"name\": \"item 2\"
+        \"name\": \"item 2\",
+		\"image\": \"res://addons/inventory_system/images/item_scroll_blue.png\"
     }
 ]"

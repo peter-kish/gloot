@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/inventory_system/tests/data/item_definitions_basic.tres" type="Resource" id=1]
 [ext_resource path="res://addons/inventory_system/inventory.gd" type="Script" id=2]
 [ext_resource path="res://addons/inventory_system/ctrl_inventory.gd" type="Script" id=3]
+[ext_resource path="res://addons/inventory_system/images/icon_key.png" type="Texture" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -13,6 +14,7 @@ margin_right = 315.0
 margin_bottom = 282.0
 script = ExtResource( 3 )
 inventory_path = NodePath("../Inventory")
+default_item_icon = ExtResource( 4 )
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource( 2 )

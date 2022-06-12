@@ -10,10 +10,12 @@ json_data = "[
     },
     {
         \"id\": \"big_item\",
-        \"weight\": 20
+        \"weight\": 20,
+		\"image\": \"res://addons/inventory_system/images/item_book_blue.png\"
     },
     {
         \"id\": \"stackable_item\",
-        \"stack_size\": 10
+        \"stack_size\": 10,
+		\"image\": \"res://addons/inventory_system/images/item_scroll_blue.png\"
     }
 ]"

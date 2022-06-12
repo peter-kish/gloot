@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/inventory_system/ctrl_inventory.gd" type="Script" id=1]
 [ext_resource path="res://addons/inventory_system/inventory.gd" type="Script" id=2]
 [ext_resource path="res://addons/inventory_system/tests/data/item_definitions_basic.tres" type="Resource" id=3]
 [ext_resource path="res://addons/inventory_system/examples/inventory_transfer.gd" type="Script" id=4]
+[ext_resource path="res://addons/inventory_system/images/icon_key.png" type="Texture" id=5]
 
 [node name="InventoryTransfer" type="Control"]
 anchor_right = 1.0
@@ -27,6 +28,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
 inventory_path = NodePath("../../../Inventory")
+default_item_icon = ExtResource( 5 )
 
 [node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 margin_left = 514.0
@@ -36,6 +38,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
 inventory_path = NodePath("../../../Inventory2")
+default_item_icon = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_top = 562.0

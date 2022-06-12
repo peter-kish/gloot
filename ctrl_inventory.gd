@@ -3,6 +3,7 @@ extends VBoxContainer
 tool
 
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
+export(Texture) var default_item_icon: Texture;
 var inventory: Inventory = null setget _set_inventory;
 var item_list: ItemList;
 
@@ -74,7 +75,7 @@ func _populate_list() -> void:
         return;
 
     for item in inventory.get_items():
-        item_list.add_item(_get_item_title(item));
+        item_list.add_item(_get_item_title(item), _get_item_texture(item));
         item_list.set_item_metadata(item_list.get_item_count() - 1, item);
 
 
@@ -89,6 +90,13 @@ func _get_item_title(item: InventoryItem) -> String:
         title = "%s (x%d)" % [title, stack_size];
 
     return title;
+
+
+func _get_item_texture(item: InventoryItem) -> Resource:
+    var texture_path = item.get_property("image");\
+    if texture_path:
+        return load(texture_path);
+    return default_item_icon;
 
 
 func get_selected_inventory_items() -> Array:
