@@ -4,7 +4,7 @@
   <img src="images/gloot_logo_128x128.png" />
 </p>
 
-An universal inventory system for the Godot game engine (version 3.x and newer).
+A universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Table of Contents
 
