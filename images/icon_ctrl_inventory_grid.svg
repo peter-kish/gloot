@@ -41,9 +41,9 @@
      inkscape:window-height="1417"
      id="namedview6"
      showgrid="true"
-     inkscape:zoom="29.5"
-     inkscape:cx="-1.965572"
-     inkscape:cy="12.264399"
+     inkscape:zoom="20.85965"
+     inkscape:cx="15.770515"
+     inkscape:cy="6.878746"
      inkscape:window-x="54"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -54,26 +54,13 @@
      inkscape:snap-others="true">
     <inkscape:grid
        type="xygrid"
-       id="grid4520" />
+       id="grid4520"
+       spacingx="1"
+       spacingy="1" />
   </sodipodi:namedview>
   <path
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     d="M 2,2 V 14 H 14 V 2 Z m 2,2 h 8 v 8 H 4 Z"
-     id="rect3700"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cccccccccc" />
-  <rect
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.88976383;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     id="rect3728"
-     width="2"
-     height="10"
-     x="7"
-     y="3" />
-  <rect
-     style="opacity:1;fill:#a5efac;fill-opacity:1;stroke:none;stroke-width:1.33626485;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-     id="rect3730"
-     width="5"
-     height="2"
-     x="8"
-     y="7" />
+     style="opacity:1;fill:#00e436;fill-opacity:1;stroke:none;stroke-width:0.06666668;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="M 8.0000003,3.9999999 0,8 8.0000003,12 16,8 Z m 0,1.3333334 L 10,6.3333334 l -1.9999997,1 -2,-1 z m 3.3333337,1.6666668 2,0.9999999 -2,0.9999999 L 9.333334,8 Z m -6.6666671,0 L 6.666667,8 4.6666669,8.9999999 2.6666669,8 Z M 8.0000003,8.6666667 10,9.6666669 8.0000003,10.666666 l -2,-0.9999991 z"
+     id="rect2092"
+     inkscape:connector-curvature="0" />
 </svg>
