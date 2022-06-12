@@ -135,17 +135,14 @@ Apart from the previously mentioned properties, item prototypes can hold all kin
 
 Example:
 ```json
-{
-    "inventory_type": "stack",
-    "item_prototypes": [
-        {
-            "id": "knife_01",
-            "weight": "2.0",
-            "name": "Kitchen Knife",
-            "description": "A knife intended to be used in food preparation."
-        }
-    ]
-}
+[
+    {
+        "id": "knife_01",
+        "weight": "2.0",
+        "name": "Kitchen Knife",
+        "description": "A knife intended to be used in food preparation."
+    }
+]
 ```
 
 Any of the item properties can be access from code through the `get_prototype()` and `get_prototype_property()` methods of the `InventoryItem` classes:
