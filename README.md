@@ -1,4 +1,4 @@
-# Godot Inventory System
+# GLoot
 
 An universal inventory system for the Godot game engine (version 3.x and newer).
 
@@ -161,7 +161,7 @@ if stack_size > 0:
 
 TODO
 
-## Class Diagrams
+### Class Diagrams
 
 ![InventoryItem class diagram](images/cd_inventory_item.png "InventoryItem class diagram")
 
