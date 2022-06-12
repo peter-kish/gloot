@@ -5,21 +5,32 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 ## Table of Contents
 
 1. [Features](#features)
+    1. [Item Prototypes](#item-prototypes)
+    2. [Inventory Items](#inventory-items)
+    3. [Inventory Types](#inventory-types)
+    4. [Item Slots](#item-slots)
+    5. [UI Controls](#ui-controls)
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [Creating Item Prototypes](#creating-item-prototypes)
+    1. [Minimal Item Protoset JSON](#minimal-item-protoset-json)
+    2. [Item prototypes for a Stack Based Inventory](#item-prototypes-for-a-stack-based-inventory)
+    3. [Item prototypes for a Grid Based Inventory](#item-prototypes-for-a-grid-based-inventory)
+    4. [Additional Prototype Fields](#additional-prototype-fields)
+    5. [Editing item properties](#editing-item-properties)
 5. [The API](#the-api)
-5. [Examples](#examples)
+    1. [Class Diagrams](#class-diagrams)
+6. [Examples](#examples)
 
 ## Features
 
 ### Item Prototypes
 
-* ![](images/icon_item_protoset.svg "ItemProtoset icon") `ItemProtoset` - A resource type holding a set of inventory item prototypes in JSON format.
+* ![](images/icon_item_protoset.svg "ItemProtoset icon") `ItemProtoset` - A resource type holding a set of inventory [item prototypes](#creating-item-prototypes) in JSON format.
 
 ### Inventory Items
 
-* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an [`ItemProtoset`](#item-prototypes) resource. Can hold additional properties.
+* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an `ItemProtoset` resource. Can hold additional [properties](#editing-item-properties).
 
 ### Inventory Types
 
