@@ -2,6 +2,15 @@
 
 An universal inventory system for the Godot game engine (version 3.x and newer).
 
+## Table of Contents
+
+1. [Features](#features)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Creating Item Prototypes](#creating-item-prototypes)
+5. [The API](#the-api)
+5. [Examples](#examples)
+
 ## Features
 
 ### Item Prototypes
@@ -10,7 +19,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Inventory Items
 
-* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an `ItemProtoset` resource. Can hold additional properties.
+* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an [`ItemProtoset`](#item-prototypes) resource. Can hold additional properties.
 
 ### Inventory Types
 
@@ -36,7 +45,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Usage
 
-1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see *Creating Item Prototypes* below).
+1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_protoset` property (previously created).
 3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
     **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
