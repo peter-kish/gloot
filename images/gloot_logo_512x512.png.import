@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/gloot_logo_512x512.png-7d9606f538bf8c387081aa7f5c2915d2.stex"
+path="res://.import/gloot_logo_512x512.png-1141fdc43cedae5f014542131a4ef961.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/inventory_system/images/gloot_logo_512x512.png"
-dest_files=[ "res://.import/gloot_logo_512x512.png-7d9606f538bf8c387081aa7f5c2915d2.stex" ]
+source_file="res://addons/gloot/images/gloot_logo_512x512.png"
+dest_files=[ "res://.import/gloot_logo_512x512.png-1141fdc43cedae5f014542131a4ef961.stex" ]
 
 [params]
 

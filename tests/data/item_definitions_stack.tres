@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://addons/inventory_system/item_protoset.gd" type="Script" id=1]
+[ext_resource path="res://addons/gloot/item_protoset.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
@@ -11,11 +11,11 @@ json_data = "[
     {
         \"id\": \"big_item\",
         \"weight\": 20,
-		\"image\": \"res://addons/inventory_system/images/item_book_blue.png\"
+		\"image\": \"res://addons/gloot/images/item_book_blue.png\"
     },
     {
         \"id\": \"stackable_item\",
         \"stack_size\": 10,
-		\"image\": \"res://addons/inventory_system/images/item_scroll_blue.png\"
+		\"image\": \"res://addons/gloot/images/item_scroll_blue.png\"
     }
 ]"

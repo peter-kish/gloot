@@ -1,9 +1,6 @@
 tool
 extends EditorPlugin
 
-# TODO: Item sprites
-# TODO: Basic UI elements
-
 
 func _enter_tree():
     add_custom_type("ItemProtoSet", "Resource", preload("item_protoset.gd"), preload("images/icon_item_protoset.svg"));

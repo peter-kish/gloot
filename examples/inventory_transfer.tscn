@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/inventory_system/ctrl_inventory.gd" type="Script" id=1]
-[ext_resource path="res://addons/inventory_system/inventory.gd" type="Script" id=2]
-[ext_resource path="res://addons/inventory_system/tests/data/item_definitions_basic.tres" type="Resource" id=3]
-[ext_resource path="res://addons/inventory_system/examples/inventory_transfer.gd" type="Script" id=4]
-[ext_resource path="res://addons/inventory_system/images/icon_key.png" type="Texture" id=5]
+[ext_resource path="res://addons/gloot/ctrl_inventory.gd" type="Script" id=1]
+[ext_resource path="res://addons/gloot/inventory.gd" type="Script" id=2]
+[ext_resource path="res://addons/gloot/tests/data/item_definitions_basic.tres" type="Resource" id=3]
+[ext_resource path="res://addons/gloot/examples/inventory_transfer.gd" type="Script" id=4]
+[ext_resource path="res://addons/gloot/images/icon_key.png" type="Texture" id=5]
 
 [node name="InventoryTransfer" type="Control"]
 anchor_right = 1.0
