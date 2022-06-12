@@ -8,11 +8,13 @@ json_data = "[
     {
         \"id\": \"item_1x1\",
         \"width\": 1,
-        \"height\": 1
+        \"height\": 1,
+		\"image\": \"res://addons/inventory_system/images/item_book_blue.png\"
     },
     {
         \"id\": \"item_2x2\",
         \"width\": 2,
-        \"height\": 2
+        \"height\": 2,
+		\"image\": \"res://addons/inventory_system/images/item_armour_silver.png\"
     }
 ]"

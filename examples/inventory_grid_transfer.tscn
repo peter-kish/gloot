@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/inventory_system/tests/data/item_definitions_grid.tres" type="Resource" id=1]
 [ext_resource path="res://addons/inventory_system/inventory_grid.gd" type="Script" id=2]
 [ext_resource path="res://addons/inventory_system/ctrl_inventory_grid.gd" type="Script" id=3]
 [ext_resource path="res://addons/inventory_system/examples/inventory_grid_transfer.gd" type="Script" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
 
 [node name="InventoryGridTransfer" type="Control"]
 anchor_right = 1.0
@@ -36,6 +37,7 @@ margin_bottom = 167.0
 rect_min_size = Vector2( 160, 160 )
 script = ExtResource( 3 )
 inventory_path = NodePath("../../../../../InventoryGridLeft")
+default_item_texture = ExtResource( 5 )
 
 [node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 margin_top = 178.0
@@ -61,6 +63,7 @@ margin_bottom = 167.0
 rect_min_size = Vector2( 160, 160 )
 script = ExtResource( 3 )
 inventory_path = NodePath("../../../../../InventoryGridRight")
+default_item_texture = ExtResource( 5 )
 
 [node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
 margin_top = 178.0
@@ -90,8 +93,8 @@ contents = [ "item_2x2", "item_1x1" ]
 width = 5
 height = 5
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
 visible = false
 margin_right = 40.0
 margin_bottom = 40.0
-color = Color( 1, 1, 1, 0.501961 )
+stretch_mode = 1

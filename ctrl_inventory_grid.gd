@@ -7,6 +7,7 @@ signal item_dropped;
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions;
 export(Color) var grid_color: Color = Color.black;
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
+export(Texture) var default_item_texture: Texture;
 var inventory: InventoryGrid = null setget _set_inventory;
 var grabbed_ctrl_inventory_item = null;
 var grab_offset: Vector2;
@@ -113,6 +114,7 @@ func _populate_list() -> void:
     for item in inventory.get_items():
         var ctrl_inventory_item = ctrl_inventory_item_script.new();
         ctrl_inventory_item.ctrl_inventory = self;
+        ctrl_inventory_item.texture = default_item_texture;
         ctrl_inventory_item.item = item;
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab");
         add_child(ctrl_inventory_item);

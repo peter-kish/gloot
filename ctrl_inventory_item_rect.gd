@@ -5,11 +5,15 @@ signal grabbed;
 
 var item: InventoryItem setget _set_item;
 var ctrl_inventory;
+var texture: Texture;
 
 
 func _set_item(new_item: InventoryItem) -> void:
     item = new_item;
     if item && ctrl_inventory:
+        var texture_path = item.get_property("image");
+        if texture_path:
+            texture = load(texture_path);
         var item_size = _get_item_size();
         var item_pos = _get_item_position();
         rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
@@ -43,8 +47,11 @@ func _ready() -> void:
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, rect_size);
-    draw_rect(rect, Color.white, false);
-    draw_rect(rect, Color.gray, true);
+    if texture:
+        var src_rect: Rect2 = Rect2(0, 0, texture.get_width(), texture.get_height());
+        draw_texture_rect_region(texture, rect, src_rect);
+    else:
+        draw_rect(rect, Color.white, false);
 
 
 func _input(event: InputEvent) -> void:

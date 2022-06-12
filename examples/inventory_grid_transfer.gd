@@ -2,7 +2,7 @@ extends Control
 
 onready var ctrl_inventory_left: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/CtrlInventoryGridLeft;
 onready var ctrl_inventory_right: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2/CtrlInventoryGridRight;
-onready var rect: ColorRect = $ColorRect;
+onready var rect: TextureRect = $TextureRect;
 onready var btn_sort_left: Button = $VBoxContainer/HBoxContainer/VBoxContainer/BtnSortLeft;
 onready var btn_sort_right: Button = $VBoxContainer/HBoxContainer/VBoxContainer2/BtnSortRight;
 
@@ -47,5 +47,6 @@ func _process(_delta) -> void:
     var item_size: Vector2 = Vector2(grabbed_ctrl_item_size.x * ctrl_inventory.field_dimensions.x, \
         grabbed_ctrl_item_size.y * ctrl_inventory.field_dimensions.y);
         
+    rect.texture = ctrl_item.texture;
     rect.rect_size = item_size;
     rect.set_global_position(get_global_mouse_position() - ctrl_inventory.grab_offset);
