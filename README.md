@@ -18,8 +18,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
     3. [Item prototypes for a Grid Based Inventory](#item-prototypes-for-a-grid-based-inventory)
     4. [Additional Prototype Fields](#additional-prototype-fields)
     5. [Editing item properties](#editing-item-properties)
-5. [The API](#the-api)
-    1. [Class Diagrams](#class-diagrams)
+5. [The Documentation](#the-documentation)
 6. [Examples](#examples)
 
 ## Features
