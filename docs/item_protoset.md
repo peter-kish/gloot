@@ -4,7 +4,7 @@ Inherits: [Resource](https://docs.godotengine.org/en/stable/classes/class_resour
 
 ## Description
 
-TODO
+A resource type holding a set of inventory item prototypes in JSON format.
 
 ## Properties
 

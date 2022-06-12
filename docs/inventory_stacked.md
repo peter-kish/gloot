@@ -4,7 +4,7 @@ Inherits: [`Inventory`](./inventory.md)
 
 ## Description
 
-TODO
+Inventory that has a limited item capacity in terms of weight.
 
 ## Properties
 

@@ -4,7 +4,7 @@ Inherits: [Node](https://docs.godotengine.org/en/stable/classes/class_node.html)
 
 ## Description
 
-TODO
+Inventory item class. It is based on an item prototype from an [`ItemProtoset`](./item_protoset.md) resource. Can hold additional properties.
 
 ## Properties
 

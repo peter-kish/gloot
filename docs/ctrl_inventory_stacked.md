@@ -4,7 +4,7 @@ Inherits: [CtrlInventory](./ctrl_inventory.md)
 
 ## Description
 
-TODO
+A UI control representing a stack based inventory (`InventoryStacked`). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory.
 
 ## Properties
 

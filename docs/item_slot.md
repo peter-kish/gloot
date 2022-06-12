@@ -4,7 +4,7 @@ Inherits: [Node](https://docs.godotengine.org/en/stable/classes/class_node.html)
 
 ## Description
 
-TODO
+Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
 
 ## Properties
 

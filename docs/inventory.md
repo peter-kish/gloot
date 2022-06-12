@@ -6,7 +6,7 @@ Inherited by: [`InventoryStacked`](./inventory_stacked.md), [`InventoryGrid`](./
 
 ## Description
 
-TODO
+Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
 
 ## Properties
 
