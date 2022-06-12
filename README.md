@@ -62,7 +62,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
     **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 5. Create some UI controls to display the created inventory and its contents.
-6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the class diagrams for more details about the available properties, methods and signals for each class.
+6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the [documentation](#the-documentation) for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
 
@@ -177,19 +177,9 @@ if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
 ```
 
-## The API
+## The Documentation
 
-TODO
-
-### Class Diagrams
-
-![InventoryItem class diagram](images/cd_inventory_item.png "InventoryItem class diagram")
-
-![Inventory class diagram](images/cd_inventory.png "Inventory class diagram")
-
-![ItemSlot class diagram](images/cd_item_slot.png "ItemSlot class diagram")
-
-![ItemProtoset class diagram](images/cd_item_protoset.png "ItemProtoset class diagram")
+The docs can be found [here](./docs/docs.md).
 
 ## Examples
 

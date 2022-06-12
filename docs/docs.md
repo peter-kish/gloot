@@ -1,0 +1,24 @@
+# Welcome to the GLoot docs!
+
+## Class Reference
+
+* [`ItemProtoset`](./item_protoset.md)
+* [`InventoryItem`](./inventory_item.md)
+* [`Inventory`](./inventory.md)
+* [`InventoryStacked`](./inventory_stacked.md)
+* [`InventoryGrid`](./inventory_grid.md)
+* [`ItemSlot`](./item_slot.md)
+* [`CtrlInventory`](./ctrl_inventory.md)
+* [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
+* [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
+* [`CtrlInventoryItemRect`](./ctrl_inventory_item_rect.md)
+
+## Class Diagrams
+
+![InventoryItem class diagram](../images/cd_inventory_item.png "InventoryItem class diagram")
+
+![Inventory class diagram](../images/cd_inventory.png "Inventory class diagram")
+
+![ItemSlot class diagram](../images/cd_item_slot.png "ItemSlot class diagram")
+
+![ItemProtoset class diagram](../images/cd_item_protoset.png "ItemProtoset class diagram")
