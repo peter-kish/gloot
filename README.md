@@ -10,15 +10,13 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Inventory Items
 
-* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Basic inventory item class. Nameless, weightless and shapeless.
-* ![](images/icon_item_stackable.svg "InventoryItemStackable icon") `InventoryItemStackable` - Represents a stack of inventory items. Item stacks can be split up and joined together. The total weight of a stack equals its size multiplied by the unit weight of the item. Inherits InventoryItem.
-* ![](images/icon_item_rect.svg "InventoryItemRect icon") `InventoryItemRect` - Inventory item that takes up a predefined amount of 2d space in a grid-based inventory (see `InventoryGrid` below). The size of the item is defined by its weight and height, while its position is defined by x and y coordinates. Rectangular items can also be rotated by 90 degrees for easier inventory organization. In case the item has been rotated, its width and height values are swapped and its "rotated" flag is set. Inherits InventoryItem.
+* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an `ItemProtoset` resource. Can hold additional properties.
 
 ### Inventory Types
 
 * ![](images/icon_inventory.svg "Inventory icon") `Inventory` - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
-* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") `InventoryStacked` - Contains `InventoryItemStackable` items and has a limited item capacity in terms of weight. Inherits Inventory.
-* ![](images/icon_inventory_grid.svg "InventoryGrid icon") `InventoryGrid` - Contains `InventoryItemRect` items and has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
+* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") `InventoryStacked` - Has a limited item capacity in terms of weight. Inherits Inventory.
+* ![](images/icon_inventory_grid.svg "InventoryGrid icon") `InventoryGrid` - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
 
 ### Item Slots
 
@@ -38,7 +36,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 
 ## Usage
 
-1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format.
+1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see *Creating Item Prototypes* below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_protoset` property (previously created).
 3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
     **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
@@ -49,7 +47,7 @@ An universal inventory system for the Godot game engine (version 3.x and newer).
 ## Creating Item Prototypes
 
 Item protosets represent a number of item prototypes based on which future inventory items will be created.
-It also defines the type of the inventory these items will be contained in.
+An item prototype is defined by its ID and its properties.
 
 ### Minimal Item Protoset JSON
 
@@ -72,31 +70,32 @@ Below is an example of a minimal item protoset JSON:
 
 Prototypes of items contained in stack based inventories support the following additional properties:
 
-* `default_stack_size` - Defines the default stack size of the item. Newly created items that use this prototype will have this stack size. Has the value of 1 if not defined.
+* `stack_size` - Defines the default stack size of the item. Newly created items that use this prototype will have this stack size. Has the value of 1 if not defined.
 * `weight` - Defines the unit weight of the item. Has the value of 1.0 if not defined.
     **NOTE**: The total weight of an item is defined as its unit weight multiplied by its stack size.
 
 Example:
 ```json
-{
-    "inventory_type": "stack",
-    "items_prototypes": [
-        {
-            "id": "stackable_item",
-            "default_stack_size": 10
-        },
-        {
-            "id": "heavy_item",
-            "weight": 20
-        },
-        {
-            "id": "very_heavy_item",
-            "default_stack_size": 10
-            "weight": 20
-        }
-    ]
-}
+[
+    {
+        "id": "stackable_item",
+        "stack_size": 10
+    },
+    {
+        "id": "heavy_item",
+        "weight": 20.0
+    },
+    {
+        "id": "very_heavy_item",
+        "stack_size": 10,
+        "weight": 20.0
+    }
+]
 ```
+
+The total weight of a `stackable_item` is 10 - The unit weight is not defined and the default value of 1.0 is used. Multiplied with `stack_size` of 10 gives a total weight of 10.0.
+The total weight of a `heavy_item` is 20.0 - The stack size is not defined and the default value of 1 is used. Multiplied with `weight` of 20.0 gives a total weight of 20.0.
+The total weight of a `very_heavy_item` is 200.0 - The stack size of 10 is multiplied with the unit weight of 20.0.
 
 ### Item prototypes for a Grid Based Inventory
 
@@ -107,26 +106,23 @@ Prototypes of items contained in stack based inventories support the following a
 
 Example:
 ```json
-{
-    "inventory_type": "grid",
-    "items_prototypes": [
-        {
-            "id": "1x1_knife",
-            "width": 1,
-            "height": 1
-        },
-        {
-            "id": "1x3_spear",
-            "width": 1,
-            "height": 3
-        },
-        {
-            "id": "2x2_bomb",
-            "width": 2,
-            "height": 2
-        },
-    ]
-}
+[
+    {
+        "id": "1x1_knife",
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "1x3_spear",
+        "width": 1,
+        "height": 3
+    },
+    {
+        "id": "2x2_bomb",
+        "width": 2,
+        "height": 2
+    }
+]
 ```
 
 ### Additional Prototype Fields
@@ -145,26 +141,20 @@ Example:
 ]
 ```
 
-Any of the item properties can be access from code through the `get_prototype()` and `get_prototype_property()` methods of the `InventoryItem` classes:
+Any of the item properties can be accessed from code through the `get_property()` methods of the `InventoryItem` classes:
 ```
-var item_name = ""
-if item.get_prototype().has("name"):
-    item_name = item.get_prototype()["name"]
-var item_description = item.get_prototype_property("description", "")
+var item_name = item.get_property("name", "")
+var item_description = item.get_property("description", "")
 ```
 
-## Creating New Inventory Types
+### Editing item properties
 
-Coming up with new inventory types can be done by inheriting from one of the available inventory classes (`Inventory`, `InventoryStacked` or `InventoryGrid`).
-In case the new inventory type is also meant to be used with a custom inventory item type (derived from `InventoryItem`), the `get_item_script()` should also be overridden so that it returns the script from which these custom items can be instantiated from.
-
-Example custom_inventory.gd
+Item properties defined in the `ItemProtoset` resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
 ```
-extends Inventory
-class_name CustomInventory
-
-static func get_item_script() -> Script:
-    return preload("res://custom_item.gd")
+# Decrease the size of an item stack by 1
+var stack_size: int = item.get_property("stack_size")
+if stack_size > 0:
+    item.set_property("stack_size", stack_size - 1)
 ```
 
 ## The API
