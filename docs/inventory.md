@@ -10,21 +10,21 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 
 ## Properties
 
-* `item_protoset: Resource`
-* `contents: Array`
+* `item_protoset: Resource` - An `ItemProtoset` resource containing item prototypes.
+* `contents: Array` - An array of prototype IDs that will be added to the inventory when the node is loaded.
 
 ## Methods
 
-* `get_items() -> Array`
-* `has_item(item: InventoryItem) -> bool`
-* `add_item(item: InventoryItem) -> bool`
-* `remove_item(item: InventoryItem) -> bool`
-* `get_item_by_id(id: String) -> InventoryItem`
-* `has_item_by_id(id: String) -> bool`
-* `transfer(item: InventoryItem, destination: Inventory) -> bool`
+* `get_items() -> Array` - Returns an array containing all the items in the inventory.
+* `has_item(item: InventoryItem) -> bool` - Checks if the inventory contains the given item.
+* `add_item(item: InventoryItem) -> bool` - Adds the given item to the inventory.
+* `remove_item(item: InventoryItem) -> bool` - Removes the given item to the inventory.
+* `get_item_by_id(id: String) -> InventoryItem` - Returns the first found item with the given prototype ID.
+* `has_item_by_id(id: String) -> bool` - Checks if the inventory contains an item with the given ID.
+* `transfer(item: InventoryItem, destination: Inventory) -> bool` - Transfers the given item into the given inventory.
 
 ## Signals
 
-* `item_added(item: InventoryItem)`
-* `item_removed(item: InventoryItem)`
-* `contents_changed()`
+* `item_added(item: InventoryItem)` - Emitted when an item has been added to the inventory.
+* `item_removed(item: InventoryItem)` - Emitted when an item has been removed from the inventory.
+* `contents_changed()` - Emitted when the contents of the inventory have changed.

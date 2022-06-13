@@ -10,12 +10,12 @@ A UI control representing a basic `Inventory`. Displays a list of items in the i
 
 ## Properties
 
-* `inventory_path: NodePath`
-* `default_item_icon: Texture`
-* `inventory: Inventory`
-* `item_list: ItemList`
+* `inventory_path: NodePath` - Path to an `Inventory` node.
+* `default_item_icon: Texture` - The default icon that will be used for items with no `image` property.
+* `inventory: Inventory` - The `Inventory` node linked to this control.
+* `item_list: ItemList` - TODO: Remove
 
 ## Methods
 
-* `get_selected_inventory_items() -> Array`
-* `get_inventory_item(index: int) -> InventoryItem`
+* `get_selected_inventory_items() -> Array` - Returns an array of selected items.
+* `get_inventory_item(index: int) -> InventoryItem` - TODO: Remove

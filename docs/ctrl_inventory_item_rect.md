@@ -8,10 +8,10 @@ TODO
 
 ## Properties
 
-* `item: InventoryItem`
-* `ctrl_inventory: Inventory`
-* `texture: Texture`
+* `item: InventoryItem` - The `InventoryItem` represented by this control.
+* `ctrl_inventory: Inventory` - The `CtrlInventoryGrid` containing this node.
+* `texture: Texture` - The texture that represents the `item`.
 
 ## Signals
 
-* `grabbed(CtrlInventoryItemRect self, Vector2 offset)`
+* `grabbed(CtrlInventoryItemRect self, Vector2 offset)` - Emitted when the control has been grabbed.

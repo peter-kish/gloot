@@ -12,13 +12,3 @@
 * [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
 * [`CtrlInventoryItemRect`](./ctrl_inventory_item_rect.md)
-
-## Class Diagrams
-
-![InventoryItem class diagram](../images/cd_inventory_item.png "InventoryItem class diagram")
-
-![Inventory class diagram](../images/cd_inventory.png "Inventory class diagram")
-
-![ItemSlot class diagram](../images/cd_item_slot.png "ItemSlot class diagram")
-
-![ItemProtoset class diagram](../images/cd_item_protoset.png "ItemProtoset class diagram")

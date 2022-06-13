@@ -8,15 +8,15 @@ Holds a reference to a given item from a given inventory. The slot can be cleare
 
 ## Properties
 
-* `inventory: Inventory`
-* `item: InventoryItem`
+* `inventory: Inventory` - An `Inventory` this item slot is linked to.
+* `item: InventoryItem` - The `InventoryItem` held by this slot.
 
 ## Methods
 
-* `can_hold_item(new_item: InventoryItem) -> bool`
+* `can_hold_item(new_item: InventoryItem) -> bool` - Checks if the slot can hold the given item (i.e. if the item is inside `inventory`).
 
 ## Signals
 
-* `item_set(InventoryItem item)`
-* `item_cleared()`
-* `inventory_changed(Inventory inventory)`
+* `item_set(InventoryItem item)` - Emitted when an item is placed in the slot.
+* `item_cleared()` - Emitted when the slot is cleared.
+* `inventory_changed(Inventory inventory)` - Emitted when the linked inventory is changed.
