@@ -5,7 +5,7 @@ tool
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path;
 export(Texture) var default_item_icon: Texture;
 var inventory: Inventory = null setget _set_inventory;
-var item_list: ItemList;
+var _item_list: ItemList;
 
 
 func _get_configuration_warning() -> String:
@@ -40,10 +40,10 @@ func _set_inventory(new_inventory: Inventory) -> void:
 
 
 func _ready():
-    item_list = ItemList.new();
-    item_list.size_flags_horizontal = SIZE_EXPAND_FILL;
-    item_list.size_flags_vertical = SIZE_EXPAND_FILL;
-    add_child(item_list);
+    _item_list = ItemList.new();
+    _item_list.size_flags_horizontal = SIZE_EXPAND_FILL;
+    _item_list.size_flags_vertical = SIZE_EXPAND_FILL;
+    add_child(_item_list);
 
     if has_node(inventory_path):
         _set_inventory(get_node(inventory_path));
@@ -63,8 +63,8 @@ func _refresh() -> void:
 
 
 func _clear_list() -> void:
-    if item_list:
-        item_list.clear();
+    if _item_list:
+        _item_list.clear();
 
 
 func _populate_list() -> void:
@@ -75,8 +75,8 @@ func _populate_list() -> void:
         return;
 
     for item in inventory.get_items():
-        item_list.add_item(_get_item_title(item), _get_item_texture(item));
-        item_list.set_item_metadata(item_list.get_item_count() - 1, item);
+        _item_list.add_item(_get_item_title(item), _get_item_texture(item));
+        _item_list.set_item_metadata(_item_list.get_item_count() - 1, item);
 
 
 func _get_item_title(item: InventoryItem) -> String:
@@ -101,13 +101,13 @@ func _get_item_texture(item: InventoryItem) -> Resource:
 
 func get_selected_inventory_items() -> Array:
     var result: Array = [];
-    for index in item_list.get_selected_items():
-        result.push_back(get_inventory_item(index));
+    for index in _item_list.get_selected_items():
+        result.push_back(_get_inventory_item(index));
     return result;
 
 
-func get_inventory_item(index: int) -> InventoryItem:
+func _get_inventory_item(index: int) -> InventoryItem:
     assert(index >= 0);
-    assert(index < item_list.get_item_count());
+    assert(index < _item_list.get_item_count());
 
-    return item_list.get_item_metadata(index);
+    return _item_list.get_item_metadata(index);

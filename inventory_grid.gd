@@ -10,7 +10,7 @@ const KEY_HEIGHT: String = "height";
 export(int, 1, 100) var width: int = 10 setget _set_width;
 export(int, 1, 100) var height: int = 10 setget _set_height;
 
-var item_positions: Dictionary = {};
+var _item_positions: Dictionary = {};
 
 
 class Vector2i:    
@@ -120,8 +120,8 @@ func _get_prototype_size(prototype_id: String) -> Vector2i:
 
 
 func get_item_position(item: InventoryItem) -> Vector2:
-    assert(item_positions.has(item), "The inventory does not contain this item!");
-    return item_positions[item];
+    assert(_item_positions.has(item), "The inventory does not contain this item!");
+    return _item_positions[item];
 
 
 func get_item_size(item: InventoryItem) -> Vector2:
@@ -180,7 +180,7 @@ func add_item(item: InventoryItem) -> bool:
 func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y):
-        item_positions[item] = Vector2(x, y);
+        _item_positions[item] = Vector2(x, y);
         return .add_item(item);
 
     return false;
@@ -188,8 +188,8 @@ func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
 
 func remove_item(item: InventoryItem) -> bool:
     if .remove_item(item):
-        assert(item_positions.has(item));
-        item_positions.erase(item);
+        assert(_item_positions.has(item));
+        _item_positions.erase(item);
         return true;
     return false;
 
@@ -197,7 +197,7 @@ func remove_item(item: InventoryItem) -> bool:
 func move_item(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y, item):
-        item_positions[item] = Vector2(x, y);
+        _item_positions[item] = Vector2(x, y);
         emit_signal("contents_changed");
         return true;
 

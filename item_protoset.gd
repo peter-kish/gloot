@@ -6,7 +6,7 @@ const KEY_ID: String = "id";
 
 export(String, MULTILINE) var json_data setget _set_json_data;
 
-var prototypes: Dictionary = {};
+var _prototypes: Dictionary = {};
 
 
 func _set_json_data(new_json_data: String) -> void:
@@ -16,7 +16,7 @@ func _set_json_data(new_json_data: String) -> void:
 
 
 func parse(json: String) -> void:
-    prototypes.clear();
+    _prototypes.clear();
 
     var parse_result = parse_json(json);
     assert(parse_result is Array, "JSON file must contain an array!");
@@ -27,21 +27,17 @@ func parse(json: String) -> void:
         assert(prototype[KEY_ID] is String, "'%s' property must be a string!" % KEY_ID);
 
         var id = prototype[KEY_ID];
-        assert(!prototypes.has(id), "Item definition ID '%s' already in use!" % id);
-        prototypes[id] = prototype;
+        assert(!_prototypes.has(id), "Item definition ID '%s' already in use!" % id);
+        _prototypes[id] = prototype;
 
 
 func get(id: String) -> Dictionary:
     assert(has(id), "No prototype for ID %s" % id);
-    return prototypes[id];
+    return _prototypes[id];
 
 
 func has(id: String) -> bool:
-    return prototypes.has(id);
-
-
-func empty() -> bool:
-    return prototypes.empty();
+    return _prototypes.has(id);
 
 
 func get_item_property(id: String, property_name: String, default_value):

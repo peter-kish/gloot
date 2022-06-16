@@ -11,7 +11,7 @@ export(Texture) var default_item_texture: Texture;
 var inventory: InventoryGrid = null setget _set_inventory;
 var grabbed_ctrl_inventory_item = null;
 var grab_offset: Vector2;
-var ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd");
+var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd");
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -112,7 +112,7 @@ func _populate_list() -> void:
         return;
 
     for item in inventory.get_items():
-        var ctrl_inventory_item = ctrl_inventory_item_script.new();
+        var ctrl_inventory_item = _ctrl_inventory_item_script.new();
         ctrl_inventory_item.ctrl_inventory = self;
         ctrl_inventory_item.texture = default_item_texture;
         ctrl_inventory_item.item = item;
