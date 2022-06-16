@@ -10,7 +10,6 @@ Inventory that has a limited capacity in terms of space. The inventory capacity 
 
 * `width: int` - The width of the inventory.
 * `height: int` - The height of the inventory.
-* `item_positions: Dictionary` - A dictionary holding the positions (as `Vector2`) of all items in the inventory.
 
 ## Methods
 

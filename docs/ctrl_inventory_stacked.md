@@ -10,4 +10,3 @@ A UI control representing a stack based inventory (`InventoryStacked`). It lists
 
 * `progress_bar_visible: bool` - If true, a progress bar will be shown indicating inventory fullness.
 * `percent_visible: bool` - If true, a percentage will be shown indicating inventory fullness.
-* `progress_bar: ProgressBar` - TODO: Remove

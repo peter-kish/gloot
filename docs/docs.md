@@ -11,4 +11,3 @@
 * [`CtrlInventory`](./ctrl_inventory.md)
 * [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
-* [`CtrlInventoryItemRect`](./ctrl_inventory_item_rect.md)
