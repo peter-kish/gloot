@@ -141,16 +141,34 @@ func _ready():
 
 func _set_width(new_width: int) -> void:
     assert(new_width > 0, "Inventory width must be positive!");
+    var old_width = width;
     width = new_width;
     update_configuration_warning();
+    if !Engine.editor_hint:
+        if _bounds_broken():
+            width = old_width;
     emit_signal("size_changed");
 
 
 func _set_height(new_height: int) -> void:
     assert(new_height > 0, "Inventory height must be positive!");
+    var old_height = height;
     height = new_height;
     update_configuration_warning();
+    if !Engine.editor_hint:
+        if _bounds_broken():
+            height = old_height;
     emit_signal("size_changed");
+
+
+func _bounds_broken() -> bool:
+    for item in get_items():
+        var item_pos = get_item_position(item);
+        var item_size = get_item_size(item);
+        if !rect_free(item_pos.x, item_pos.y, item_size.x, item_size.y, item):
+            return true;
+
+    return false;
 
 
 func _set_contents(new_contents: Array) -> void:
@@ -241,7 +259,7 @@ func find_free_place(item: InventoryItem) -> Dictionary:
     var item_size = get_item_size(item);
     for x in range(width - (item_size.x - 1)):
         for y in range(height - (item_size.y - 1)):
-            if rect_free(x, y, item_size.x, item_size.y):
+            if rect_free(x, y, item_size.x, item_size.y, item):
                 return {x = x, y = y};
 
     return {};

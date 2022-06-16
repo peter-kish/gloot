@@ -16,3 +16,10 @@ func run_tests():
     assert(free_place.x == 0);
     assert(free_place.y == 1);
     assert(inventory_3x3.add_item_at(item_2x2, 1, 0));
+
+    inventory_3x3.height = 2;
+    assert(inventory_3x3.height == 2);
+    inventory_3x3.height = 3;
+    assert(inventory_3x3.height == 3);
+    inventory_3x3.width = 2;
+    assert(inventory_3x3.width == 3);
