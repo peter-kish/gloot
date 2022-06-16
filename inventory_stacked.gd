@@ -41,6 +41,9 @@ func has_unlimited_capacity() -> bool:
 
 func _set_capacity(new_capacity: float) -> void:
     assert(new_capacity >= 0, "Capacity must be greater or equal to 0!");
+    if !Engine.editor_hint:
+        if new_capacity > 0.0 && occupied_space > new_capacity:
+            return;
     capacity = new_capacity;
     update_configuration_warning();
     emit_signal("capacity_changed");

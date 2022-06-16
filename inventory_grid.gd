@@ -147,7 +147,8 @@ func _set_width(new_width: int) -> void:
     if !Engine.editor_hint:
         if _bounds_broken():
             width = old_width;
-    emit_signal("size_changed");
+    if width != old_width:
+        emit_signal("size_changed");
 
 
 func _set_height(new_height: int) -> void:
@@ -158,7 +159,8 @@ func _set_height(new_height: int) -> void:
     if !Engine.editor_hint:
         if _bounds_broken():
             height = old_height;
-    emit_signal("size_changed");
+    if height != old_height:
+        emit_signal("size_changed");
 
 
 func _bounds_broken() -> bool:

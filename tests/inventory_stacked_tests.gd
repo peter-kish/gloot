@@ -31,6 +31,12 @@ func run_tests():
     assert(inventory.remove_item(item));
     assert(inventory.remove_item(big_item));
 
+    inventory.capacity = 21;
+    assert(inventory.add_item(big_item));
+    inventory.capacity = 19;
+    assert(inventory.capacity == 21);
+    assert(inventory.remove_item(big_item));
+
     inventory.capacity = 10.0;
     assert(inventory.add_item(item));
     assert(inventory.occupied_space == 1.0);
