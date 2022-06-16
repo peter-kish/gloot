@@ -29,33 +29,33 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Item Prototypes
 
-* ![](images/icon_item_protoset.svg "ItemProtoset icon") `ItemProtoset` - A resource type holding a set of inventory [item prototypes](#creating-item-prototypes) in JSON format.
+* ![](images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of inventory [item prototypes](#creating-item-prototypes) in JSON format.
 
 ### Inventory Items
 
-* ![](images/icon_item.svg "InventoryItem icon") `InventoryItem` - Inventory item class. It is based on an item prototype from an `ItemProtoset` resource. Can hold additional [properties](#editing-item-properties).
+* ![](images/icon_item.svg "InventoryItem icon") [`InventoryItem`](docs/inventory_item.md) - Inventory item class. It is based on an item prototype from an [`ItemProtoset`](docs/item_protoset.md) resource. Can hold additional [properties](#editing-item-properties).
 
 ### Inventory Types
 
-* ![](images/icon_inventory.svg "Inventory icon") `Inventory` - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
-* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") `InventoryStacked` - Has a limited item capacity in terms of weight. Inherits Inventory.
-* ![](images/icon_inventory_grid.svg "InventoryGrid icon") `InventoryGrid` - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
+* ![](images/icon_inventory.svg "Inventory icon") [`Inventory`](docs/inventory.md) - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
+* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") [`InventoryStacked`](docs/inventory_stacked.md) - Has a limited item capacity in terms of weight. Inherits Inventory.
+* ![](images/icon_inventory_grid.svg "InventoryGrid icon") [`InventoryGrid`](docs/inventory_grid.md) - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
 
 ### Item Slots
 
-* ![](images/icon_item_slot.svg "ItemSlot icon") `ItemSlot` - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
+* ![](images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
 
 ### UI Controls
 
 User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing. The following controls offer some basic interaction with the various [inventory types](#inventory-types).
 
-* ![](images/icon_ctrl_inventory.svg "CtrlInventory icon") `CtrlInventory` - UI control representing a basic `Inventory`. Displays a list of items in the inventory.
+* ![](images/icon_ctrl_inventory.svg "CtrlInventory icon") [`CtrlInventory`](docs/ctrl_inventory.md) - UI control representing a basic [`Inventory`](docs/inventory.md). Displays a list of items in the inventory.
 
 ![](images/screenshots/ss_inventory.png "CtrlInventory")
-* ![](images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") `CtrlInventoryStacked` - UI control representing a stack based inventory (`InventoryStacked`). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory.
+* ![](images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") [`CtrlInventoryStacked`](docs/ctrl_inventory_stacked.md) - UI control representing a stack based inventory ([`InventoryStacked`](docs/inventory_stacked.md)). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory.
 
 ![](images/screenshots/ss_inventory_stacked.png "CtrlInventoryStacked")
-* ![](images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") `CtrlInventoryGrid` - UI control representing a grid based inventory (`InventoryGrid`). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging.
+* ![](images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging.
 
 ![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
 
@@ -67,8 +67,8 @@ User interfaces are usually unique for each project, but it often helps to have 
 
 ## Usage
 
-1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
-2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_protoset` property (previously created).
+1. Create an [`ItemProtoset`](docs/item_protoset.md) resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
+2. Create an inventory node in your scene. Set its capacity if needed (required for [`InventoryStacked`](docs/inventory_stacked.md) and [`InventoryGrid`](docs/inventory_grid.md)) and set its `item_protoset` property (previously created).
 3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
 > **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
@@ -124,9 +124,9 @@ Example:
 ]
 ```
 
-The total weight of a `stackable_item` is 10 - The unit weight is not defined and the default value of 1.0 is used. Multiplied with `stack_size` of 10 gives a total weight of 10.0.
-The total weight of a `heavy_item` is 20.0 - The stack size is not defined and the default value of 1 is used. Multiplied with `weight` of 20.0 gives a total weight of 20.0.
-The total weight of a `very_heavy_item` is 200.0 - The stack size of 10 is multiplied with the unit weight of 20.0.
+* The total weight of a `stackable_item` is 10 - The unit weight is not defined and the default value of 1.0 is used. Multiplied with `stack_size` of 10 gives a total weight of 10.0.
+* The total weight of a `heavy_item` is 20.0 - The stack size is not defined and the default value of 1 is used. Multiplied with `weight` of 20.0 gives a total weight of 20.0.
+* The total weight of a `very_heavy_item` is 200.0 - The stack size of 10 is multiplied with the unit weight of 20.0.
 
 ### Item prototypes for a Grid Based Inventory
 
@@ -172,7 +172,7 @@ Example:
 ]
 ```
 
-Any of the item properties can be accessed from code through the `get_property()` methods of the `InventoryItem` classes:
+Any of the item properties can be accessed from code through the `get_property()` methods of the [`InventoryItem`](docs/inventory_item.md) classes:
 ```
 var item_name = item.get_property("name", "")
 var item_description = item.get_property("description", "")
@@ -180,7 +180,7 @@ var item_description = item.get_property("description", "")
 
 ### Editing item properties
 
-Item properties defined in the `ItemProtoset` resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
+Item properties defined in the [`ItemProtoset`](docs/item_protoset.md) resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
 ```
 # Decrease the size of an item stack by 1
 var stack_size: int = item.get_property("stack_size")
