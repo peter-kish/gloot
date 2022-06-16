@@ -47,14 +47,22 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### UI Controls
 
+User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing. The following controls offer some basic interaction with the various [inventory types](#inventory-types).
+
 * ![](images/icon_ctrl_inventory.svg "CtrlInventory icon") `CtrlInventory` - UI control representing a basic `Inventory`. Displays a list of items in the inventory.
+
+![](images/screenshots/ss_inventory.png "CtrlInventory")
 * ![](images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") `CtrlInventoryStacked` - UI control representing a stack based inventory (`InventoryStacked`). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory.
+
+![](images/screenshots/ss_inventory_stacked.png "CtrlInventoryStacked")
 * ![](images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") `CtrlInventoryGrid` - UI control representing a grid based inventory (`InventoryGrid`). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging.
+
+![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
 
 ## Installation
 
 1. Create an `addons` directory inside your project directory.
-2. Run `git clone` from the `addons` directory.
+2. Run `git clone https://github.com/peter-kish/gloot.git` from the `addons` directory.
 3. Enable the plugin in `Project Settings > Plugins`.
 
 ## Usage
@@ -62,9 +70,9 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 1. Create an `ItemProtoset` resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for `InventoryStacked` and `InventoryGrid`) and set its `item_protoset` property (previously created).
 3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
-    **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
+> **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
-5. Create some UI controls to display the created inventory and its contents.
+5. Create some [UI controls](#ui-controls) to display the created inventory and its contents.
 6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the [documentation](#the-documentation) for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
@@ -76,7 +84,7 @@ An item prototype is defined by its ID and its properties.
 
 There are a few requirements each protoset JSON must fulfill:
 
-* The JSON must be a JSON array.
+* The JSON must be a JSON array containing JSON objects.
 * Each element of the array must contain the `id` property uniquely identifying the prototype.
 
 Below is an example of a minimal item protoset JSON:
@@ -188,5 +196,11 @@ The docs can be found [here](./docs/docs.md).
 
 Take a look at the `examples` directory for some example scenes:
 * `inventory_transfer.tscn` - Displaying two basic inventories (`Inventory`) and transferring items between them.
+
+![](images/screenshots/ss_example_inventory_transfer.png "inventory_transfer.tscn")
 * `inventory_stacked_transfer.tscn` - Displaying two stack based inventories (`InventoryStacked`) and transferring items between them.
+
+![](images/screenshots/ss_example_inventory_stacked_transfer.png "inventory_stacked_transfer.tscn")
 * `inventory_grid_transfer.tscn` - Displaying two grid based inventories (`InventoryGrid`) and transferring items between them using drag and drop.
+
+![](images/screenshots/ss_example_inventory_grid_transfer.png "inventory_grid_transfer.tscn")
