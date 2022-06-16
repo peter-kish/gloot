@@ -11,8 +11,8 @@ anchor_bottom = 1.0
 
 [node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
 margin_top = -1.0
-margin_right = 305.0
-margin_bottom = 290.0
+margin_right = 377.0
+margin_bottom = 224.0
 script = ExtResource( 2 )
 inventory_path = NodePath("../InventoryStacked")
 default_item_icon = ExtResource( 4 )
