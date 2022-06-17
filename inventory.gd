@@ -97,3 +97,14 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 
     return false;
 
+
+func serialize() -> Dictionary:
+    var result: Dictionary = {};
+
+    result["item_protoset"] = item_protoset.resource_path;
+    result["items"] = [];
+    for item in get_items():
+        result["items"].append(item.serialize());
+
+    return result;
+

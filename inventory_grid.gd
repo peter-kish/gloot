@@ -10,7 +10,7 @@ const KEY_HEIGHT: String = "height";
 export(int, 1, 100) var width: int = 10 setget _set_width;
 export(int, 1, 100) var height: int = 10 setget _set_height;
 
-var _item_positions: Dictionary = {};
+var _item_positions: Array = [];
 
 
 class Vector2i:    
@@ -120,8 +120,13 @@ func _get_prototype_size(prototype_id: String) -> Vector2i:
 
 
 func get_item_position(item: InventoryItem) -> Vector2:
-    assert(_item_positions.has(item), "The inventory does not contain this item!");
-    return _item_positions[item];
+    return _item_positions[_get_item_index(item)];
+
+
+func _get_item_index(item: InventoryItem) -> int:
+    var item_index: int = get_items().find(item);
+    assert(item_index >= 0, "The inventory does not contain this item!");
+    return item_index;
 
 
 func get_item_size(item: InventoryItem) -> Vector2:
@@ -200,16 +205,16 @@ func add_item(item: InventoryItem) -> bool:
 func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y):
-        _item_positions[item] = Vector2(x, y);
-        return .add_item(item);
+        if .add_item(item):
+            _item_positions.append(Vector2(x, y));
+            return true;
 
     return false;
 
 
 func remove_item(item: InventoryItem) -> bool:
     if .remove_item(item):
-        assert(_item_positions.has(item));
-        _item_positions.erase(item);
+        _item_positions.remove(_get_item_index(item));
         return true;
     return false;
 
@@ -217,7 +222,7 @@ func remove_item(item: InventoryItem) -> bool:
 func move_item(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y, item):
-        _item_positions[item] = Vector2(x, y);
+        _item_positions[_get_item_index(item)] = Vector2(x, y);
         emit_signal("contents_changed");
         return true;
 
@@ -289,3 +294,13 @@ func sort() -> bool:
         add_item_at(item, free_place.x, free_place.y);
 
     return true;
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = .serialize();
+
+    result["width"] = width;
+    result["height"] = height;
+    result["item_positions"] = _item_positions;
+
+    return result;

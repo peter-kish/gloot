@@ -51,7 +51,7 @@ func run_tests():
     var item2 = inventory.get_items()[1];
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 5);
     assert(item2.get_property(InventoryStacked.KEY_STACK_SIZE) == 5);
-    assert(item1.join(item2));
+    assert(inventory.join(item1, item2));
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 10);
     assert(inventory.get_items().size() == 1);
 

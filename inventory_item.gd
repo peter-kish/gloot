@@ -24,3 +24,13 @@ func set_property(property_name: String, value) -> void:
 
 func clear_property(property_name: String) -> void:
     properties.erase(property_name);
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = {};
+
+    result["protoset"] = protoset.resource_path;
+    result["prototype_id"] = prototype_id;
+    result["properties"] = properties;
+
+    return result;

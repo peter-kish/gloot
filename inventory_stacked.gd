@@ -200,3 +200,12 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
         return transfer_automerge(new_item, destination);
 
     return false;
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = .serialize();
+
+    result["capacity"] = capacity;
+    result["occupied_space"] = occupied_space;
+
+    return result;
