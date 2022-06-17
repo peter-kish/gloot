@@ -19,3 +19,11 @@ func run_tests():
 
     assert(inventory2.remove_item(item));
     assert(!inventory2.has_item(item));
+
+    assert(inventory1.add_item(item));
+    var inventory_data = inventory1.serialize();
+    inventory1.reset();
+    assert(inventory1.get_items().empty());
+    assert(item.is_queued_for_deletion());
+    assert(inventory1.deserialize(inventory_data));
+    assert(inventory1.get_items().size() == 1);

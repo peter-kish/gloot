@@ -55,3 +55,15 @@ func run_tests():
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 10);
     assert(inventory.get_items().size() == 1);
 
+    var inventory_data = inventory.serialize();
+    var capacity = inventory.capacity;
+    var occupied_space = inventory.occupied_space;
+    inventory.reset();
+    assert(inventory.get_items().size().empty());
+    assert(inventory.capacity == 0);
+    assert(inventory.occupied_space == 0);
+    assert(inventory.deserialize(inventory_data));
+    assert(inventory.get_items().size() == 1);
+    assert(inventory.capacity == capacity);
+    assert(inventory.occupied_space == occupied_space);
+
