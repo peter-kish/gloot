@@ -6,9 +6,12 @@ signal size_changed;
 
 const KEY_WIDTH: String = "width";
 const KEY_HEIGHT: String = "height";
+const KEY_ITEM_POSITIONS: String = "item_positions";
+const DEFAUL_WIDTH: int = 10;
+const DEFAUL_HEIGHT: int = 10;
 
-export(int, 1, 100) var width: int = 10 setget _set_width;
-export(int, 1, 100) var height: int = 10 setget _set_height;
+export(int, 1, 100) var width: int = DEFAUL_WIDTH setget _set_width;
+export(int, 1, 100) var height: int = DEFAUL_HEIGHT setget _set_height;
 
 var _item_positions: Array = [];
 
@@ -213,8 +216,9 @@ func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
 
 
 func remove_item(item: InventoryItem) -> bool:
+    var item_index = _get_item_index(item);
     if .remove_item(item):
-        _item_positions.remove(_get_item_index(item));
+        _item_positions.remove(item_index);
         return true;
     return false;
 
@@ -296,11 +300,39 @@ func sort() -> bool:
     return true;
 
 
+func reset() -> void:
+    .reset();
+    _item_positions = [];
+    width = DEFAUL_WIDTH;
+    height = DEFAUL_HEIGHT;
+
+
+func clear() -> void:
+    .clear();
+    _item_positions = [];
+
+
 func serialize() -> Dictionary:
     var result: Dictionary = .serialize();
 
-    result["width"] = width;
-    result["height"] = height;
-    result["item_positions"] = _item_positions;
+    result[KEY_WIDTH] = width;
+    result[KEY_HEIGHT] = height;
+    result[KEY_ITEM_POSITIONS] = _item_positions;
 
     return result;
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !InventoryItem.verify(source, KEY_WIDTH, TYPE_INT) ||\
+        !InventoryItem.verify(source, KEY_HEIGHT, TYPE_INT) ||\
+        !InventoryItem.verify(source, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2) ||\
+        !.deserialize(source):
+        return false;
+
+    width = source[KEY_WIDTH];
+    height = source[KEY_HEIGHT];
+    var positions = source[KEY_ITEM_POSITIONS];
+    for position in positions:
+        _item_positions.append(position);
+
+    return true;
