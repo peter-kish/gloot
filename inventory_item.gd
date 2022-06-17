@@ -41,9 +41,9 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !verify(source, PROTOSET_KEY, TYPE_STRING) ||\
-        !verify(source, PROTOTYE_ID_KEY, TYPE_STRING) ||\
-        !verify(source, PROPERTIES_KEY, TYPE_DICTIONARY):
+    if !GlootVerify.dict(source, PROTOSET_KEY, TYPE_STRING) ||\
+        !GlootVerify.dict(source, PROTOTYE_ID_KEY, TYPE_STRING) ||\
+        !GlootVerify.dict(source, PROPERTIES_KEY, TYPE_DICTIONARY):
         return false;
 
     protoset = load(source[PROTOSET_KEY]);
@@ -51,22 +51,3 @@ func deserialize(source: Dictionary) -> bool:
     properties = source[PROPERTIES_KEY];
 
     return true;
-
-
-static func verify(dict: Dictionary, key: String, value_type: int, array_type: int = 0) -> bool:
-    if !dict.has(key):
-        print("Missing key: '%s'!" % key);
-        return false;
-    
-    if typeof(dict[key]) != value_type:
-        print("Key '%s' has wrong type!" % key);
-        return false;
-
-    if value_type == TYPE_ARRAY:
-        var array = dict[key];
-        for i in range(array.size()):
-            if typeof(array[i]) != array_type:
-                print("Array element %d has wrong type!" % i);
-
-    return true;
-

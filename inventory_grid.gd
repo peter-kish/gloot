@@ -323,10 +323,14 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !InventoryItem.verify(source, KEY_WIDTH, TYPE_INT) ||\
-        !InventoryItem.verify(source, KEY_HEIGHT, TYPE_INT) ||\
-        !InventoryItem.verify(source, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2) ||\
-        !.deserialize(source):
+    if !GlootVerify.dict(source, KEY_WIDTH, TYPE_INT) ||\
+        !GlootVerify.dict(source, KEY_HEIGHT, TYPE_INT) ||\
+        !GlootVerify.dict(source, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2):
+        return false;
+
+    reset();
+
+    if !.deserialize(source):
         return false;
 
     width = source[KEY_WIDTH];

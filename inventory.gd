@@ -124,8 +124,8 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !InventoryItem.verify(source, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
-        !InventoryItem.verify(source, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
+    if !GlootVerify.dict(source, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+        !GlootVerify.dict(source, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
         return false;
 
     reset();

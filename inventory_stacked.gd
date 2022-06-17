@@ -221,12 +221,14 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !InventoryItem.verify(source, KEY_CAPACITY, TYPE_REAL) ||\
-        !InventoryItem.verify(source, KEY_OCCUPIED_SPACE, TYPE_REAL) ||\
-        !.deserialize(source):
+    if !GlootVerify.dict(source, KEY_CAPACITY, TYPE_REAL) ||\
+        !GlootVerify.dict(source, KEY_OCCUPIED_SPACE, TYPE_REAL):
         return false;
 
     reset();
+
+    if !.deserialize(source):
+        return false;
 
     capacity = source[KEY_CAPACITY];
     occupied_space = source[KEY_OCCUPIED_SPACE];
