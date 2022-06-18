@@ -23,3 +23,13 @@ func run_tests():
     assert(inventory_3x3.height == 3);
     inventory_3x3.width = 2;
     assert(inventory_3x3.width == 3);
+
+    var inventory_data = inventory_3x3.serialize();
+    inventory_3x3.reset();
+    assert(inventory_3x3.get_items().empty());
+    assert(inventory_3x3.width == InventoryGrid.DEFAUL_WIDTH);
+    assert(inventory_3x3.height == InventoryGrid.DEFAUL_HEIGHT);
+    assert(inventory_3x3.deserialize(inventory_data));
+    assert(inventory_3x3.get_items().size() == 2);
+    assert(inventory_3x3.width == 3);
+    assert(inventory_3x3.height == 3);

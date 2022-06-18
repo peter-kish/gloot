@@ -9,6 +9,9 @@ signal contents_changed;
 export(Resource) var item_protoset: Resource setget _set_item_protoset;
 export(Array, String) var contents: Array setget _set_contents;
 
+const KEY_ITEM_PROTOSET: String = "item_protoset";
+const KEY_ITEMS: String = "items";
+
 
 func _set_item_protoset(new_item_protoset: Resource) -> void:
     item_protoset = new_item_protoset;
@@ -96,4 +99,45 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
         return destination.add_item(item);
 
     return false;
+
+
+func reset() -> void:
+    clear();
+    item_protoset = null;
+
+
+func clear() -> void:
+    for item in get_items():
+        remove_item(item);
+        item.queue_free();
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = {};
+
+    result[KEY_ITEM_PROTOSET] = item_protoset.resource_path;
+    if !get_items().empty():
+        result[KEY_ITEMS] = [];
+        for item in get_items():
+            result[KEY_ITEMS].append(item.serialize());
+
+    return result;
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !GlootVerify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+        !GlootVerify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
+        return false;
+
+    reset();
+
+    item_protoset = load(source[KEY_ITEM_PROTOSET]);
+    if source.has(KEY_ITEMS):
+        var items = source[KEY_ITEMS];
+        for item_dict in items:
+            var item = get_item_script().new();
+            item.deserialize(item_dict);
+            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id);
+
+    return true;
 

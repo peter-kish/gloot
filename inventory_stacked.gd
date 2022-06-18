@@ -12,6 +12,9 @@ const DEFAULT_STACK_SIZE: int = 1;
 export(float) var capacity: float setget _set_capacity;
 var occupied_space: float;
 
+const KEY_CAPACITY: String = "capacity";
+const KEY_OCCUPIED_SPACE: String = "occupied_space";
+
 
 func _get_configuration_warning() -> String:
     var space = _get_default_occupied_space();
@@ -200,3 +203,34 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
         return transfer_automerge(new_item, destination);
 
     return false;
+
+
+func reset() -> void:
+    .reset();
+    capacity = 0;
+    occupied_space = 0;
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = .serialize();
+
+    result[KEY_CAPACITY] = capacity;
+    result[KEY_OCCUPIED_SPACE] = occupied_space;
+
+    return result;
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !GlootVerify.dict(source, true, KEY_CAPACITY, TYPE_REAL) ||\
+        !GlootVerify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_REAL):
+        return false;
+
+    reset();
+
+    if !.deserialize(source):
+        return false;
+
+    capacity = source[KEY_CAPACITY];
+    occupied_space = source[KEY_OCCUPIED_SPACE];
+
+    return true;
