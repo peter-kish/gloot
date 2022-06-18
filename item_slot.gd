@@ -9,6 +9,9 @@ signal inventory_changed;
 var inventory: Inventory setget _set_inventory;
 var item: InventoryItem setget _set_item;
 
+const KEY_INVENTORY: String = "inventory";
+const KEY_ITEM: String = "item";
+
 
 func _set_inventory(new_inv: Inventory) -> void:
     if inventory != null:
@@ -68,4 +71,41 @@ func _on_item_removed(pItem: InventoryItem) -> void:
 
 func _on_item_tree_exiting():
     _set_item(null);
+
+
+func reset():
+    _set_inventory(null);
+    _set_item(null);
+
+
+func serialize() -> Dictionary:
+    var result: Dictionary = {};
+
+    if inventory:
+        result[KEY_INVENTORY] = inventory.get_path();
+    if item:
+        result[KEY_ITEM] = item.get_path();
+
+    return result;
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !GlootVerify.dict(source, false, KEY_INVENTORY, TYPE_NODE_PATH) ||\
+        !GlootVerify.dict(source, false, KEY_ITEM, TYPE_NODE_PATH):
+        return false;
+
+    reset();
+
+    if source.has(KEY_INVENTORY):
+        _set_inventory(get_node_or_null(source[KEY_INVENTORY]));
+        if inventory == null:
+            print("Warning: Node not found (%s)!" % source[KEY_INVENTORY]);
+            return false;
+    if source.has(KEY_ITEM):
+        _set_item(get_node_or_null(source[KEY_ITEM]));
+        if item == null:
+            print("Warning: Node not found (%s)!" % source[KEY_ITEM]);
+            return false;
+
+    return true;
 

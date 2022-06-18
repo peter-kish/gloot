@@ -25,3 +25,14 @@ func run_tests():
     assert(slot.item == item);
     inventory2.remove_item(item);
     assert(slot.item == null);
+
+    assert(inventory1.add_item(item));
+    slot.inventory = inventory1;
+    slot.item = item;
+    var item_slot_data = slot.serialize();
+    slot.reset();
+    assert(slot.inventory == null);
+    assert(slot.item == null);
+    assert(slot.deserialize(item_slot_data));
+    assert(slot.inventory == inventory1);
+    assert(slot.item == item);

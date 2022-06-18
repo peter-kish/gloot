@@ -14,6 +14,9 @@ Holds a reference to a given item from a given inventory. The slot can be cleare
 ## Methods
 
 * `can_hold_item(new_item: InventoryItem) -> bool` - Checks if the slot can hold the given item (i.e. if the item is inside `inventory`).
+* `reset()` - Resets the linked inventory and inventory item.
+* `serialize() -> Dictionary` - Serializes the item slot into a dictionary.
+* `deserialize(source: Dictionary) -> bool` - Loads the item slot data from the given dictionary.
 
 ## Signals
 
