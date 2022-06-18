@@ -208,9 +208,12 @@ func add_item(item: InventoryItem) -> bool:
 func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
     var item_size = get_item_size(item);
     if rect_free(x, y, item_size.x, item_size.y):
+        _item_positions.append(Vector2(x, y));
         if .add_item(item):
-            _item_positions.append(Vector2(x, y));
             return true;
+        else:
+            _item_positions.pop_back();
+            return false;
 
     return false;
 
