@@ -30,7 +30,7 @@ func clear_property(property_name: String) -> void:
     properties.erase(property_name);
 
 
-func _reset() -> void:
+func reset() -> void:
     protoset = null;
     prototype_id = "";
     properties = {};
@@ -53,7 +53,7 @@ func deserialize(source: Dictionary) -> bool:
         !GlootVerify.dict(source, false, PROPERTIES_KEY, TYPE_DICTIONARY):
         return false;
 
-    _reset();
+    reset();
 
     protoset = load(source[PROTOSET_KEY]);
     prototype_id = source[PROTOTYE_ID_KEY];
