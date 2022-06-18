@@ -38,8 +38,8 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 ### Inventory Types
 
 * ![](images/icon_inventory.svg "Inventory icon") [`Inventory`](docs/inventory.md) - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
-* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") [`InventoryStacked`](docs/inventory_stacked.md) - Has a limited item capacity in terms of weight. Inherits Inventory.
-* ![](images/icon_inventory_grid.svg "InventoryGrid icon") [`InventoryGrid`](docs/inventory_grid.md) - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits Inventory.
+* ![](images/icon_inventory_stacked.svg "InventoryStacked icon") [`InventoryStacked`](docs/inventory_stacked.md) - Has a limited item capacity in terms of weight. Inherits `Inventory`.
+* ![](images/icon_inventory_grid.svg "InventoryGrid icon") [`InventoryGrid`](docs/inventory_grid.md) - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits `Inventory`.
 
 ### Item Slots
 
@@ -49,13 +49,13 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 
 User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing. The following controls offer some basic interaction with the various [inventory types](#inventory-types).
 
-* ![](images/icon_ctrl_inventory.svg "CtrlInventory icon") [`CtrlInventory`](docs/ctrl_inventory.md) - UI control representing a basic [`Inventory`](docs/inventory.md). Displays a list of items in the inventory.
+* ![](images/icon_ctrl_inventory.svg "CtrlInventory icon") [`CtrlInventory`](docs/ctrl_inventory.md) - UI control representing a basic [`Inventory`](docs/inventory.md). Displays a list of items in the inventory. Uses the `name` item property to display the item name in the list.
 
 ![](images/screenshots/ss_inventory.png "CtrlInventory")
-* ![](images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") [`CtrlInventoryStacked`](docs/ctrl_inventory_stacked.md) - UI control representing a stack based inventory ([`InventoryStacked`](docs/inventory_stacked.md)). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory.
+* ![](images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") [`CtrlInventoryStacked`](docs/ctrl_inventory_stacked.md) - UI control representing a stack based inventory ([`InventoryStacked`](docs/inventory_stacked.md)). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory. Inherits `CtrlInventory`.
 
 ![](images/screenshots/ss_inventory_stacked.png "CtrlInventoryStacked")
-* ![](images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging.
+* ![](images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging. Uses the `image` item property (path to a texture) to display the item on the grid.
 
 ![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
 
