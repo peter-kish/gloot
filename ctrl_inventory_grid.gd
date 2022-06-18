@@ -23,8 +23,6 @@ func _get_configuration_warning() -> String:
     if inventory_path.is_empty():
         return "This node is not linked to an inventory, so it can't display any content.\n" + \
                "Set the inventory_path property to point to an InventoryGrid node."
-    if !(get_node_or_null(inventory_path) is InventoryGrid):
-        return "The inventory_path property must point to a node inheriting from InventoryGrid.";
     return "";
 
 
