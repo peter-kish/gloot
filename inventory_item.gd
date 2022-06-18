@@ -30,24 +30,34 @@ func clear_property(property_name: String) -> void:
     properties.erase(property_name);
 
 
+func _reset() -> void:
+    protoset = null;
+    prototype_id = "";
+    properties = {};
+
+
 func serialize() -> Dictionary:
     var result: Dictionary = {};
 
     result[PROTOSET_KEY] = protoset.resource_path;
     result[PROTOTYE_ID_KEY] = prototype_id;
-    result[PROPERTIES_KEY] = properties;
+    if !properties.empty():
+        result[PROPERTIES_KEY] = properties;
 
     return result;
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, PROTOSET_KEY, TYPE_STRING) ||\
-        !GlootVerify.dict(source, PROTOTYE_ID_KEY, TYPE_STRING) ||\
-        !GlootVerify.dict(source, PROPERTIES_KEY, TYPE_DICTIONARY):
+    if !GlootVerify.dict(source, true, PROTOSET_KEY, TYPE_STRING) ||\
+        !GlootVerify.dict(source, true, PROTOTYE_ID_KEY, TYPE_STRING) ||\
+        !GlootVerify.dict(source, false, PROPERTIES_KEY, TYPE_DICTIONARY):
         return false;
+
+    _reset();
 
     protoset = load(source[PROTOSET_KEY]);
     prototype_id = source[PROTOTYE_ID_KEY];
-    properties = source[PROPERTIES_KEY];
+    if source.has(PROPERTIES_KEY):
+        properties = source[PROPERTIES_KEY];
 
     return true;

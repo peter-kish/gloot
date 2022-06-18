@@ -31,8 +31,10 @@ const type_names: Array = [
 ]
 
 
-static func dict(dict: Dictionary, key: String, value_type: int, array_type: int = -1) -> bool:
+static func dict(dict: Dictionary, mandatory: bool, key: String, value_type: int, array_type: int = -1) -> bool:
     if !dict.has(key):
+        if !mandatory:
+            return true;
         print("Missing key: '%s'!" % key);
         return false;
     

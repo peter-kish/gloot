@@ -317,15 +317,16 @@ func serialize() -> Dictionary:
 
     result[KEY_WIDTH] = width;
     result[KEY_HEIGHT] = height;
-    result[KEY_ITEM_POSITIONS] = _item_positions;
+    if !_item_positions.empty():
+        result[KEY_ITEM_POSITIONS] = _item_positions;
 
     return result;
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, KEY_WIDTH, TYPE_INT) ||\
-        !GlootVerify.dict(source, KEY_HEIGHT, TYPE_INT) ||\
-        !GlootVerify.dict(source, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2):
+    if !GlootVerify.dict(source, true, KEY_WIDTH, TYPE_INT) ||\
+        !GlootVerify.dict(source, true, KEY_HEIGHT, TYPE_INT) ||\
+        !GlootVerify.dict(source, false, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2):
         return false;
 
     reset();
@@ -335,8 +336,9 @@ func deserialize(source: Dictionary) -> bool:
 
     width = source[KEY_WIDTH];
     height = source[KEY_HEIGHT];
-    var positions = source[KEY_ITEM_POSITIONS];
-    for position in positions:
-        _item_positions.append(position);
+    if source.has(KEY_ITEM_POSITIONS):
+        var positions = source[KEY_ITEM_POSITIONS];
+        for position in positions:
+            _item_positions.append(position);
 
     return true;
