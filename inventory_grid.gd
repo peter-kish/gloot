@@ -220,10 +220,8 @@ func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
 
 func remove_item(item: InventoryItem) -> bool:
     var item_index = _get_item_index(item);
-    if .remove_item(item):
-        _item_positions.remove(item_index);
-        return true;
-    return false;
+    _item_positions.remove(item_index);
+    return .remove_item(item);
 
 
 func move_item(item: InventoryItem, x: int, y: int) -> bool:
@@ -292,7 +290,7 @@ func sort() -> bool:
     item_array.sort_custom(self, "_compare_items");
 
     for item in get_items():
-        remove_child(item);
+        remove_item(item);
 
     for item in item_array:
         var free_place: Dictionary = find_free_place(item);
