@@ -46,8 +46,8 @@ func _on_btn_remove():
         return;
 
     var selected_items: PoolIntArray = item_list.get_selected_items();
-    for selected_item in selected_items:
-        current_value.remove(selected_item);
+    for i in range(selected_items.size() - 1, -1, -1):
+        current_value.remove(selected_items[i]);
     refresh_editor_control();
     emit_changed(get_edited_property(), current_value);
 
@@ -77,6 +77,7 @@ func _create_editor_control() -> Control:
 
     item_list = ItemList.new();
     item_list.size_flags_vertical = SIZE_EXPAND_FILL;
+    item_list.select_mode = 1;
     v_container.add_child(item_list);
 
     var h_container: HBoxContainer = HBoxContainer.new();
