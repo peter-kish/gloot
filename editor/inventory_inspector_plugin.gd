@@ -3,7 +3,8 @@ extends EditorInspectorPlugin
 var InventoryContentEditor = preload("res://addons/gloot/editor/inventory_content_editor.gd");
 
 const INVENTORY_SCRIPT_PATH: String = "res://addons/gloot/inventory.gd";
-var inventory_script_rid: int = load(INVENTORY_SCRIPT_PATH).get_rid().get_id();
+var editor_interface: EditorInterface = null;
+
 
 func can_handle(object: Object) -> bool:
     var script: Script = object.get_script();
@@ -26,6 +27,8 @@ func _derives_from_inventory(a: Script) -> bool:
 
 func parse_property(object: Object, type: int, path: String, hint: int, hint_text: String, usage: int) -> bool:
     if path == "contents":
-        add_property_editor(path, InventoryContentEditor.new())
+        var inventory_content_editor = InventoryContentEditor.new();
+        inventory_content_editor.editor_interface = editor_interface;
+        add_property_editor(path, inventory_content_editor)
         return true;
     return false;

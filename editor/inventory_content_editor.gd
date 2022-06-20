@@ -2,12 +2,25 @@ extends EditorProperty
 
 var editor_control: Control;
 var item_list: ItemList;
-var btn_add: MenuButton
+var btn_add: MenuButton;
+var btn_remove: Button;
 
+var editor_interface: EditorInterface = null setget _set_editor_interface;
 # An internal value of the property.
 var current_value: Array = []
 # A guard against internal changes when the property is updated.
 var updating = false
+
+
+func _set_editor_interface(interface: EditorInterface) -> void:
+    editor_interface = interface;
+    var gui = editor_interface.get_base_control();
+    var add_icon: Texture = gui.get_icon("Add", "EditorIcons");
+    var remove_icon: Texture = gui.get_icon("Remove", "EditorIcons");
+    if btn_add:
+        btn_add.icon = add_icon;
+    if btn_remove:
+        btn_remove.icon = remove_icon;
 
 
 func _init():
@@ -89,7 +102,7 @@ func _create_editor_control() -> Control:
     btn_add.get_popup().connect("index_pressed", self, "_on_btn_add_index_pressed");
     h_container.add_child(btn_add);
 
-    var btn_remove: Button = Button.new();
+    btn_remove = Button.new();
     btn_remove.text = "Remove";
     btn_remove.connect("pressed", self, "_on_btn_remove");
     h_container.add_child(btn_remove);
