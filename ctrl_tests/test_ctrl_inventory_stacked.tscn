@@ -2,8 +2,8 @@
 
 [ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=2]
-[ext_resource path="res://addons/gloot/tests/data/item_definitions_stack.tres" type="Resource" id=3]
-[ext_resource path="res://addons/gloot/images/icon_key.png" type="Texture" id=4]
+[ext_resource path="res://tests/data/item_definitions_stack.tres" type="Resource" id=3]
+[ext_resource path="res://images/icon_key.png" type="Texture" id=4]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0

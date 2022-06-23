@@ -1,0 +1,106 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "VBoxContainer",
+"class": "CtrlInventory",
+"language": "GDScript",
+"path": "res://addons/gloot/ctrl_inventory.gd"
+}, {
+"base": "Container",
+"class": "CtrlInventoryGrid",
+"language": "GDScript",
+"path": "res://addons/gloot/ctrl_inventory_grid.gd"
+}, {
+"base": "Control",
+"class": "CtrlInventoryItemRect",
+"language": "GDScript",
+"path": "res://addons/gloot/ctrl_inventory_item_rect.gd"
+}, {
+"base": "CtrlInventory",
+"class": "CtrlInventoryStacked",
+"language": "GDScript",
+"path": "res://addons/gloot/ctrl_inventory_stacked.gd"
+}, {
+"base": "Reference",
+"class": "GlootVerify",
+"language": "GDScript",
+"path": "res://addons/gloot/verify.gd"
+}, {
+"base": "Node",
+"class": "Inventory",
+"language": "GDScript",
+"path": "res://addons/gloot/inventory.gd"
+}, {
+"base": "Inventory",
+"class": "InventoryGrid",
+"language": "GDScript",
+"path": "res://addons/gloot/inventory_grid.gd"
+}, {
+"base": "Node",
+"class": "InventoryItem",
+"language": "GDScript",
+"path": "res://addons/gloot/inventory_item.gd"
+}, {
+"base": "Inventory",
+"class": "InventoryStacked",
+"language": "GDScript",
+"path": "res://addons/gloot/inventory_stacked.gd"
+}, {
+"base": "Resource",
+"class": "ItemProtoset",
+"language": "GDScript",
+"path": "res://addons/gloot/item_protoset.gd"
+}, {
+"base": "Node",
+"class": "ItemSlot",
+"language": "GDScript",
+"path": "res://addons/gloot/item_slot.gd"
+}, {
+"base": "Node",
+"class": "Test",
+"language": "GDScript",
+"path": "res://tests/test.gd"
+} ]
+_global_script_class_icons={
+"CtrlInventory": "",
+"CtrlInventoryGrid": "",
+"CtrlInventoryItemRect": "",
+"CtrlInventoryStacked": "",
+"GlootVerify": "",
+"Inventory": "",
+"InventoryGrid": "",
+"InventoryItem": "",
+"InventoryStacked": "",
+"ItemProtoset": "",
+"ItemSlot": "",
+"Test": ""
+}
+
+[application]
+
+config/name="temp_gloot"
+run/main_scene="res://tests/gloot_test.tscn"
+config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/gloot/plugin.cfg" )
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+environment/default_environment="res://default_env.tres"

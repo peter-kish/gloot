@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/item_book_blue.png-af65e7c769f4fc9272b466c31ddcf156.stex"
+path="res://.import/item_book_blue.png-18eb038bfc578aaa3c7e8cdc9da1ce36.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/gloot/images/item_book_blue.png"
-dest_files=[ "res://.import/item_book_blue.png-af65e7c769f4fc9272b466c31ddcf156.stex" ]
+source_file="res://images/item_book_blue.png"
+dest_files=[ "res://.import/item_book_blue.png-18eb038bfc578aaa3c7e8cdc9da1ce36.stex" ]
 
 [params]
 

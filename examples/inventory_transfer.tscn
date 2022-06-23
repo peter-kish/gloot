@@ -2,9 +2,9 @@
 
 [ext_resource path="res://addons/gloot/ctrl_inventory.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/inventory.gd" type="Script" id=2]
-[ext_resource path="res://addons/gloot/tests/data/item_definitions_basic.tres" type="Resource" id=3]
-[ext_resource path="res://addons/gloot/examples/inventory_transfer.gd" type="Script" id=4]
-[ext_resource path="res://addons/gloot/images/icon_key.png" type="Texture" id=5]
+[ext_resource path="res://tests/data/item_definitions_basic.tres" type="Resource" id=3]
+[ext_resource path="res://examples/inventory_transfer.gd" type="Script" id=4]
+[ext_resource path="res://images/icon_key.png" type="Texture" id=5]
 
 [node name="InventoryTransfer" type="Control"]
 anchor_right = 1.0
@@ -16,14 +16,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 500.0
-margin_bottom = 208.0
+margin_right = 1024.0
+margin_bottom = 558.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CtrlInventory" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-margin_right = 248.0
-margin_bottom = 208.0
+margin_right = 510.0
+margin_bottom = 558.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -31,9 +31,9 @@ inventory_path = NodePath("../../../Inventory")
 default_item_icon = ExtResource( 5 )
 
 [node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-margin_left = 252.0
-margin_right = 500.0
-margin_bottom = 208.0
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 558.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -41,25 +41,25 @@ inventory_path = NodePath("../../../Inventory2")
 default_item_icon = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_top = 212.0
-margin_right = 500.0
-margin_bottom = 226.0
+margin_top = 562.0
+margin_right = 1024.0
+margin_bottom = 576.0
 text = "Use the buttons below to transfer items from one inventory to the other."
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 230.0
-margin_right = 500.0
-margin_bottom = 250.0
+margin_top = 580.0
+margin_right = 1024.0
+margin_bottom = 600.0
 
 [node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
-margin_right = 248.0
+margin_right = 510.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "<<<"
 
 [node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
-margin_left = 252.0
-margin_right = 500.0
+margin_left = 514.0
+margin_right = 1024.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = ">>>"
