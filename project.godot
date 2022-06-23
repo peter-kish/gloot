@@ -86,9 +86,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="temp_gloot"
+config/name="GLoot"
 run/main_scene="res://tests/gloot_test.tscn"
-config/icon="res://icon.png"
+config/icon="res://images/gloot_logo_128x128.png"
 
 [editor_plugins]
 
