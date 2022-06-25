@@ -7,6 +7,8 @@ export(Texture) var default_item_icon: Texture
 var inventory: Inventory = null setget _set_inventory
 var _item_list: ItemList
 
+const KEY_IMAGE = "image"
+
 
 func _get_configuration_warning() -> String:
     if inventory_path.is_empty():
@@ -91,7 +93,7 @@ func _get_item_title(item: InventoryItem) -> String:
 
 
 func _get_item_texture(item: InventoryItem) -> Resource:
-    var texture_path = item.get_property("image")
+    var texture_path = item.get_property(KEY_IMAGE)
     if texture_path:
         return load(texture_path)
     return default_item_icon

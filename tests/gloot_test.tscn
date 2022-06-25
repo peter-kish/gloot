@@ -26,7 +26,6 @@ script = ExtResource( 2 )
 [node name="Inventory" type="Node" parent="ItemDefinitionsTest"]
 script = ExtResource( 11 )
 item_protoset = ExtResource( 9 )
-contents = [ "minimal_item", "minimal_item_2" ]
 
 [node name="InventoryTests" type="Node" parent="."]
 script = ExtResource( 6 )
@@ -34,7 +33,6 @@ script = ExtResource( 6 )
 [node name="Inventory1" type="Node" parent="InventoryTests"]
 script = ExtResource( 11 )
 item_protoset = ExtResource( 9 )
-contents = [ "minimal_item" ]
 
 [node name="Inventory2" type="Node" parent="InventoryTests"]
 script = ExtResource( 11 )
@@ -88,7 +86,6 @@ script = ExtResource( 4 )
 [node name="Inventory1" type="Node" parent="ItemSlotTests"]
 script = ExtResource( 11 )
 item_protoset = ExtResource( 9 )
-contents = [ "minimal_item" ]
 
 [node name="Inventory2" type="Node" parent="ItemSlotTests"]
 script = ExtResource( 11 )

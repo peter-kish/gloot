@@ -5,6 +5,7 @@ tool
 signal item_added
 signal item_removed
 signal contents_changed
+signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
 var contents: Array setget _set_contents
@@ -14,10 +15,11 @@ const KEY_ITEMS: String = "items"
 
 
 func _set_item_protoset(new_item_protoset: Resource) -> void:
+    assert((new_item_protoset is ItemProtoset) || (new_item_protoset == null), \
+        "item_protoset must be an ItemProtoset resource!")
+    
     item_protoset = new_item_protoset
-
-    assert(item_protoset is ItemProtoset, \
-            "item_protoset must be an ItemProtoset resource!")
+    emit_signal("protoset_changed")
 
 
 func _set_contents(new_contents: Array) -> void:

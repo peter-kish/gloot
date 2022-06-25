@@ -11,7 +11,7 @@ var texture: Texture
 func _set_item(new_item: InventoryItem) -> void:
     item = new_item
     if item && ctrl_inventory:
-        var texture_path = item.get_property("image")
+        var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
         if texture_path:
             texture = load(texture_path)
         var item_size = _get_item_size()
