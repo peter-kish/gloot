@@ -2,9 +2,9 @@ tool
 extends Control
 
 onready var item_list_prototypes = $VBoxContainer/HBoxContainer/PrototypesContainer/ItemList
-onready var edt_filter_prototypes = $VBoxContainer/HBoxContainer/PrototypesContainer/LineEdit
+onready var edt_filter_prototypes = $VBoxContainer/HBoxContainer/PrototypesContainer/HBoxContainer/LineEdit
 onready var item_list_items = $VBoxContainer/HBoxContainer/ItemsContainer/ItemList
-onready var edt_filter_items = $VBoxContainer/HBoxContainer/ItemsContainer/LineEdit
+onready var edt_filter_items = $VBoxContainer/HBoxContainer/ItemsContainer/HBoxContainer/LineEdit
 onready var btn_add = $VBoxContainer/HBoxContainer/PrototypesContainer/BtnAdd
 onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
 
@@ -16,6 +16,8 @@ func _ready():
     btn_remove.connect("pressed", self, "_on_btn_remove")
     item_list_prototypes.connect("item_activated", self, "_on_prototype_activated")
     item_list_items.connect("item_activated", self, "_on_item_activated")
+    edt_filter_prototypes.connect("text_changed", self, "_on_properties_filter_changed")
+    edt_filter_items.connect("text_changed", self, "_on_items_filter_changed")
 
     if inventory:
         edit(inventory)
@@ -23,21 +25,37 @@ func _ready():
 
 func _on_prototype_activated(index: int) -> void:
     if inventory == null:
-        return;
+        return
     inventory.contents.append(item_list_prototypes.get_item_text(index))
     _refresh()
 
 
 func _on_item_activated(index: int) -> void:
     if inventory == null:
-        return;
+        return
     inventory.contents.remove(index)
     _refresh()
 
 
+func _on_properties_filter_changed(new_text: String) -> void:
+    item_list_prototypes.clear()
+    for prototype_id in inventory.item_protoset._prototypes.keys():
+        if !new_text.empty() && !(new_text in prototype_id):
+            continue
+        item_list_prototypes.add_item(prototype_id, _get_prototype_icon(prototype_id))
+
+
+func _on_items_filter_changed(new_text: String) -> void:
+    item_list_items.clear()
+    for prototype_id in inventory.contents:
+        if !new_text.empty() && !(new_text in prototype_id):
+            continue
+        item_list_items.add_item(prototype_id, _get_prototype_icon(prototype_id))
+
+
 func _on_btn_add() -> void:
     if inventory == null:
-        return;
+        return
 
     for i in item_list_prototypes.get_selected_items():
         inventory.contents.append(item_list_prototypes.get_item_text(i))
@@ -47,7 +65,7 @@ func _on_btn_add() -> void:
 
 func _on_btn_remove() -> void:
     if inventory == null:
-        return;
+        return
 
     var selected_items: PoolIntArray = item_list_items.get_selected_items()
     for i in range(selected_items.size() - 1, -1, -1):
@@ -70,7 +88,7 @@ func edit(inv: Inventory) -> void:
 func _get_prototype_icon(prototype_id: String) -> Texture:
     var texture_path = inventory.item_protoset.get_item_property(prototype_id, "image")
     if texture_path:
-        var resource = load(texture_path);
+        var resource = load(texture_path)
         if resource is Texture:
             return resource
     return null

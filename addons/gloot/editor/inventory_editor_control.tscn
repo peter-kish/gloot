@@ -30,10 +30,21 @@ margin_bottom = 14.0
 text = "Prototypes"
 align = 1
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/PrototypesContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/PrototypesContainer"]
 margin_top = 18.0
 margin_right = 510.0
 margin_bottom = 42.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/PrototypesContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 19.0
+text = "Filter:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/PrototypesContainer/HBoxContainer"]
+margin_left = 41.0
+margin_right = 510.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer/PrototypesContainer"]
@@ -62,10 +73,21 @@ margin_bottom = 14.0
 text = "Inventory Items"
 align = 1
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
 margin_top = 18.0
 margin_right = 510.0
 margin_bottom = 42.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ItemsContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 19.0
+text = "Filter:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer/ItemsContainer/HBoxContainer"]
+margin_left = 41.0
+margin_right = 510.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
