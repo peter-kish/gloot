@@ -9,6 +9,7 @@ onready var btn_add = $VBoxContainer/HBoxContainer/PrototypesContainer/BtnAdd
 onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
 
 var inventory: Inventory
+var editor_interface: EditorInterface = null
 
 
 func _ready():
@@ -19,7 +20,13 @@ func _ready():
     edt_filter_prototypes.connect("text_changed", self, "_on_properties_filter_changed")
     edt_filter_items.connect("text_changed", self, "_on_items_filter_changed")
 
+    print("Editor interface %s" % editor_interface);
+    if editor_interface:
+        btn_add.icon = editor_interface.get_base_control().get_icon("Add", "EditorIcons")
+        btn_remove.icon = editor_interface.get_base_control().get_icon("Remove", "EditorIcons")
+
     if inventory:
+        print("Edit");
         edit(inventory)
 
 

@@ -74,6 +74,7 @@ text = "Inventory Items"
 align = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
+visible = false
 margin_top = 18.0
 margin_right = 510.0
 margin_bottom = 42.0
@@ -91,7 +92,7 @@ margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
-margin_top = 46.0
+margin_top = 18.0
 margin_right = 510.0
 margin_bottom = 576.0
 size_flags_horizontal = 3
