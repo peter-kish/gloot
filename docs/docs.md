@@ -3,6 +3,7 @@
 ## Class Reference
 
 * [`ItemProtoset`](./item_protoset.md)
+* [`ItemPrototype`](./item_prototype.md)
 * [`InventoryItem`](./inventory_item.md)
 * [`Inventory`](./inventory.md)
 * [`InventoryStacked`](./inventory_stacked.md)
