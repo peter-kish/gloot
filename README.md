@@ -62,14 +62,19 @@ User interfaces are usually unique for each project, but it often helps to have 
 ## Installation
 
 1. Create an `addons` directory inside your project directory.
-2. Run `git clone https://github.com/peter-kish/gloot.git` from the `addons` directory.
-3. Enable the plugin in `Project Settings > Plugins`.
+2. Get the plugin from the AssetLib or from GitHub
+    * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download to install the plugin.
+    * From GitHub: Run `git clone https://github.com/peter-kish/gloot.git` and copy the contents of the `addons` directory to your projects `addons` directory.
+4. Enable the plugin in `Project Settings > Plugins`.
 
 ## Usage
 
 1. Create an [`ItemProtoset`](docs/item_protoset.md) resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for [`InventoryStacked`](docs/inventory_stacked.md) and [`InventoryGrid`](docs/inventory_grid.md)) and set its `item_protoset` property (previously created).
-3. To add items to the inventory set its `contents` property. List the prototype IDs of the items that you want added to the inventory.
+3. Add items using the custom control in the inspector:
+
+![](images/screenshots/ss_inspector.png "Custom Inspector Control")
+
 > **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 5. Create some [UI controls](#ui-controls) to display the created inventory and its contents.
