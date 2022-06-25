@@ -179,3 +179,8 @@ func _refresh() -> void:
     var inv = inventory
     reset()
     edit(inv)
+
+    # Do this from here because appending/removing inventory contents does not trigger the
+    # _set_contents() callback.
+    if inv is InventoryStacked:
+        inv.update_configuration_warning()
