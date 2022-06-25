@@ -7,6 +7,9 @@ onready var item_list_items = $VBoxContainer/HBoxContainer/ItemsContainer/ItemLi
 onready var edt_filter_items = $VBoxContainer/HBoxContainer/ItemsContainer/HBoxContainer/LineEdit
 onready var btn_add = $VBoxContainer/HBoxContainer/PrototypesContainer/BtnAdd
 onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
+onready var space_container = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer
+onready var progress_bar = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/ProgressBar
+onready var lbl_space = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/Label
 
 var inventory: Inventory
 var editor_interface: EditorInterface = null
@@ -20,14 +23,18 @@ func _ready():
     edt_filter_prototypes.connect("text_changed", self, "_on_properties_filter_changed")
     edt_filter_items.connect("text_changed", self, "_on_items_filter_changed")
 
-    print("Editor interface %s" % editor_interface);
     if editor_interface:
         btn_add.icon = editor_interface.get_base_control().get_icon("Add", "EditorIcons")
         btn_remove.icon = editor_interface.get_base_control().get_icon("Remove", "EditorIcons")
 
     if inventory:
-        print("Edit");
+        if inventory is InventoryStacked:
+            inventory.connect("capacity_changed", self, "_on_capacity_changed")
         edit(inventory)
+
+
+func _on_capacity_changed() -> void:
+    _refresh()
 
 
 func _on_prototype_activated(index: int) -> void:
@@ -91,6 +98,30 @@ func edit(inv: Inventory) -> void:
     for prototype_id in inventory.item_protoset._prototypes.keys():
         item_list_prototypes.add_item(prototype_id, _get_prototype_icon(prototype_id))
 
+    space_container.visible = (inventory is InventoryStacked)
+    if inventory is InventoryStacked:
+        var occupied_space: float = _get_occupied_space()
+        lbl_space.text = "%d/%d" % [occupied_space, inventory.capacity]
+        if occupied_space > inventory.capacity:
+            lbl_space.add_color_override("font_color", Color.red)
+        else:
+            lbl_space.add_color_override("font_color", Color.white)
+        progress_bar.value = 100.0 * (occupied_space / inventory.capacity)
+
+
+func _get_occupied_space() -> float:
+    if !inventory:
+        return -1.0
+
+    var result: float = 0
+    for prototype_id in inventory.contents:
+        if !inventory.item_protoset:
+            continue
+        var unit_weight: float = inventory.item_protoset.get_item_property(prototype_id, "weight", 1.0)
+        var stack_size: int = inventory.item_protoset.get_item_property(prototype_id, "stack_size", 1)
+        result += unit_weight * stack_size
+    return result
+
 
 func _get_prototype_icon(prototype_id: String) -> Texture:
     var texture_path = inventory.item_protoset.get_item_property(prototype_id, "image")
@@ -107,6 +138,7 @@ func reset() -> void:
     edt_filter_prototypes.text = ""
     edt_filter_items.text = ""
     inventory = null
+    space_container.hide()
 
 
 func _refresh() -> void:

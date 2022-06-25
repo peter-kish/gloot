@@ -73,11 +73,32 @@ margin_bottom = 14.0
 text = "Inventory Items"
 align = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
 visible = false
 margin_top = 18.0
 margin_right = 510.0
 margin_bottom = 42.0
+rect_min_size = Vector2( 0, 24 )
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer"]
+margin_right = 510.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 24 )
+percent_visible = false
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer"]
+margin_top = 5.0
+margin_right = 510.0
+margin_bottom = 19.0
+text = "10/20"
+align = 1
+valign = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/ItemsContainer"]
+visible = false
+margin_top = 46.0
+margin_right = 510.0
+margin_bottom = 70.0
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/ItemsContainer/HBoxContainer"]
 margin_top = 5.0
