@@ -40,7 +40,7 @@ func has(id: String) -> bool:
     return _prototypes.has(id)
 
 
-func get_item_property(id: String, property_name: String, default_value):
+func get_item_property(id: String, property_name: String, default_value = null):
     if has(id):
         var prototype = get(id)
         if !prototype.empty() && prototype.has(property_name):

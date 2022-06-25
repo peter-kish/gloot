@@ -20,7 +20,6 @@ func _enter_tree():
     add_custom_type("CtrlInventoryGrid", "Container", preload("ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
 
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
-    inspector_plugin.editor_interface = get_editor_interface()
     add_inspector_plugin(inspector_plugin)
 
 
