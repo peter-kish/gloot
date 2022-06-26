@@ -62,7 +62,7 @@ func _on_properties_filter_changed(new_text: String) -> void:
 
     item_list_prototypes.clear()
     for prototype_id in inventory.item_protoset._prototypes.keys():
-        if !new_text.empty() && !(new_text in prototype_id):
+        if !new_text.empty() && !(new_text.to_lower() in prototype_id.to_lower()):
             continue
         _add_prototype(prototype_id)
 
@@ -73,7 +73,7 @@ func _on_items_filter_changed(new_text: String) -> void:
 
     item_list_items.clear()
     for prototype_id in inventory.contents:
-        if !new_text.empty() && !(new_text in prototype_id):
+        if !new_text.empty() && !(new_text.to_lower() in prototype_id.to_lower()):
             continue
         _add_item(prototype_id)
 
