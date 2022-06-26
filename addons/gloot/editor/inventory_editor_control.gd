@@ -29,8 +29,8 @@ func _ready():
 
     if inventory:
         if inventory is InventoryStacked:
-            inventory.connect("capacity_changed", self, "_refresh")
-            inventory.connect("protoset_changed", self, "_refresh")
+            inventory.connect("capacity_changed", self, "refresh")
+        inventory.connect("protoset_changed", self, "refresh")
         edit(inventory)
 
 
@@ -38,14 +38,14 @@ func _on_prototype_activated(index: int) -> void:
     if inventory == null || inventory.item_protoset == null:
         return
     inventory.contents.append(_get_prototype(index))
-    _refresh()
+    refresh()
 
 
 func _on_item_activated(index: int) -> void:
     if inventory == null || inventory.item_protoset == null:
         return
     inventory.contents.remove(index)
-    _refresh()
+    refresh()
 
 
 func _on_properties_filter_changed(new_text: String) -> void:
@@ -104,7 +104,7 @@ func _on_btn_add() -> void:
     for i in item_list_prototypes.get_selected_items():
         inventory.contents.append(item_list_prototypes.get_item_metadata(i))
         item_list_prototypes.unselect(i)
-    _refresh()
+    refresh()
 
 
 func _on_btn_remove() -> void:
@@ -114,7 +114,7 @@ func _on_btn_remove() -> void:
     var selected_items: PoolIntArray = item_list_items.get_selected_items()
     for i in range(selected_items.size() - 1, -1, -1):
         inventory.contents.remove(selected_items[i])
-    _refresh()
+    refresh()
 
 
 func edit(inv: Inventory) -> void:
@@ -175,7 +175,10 @@ func reset() -> void:
     space_container.hide()
 
 
-func _refresh() -> void:
+func refresh() -> void:
+    if !is_inside_tree():
+        return
+
     var inv = inventory
     reset()
     edit(inv)

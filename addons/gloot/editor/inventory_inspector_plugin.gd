@@ -2,23 +2,17 @@ extends EditorInspectorPlugin
 
 signal edit_requested
 
+var InventoryPropertyEditor = preload("res://addons/gloot/editor/inventory_property_editor.gd")
 const INVENTORY_SCRIPT_PATH: String = "res://addons/gloot/inventory.gd"
-const InventoryEditorControl = preload("res://addons/gloot/editor/inventory_editor_control.tscn")
-var inventory: Inventory = null
 var editor_interface: EditorInterface = null
 
 
 func can_handle(object: Object) -> bool:
     var script: Script = object.get_script()
-
-    if script && _derives_from_inventory(script):
-        var editor_control = InventoryEditorControl.instance()
-        editor_control.inventory = object
-        editor_control.editor_interface = editor_interface
-        add_custom_control(editor_control)
-        return true
-
-    return false
+    if script == null:
+        return false
+        
+    return _derives_from_inventory(script)
 
 
 func _derives_from_inventory(a: Script) -> bool:
@@ -29,5 +23,14 @@ func _derives_from_inventory(a: Script) -> bool:
     if base_script && base_script.resource_path == INVENTORY_SCRIPT_PATH:
         return true
 
+    return false
+
+
+func parse_property(object: Object, type: int, path: String, hint: int, hint_text: String, usage: int) -> bool:
+    if path == "contents":
+        var inventory_property_editor = InventoryPropertyEditor.new()
+        inventory_property_editor.editor_interface = editor_interface
+        add_property_editor(path, inventory_property_editor)
+        return true
     return false
 
