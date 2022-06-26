@@ -8,7 +8,7 @@ signal contents_changed
 signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
-var contents: Array setget _set_contents
+export(Array, String) var contents: Array setget _set_contents
 
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
