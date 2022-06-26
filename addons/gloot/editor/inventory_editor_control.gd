@@ -8,11 +8,19 @@ onready var edt_filter_items = $VBoxContainer/HBoxContainer/ItemsContainer/HBoxC
 onready var btn_add = $VBoxContainer/HBoxContainer/PrototypesContainer/BtnAdd
 onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
 onready var space_container = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer
-onready var progress_bar = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/ProgressBar
 onready var lbl_space = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/Label
 
 var inventory: Inventory
-var editor_interface: EditorInterface = null
+var editor_interface: EditorInterface = null setget _set_editor_interface
+
+
+func _set_editor_interface(new_interface: EditorInterface) -> void:
+    editor_interface = new_interface
+    if editor_interface:
+        if btn_add:
+            btn_add.icon = editor_interface.get_base_control().get_icon("Add", "EditorIcons")
+        if btn_remove:
+            btn_remove.icon = editor_interface.get_base_control().get_icon("Remove", "EditorIcons")
 
 
 func _ready():
@@ -132,12 +140,7 @@ func edit(inv: Inventory) -> void:
     space_container.visible = show_space
     if show_space:
         var occupied_space: float = _get_occupied_space()
-        lbl_space.text = "%d/%d" % [occupied_space, inventory.capacity]
-        if occupied_space > inventory.capacity:
-            lbl_space.add_color_override("font_color", Color.red)
-        else:
-            lbl_space.add_color_override("font_color", Color.white)
-        progress_bar.value = 100.0 * (occupied_space / inventory.capacity)
+        lbl_space.text = "Occupied Space: %.2f" % occupied_space
 
 
 func _get_occupied_space() -> float:

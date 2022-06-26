@@ -2,10 +2,16 @@ extends EditorProperty
 
 const InventoryEditorControl = preload("res://addons/gloot/editor/inventory_editor_control.tscn")
 
-var editor_interface: EditorInterface
+var editor_interface: EditorInterface setget _set_editor_interface
 var property_control: Control
 var current_value
 var updating: bool = false
+
+
+func _set_editor_interface(new_interface: EditorInterface) -> void:
+    editor_interface = new_interface
+    if property_control:
+        property_control.editor_interface = editor_interface
 
 
 func _init() -> void:
