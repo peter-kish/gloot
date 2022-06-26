@@ -8,11 +8,19 @@ onready var edt_filter_items = $VBoxContainer/HBoxContainer/ItemsContainer/HBoxC
 onready var btn_add = $VBoxContainer/HBoxContainer/PrototypesContainer/BtnAdd
 onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
 onready var space_container = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer
-onready var progress_bar = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/ProgressBar
 onready var lbl_space = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/Label
 
 var inventory: Inventory
-var editor_interface: EditorInterface = null
+var editor_interface: EditorInterface = null setget _set_editor_interface
+
+
+func _set_editor_interface(new_interface: EditorInterface) -> void:
+    editor_interface = new_interface
+    if editor_interface:
+        if btn_add:
+            btn_add.icon = editor_interface.get_base_control().get_icon("Add", "EditorIcons")
+        if btn_remove:
+            btn_remove.icon = editor_interface.get_base_control().get_icon("Remove", "EditorIcons")
 
 
 func _ready():
@@ -29,8 +37,8 @@ func _ready():
 
     if inventory:
         if inventory is InventoryStacked:
-            inventory.connect("capacity_changed", self, "_refresh")
-            inventory.connect("protoset_changed", self, "_refresh")
+            inventory.connect("capacity_changed", self, "refresh")
+        inventory.connect("protoset_changed", self, "refresh")
         edit(inventory)
 
 
@@ -38,14 +46,14 @@ func _on_prototype_activated(index: int) -> void:
     if inventory == null || inventory.item_protoset == null:
         return
     inventory.contents.append(_get_prototype(index))
-    _refresh()
+    refresh()
 
 
 func _on_item_activated(index: int) -> void:
     if inventory == null || inventory.item_protoset == null:
         return
     inventory.contents.remove(index)
-    _refresh()
+    refresh()
 
 
 func _on_properties_filter_changed(new_text: String) -> void:
@@ -54,7 +62,7 @@ func _on_properties_filter_changed(new_text: String) -> void:
 
     item_list_prototypes.clear()
     for prototype_id in inventory.item_protoset._prototypes.keys():
-        if !new_text.empty() && !(new_text in prototype_id):
+        if !new_text.empty() && !(new_text.to_lower() in prototype_id.to_lower()):
             continue
         _add_prototype(prototype_id)
 
@@ -65,7 +73,7 @@ func _on_items_filter_changed(new_text: String) -> void:
 
     item_list_items.clear()
     for prototype_id in inventory.contents:
-        if !new_text.empty() && !(new_text in prototype_id):
+        if !new_text.empty() && !(new_text.to_lower() in prototype_id.to_lower()):
             continue
         _add_item(prototype_id)
 
@@ -104,7 +112,7 @@ func _on_btn_add() -> void:
     for i in item_list_prototypes.get_selected_items():
         inventory.contents.append(item_list_prototypes.get_item_metadata(i))
         item_list_prototypes.unselect(i)
-    _refresh()
+    refresh()
 
 
 func _on_btn_remove() -> void:
@@ -114,7 +122,7 @@ func _on_btn_remove() -> void:
     var selected_items: PoolIntArray = item_list_items.get_selected_items()
     for i in range(selected_items.size() - 1, -1, -1):
         inventory.contents.remove(selected_items[i])
-    _refresh()
+    refresh()
 
 
 func edit(inv: Inventory) -> void:
@@ -132,12 +140,7 @@ func edit(inv: Inventory) -> void:
     space_container.visible = show_space
     if show_space:
         var occupied_space: float = _get_occupied_space()
-        lbl_space.text = "%d/%d" % [occupied_space, inventory.capacity]
-        if occupied_space > inventory.capacity:
-            lbl_space.add_color_override("font_color", Color.red)
-        else:
-            lbl_space.add_color_override("font_color", Color.white)
-        progress_bar.value = 100.0 * (occupied_space / inventory.capacity)
+        lbl_space.text = "Occupied Space: %.2f" % occupied_space
 
 
 func _get_occupied_space() -> float:
@@ -175,7 +178,10 @@ func reset() -> void:
     space_container.hide()
 
 
-func _refresh() -> void:
+func refresh() -> void:
+    if !is_inside_tree():
+        return
+
     var inv = inventory
     reset()
     edit(inv)

@@ -25,6 +25,7 @@ func _ready():
     _progress_bar.percent_visible = percent_visible
     _progress_bar.visible = progress_bar_visible
     add_child(_progress_bar)
+    _refresh()
 
 
 func _connect_signals() -> void:
