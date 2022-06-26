@@ -1,9 +1,8 @@
 # Welcome to the GLoot docs!
 
-## Class Reference
+## GDScript Class Reference
 
 * [`ItemProtoset`](./item_protoset.md)
-* [`ItemPrototype`](./item_prototype.md)
 * [`InventoryItem`](./inventory_item.md)
 * [`Inventory`](./inventory.md)
 * [`InventoryStacked`](./inventory_stacked.md)
@@ -12,3 +11,8 @@
 * [`CtrlInventory`](./ctrl_inventory.md)
 * [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
+
+## JSON Reference
+
+* [`Item Protoset`](./json_item_protoset.md)
+* [`Item Prototype`](./json_item_prototype.md)
