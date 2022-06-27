@@ -16,6 +16,10 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 * `grabbed_ctrl_inventory_item` - The `CtrlInventoryItemRect` currently grabbed by the user.
 * `grab_offset: Vector2` - An offset by which the currently grabbed `CtrlInventoryItemRect` is held.
 
+## Methods
+
+* `get_field_coords(global_pos: Vector2) -> Vector2` - Converts the given global coordinates to local inventory field coordinates.
+
 ## Signals
 
 * `item_dropped(InventoryItem, Vector2)` - Emitted when a grabbed `CtrlInventoryItemRect` is dropped.

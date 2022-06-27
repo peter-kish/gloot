@@ -157,7 +157,7 @@ func _input(event: InputEvent) -> void:
             grabbed_ctrl_inventory_item:
 
             if _is_mouse_hovering():
-                var field_coords = _get_field_coords(get_global_mouse_position())
+                var field_coords = get_field_coords(get_global_mouse_position())
                 inventory.move_item(grabbed_ctrl_inventory_item.item, \
                     field_coords.x, \
                     field_coords.y)
@@ -173,7 +173,7 @@ func _is_mouse_hovering() -> bool:
     return get_global_rect().has_point(get_global_mouse_position())
 
 
-func _get_field_coords(global_pos: Vector2) -> Vector2:
+func get_field_coords(global_pos: Vector2) -> Vector2:
     var offset = global_pos - get_global_rect().position
     var x: int = offset.x / field_dimensions.x
     var y: int = offset.y / field_dimensions.y

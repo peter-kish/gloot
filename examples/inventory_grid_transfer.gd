@@ -22,7 +22,7 @@ func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_invent
     else:
         return
 
-    var field_coords: Vector2 = ctrl_dest_inventory._get_field_coords(drop_pos)
+    var field_coords: Vector2 = ctrl_dest_inventory.get_field_coords(drop_pos)
     if !ctrl_source_inventory.inventory.transfer_to( \
         item, \
         ctrl_dest_inventory.inventory, \
