@@ -14,7 +14,7 @@ var grabbed_ctrl_inventory_item = null
 var grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
 var drag_sprite: Sprite
-var ctrl_item_container: Node
+var ctrl_item_container: Control
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -52,7 +52,7 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
 func _ready():
     _set_inventory(get_node_or_null(inventory_path))
 
-    ctrl_item_container = Node.new()
+    ctrl_item_container = Control.new()
     add_child(ctrl_item_container)
 
     drag_sprite = Sprite.new()

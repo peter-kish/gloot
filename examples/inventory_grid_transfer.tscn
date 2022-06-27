@@ -89,12 +89,6 @@ height = 5
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 1 )
-contents = [ "item_2x2", "item_1x1" ]
+contents = [ "item_1x1", "item_2x2" ]
 width = 5
 height = 5
-
-[node name="TextureRect" type="TextureRect" parent="."]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-stretch_mode = 1
