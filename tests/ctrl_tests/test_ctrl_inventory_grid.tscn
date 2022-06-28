@@ -21,5 +21,4 @@ default_item_texture = ExtResource( 4 )
 script = ExtResource( 3 )
 item_protoset = ExtResource( 1 )
 contents = [ "item_2x2", "item_1x1" ]
-width = 5
-height = 5
+size = Vector2( 5, 5 )

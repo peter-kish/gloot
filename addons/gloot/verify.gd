@@ -50,3 +50,11 @@ static func dict(dict: Dictionary, mandatory: bool, key: String, value_type: int
                 print("Array element %d has wrong type! Expected '%s', got '%s'!" % [i, array_type, array[i]])
 
     return true
+
+
+static func vector_positive(v: Vector2) -> bool:
+    return v.x >= 0 && v.y >= 0
+
+
+static func rect_positive(rect: Rect2) -> bool:
+    return vector_positive(rect.position) && vector_positive(rect.size)

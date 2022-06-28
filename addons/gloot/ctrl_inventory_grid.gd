@@ -87,7 +87,7 @@ func _process(_delta):
 func _draw():
     if !inventory:
         return
-    _draw_grid(Vector2.ZERO, inventory.width, inventory.height, field_dimensions)
+    _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)
 
 
 func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
@@ -105,8 +105,8 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
 
 func _refresh_grid_container() -> void:
     if inventory:
-        rect_min_size = Vector2(inventory.width * field_dimensions.x, \
-                                           inventory.height * field_dimensions.y)
+        rect_min_size = Vector2(inventory.size.x * field_dimensions.x, \
+            inventory.size.y * field_dimensions.y)
         rect_size = rect_min_size
 
 
@@ -159,8 +159,7 @@ func _input(event: InputEvent) -> void:
             if _is_mouse_hovering():
                 var field_coords = get_field_coords(get_global_mouse_position())
                 inventory.move_item(grabbed_ctrl_inventory_item.item, \
-                    field_coords.x, \
-                    field_coords.y)
+                    field_coords)
             else:
                 emit_signal("item_dropped", grabbed_ctrl_inventory_item.item, get_global_mouse_position())
             grabbed_ctrl_inventory_item.show()

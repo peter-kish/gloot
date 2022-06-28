@@ -26,8 +26,7 @@ func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_invent
     if !ctrl_source_inventory.inventory.transfer_to( \
         item, \
         ctrl_dest_inventory.inventory, \
-        int(field_coords.x), \
-        int(field_coords.y)):
+        field_coords):
         print("Warning: InventoryGrid.transfer_to() returned false!")
 
 

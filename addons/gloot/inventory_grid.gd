@@ -6,87 +6,43 @@ signal size_changed
 
 const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
+const KEY_SIZE: String = "size"
 const KEY_ITEM_POSITIONS: String = "item_positions"
-const DEFAULT_WIDTH: int = 10
-const DEFAULT_HEIGHT: int = 10
+const DEFAULT_SIZE: Vector2 = Vector2(10, 10)
 
-export(int, 1, 100) var width: int = DEFAULT_WIDTH setget _set_width
-export(int, 1, 100) var height: int = DEFAULT_HEIGHT setget _set_height
+export(Vector2) var size: Vector2 = DEFAULT_SIZE setget _set_size
 
 var _item_positions: Array = []
 
 
-class Vector2i:    
-    var x: int
-    var y: int
-
-
-    func _init(x_: int, y_:int):
-        x = x_
-        y = y_
-
-
-    func _to_string():
-        return "(%s, %s)" % [x, y]
-
-
-    func area() -> int:
-        return x * y
-
-
-class Rect2i:
-    var position: Vector2i
-    var size: Vector2i
-
-
-    func _init(position_: Vector2i, size_: Vector2i):
-        position = position_
-        size = size_
-
-
-    func _to_string():
-        return "(%s, %s, %s, %s)" % [position.x, position.y, size.x, size.y]
-
-
-    func to_rect2() -> Rect2:
-        return Rect2(position.x, position.y, size.x, size.y)
-
-
-    func intersects(r: Rect2i) -> bool:
-        var rect1 = r.to_rect2()
-        var rect2 = to_rect2()
-        return rect1.intersects(rect2)
-
-
 class Space:
-    var capacity: Vector2i
+    var capacity: Vector2
     var reserved_rects: Array
 
 
-    func _init(capacity_: Vector2i):
-        capacity = capacity_
+    func _init(capacity_: Vector2):
+        capacity = capacity_.round()
 
 
-    func reserve(size: Vector2i) -> bool:
-        var free_rect = _find_free_space(size)
-        if free_rect:
+    func reserve(size: Vector2) -> bool:
+        var free_rect = _find_free_space(size.round())
+        if GlootVerify.rect_positive(free_rect):
             reserved_rects.append(free_rect)
             return true
         return false
 
 
-    func _find_free_space(size: Vector2i) -> Rect2i:
-        for x in range(capacity.x - (size.x - 1)):
-            for y in range(capacity.y - (size.y - 1)):
-                var space_pos: Vector2i = Vector2i.new(x, y)
-                var space_size: Vector2i = Vector2i.new(size.x, size.y)
-                var space: Rect2i = Rect2i.new(space_pos, space_size)
+    func _find_free_space(size: Vector2) -> Rect2:
+        size = size.round()
+        for x in range(int(capacity.x) - (int(size.x) - 1)):
+            for y in range(int(capacity.y) - (int(size.y) - 1)):
+                var space: Rect2 = Rect2(Vector2(x, y), size)
                 if _rect_free(space):
                     return space
-        return null
+        return Rect2(-1, -1, -1, -1)
 
 
-    func _rect_free(rect: Rect2i) -> bool:
+    func _rect_free(rect: Rect2) -> bool:
         if rect.position.x + rect.size.x > capacity.x:
             return false
         if rect.position.y + rect.size.y > capacity.y:
@@ -106,7 +62,7 @@ func _get_configuration_warning() -> String:
 
 
 func _is_full_by_default() -> bool:
-    var space: Space = Space.new(Vector2i.new(width, height))
+    var space: Space = Space.new(size)
     for prototype_id in contents:
         var prototype_size = _get_prototype_size(prototype_id)
         if !space.reserve(prototype_size):
@@ -114,12 +70,12 @@ func _is_full_by_default() -> bool:
     return false
 
 
-func _get_prototype_size(prototype_id: String) -> Vector2i:
+func _get_prototype_size(prototype_id: String) -> Vector2:
     if item_protoset:
         var width: int = item_protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
         var height: int = item_protoset.get_item_property(prototype_id, KEY_HEIGHT, 1)
-        return Vector2i.new(width, height)
-    return Vector2i.new(1, 1)
+        return Vector2(width, height)
+    return Vector2(1, 1)
 
 
 func get_item_position(item: InventoryItem) -> Vector2:
@@ -140,42 +96,36 @@ func get_item_size(item: InventoryItem) -> Vector2:
         item_width = item_height
         item_height = temp
     return Vector2(item_width, item_height)
+
+
+func get_item_rect(item: InventoryItem) -> Rect2:
+    var item_pos: Vector2 = get_item_position(item)
+    var item_size: Vector2 = get_item_size(item)
+    return Rect2(item_pos, item_size)
     
 
 func _ready():
-    assert(width > 0, "Inventory width must be positive!")
-    assert(height > 0, "Inventory height must be positive!")
+    assert(size.x > 0, "Inventory width must be positive!")
+    assert(size.y > 0, "Inventory height must be positive!")
 
 
-func _set_width(new_width: int) -> void:
-    assert(new_width > 0, "Inventory width must be positive!")
-    var old_width = width
-    width = new_width
+func _set_size(new_size: Vector2) -> void:
+    new_size = new_size.round()
+    assert(new_size.x > 0, "Inventory width must be positive!")
+    assert(new_size.y > 0, "Inventory height must be positive!")
+    var old_size = size
+    size = new_size
     update_configuration_warning()
     if !Engine.editor_hint:
         if _bounds_broken():
-            width = old_width
-    if width != old_width:
-        emit_signal("size_changed")
-
-
-func _set_height(new_height: int) -> void:
-    assert(new_height > 0, "Inventory height must be positive!")
-    var old_height = height
-    height = new_height
-    update_configuration_warning()
-    if !Engine.editor_hint:
-        if _bounds_broken():
-            height = old_height
-    if height != old_height:
+            size = old_size
+    if size != old_size:
         emit_signal("size_changed")
 
 
 func _bounds_broken() -> bool:
     for item in get_items():
-        var item_pos = get_item_position(item)
-        var item_size = get_item_size(item)
-        if !rect_free(item_pos.x, item_pos.y, item_size.x, item_size.y, item):
+        if !rect_free(get_item_rect(item), item):
             return true
 
     return false
@@ -194,21 +144,23 @@ func _populate() -> void:
 func _compare_prototypes(prototype_id_1: String, prototype_id_2: String) -> bool:
     var size_1 = _get_prototype_size(prototype_id_1)
     var size_2 = _get_prototype_size(prototype_id_2)
-    return size_1.area() > size_2.area()
+    # Compare areas
+    return (size_1.x * size_1.y) > (size_2.x * size_2.y)
 
 
 func add_item(item: InventoryItem) -> bool:
     var free_place = find_free_place(item)
-    if free_place.empty():
+    if !GlootVerify.vector_positive(free_place):
         return false
 
-    return add_item_at(item, free_place.x, free_place.y)
+    return add_item_at(item, free_place)
 
 
-func add_item_at(item: InventoryItem, x: int, y: int) -> bool:
+func add_item_at(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
-    if rect_free(x, y, item_size.x, item_size.y):
-        _item_positions.append(Vector2(x, y))
+    var rect: Rect2 = Rect2(position, item_size)
+    if rect_free(rect):
+        _item_positions.append(position)
         if .add_item(item):
             return true
         else:
@@ -224,10 +176,11 @@ func remove_item(item: InventoryItem) -> bool:
     return .remove_item(item)
 
 
-func move_item(item: InventoryItem, x: int, y: int) -> bool:
+func move_item(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
-    if rect_free(x, y, item_size.x, item_size.y, item):
-        _item_positions[_get_item_index(item)] = Vector2(x, y)
+    var rect: Rect2 = Rect2(position, item_size)
+    if rect_free(rect, item):
+        _item_positions[_get_item_index(item)] = position
         emit_signal("contents_changed")
         return true
 
@@ -235,23 +188,24 @@ func move_item(item: InventoryItem, x: int, y: int) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    return transfer_to(item, destination, 0, 0)
+    return transfer_to(item, destination, Vector2.ZERO)
 
 
-func transfer_to(item: InventoryItem, destination: InventoryGrid, x: int, y: int) -> bool:
+func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2) -> bool:
     var item_size = get_item_size(item)
-    if destination.rect_free(x, y, item_size.x, item_size.y):
+    var rect: Rect2 = Rect2(position, item_size)
+    if destination.rect_free(rect):
         if .transfer(item, destination):
-            destination.move_item(item, x, y)
+            destination.move_item(item, position)
             return true
 
     return false
 
 
-func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItem = null) -> bool:
-    if x + w > width:
+func rect_free(rect: Rect2, exception: InventoryItem = null) -> bool:
+    if rect.position.x + rect.size.x > size.x:
         return false
-    if y + h > height:
+    if rect.position.y + rect.size.y > size.y:
         return false
 
     for item in get_items():
@@ -259,22 +213,22 @@ func rect_free(x: int, y: int, w: int, h: int, exception: InventoryItem = null) 
             continue
         var item_pos: Vector2 = get_item_position(item)
         var item_size: Vector2 = get_item_size(item)
-        var rect1: Rect2 = Rect2(Vector2(x, y), Vector2(w, h))
         var rect2: Rect2 = Rect2(item_pos, item_size)
-        if rect1.intersects(rect2):
+        if rect.intersects(rect2):
             return false
 
     return true
 
 
-func find_free_place(item: InventoryItem) -> Dictionary:
+func find_free_place(item: InventoryItem) -> Vector2:
     var item_size = get_item_size(item)
-    for x in range(width - (item_size.x - 1)):
-        for y in range(height - (item_size.y - 1)):
-            if rect_free(x, y, item_size.x, item_size.y, item):
-                return {x = x, y = y}
+    for x in range(size.x - (item_size.x - 1)):
+        for y in range(size.y - (item_size.y - 1)):
+            var rect: Rect2 = Rect2(Vector2(x, y), item_size)
+            if rect_free(rect, item):
+                return Vector2(x, y)
 
-    return {}
+    return Vector2(-1, -1)
 
 
 func _compare_items(item1: InventoryItem, item2: InventoryItem) -> bool:
@@ -293,10 +247,10 @@ func sort() -> bool:
         remove_item(item)
 
     for item in item_array:
-        var free_place: Dictionary = find_free_place(item)
-        if free_place.empty():
+        var free_place: Vector2 = find_free_place(item)
+        if !GlootVerify.vector_positive(free_place):
             return false
-        add_item_at(item, free_place.x, free_place.y)
+        add_item_at(item, free_place)
 
     return true
 
@@ -304,8 +258,7 @@ func sort() -> bool:
 func reset() -> void:
     .reset()
     _item_positions = []
-    width = DEFAULT_WIDTH
-    height = DEFAULT_HEIGHT
+    size = DEFAULT_SIZE
 
 
 func clear() -> void:
@@ -316,8 +269,7 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = .serialize()
 
-    result[KEY_WIDTH] = width
-    result[KEY_HEIGHT] = height
+    result[KEY_SIZE] = size
     if !_item_positions.empty():
         result[KEY_ITEM_POSITIONS] = _item_positions
 
@@ -325,8 +277,7 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_WIDTH, TYPE_INT) ||\
-        !GlootVerify.dict(source, true, KEY_HEIGHT, TYPE_INT) ||\
+    if !GlootVerify.dict(source, true, KEY_SIZE, TYPE_VECTOR2) ||\
         !GlootVerify.dict(source, false, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2):
         return false
 
@@ -335,8 +286,7 @@ func deserialize(source: Dictionary) -> bool:
     if !.deserialize(source):
         return false
 
-    width = source[KEY_WIDTH]
-    height = source[KEY_HEIGHT]
+    size = source[KEY_SIZE]
     if source.has(KEY_ITEM_POSITIONS):
         var positions = source[KEY_ITEM_POSITIONS]
         for position in positions:

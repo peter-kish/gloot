@@ -69,8 +69,7 @@ script = ExtResource( 5 )
 [node name="InventoryGrid3x3" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 10 )
 item_protoset = ExtResource( 7 )
-width = 3
-height = 3
+size = Vector2( 3, 3 )
 
 [node name="Item_1x1" type="Node" parent="InventoryGridTests"]
 script = ExtResource( 13 )
