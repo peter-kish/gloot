@@ -11,7 +11,9 @@ const PROPERTIES_KEY: String = "properties"
 
 
 func get_inventory() -> Node:
-    return get_parent()
+    if get_parent():
+        return get_parent().get_parent()
+    return null
 
 
 func get_property(property_name: String, default_value = null):
