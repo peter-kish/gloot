@@ -7,11 +7,11 @@ signal size_changed
 const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
 const KEY_ITEM_POSITIONS: String = "item_positions"
-const DEFAUL_WIDTH: int = 10
-const DEFAUL_HEIGHT: int = 10
+const DEFAULT_WIDTH: int = 10
+const DEFAULT_HEIGHT: int = 10
 
-export(int, 1, 100) var width: int = DEFAUL_WIDTH setget _set_width
-export(int, 1, 100) var height: int = DEFAUL_HEIGHT setget _set_height
+export(int, 1, 100) var width: int = DEFAULT_WIDTH setget _set_width
+export(int, 1, 100) var height: int = DEFAULT_HEIGHT setget _set_height
 
 var _item_positions: Array = []
 
@@ -304,8 +304,8 @@ func sort() -> bool:
 func reset() -> void:
     .reset()
     _item_positions = []
-    width = DEFAUL_WIDTH
-    height = DEFAUL_HEIGHT
+    width = DEFAULT_WIDTH
+    height = DEFAULT_HEIGHT
 
 
 func clear() -> void:
