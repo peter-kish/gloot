@@ -8,6 +8,7 @@ var inventory: Inventory = null setget _set_inventory
 var _item_list: ItemList
 
 const KEY_IMAGE = "image"
+const KEY_NAME = "name"
 
 
 func _get_configuration_warning() -> String:
@@ -80,7 +81,7 @@ func _populate_list() -> void:
 
 
 func _get_item_title(item: InventoryItem) -> String:
-    var title = item.get_property("name", item.prototype_id)
+    var title = item.get_property(KEY_NAME, item.prototype_id)
     if !(title is String):
         title = item.prototype_id
 
