@@ -102,7 +102,7 @@ func _clear() -> void:
     if _label:
         _label.text = ""
     if _texture_rect:
-        _texture_rect.texture = default_item_icon
+        _texture_rect.texture = null
 
 
 func _get_item_texture(item: InventoryItem) -> Resource:
