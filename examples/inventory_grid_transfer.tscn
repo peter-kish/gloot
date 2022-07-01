@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tests/data/item_definitions_grid.tres" type="Resource" id=1]
 [ext_resource path="res://addons/gloot/inventory_grid.gd" type="Script" id=2]
 [ext_resource path="res://addons/gloot/ctrl_inventory_grid.gd" type="Script" id=3]
 [ext_resource path="res://examples/inventory_grid_transfer.gd" type="Script" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://addons/gloot/ctrl_item_slot.gd" type="Script" id=6]
+[ext_resource path="res://addons/gloot/item_slot.gd" type="Script" id=7]
 
 [node name="InventoryGridTransfer" type="Control"]
 anchor_right = 1.0
@@ -16,7 +18,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 352.0
+margin_right = 422.0
 margin_bottom = 198.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -72,12 +74,45 @@ margin_bottom = 198.0
 size_flags_horizontal = 3
 text = "Sort"
 
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+margin_left = 356.0
+margin_right = 422.0
+margin_bottom = 198.0
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+margin_right = 66.0
+margin_bottom = 14.0
+text = "Item Slot:"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+margin_top = 18.0
+margin_right = 66.0
+margin_bottom = 64.0
+
+[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 59.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 32 )
+script = ExtResource( 6 )
+item_slot_path = NodePath("../../../../../ItemSlot")
+label_visible = false
+
+[node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+margin_top = 68.0
+margin_right = 66.0
+margin_bottom = 88.0
+text = "Unequip"
+
 [node name="Label" type="Label" parent="VBoxContainer"]
 margin_top = 202.0
 margin_right = 448.0
-margin_bottom = 233.0
+margin_bottom = 267.0
 text = "Drag and drop items to transfer them from one inventory to the other.
-Press the 'Sort' buttons to sort the inventories."
+Press the 'Sort' buttons to sort the inventories.
+Drag items from the right inventory onto the item slot to equip it.
+Use the 'Unequip' button to unequip it."
 
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -90,3 +125,7 @@ script = ExtResource( 2 )
 item_protoset = ExtResource( 1 )
 contents = [ "item_2x2", "item_1x1" ]
 size = Vector2( 5, 5 )
+
+[node name="ItemSlot" type="Node" parent="."]
+script = ExtResource( 7 )
+inventory_path = NodePath("../InventoryGridRight")
