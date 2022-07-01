@@ -21,13 +21,13 @@ size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1024.0
-margin_bottom = 504.0
+margin_bottom = 491.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 margin_right = 510.0
-margin_bottom = 504.0
+margin_bottom = 491.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -37,50 +37,51 @@ default_item_icon = ExtResource( 5 )
 [node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 margin_left = 514.0
 margin_right = 1024.0
-margin_bottom = 504.0
+margin_bottom = 491.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
 inventory_path = NodePath("../../../InventoryStackedRight")
 default_item_icon = ExtResource( 5 )
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
-margin_top = 508.0
-margin_right = 1024.0
-margin_bottom = 522.0
-text = "Use the buttons below to equip/unequip an item from the left inventory."
-
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 526.0
+margin_top = 495.0
 margin_right = 1024.0
-margin_bottom = 558.0
+margin_bottom = 541.0
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3"]
-margin_right = 32.0
-margin_bottom = 32.0
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3"]
+margin_right = 46.0
+margin_bottom = 46.0
+
+[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 39.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 32, 32 )
 script = ExtResource( 6 )
-item_slot_path = NodePath("../../../ItemSlot")
+item_slot_path = NodePath("../../../../ItemSlot")
 default_item_icon = ExtResource( 5 )
 label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-margin_left = 36.0
-margin_right = 83.0
-margin_bottom = 32.0
+margin_left = 50.0
+margin_right = 97.0
+margin_bottom = 46.0
 text = "Equip"
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-margin_left = 87.0
-margin_right = 145.0
-margin_bottom = 32.0
+margin_left = 101.0
+margin_right = 159.0
+margin_bottom = 46.0
 text = "Unquip"
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_top = 562.0
+margin_top = 545.0
 margin_right = 1024.0
 margin_bottom = 576.0
-text = "Use the buttons below to transfer items from one inventory to the other."
+text = "Use the buttons above to equip/unequip an item from the left inventory.
+Use the buttons below to transfer items from one inventory to the other."
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 580.0
