@@ -118,6 +118,7 @@ func clear() -> void:
     for item in get_items():
         remove_item(item)
         item.queue_free()
+    contents.clear()
 
 
 func serialize() -> Dictionary:

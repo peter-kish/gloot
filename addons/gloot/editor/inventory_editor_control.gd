@@ -10,8 +10,30 @@ onready var btn_remove = $VBoxContainer/HBoxContainer/ItemsContainer/BtnRemove
 onready var space_container = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer
 onready var lbl_space = $VBoxContainer/HBoxContainer/ItemsContainer/MarginContainer/Label
 
-var inventory: Inventory
+var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface = null setget _set_editor_interface
+
+
+func _set_inventory(new_inventory: Inventory) -> void:
+    if inventory:
+        if inventory is InventoryStacked:
+            inventory.disconnect("capacity_changed", self, "refresh")
+        inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
+
+    inventory = new_inventory
+    
+    if inventory:
+        if inventory is InventoryStacked:
+            inventory.connect("capacity_changed", self, "refresh")
+        inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
+
+    edit(inventory)
+
+
+func _on_inventory_protoset_changed() -> void:
+    if !inventory || !inventory.item_protoset:
+        inventory.clear()
+    refresh()
 
 
 func _set_editor_interface(new_interface: EditorInterface) -> void:
@@ -30,16 +52,6 @@ func _ready():
     item_list_items.connect("item_activated", self, "_on_item_activated")
     edt_filter_prototypes.connect("text_changed", self, "_on_properties_filter_changed")
     edt_filter_items.connect("text_changed", self, "_on_items_filter_changed")
-
-    if editor_interface:
-        btn_add.icon = editor_interface.get_base_control().get_icon("Add", "EditorIcons")
-        btn_remove.icon = editor_interface.get_base_control().get_icon("Remove", "EditorIcons")
-
-    if inventory:
-        if inventory is InventoryStacked:
-            inventory.connect("capacity_changed", self, "refresh")
-        inventory.connect("protoset_changed", self, "refresh")
-        edit(inventory)
 
 
 func _on_prototype_activated(index: int) -> void:
