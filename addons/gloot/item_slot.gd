@@ -1,16 +1,40 @@
 extends Node
 class_name ItemSlot
+tool
 
 signal item_set
 signal item_cleared
 signal inventory_changed
 
 
+export(NodePath) var inventory_path: NodePath setget _set_inventory_path
+export(int) var equipped_item: int = -1 setget _set_equipped_item
 var inventory: Inventory setget _set_inventory
 var item: InventoryItem setget _set_item
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"
+
+
+func _set_inventory_path(new_inv_path: NodePath) -> void:
+    inventory_path = new_inv_path
+    var node: Node = get_node_or_null(inventory_path)
+
+    if is_inside_tree():
+        assert(node is Inventory)
+        
+    _set_inventory(node)
+
+
+func _set_equipped_item(new_equipped_item: int) -> void:
+    equipped_item = new_equipped_item
+    if equipped_item < 0:
+        _set_item(null)
+        return
+    if inventory:
+        var items = inventory.get_items()
+        if equipped_item < items.size() && can_hold_item(items[equipped_item]):
+            _set_item(items[equipped_item])
 
 
 func _set_inventory(new_inv: Inventory) -> void:
@@ -57,6 +81,14 @@ func can_hold_item(new_item: InventoryItem) -> bool:
         return false
 
     return true
+
+
+func _ready():
+    _set_inventory(get_node_or_null(inventory_path))
+    if equipped_item >= 0 && inventory:
+        var items = inventory.get_items()
+        if equipped_item < items.size() && can_hold_item(items[equipped_item]):
+            _set_item(items[equipped_item])
 
 
 func _on_inventory_tree_exiting():

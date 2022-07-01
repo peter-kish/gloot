@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_inventory_stacked.gd"
 }, {
+"base": "HBoxContainer",
+"class": "CtrlItemSlot",
+"language": "GDScript",
+"path": "res://addons/gloot/ctrl_item_slot.gd"
+}, {
 "base": "Reference",
 "class": "GlootVerify",
 "language": "GDScript",
@@ -74,6 +79,7 @@ _global_script_class_icons={
 "CtrlInventoryGrid": "",
 "CtrlInventoryItemRect": "",
 "CtrlInventoryStacked": "",
+"CtrlItemSlot": "",
 "GlootVerify": "",
 "Inventory": "",
 "InventoryGrid": "",
