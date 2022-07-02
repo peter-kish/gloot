@@ -1,5 +1,5 @@
 class_name CtrlInventoryGrid
-extends Container
+extends Control
 tool
 
 signal item_dropped
@@ -10,11 +10,11 @@ export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
 export(int) var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null setget _set_inventory
-var grabbed_ctrl_inventory_item = null
-var grab_offset: Vector2
+var _grabbed_ctrl_inventory_item = null
+var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
-var drag_sprite: Sprite
-var ctrl_item_container: Control
+var _drag_sprite: Sprite
+var _ctrl_item_container: Control
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -57,14 +57,14 @@ func _ready():
             
     _set_inventory(get_node_or_null(inventory_path))
 
-    ctrl_item_container = Control.new()
-    add_child(ctrl_item_container)
+    _ctrl_item_container = Control.new()
+    add_child(_ctrl_item_container)
 
-    drag_sprite = Sprite.new()
-    drag_sprite.centered = false
-    drag_sprite.z_index = drag_sprite_z_index
-    drag_sprite.hide()
-    add_child(drag_sprite)
+    _drag_sprite = Sprite.new()
+    _drag_sprite.centered = false
+    _drag_sprite.z_index = drag_sprite_z_index
+    _drag_sprite.hide()
+    add_child(_drag_sprite)
 
 
 func _connect_signals() -> void:
@@ -84,8 +84,8 @@ func _refresh() -> void:
 
 
 func _process(_delta):
-    if drag_sprite && drag_sprite.visible:
-        drag_sprite.global_position = get_global_mouse_position() - grab_offset
+    if _drag_sprite && _drag_sprite.visible:
+        _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
     update()
 
 
@@ -116,11 +116,11 @@ func _refresh_grid_container() -> void:
 
 
 func _clear_list() -> void:
-    if !ctrl_item_container:
+    if !_ctrl_item_container:
         return
 
-    for ctrl_inventory_item in ctrl_item_container.get_children():
-        ctrl_item_container.remove_child(ctrl_inventory_item)
+    for ctrl_inventory_item in _ctrl_item_container.get_children():
+        _ctrl_item_container.remove_child(ctrl_inventory_item)
         ctrl_inventory_item.queue_free()
 
 
@@ -137,21 +137,21 @@ func _populate_list() -> void:
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
-        ctrl_item_container.add_child(ctrl_inventory_item)
+        _ctrl_item_container.add_child(ctrl_inventory_item)
 
 
 func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
-    grabbed_ctrl_inventory_item = ctrl_inventory_item
-    grabbed_ctrl_inventory_item.hide()
-    grab_offset = offset
-    if drag_sprite:
-        drag_sprite.texture = ctrl_inventory_item.texture
-        if drag_sprite.texture == null:
-            drag_sprite.texture = default_item_texture
+    _grabbed_ctrl_inventory_item = ctrl_inventory_item
+    _grabbed_ctrl_inventory_item.hide()
+    _grab_offset = offset
+    if _drag_sprite:
+        _drag_sprite.texture = ctrl_inventory_item.texture
+        if _drag_sprite.texture == null:
+            _drag_sprite.texture = default_item_texture
         var item_size = inventory.get_item_size(ctrl_inventory_item.item)
-        var texture_size = drag_sprite.texture.get_size()
-        drag_sprite.scale = item_size * texture_size / field_dimensions
-        drag_sprite.show()
+        var texture_size = _drag_sprite.texture.get_size()
+        _drag_sprite.scale = item_size * texture_size / field_dimensions
+        _drag_sprite.show()
 
 
 func _input(event: InputEvent) -> void:
@@ -159,18 +159,18 @@ func _input(event: InputEvent) -> void:
         var mb_event: InputEventMouseButton = event
         if !mb_event.is_pressed() && \
             mb_event.button_index == BUTTON_LEFT && \
-            grabbed_ctrl_inventory_item:
+            _grabbed_ctrl_inventory_item:
 
             if _is_mouse_hovering():
                 var field_coords = get_field_coords(get_global_mouse_position())
-                inventory.move_item(grabbed_ctrl_inventory_item.item, \
+                inventory.move_item(_grabbed_ctrl_inventory_item.item, \
                     field_coords)
             else:
-                emit_signal("item_dropped", grabbed_ctrl_inventory_item.item, get_global_mouse_position())
-            grabbed_ctrl_inventory_item.show()
-            grabbed_ctrl_inventory_item = null
-            if drag_sprite:
-                drag_sprite.hide()
+                emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, get_global_mouse_position())
+            _grabbed_ctrl_inventory_item.show()
+            _grabbed_ctrl_inventory_item = null
+            if _drag_sprite:
+                _drag_sprite.hide()
 
 
 func _is_mouse_hovering() -> bool:

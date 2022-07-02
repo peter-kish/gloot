@@ -1,5 +1,5 @@
 class_name CtrlItemSlot
-extends HBoxContainer
+extends Control
 tool
 
 
@@ -8,6 +8,7 @@ export(Texture) var default_item_icon: Texture
 export(bool) var item_texture_visible: bool = true setget _set_item_texture_visible
 export(bool) var label_visible: bool = true setget _set_label_visible
 var item_slot: ItemSlot setget _set_item_slot
+var _hbox_container: HBoxContainer
 var _texture_rect: TextureRect
 var _label: Label
 
@@ -77,13 +78,23 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 
 
 func _ready():
+    if Engine.editor_hint:
+        # Clean up, in case it is duplicated in the editor
+        for child in get_children():
+            child.queue_free();
+
+    _hbox_container = HBoxContainer.new()
+    _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    _hbox_container.size_flags_vertical = SIZE_EXPAND_FILL
+    add_child(_hbox_container)
+
     _texture_rect = TextureRect.new()
     _texture_rect.visible = item_texture_visible
-    add_child(_texture_rect)
+    _hbox_container.add_child(_texture_rect)
 
     _label = Label.new()
     _label.visible = label_visible
-    add_child(_label)
+    _hbox_container.add_child(_label)
 
     var node: Node = get_node_or_null(item_slot_path)
     if is_inside_tree() && node:
