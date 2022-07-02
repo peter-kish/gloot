@@ -32,6 +32,11 @@ static func get_item_script() -> Script:
 
 
 func _ready() -> void:
+    if Engine.editor_hint:
+        # Clean up, in case it is duplicated in the editor
+        for child in get_children():
+            child.queue_free();
+            
     _items = Node.new()
     add_child(_items)
     _populate()

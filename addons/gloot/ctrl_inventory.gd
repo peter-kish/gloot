@@ -41,6 +41,11 @@ func _set_inventory(new_inventory: Inventory) -> void:
 
 
 func _ready():
+    if Engine.editor_hint:
+        # Clean up, in case it is duplicated in the editor
+        for child in get_children():
+            child.queue_free();
+
     _item_list = ItemList.new()
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
