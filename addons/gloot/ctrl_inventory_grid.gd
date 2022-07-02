@@ -33,7 +33,7 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path
     var node: Node = get_node_or_null(inventory_path)
 
-    if is_inside_tree():
+    if is_inside_tree() && node:
         assert(node is InventoryGrid)
         
     _set_inventory(node)

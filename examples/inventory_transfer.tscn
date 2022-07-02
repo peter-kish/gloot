@@ -116,7 +116,3 @@ contents = [ "item1", "item2" ]
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )
 inventory_path = NodePath("../Inventory")
-
-[node name="ItemSlot2" type="Node" parent="."]
-script = ExtResource( 7 )
-inventory_path = NodePath("../Inventory2")
