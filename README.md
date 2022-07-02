@@ -58,6 +58,7 @@ User interfaces are usually unique for each project, but it often helps to have 
 * ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging. Uses the `image` item property (path to a texture) to display the item on the grid.
 
 ![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
+* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlot icon") [`CtrlItemSlot`](docs/ctrl_item_slot.md) - UI control representing an ([`ItemSlot`](docs/item_slot.md)).
 
 ## Installation
 
