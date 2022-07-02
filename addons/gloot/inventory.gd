@@ -15,12 +15,19 @@ const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
 
 
+func _get_configuration_warning() -> String:
+    if item_protoset == null:
+        return "This inventory node has no protoset. Set the 'item_protoset' field to be able to populate the inventory with items."
+    return ""
+
+
 func _set_item_protoset(new_item_protoset: Resource) -> void:
     assert((new_item_protoset is ItemProtoset) || (new_item_protoset == null), \
         "item_protoset must be an ItemProtoset resource!")
     
     item_protoset = new_item_protoset
     emit_signal("protoset_changed")
+    update_configuration_warning()
 
 
 func _set_contents(new_contents: Array) -> void:
