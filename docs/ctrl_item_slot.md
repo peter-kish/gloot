@@ -1,6 +1,6 @@
 # `CtrlItemSlot`
 
-Inherits: [HBoxContainer](https://docs.godotengine.org/en/stable/classes/class_hboxcontainer.html)
+Inherits: [Control](https://docs.godotengine.org/en/stable/classes/class_control.html)
 
 ## Description
 

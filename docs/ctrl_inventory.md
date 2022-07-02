@@ -1,6 +1,6 @@
 # `CtrlInventory`
 
-Inherits: [VBoxContainer](https://docs.godotengine.org/en/stable/classes/class_vboxcontainer.html)
+Inherits: [Control](https://docs.godotengine.org/en/stable/classes/class_control.html)
 
 Inherited by: [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 

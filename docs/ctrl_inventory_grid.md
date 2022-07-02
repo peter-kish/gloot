@@ -1,6 +1,6 @@
 # `CtrlInventoryGrid`
 
-Inherits: [CtrlInventory](./ctrl_inventory.md)
+Inherits: [Control](https://docs.godotengine.org/en/stable/classes/class_control.html)
 
 ## Description
 

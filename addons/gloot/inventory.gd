@@ -17,7 +17,8 @@ const KEY_ITEMS: String = "items"
 
 func _get_configuration_warning() -> String:
     if item_protoset == null:
-        return "This inventory node has no protoset. Set the 'item_protoset' field to be able to populate the inventory with items."
+        return "This inventory node has no protoset. Set the 'item_protoset' field to be able to " \
+        + "populate the inventory with items."
     return ""
 
 

@@ -9,12 +9,12 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "VBoxContainer",
+"base": "Control",
 "class": "CtrlInventory",
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_inventory.gd"
 }, {
-"base": "Container",
+"base": "Control",
 "class": "CtrlInventoryGrid",
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_inventory_grid.gd"
@@ -29,7 +29,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_inventory_stacked.gd"
 }, {
-"base": "HBoxContainer",
+"base": "Control",
 "class": "CtrlItemSlot",
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_item_slot.gd"
