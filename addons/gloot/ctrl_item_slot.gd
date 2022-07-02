@@ -12,14 +12,22 @@ var _texture_rect: TextureRect
 var _label: Label
 
 
+func _get_configuration_warning() -> String:
+    if item_slot_path.is_empty():
+        return "This node is not linked to an item slot, so it can't display any content.\n" + \
+               "Set the item_slot_path property to point to an ItemSlot node."
+    return ""
+
+
 func _set_item_slot_path(new_item_slot_path: NodePath) -> void:
     item_slot_path = new_item_slot_path
     var node: Node = get_node_or_null(item_slot_path)
 
-    if is_inside_tree():
+    if is_inside_tree() && node:
         assert(node is ItemSlot)
         
     _set_item_slot(node)
+    update_configuration_warning()
 
 
 func _set_item_texture_visible(new_item_texture_visible: bool) -> void:
@@ -35,7 +43,10 @@ func _set_label_visible(new_label_visible: bool) -> void:
 
 
 func _set_item_slot(new_item_slot: ItemSlot) -> void:
-    if new_item_slot == null && item_slot:
+    if new_item_slot == item_slot:
+        return
+
+    if item_slot:
         _disconnect_signals()
 
     item_slot = new_item_slot
@@ -75,7 +86,7 @@ func _ready():
     add_child(_label)
 
     var node: Node = get_node_or_null(item_slot_path)
-    if is_inside_tree():
+    if is_inside_tree() && node:
         assert(node is ItemSlot)
     _set_item_slot(node)
 
