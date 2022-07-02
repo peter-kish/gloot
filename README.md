@@ -22,8 +22,9 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
     3. [Item prototypes for a Grid Based Inventory](#item-prototypes-for-a-grid-based-inventory)
     4. [Additional Prototype Fields](#additional-prototype-fields)
     5. [Editing item properties](#editing-item-properties)
-5. [The Documentation](#the-documentation)
-6. [Examples](#examples)
+5. [Serialization](#serialization)
+6. [The Documentation](#the-documentation)
+7. [Examples](#examples)
 
 ## Features
 
@@ -192,6 +193,31 @@ Item properties defined in the [`ItemProtoset`](docs/item_protoset.md) resource 
 var stack_size: int = item.get_property("stack_size")
 if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
+```
+
+## Serialization
+
+All GLoot classes have a `serialize()` and a `deserialize()` method that can be used for serialization.
+The `serialize()` methods serializes the class into a dictionary, that can be further serialized into JSON, binary or some other format.
+
+Example:
+```
+# Serialize the inventory into a JSON string
+var inventory: Inventory = get_node("inventory")
+var dict: Dictionary = inventory.serialize()
+var json: String = JSON.print(dict)
+```
+
+The `deserialize` methods receive a dictionary as argument that has been previously generated with `serialize()` and apply the data to the current class instance.
+
+Example:
+```
+# Deserialize the inventory from a JSON string
+var inventory: Inventory = get_node("inventory")
+var res: JSONParseResult = JSON.parse(json)
+if res.error == OK:
+    var dict = res.result
+    inventory.deserialize(dict)
 ```
 
 ## The Documentation
