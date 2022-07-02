@@ -5,7 +5,7 @@ var item_1x1: InventoryItem
 var item_2x2: InventoryItem
 
 
-func run_tests():
+func setup():
     inventory_3x3 = $InventoryGrid3x3
     item_1x1 = $Item_1x1
     item_2x2 = $Item_2x2
@@ -16,8 +16,6 @@ func run_tests():
         "test_change_size",
         "test_serialize"
     ]
-
-    .run_tests()
 
 
 func reset():

@@ -7,7 +7,7 @@ var big_item: InventoryItem
 var stackable_item: InventoryItem
 
 
-func run_tests() -> void:
+func setup() -> void:
     inventory = $InventoryStacked
     item = $MinimalItem
     big_item = $BigItem
@@ -23,8 +23,6 @@ func run_tests() -> void:
         "test_stack_split_join",
         "test_serialize"
     ]
-
-    .run_tests()
 
 
 func reset() -> void:

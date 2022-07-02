@@ -8,9 +8,8 @@ var d: Dictionary = {
 }
 
 
-func run_tests():
+func setup():
     tests = ["test_mandatory", "test_optional"]
-    .run_tests()
 
 
 func test_mandatory() -> void:

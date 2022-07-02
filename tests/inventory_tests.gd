@@ -5,7 +5,7 @@ var inventory2: Inventory
 var item: InventoryItem
 
 
-func run_tests():
+func setup():
     inventory1 = $Inventory1
     inventory2 = $Inventory2
     item = inventory1.get_item_by_id("minimal_item")
@@ -18,8 +18,6 @@ func run_tests():
         "test_remove_item",
         "test_serialize"
     ]
-
-    .run_tests()
 
 
 func reset() -> void:

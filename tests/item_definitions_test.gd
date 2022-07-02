@@ -4,10 +4,9 @@ extends Test
 var inventory: Inventory
 
 
-func run_tests():
+func setup():
     inventory = $Inventory
     tests = ["test_item_count"]
-    .run_tests()
 
 
 func test_item_count():

@@ -6,7 +6,7 @@ var slot: ItemSlot
 var item: InventoryItem
 
 
-func run_tests():
+func setup():
     inventory1 = $Inventory1
     inventory2 = $Inventory2
     slot = $ItemSlot
@@ -18,8 +18,6 @@ func run_tests():
         "test_item_removed",
         "test_serialize"
     ]
-
-    .run_tests()
 
 
 func reset() -> void:
