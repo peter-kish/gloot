@@ -36,8 +36,10 @@ func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_invent
 
 
 func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:
+    var equipped_item = ctrl_slot.item_slot.item
     if !ctrl_inventory.inventory.sort():
         print("Warning: InventoryGrid.sort() returned false!")
+    ctrl_slot.item_slot.item = equipped_item
 
 
 func _on_btn_unequip() -> void:
