@@ -1,5 +1,4 @@
-extends Test
-
+extends TestSuite
 
 var inventory: InventoryStacked
 var item: InventoryItem
@@ -7,7 +6,7 @@ var big_item: InventoryItem
 var stackable_item: InventoryItem
 
 
-func setup() -> void:
+func init_suite() -> void:
     inventory = $InventoryStacked
     item = $MinimalItem
     big_item = $BigItem
@@ -25,7 +24,7 @@ func setup() -> void:
     ]
 
 
-func reset() -> void:
+func init_test() -> void:
     inventory.capacity = 10.0
     for i in inventory.get_items():
         inventory.remove_item(i)

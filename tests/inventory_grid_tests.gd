@@ -1,11 +1,11 @@
-extends Test
+extends TestSuite
 
 var inventory_3x3: InventoryGrid
 var item_1x1: InventoryItem
 var item_2x2: InventoryItem
 
 
-func setup():
+func init_suite():
     inventory_3x3 = $InventoryGrid3x3
     item_1x1 = $Item_1x1
     item_2x2 = $Item_2x2
@@ -18,7 +18,7 @@ func setup():
     ]
 
 
-func reset():
+func init_test():
     for i in inventory_3x3.get_items():
         inventory_3x3.remove_item(i)
 

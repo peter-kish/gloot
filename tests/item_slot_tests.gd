@@ -1,4 +1,4 @@
-extends Test
+extends TestSuite
 
 var inventory1: Inventory
 var inventory2: Inventory
@@ -6,7 +6,7 @@ var slot: ItemSlot
 var item: InventoryItem
 
 
-func setup():
+func init_suite():
     inventory1 = $Inventory1
     inventory2 = $Inventory2
     slot = $ItemSlot
@@ -20,7 +20,7 @@ func setup():
     ]
 
 
-func reset() -> void:
+func init_test() -> void:
     for i in inventory1.get_items():
         inventory1.remove_item(i)
     for i in inventory2.get_items():

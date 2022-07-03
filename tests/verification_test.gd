@@ -1,4 +1,4 @@
-extends Test
+extends TestSuite
 
 var d: Dictionary = {
     "f": 3.14,
@@ -8,7 +8,7 @@ var d: Dictionary = {
 }
 
 
-func setup():
+func init_suite():
     tests = ["test_mandatory", "test_optional"]
 
 
