@@ -70,9 +70,9 @@ _global_script_classes=[ {
 "path": "res://addons/gloot/item_slot.gd"
 }, {
 "base": "Node",
-"class": "Test",
+"class": "TestSuite",
 "language": "GDScript",
-"path": "res://tests/test.gd"
+"path": "res://tests/test_suite.gd"
 } ]
 _global_script_class_icons={
 "CtrlInventory": "",
@@ -87,7 +87,7 @@ _global_script_class_icons={
 "InventoryStacked": "",
 "ItemProtoset": "",
 "ItemSlot": "",
-"Test": ""
+"TestSuite": ""
 }
 
 [application]

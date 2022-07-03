@@ -1,26 +1,65 @@
-extends Test
+extends TestSuite
+
+var inventory1: Inventory
+var inventory2: Inventory
+var item: InventoryItem
 
 
-func run_tests():
-    var inventory1 = $Inventory1
-    var inventory2 = $Inventory2
+func init_suite():
+    inventory1 = $Inventory1
+    inventory2 = $Inventory2
+    item = inventory1.get_item_by_id("minimal_item")
 
+    tests = [
+        "test_size",
+        "test_has_item",
+        "test_add_remove",
+        "test_transfer",
+        "test_remove_item",
+        "test_serialize"
+    ]
+
+
+func init_test() -> void:
+    for i in inventory1.get_items():
+        inventory1.remove_item(i)
+    for i in inventory2.get_items():
+        inventory2.remove_item(i)
+    inventory1.add_item(item)
+
+
+func test_size() -> void:
     assert(inventory1.get_items().size() == 1)
+    assert(inventory1.remove_item(item))
+    assert(inventory1.get_items().size() == 0)
 
-    assert(inventory1.has_item_by_id("minimal_item"))
-    var item = inventory1.get_item_by_id("minimal_item")
-    assert(inventory1.has_item(item))
+
+func test_add_remove() -> void:
     assert(inventory1.remove_item(item))
     assert(inventory1.add_item(item))
-    
+
+
+func test_has_item() -> void:
+    assert(inventory1.has_item_by_id("minimal_item"))
+    assert(inventory1.has_item(item))
+    assert(inventory1.remove_item(item))
+    assert(!inventory1.has_item_by_id("minimal_item"))
+    assert(!inventory1.has_item(item))
+
+
+func test_transfer() -> void:
     assert(inventory1.transfer(item, inventory2))
     assert(!inventory1.has_item(item))
     assert(inventory2.has_item(item))
 
-    assert(inventory2.remove_item(item))
-    assert(!inventory2.has_item(item))
 
-    assert(inventory1.add_item(item))
+func test_remove_item() -> void:
+    assert(inventory1.has_item(item))
+    assert(inventory1.remove_item(item))
+    assert(!inventory1.has_item(item))
+
+
+func test_serialize() -> void:
     var inventory_data = inventory1.serialize()
     inventory1.reset()
     assert(inventory1.get_items().empty())
