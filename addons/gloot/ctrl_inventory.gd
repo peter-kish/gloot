@@ -45,7 +45,7 @@ func _ready():
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
-            child.queue_free();
+            child.queue_free()
 
     _vbox_container = VBoxContainer.new()
     _vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL

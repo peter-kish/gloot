@@ -110,7 +110,7 @@ func _get_prototype_description(prototype_id: String) -> String:
     if inventory == null || inventory.item_protoset == null:
         return ""
 
-    var stack_size = inventory.item_protoset.get_item_property(prototype_id, InventoryStacked.KEY_STACK_SIZE, 1);
+    var stack_size = inventory.item_protoset.get_item_property(prototype_id, InventoryStacked.KEY_STACK_SIZE, 1)
     if stack_size == 1:
         return prototype_id
     else:

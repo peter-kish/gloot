@@ -32,7 +32,7 @@ func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_invent
             field_coords):
         var slot_rect = ctrl_slot.get_global_rect()
         if slot_rect.has_point(drop_pos) && ctrl_slot.item_slot.can_hold_item(item):
-            ctrl_slot.item_slot.item = item;
+            ctrl_slot.item_slot.item = item
 
 
 func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:

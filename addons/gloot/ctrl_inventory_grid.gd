@@ -53,7 +53,7 @@ func _ready():
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
-            child.queue_free();
+            child.queue_free()
             
     _set_inventory(get_node_or_null(inventory_path))
 
