@@ -54,8 +54,6 @@ func _ready():
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
             child.queue_free()
-            
-    _set_inventory(get_node_or_null(inventory_path))
 
     _ctrl_item_container = Control.new()
     add_child(_ctrl_item_container)
@@ -65,7 +63,7 @@ func _ready():
     _drag_sprite.z_index = drag_sprite_z_index
     _drag_sprite.hide()
     add_child(_drag_sprite)
-
+    _set_inventory(get_node_or_null(inventory_path))
 
 func _connect_signals() -> void:
     if inventory:
