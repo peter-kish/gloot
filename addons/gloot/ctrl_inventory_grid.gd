@@ -49,7 +49,7 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
     _connect_signals()
 
 
-func _ready():
+func _enter_tree():
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
