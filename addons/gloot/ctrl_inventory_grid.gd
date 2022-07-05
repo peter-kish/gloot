@@ -148,7 +148,7 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
             _drag_sprite.texture = default_item_texture
         var item_size = inventory.get_item_size(ctrl_inventory_item.item)
         var texture_size = _drag_sprite.texture.get_size()
-        _drag_sprite.scale = item_size * texture_size / field_dimensions
+        _drag_sprite.scale = item_size * field_dimensions / texture_size
         _drag_sprite.show()
 
 
