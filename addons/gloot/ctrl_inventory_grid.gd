@@ -159,12 +159,12 @@ func _input(event: InputEvent) -> void:
             mb_event.button_index == BUTTON_LEFT && \
             _grabbed_ctrl_inventory_item:
 
+            var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
             if _is_mouse_hovering():
-                var field_coords = get_field_coords(get_global_mouse_position())
-                inventory.move_item(_grabbed_ctrl_inventory_item.item, \
-                    field_coords)
+                var field_coords = get_field_coords(global_grabbed_item_pos)
+                inventory.move_item(_grabbed_ctrl_inventory_item.item, field_coords)
             else:
-                emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, get_global_mouse_position())
+                emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, global_grabbed_item_pos)
             _grabbed_ctrl_inventory_item.show()
             _grabbed_ctrl_inventory_item = null
             if _drag_sprite:
