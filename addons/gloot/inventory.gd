@@ -73,6 +73,9 @@ func add_item(item: InventoryItem) -> bool:
         item.get_parent().remove_child(item)
 
     add_child(item)
+    if Engine.editor_hint:
+        item.owner = get_tree().edited_scene_root
+    item.name = item.prototype_id
     if !item.is_connected("tree_exited", self, "_on_item_tree_exited"):
         item.connect("tree_exited", self, "_on_item_tree_exited", [item])
     emit_signal("item_added", item)
