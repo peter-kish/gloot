@@ -9,7 +9,6 @@ signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
 export(Array, String) var contents: Array setget _set_contents
-var _items: Node
 
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
@@ -44,9 +43,7 @@ func _ready() -> void:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
             child.queue_free()
-            
-    _items = Node.new()
-    add_child(_items)
+
     _populate()
 
 
@@ -61,14 +58,11 @@ func _populate() -> void:
 
 
 func get_items() -> Array:
-    if _items == null:
-        return []
-
-    return _items.get_children()
+    return get_children()
 
 
 func has_item(item: InventoryItem) -> bool:
-    return item.get_parent() == _items
+    return item.get_parent() == self
 
 
 func add_item(item: InventoryItem) -> bool:
@@ -78,7 +72,7 @@ func add_item(item: InventoryItem) -> bool:
     if item.get_parent():
         item.get_parent().remove_child(item)
 
-    _items.add_child(item)
+    add_child(item)
     if !item.is_connected("tree_exited", self, "_on_item_tree_exited"):
         item.connect("tree_exited", self, "_on_item_tree_exited", [item])
     emit_signal("item_added", item)
@@ -92,7 +86,7 @@ func remove_item(item: InventoryItem) -> bool:
 
     if item.is_connected("tree_exited", self, "_on_item_tree_exited"):
         item.disconnect("tree_exited", self, "_on_item_tree_exited")
-    _items.remove_child(item)
+    remove_child(item)
     emit_signal("item_removed", item)
     emit_signal("contents_changed")
     return true
