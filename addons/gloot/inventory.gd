@@ -8,7 +8,6 @@ signal contents_changed
 signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
-export(Array, String) var contents: Array setget _set_contents
 
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
@@ -30,10 +29,6 @@ func _set_item_protoset(new_item_protoset: Resource) -> void:
     update_configuration_warning()
 
 
-func _set_contents(new_contents: Array) -> void:
-    contents = new_contents
-
-
 static func get_item_script() -> Script:
     return preload("inventory_item.gd")
 
@@ -43,18 +38,6 @@ func _ready() -> void:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
             child.queue_free()
-
-    _populate()
-
-
-func _populate() -> void:
-    for prototype_id in contents:
-        var prototype: Dictionary = item_protoset.get(prototype_id)
-        assert(!prototype.empty(), "Undefined item id '%s'" % prototype_id)
-        var item = get_item_script().new()
-        item.prototype_id = prototype_id
-        item.protoset = item_protoset
-        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 
 
 func get_items() -> Array:
@@ -128,7 +111,6 @@ func clear() -> void:
     for item in get_items():
         remove_item(item)
         item.queue_free()
-    contents.clear()
 
 
 func serialize() -> Dictionary:

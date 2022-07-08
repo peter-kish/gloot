@@ -17,17 +17,9 @@ const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
 
 func _get_configuration_warning() -> String:
-    var space = _get_default_occupied_space()
-    if space > capacity:
-        return "Inventory capacity exceeded! %f/%f" % [space, capacity]
+    if occupied_space > capacity:
+        return "Inventory capacity exceeded! %f/%f" % [occupied_space, capacity]
     return ""
-
-
-func _get_default_occupied_space() -> float:
-    var space = 0.0
-    for prototype_id in contents:
-        space += _get_default_item_weight(prototype_id)
-    return space
 
 
 func _get_default_item_weight(prototype_id: String) -> float:
@@ -50,11 +42,6 @@ func _set_capacity(new_capacity: float) -> void:
     capacity = new_capacity
     update_configuration_warning()
     emit_signal("capacity_changed")
-
-
-func _set_contents(new_contents: Array) -> void:
-    ._set_contents(new_contents)
-    update_configuration_warning()
 
 
 func _ready():

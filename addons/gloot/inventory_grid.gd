@@ -55,19 +55,10 @@ class Space:
         return true
 
 
-func _get_configuration_warning() -> String:
-    if _is_full_by_default():
-        return "Inventory capacity exceeded!"
-    return ""
-
-
-func _is_full_by_default() -> bool:
-    var space: Space = Space.new(size)
-    for prototype_id in contents:
-        var prototype_size = _get_prototype_size(prototype_id)
-        if !space.reserve(prototype_size):
-            return true
-    return false
+# func _get_configuration_warning() -> String:
+#     if _is_full_by_default():
+#         return "Inventory capacity exceeded!"
+#     return ""
 
 
 func _get_prototype_size(prototype_id: String) -> Vector2:
@@ -129,16 +120,6 @@ func _bounds_broken() -> bool:
             return true
 
     return false
-
-
-func _set_contents(new_contents: Array) -> void:
-    ._set_contents(new_contents)
-    update_configuration_warning()
-
-
-func _populate() -> void:
-    contents.sort_custom(self, "_compare_prototypes")
-    ._populate()
 
 
 func _compare_prototypes(prototype_id_1: String, prototype_id_2: String) -> bool:
