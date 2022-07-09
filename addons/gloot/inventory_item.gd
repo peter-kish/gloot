@@ -15,6 +15,9 @@ const PROPERTIES_KEY: String = "properties"
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
         _inventory = get_parent()
+        var inv_item_protoset = get_parent().get("item_protoset")
+        if inv_item_protoset:
+            protoset = inv_item_protoset
         _emit_added(get_parent())
     elif what == NOTIFICATION_UNPARENTED:
         _emit_removed(_inventory)
