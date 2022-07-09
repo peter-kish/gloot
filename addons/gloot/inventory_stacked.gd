@@ -45,25 +45,34 @@ func _set_capacity(new_capacity: float) -> void:
 
 
 func _ready():
-    _update_occupied_space()
-    connect("contents_changed", self, "_on_contents_changed")
+    _calculate_occupied_space()
+    connect("item_added", self, "_on_item_added")
+    connect("item_removed", self, "_on_item_removed")
+    connect("occupied_space_changed", self, "_on_occupied_space_changed")
 
 
-func _update_occupied_space() -> void:
-    var old_occupied_space = occupied_space
+func _calculate_occupied_space() -> void:
     occupied_space = 0.0
     for item in get_items():
         occupied_space += _get_item_weight(item)
 
-    if occupied_space != old_occupied_space:
-        emit_signal("occupied_space_changed")
+    emit_signal("occupied_space_changed")
 
+    update_configuration_warning()
     if !Engine.editor_hint:
         assert(has_unlimited_capacity() || occupied_space <= capacity)
 
 
-func _on_contents_changed():
-    _update_occupied_space()
+func _on_item_added(item: InventoryItem) -> void:
+    occupied_space += _get_item_weight(item)
+    emit_signal("occupied_space_changed")
+    update_configuration_warning()
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    occupied_space -= _get_item_weight(item)
+    emit_signal("occupied_space_changed")
+    update_configuration_warning()
 
 
 func get_free_space() -> float:
@@ -140,7 +149,8 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     var new_item = item.duplicate()
     _set_item_stack_size(new_item, new_stack_size)
     _set_item_stack_size(item, stack_size - new_stack_size)
-    emit_signal("contents_changed")
+    emit_signal("occupied_space_changed")
+    _calculate_occupied_space()
     assert(add_item(new_item))
     return new_item
 
@@ -152,7 +162,8 @@ func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
 
     if remove_item(stack_2):
         _set_item_stack_size(stack_1, _get_item_stack_size(stack_1) + _get_item_stack_size(stack_2))
-        emit_signal("contents_changed")
+        emit_signal("occupied_space_changed")
+        _calculate_occupied_space()
         stack_2.queue_free()
         return true
 

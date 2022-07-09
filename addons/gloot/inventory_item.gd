@@ -1,19 +1,38 @@
 extends Node
 class_name InventoryItem
+tool
 
 export(Resource) var protoset
 export(String) var prototype_id: String
 var properties: Dictionary
+var _inventory: Node
 
 const PROTOSET_KEY: String = "protoset"
 const PROTOTYE_ID_KEY: String = "prototype_id"
 const PROPERTIES_KEY: String = "properties"
 
 
+func _notification(what):
+    if what == NOTIFICATION_PARENTED:
+        _inventory = get_parent()
+        _emit_added(get_parent())
+    elif what == NOTIFICATION_UNPARENTED:
+        _emit_removed(_inventory)
+        _inventory = null
+
+
+func _emit_removed(obj: Object):
+    if obj.has_signal("item_removed"):
+        obj.emit_signal("item_removed", self)
+
+
+func _emit_added(obj: Object):
+    if obj.has_signal("item_added"):
+        obj.emit_signal("item_added", self)
+
+
 func get_inventory() -> Node:
-    if get_parent():
-        return get_parent().get_parent()
-    return null
+    return _inventory
 
 
 func get_property(property_name: String, default_value = null):

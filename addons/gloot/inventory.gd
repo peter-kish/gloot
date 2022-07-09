@@ -34,10 +34,12 @@ static func get_item_script() -> Script:
 
 
 func _ready() -> void:
-    if Engine.editor_hint:
-        # Clean up, in case it is duplicated in the editor
-        for child in get_children():
-            child.queue_free()
+    connect("item_added", self, "_emit_content_changed")
+    connect("item_removed", self, "_emit_content_changed")
+
+
+func _emit_content_changed(_item: InventoryItem):
+    emit_signal("contents_changed")
 
 
 func get_items() -> Array:
@@ -59,10 +61,6 @@ func add_item(item: InventoryItem) -> bool:
     if Engine.editor_hint:
         item.owner = get_tree().edited_scene_root
     item.name = item.prototype_id
-    if !item.is_connected("tree_exited", self, "_on_item_tree_exited"):
-        item.connect("tree_exited", self, "_on_item_tree_exited", [item])
-    emit_signal("item_added", item)
-    emit_signal("contents_changed")
     return true
 
 
@@ -70,17 +68,8 @@ func remove_item(item: InventoryItem) -> bool:
     if item == null || !has_item(item):
         return false
 
-    if item.is_connected("tree_exited", self, "_on_item_tree_exited"):
-        item.disconnect("tree_exited", self, "_on_item_tree_exited")
     remove_child(item)
-    emit_signal("item_removed", item)
-    emit_signal("contents_changed")
     return true
-
-
-func _on_item_tree_exited(item: InventoryItem) -> void:
-    emit_signal("contents_changed")
-    emit_signal("item_removed", item)
 
 
 func get_item_by_id(id: String) -> InventoryItem:
