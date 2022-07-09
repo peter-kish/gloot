@@ -48,7 +48,6 @@ func _ready():
     _calculate_occupied_space()
     connect("item_added", self, "_on_item_added")
     connect("item_removed", self, "_on_item_removed")
-    connect("occupied_space_changed", self, "_on_occupied_space_changed")
 
 
 func _calculate_occupied_space() -> void:
