@@ -46,8 +46,6 @@ func _set_capacity(new_capacity: float) -> void:
 
 func _ready():
     _calculate_occupied_space()
-    connect("item_added", self, "_on_item_added")
-    connect("item_removed", self, "_on_item_removed")
 
 
 func _calculate_occupied_space() -> void:
@@ -63,12 +61,14 @@ func _calculate_occupied_space() -> void:
 
 
 func _on_item_added(item: InventoryItem) -> void:
+    ._on_item_added(item)
     occupied_space += _get_item_weight(item)
     emit_signal("occupied_space_changed")
     update_configuration_warning()
 
 
 func _on_item_removed(item: InventoryItem) -> void:
+    ._on_item_removed(item)
     occupied_space -= _get_item_weight(item)
     emit_signal("occupied_space_changed")
     update_configuration_warning()
