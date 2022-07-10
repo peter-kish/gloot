@@ -63,10 +63,12 @@ func _ready():
 
 func _connect_signals() -> void:
     inventory.connect("contents_changed", self, "_refresh")
+    inventory.connect("item_modified", self, "_refresh")
 
 
 func _disconnect_signals() -> void:
     inventory.disconnect("contents_changed", self, "_refresh")
+    inventory.disconnect("item_modified", self, "_refresh")
 
 
 func _refresh() -> void:
@@ -80,9 +82,6 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
-    if Engine.editor_hint:
-        return
-
     if inventory == null:
         return
 
@@ -92,6 +91,9 @@ func _populate_list() -> void:
 
 
 func _get_item_title(item: InventoryItem) -> String:
+    if item == null:
+        return ""
+
     var title = item.get_property(KEY_NAME, item.prototype_id)
     if !(title is String):
         title = item.prototype_id
@@ -105,6 +107,9 @@ func _get_item_title(item: InventoryItem) -> String:
 
 
 func _get_item_texture(item: InventoryItem) -> Resource:
+    if item == null:
+        return null
+
     var texture_path = item.get_property(KEY_IMAGE)
     if texture_path:
         return load(texture_path)
