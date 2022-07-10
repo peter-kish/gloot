@@ -119,6 +119,8 @@ func _set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
 
 
 func _get_item_weight(item: InventoryItem) -> float:
+    if item == null:
+        return -1.0
     return _get_item_stack_size(item) * _get_item_unit_weight(item)
 
 
