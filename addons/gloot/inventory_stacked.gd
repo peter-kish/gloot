@@ -75,6 +75,12 @@ func _on_item_removed(item: InventoryItem) -> void:
     update_configuration_warning()
 
 
+func remove_item(item: InventoryItem) -> bool:
+    var result = .remove_item(item)
+    _calculate_occupied_space()
+    return result
+
+
 func _on_item_modified(item: InventoryItem) -> void:
     _calculate_occupied_space()
     update_configuration_warning()
