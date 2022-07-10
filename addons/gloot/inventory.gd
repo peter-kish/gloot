@@ -41,16 +41,22 @@ func _ready() -> void:
 
 func _on_item_added(item: InventoryItem) -> void:
     emit_signal("contents_changed")
-    item.connect("protoset_changed", self, "_emit_item_modified", [item])
-    item.connect("prototype_id_changed", self, "_emit_item_modified", [item])
-    item.connect("properties_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("protoset_changed", self, "_emit_item_modified"):
+        item.connect("protoset_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
+        item.connect("prototype_id_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("properties_changed", self, "_emit_item_modified"):
+        item.connect("properties_changed", self, "_emit_item_modified", [item])
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     emit_signal("contents_changed")
-    item.disconnect("protoset_changed", self, "_emit_item_modified")
-    item.disconnect("prototype_id_changed", self, "_emit_item_modified")
-    item.disconnect("properties_changed", self, "_emit_item_modified")
+    if item.is_connected("protoset_changed", self, "_emit_item_modified"):
+        item.disconnect("protoset_changed", self, "_emit_item_modified")
+    if item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
+        item.disconnect("prototype_id_changed", self, "_emit_item_modified")
+    if item.is_connected("properties_changed", self, "_emit_item_modified"):
+        item.disconnect("properties_changed", self, "_emit_item_modified")
 
 
 func _emit_item_modified(item: InventoryItem) -> void:

@@ -7,58 +7,18 @@ signal size_changed
 const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
-const KEY_ITEM_POSITIONS: String = "item_positions"
+const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2 = Vector2(10, 10)
 
 export(Vector2) var size: Vector2 = DEFAULT_SIZE setget _set_size
 
-var _item_positions: Array = []
 
-
-class Space:
-    var capacity: Vector2
-    var reserved_rects: Array
-
-
-    func _init(capacity_: Vector2):
-        capacity = capacity_.round()
-
-
-    func reserve(size: Vector2) -> bool:
-        var free_rect = _find_free_space(size.round())
-        if GlootVerify.rect_positive(free_rect):
-            reserved_rects.append(free_rect)
-            return true
-        return false
-
-
-    func _find_free_space(size: Vector2) -> Rect2:
-        size = size.round()
-        for x in range(int(capacity.x) - (int(size.x) - 1)):
-            for y in range(int(capacity.y) - (int(size.y) - 1)):
-                var space: Rect2 = Rect2(Vector2(x, y), size)
-                if _rect_free(space):
-                    return space
-        return Rect2(-1, -1, -1, -1)
-
-
-    func _rect_free(rect: Rect2) -> bool:
-        if rect.position.x + rect.size.x > capacity.x:
-            return false
-        if rect.position.y + rect.size.y > capacity.y:
-            return false
-    
-        for item_rect in reserved_rects:
-            if rect.intersects(item_rect):
-                return false
-    
-        return true
-
-
-# func _get_configuration_warning() -> String:
-#     if _is_full_by_default():
-#         return "Inventory capacity exceeded!"
-#     return ""
+func _get_configuration_warning() -> String:
+    if !_is_sorted():
+        return "Inventory not sorted!"
+    if _bounds_broken():
+        return "Inventory bounds broken!"
+    return ""
 
 
 func _get_prototype_size(prototype_id: String) -> Vector2:
@@ -70,7 +30,8 @@ func _get_prototype_size(prototype_id: String) -> Vector2:
 
 
 func get_item_position(item: InventoryItem) -> Vector2:
-    return _item_positions[_get_item_index(item)]
+    assert(has_item(item), "Item not found in the inventory!")
+    return item.get_property(KEY_GRID_POSITION, Vector2.ZERO)
 
 
 func _get_item_index(item: InventoryItem) -> int:
@@ -98,6 +59,48 @@ func get_item_rect(item: InventoryItem) -> Rect2:
 func _ready():
     assert(size.x > 0, "Inventory width must be positive!")
     assert(size.y > 0, "Inventory height must be positive!")
+    sort_if_needed()
+    connect("item_modified", self, "_on_item_modified")
+    update_configuration_warning()
+
+
+func _is_sorted() -> bool:
+    for item1 in get_items():
+        for item2 in get_items():
+            if item1 == item2:
+                continue
+
+            var rect1: Rect2 = get_item_rect(item1)
+            var rect2: Rect2 = get_item_rect(item2)
+            if rect1.intersects(rect2):
+                return false;
+
+    return true
+
+
+func _on_item_added(item: InventoryItem) -> void:
+    if !rect_free(get_item_rect(item), item):
+        var free_place = find_free_place(item)
+        if GlootVerify.vector_positive(free_place):
+            move_item(item, free_place)
+    
+    sort_if_needed()
+
+    ._on_item_added(item)
+    update_configuration_warning()
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    if item.properties.has(KEY_GRID_POSITION):
+        item.properties.erase(KEY_GRID_POSITION)
+
+    ._on_item_removed(item)
+    update_configuration_warning()
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    sort_if_needed()
+    update_configuration_warning()
 
 
 func _set_size(new_size: Vector2) -> void:
@@ -122,13 +125,6 @@ func _bounds_broken() -> bool:
     return false
 
 
-func _compare_prototypes(prototype_id_1: String, prototype_id_2: String) -> bool:
-    var size_1 = _get_prototype_size(prototype_id_1)
-    var size_2 = _get_prototype_size(prototype_id_2)
-    # Compare areas
-    return (size_1.x * size_1.y) > (size_2.x * size_2.y)
-
-
 func add_item(item: InventoryItem) -> bool:
     var free_place = find_free_place(item)
     if !GlootVerify.vector_positive(free_place):
@@ -141,27 +137,21 @@ func add_item_at(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
     if rect_free(rect):
-        _item_positions.append(position)
-        if .add_item(item):
-            return true
-        else:
-            _item_positions.pop_back()
-            return false
+        item.properties[KEY_GRID_POSITION] = position
+        if item.properties[KEY_GRID_POSITION] == Vector2.ZERO:
+            item.properties.erase(KEY_GRID_POSITION)
+        return .add_item(item)
 
     return false
-
-
-func remove_item(item: InventoryItem) -> bool:
-    var item_index = _get_item_index(item)
-    _item_positions.remove(item_index)
-    return .remove_item(item)
 
 
 func move_item(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
     if rect_free(rect, item):
-        _item_positions[_get_item_index(item)] = position
+        item.properties[KEY_GRID_POSITION] = position
+        if item.properties[KEY_GRID_POSITION] == Vector2.ZERO:
+            item.properties.erase(KEY_GRID_POSITION)
         emit_signal("contents_changed")
         return true
 
@@ -225,41 +215,36 @@ func sort() -> bool:
     item_array.sort_custom(self, "_compare_items")
 
     for item in get_items():
-        remove_item(item)
+        move_item(item, size)
 
     for item in item_array:
         var free_place: Vector2 = find_free_place(item)
         if !GlootVerify.vector_positive(free_place):
             return false
-        add_item_at(item, free_place)
+        move_item(item, free_place)
 
     return true
 
 
+func sort_if_needed() -> void:
+    if !_is_sorted() || _bounds_broken():
+        sort()
+
+
 func reset() -> void:
     .reset()
-    _item_positions = []
     size = DEFAULT_SIZE
-
-
-func clear() -> void:
-    .clear()
-    _item_positions = []
 
 
 func serialize() -> Dictionary:
     var result: Dictionary = .serialize()
 
     result[KEY_SIZE] = size
-    if !_item_positions.empty():
-        result[KEY_ITEM_POSITIONS] = _item_positions
-
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_SIZE, TYPE_VECTOR2) ||\
-        !GlootVerify.dict(source, false, KEY_ITEM_POSITIONS, TYPE_ARRAY, TYPE_VECTOR2):
+    if !GlootVerify.dict(source, true, KEY_SIZE, TYPE_VECTOR2):
         return false
 
     reset()
@@ -268,9 +253,4 @@ func deserialize(source: Dictionary) -> bool:
         return false
 
     size = source[KEY_SIZE]
-    if source.has(KEY_ITEM_POSITIONS):
-        var positions = source[KEY_ITEM_POSITIONS]
-        for position in positions:
-            _item_positions.append(position)
-
     return true

@@ -23,12 +23,17 @@ script = ExtResource( 3 )
 item_protoset = ExtResource( 1 )
 size = Vector2( 5, 5 )
 
-[node name="InventoryItem" type="Node" parent="InventoryGrid"]
-script = ExtResource( 5 )
-protoset = ExtResource( 1 )
-prototype_id = "item_1x1"
-
-[node name="InventoryItem2" type="Node" parent="InventoryGrid"]
+[node name="item_2x2" type="Node" parent="InventoryGrid"]
 script = ExtResource( 5 )
 protoset = ExtResource( 1 )
 prototype_id = "item_2x2"
+properties = {
+}
+
+[node name="item_1x1" type="Node" parent="InventoryGrid"]
+script = ExtResource( 5 )
+protoset = ExtResource( 1 )
+prototype_id = "item_1x1"
+properties = {
+"grid_position": Vector2( 0, 2 )
+}

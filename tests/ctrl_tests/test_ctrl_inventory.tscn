@@ -25,8 +25,12 @@ item_protoset = ExtResource( 1 )
 script = ExtResource( 5 )
 protoset = ExtResource( 1 )
 prototype_id = "item1"
+properties = {
+}
 
 [node name="Item2" type="Node" parent="Inventory"]
 script = ExtResource( 5 )
 protoset = ExtResource( 1 )
 prototype_id = "item2"
+properties = {
+}

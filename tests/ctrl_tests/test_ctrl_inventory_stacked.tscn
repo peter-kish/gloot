@@ -27,8 +27,12 @@ capacity = 20.0
 script = ExtResource( 5 )
 protoset = ExtResource( 3 )
 prototype_id = "minimal_item"
+properties = {
+}
 
 [node name="StackableItem" type="Node" parent="InventoryStacked"]
 script = ExtResource( 5 )
 protoset = ExtResource( 3 )
 prototype_id = "stackable_item"
+properties = {
+}
