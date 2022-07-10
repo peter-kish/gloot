@@ -46,31 +46,37 @@ func _set_capacity(new_capacity: float) -> void:
 
 func _ready():
     _calculate_occupied_space()
+    connect("item_modified", self, "_on_item_modified")
 
 
 func _calculate_occupied_space() -> void:
+    var old_occupied_space = occupied_space
     occupied_space = 0.0
     for item in get_items():
         occupied_space += _get_item_weight(item)
 
-    emit_signal("occupied_space_changed")
+    if occupied_space != old_occupied_space:
+        emit_signal("occupied_space_changed")
 
     update_configuration_warning()
     if !Engine.editor_hint:
-        assert(has_unlimited_capacity() || occupied_space <= capacity)
+        assert(has_unlimited_capacity() || occupied_space <= capacity, "Inventory overflow!")
 
 
 func _on_item_added(item: InventoryItem) -> void:
     ._on_item_added(item)
-    occupied_space += _get_item_weight(item)
-    emit_signal("occupied_space_changed")
+    _calculate_occupied_space()
     update_configuration_warning()
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     ._on_item_removed(item)
-    occupied_space -= _get_item_weight(item)
-    emit_signal("occupied_space_changed")
+    _calculate_occupied_space()
+    update_configuration_warning()
+
+
+func _on_item_modified(item: InventoryItem) -> void:
+    _calculate_occupied_space()
     update_configuration_warning()
 
 

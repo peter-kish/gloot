@@ -51,7 +51,9 @@ func _notification(what):
 
 func _emit_removed(obj: Object):
     if obj.has_signal("item_removed"):
-        obj.emit_signal("item_removed", self)
+        # At this moment the child node list is still not updated.
+        # Emitting the signal deferred should avoid any issues caused by this.
+        obj.call_deferred("emit_signal", "item_removed", self)
 
 
 func _emit_added(obj: Object):
