@@ -19,8 +19,7 @@ func init_suite():
 
 
 func init_test():
-    for i in inventory_3x3.get_items():
-        inventory_3x3.remove_item(i)
+    inventory_3x3.remove_all_items()
 
 
 func test_add_item_at() -> void:

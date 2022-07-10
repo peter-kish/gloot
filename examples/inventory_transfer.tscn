@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/gloot/ctrl_inventory.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/inventory.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://images/item_key.png" type="Texture" id=5]
 [ext_resource path="res://addons/gloot/ctrl_item_slot.gd" type="Script" id=6]
 [ext_resource path="res://addons/gloot/item_slot.gd" type="Script" id=7]
+[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=8]
 
 [node name="InventoryTransfer" type="Control"]
 anchor_right = 1.0
@@ -106,12 +107,38 @@ text = ">>>"
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 3 )
-contents = [ "item1", "item2" ]
+
+[node name="InventoryItem" type="Node" parent="Inventory"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "item1"
+properties = {
+}
+
+[node name="InventoryItem2" type="Node" parent="Inventory"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "item2"
+properties = {
+}
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 3 )
-contents = [ "item1", "item2" ]
+
+[node name="InventoryItem3" type="Node" parent="Inventory2"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "item1"
+properties = {
+}
+
+[node name="InventoryItem4" type="Node" parent="Inventory2"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "item2"
+properties = {
+}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )

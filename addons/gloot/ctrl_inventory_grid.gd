@@ -49,7 +49,7 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
     _connect_signals()
 
 
-func _ready():
+func _ready() -> void:
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
@@ -64,6 +64,7 @@ func _ready():
     _drag_sprite.hide()
     add_child(_drag_sprite)
     _set_inventory(get_node_or_null(inventory_path))
+
 
 func _connect_signals() -> void:
     if inventory:
@@ -81,13 +82,13 @@ func _refresh() -> void:
     _populate_list()
 
 
-func _process(_delta):
+func _process(_delta) -> void:
     if _drag_sprite && _drag_sprite.visible:
         _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
     update()
 
 
-func _draw():
+func _draw() -> void:
     if !inventory:
         return
     _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)

@@ -9,6 +9,7 @@ signal contents_changed
 signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
+var _items: Array = []
 
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
@@ -34,12 +35,19 @@ static func get_item_script() -> Script:
     return preload("inventory_item.gd")
 
 
+func _enter_tree():
+    for child in get_children():
+        if child is InventoryItem:
+            _items.append(child)
+
+
 func _ready() -> void:
     connect("item_added", self, "_on_item_added")
     connect("item_removed", self, "_on_item_removed")
 
 
 func _on_item_added(item: InventoryItem) -> void:
+    _items.append(item)
     emit_signal("contents_changed")
     if !item.is_connected("protoset_changed", self, "_emit_item_modified"):
         item.connect("protoset_changed", self, "_emit_item_modified", [item])
@@ -50,6 +58,7 @@ func _on_item_added(item: InventoryItem) -> void:
 
 
 func _on_item_removed(item: InventoryItem) -> void:
+    _items.erase(item)
     emit_signal("contents_changed")
     if item.is_connected("protoset_changed", self, "_emit_item_modified"):
         item.disconnect("protoset_changed", self, "_emit_item_modified")
@@ -64,7 +73,7 @@ func _emit_item_modified(item: InventoryItem) -> void:
 
 
 func get_items() -> Array:
-    return get_children()
+    return _items
 
 
 func has_item(item: InventoryItem) -> bool:
@@ -81,7 +90,6 @@ func add_item(item: InventoryItem) -> bool:
     add_child(item)
     if Engine.editor_hint:
         item.owner = get_tree().edited_scene_root
-    item.name = item.prototype_id
     return true
 
 
@@ -91,6 +99,12 @@ func remove_item(item: InventoryItem) -> bool:
 
     remove_child(item)
     return true
+
+
+func remove_all_items() -> void:
+    while get_child_count() > 0:
+        remove_child(get_child(0))
+    _items = []
 
 
 func get_item_by_id(id: String) -> InventoryItem:
@@ -119,8 +133,8 @@ func reset() -> void:
 
 func clear() -> void:
     for item in get_items():
-        remove_item(item)
         item.queue_free()
+    remove_all_items()
 
 
 func serialize() -> Dictionary:
