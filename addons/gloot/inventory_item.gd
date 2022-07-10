@@ -2,14 +2,39 @@ extends Node
 class_name InventoryItem
 tool
 
-export(Resource) var protoset
-export(String) var prototype_id: String
-var properties: Dictionary
+signal protoset_changed
+signal prototype_id_changed
+signal properties_changed
+
+export(Resource) var protoset: Resource setget _set_prototset
+export(String) var prototype_id: String setget _set_prototype_id
+export(Dictionary) var properties: Dictionary setget _set_properties
 var _inventory: Node
 
 const PROTOSET_KEY: String = "protoset"
 const PROTOTYE_ID_KEY: String = "prototype_id"
 const PROPERTIES_KEY: String = "properties"
+
+
+func _set_prototset(new_protoset: Resource) -> void:
+    var old_protoset = protoset
+    protoset = new_protoset
+    if old_protoset != protoset:
+        emit_signal("protoset_changed")
+
+
+func _set_prototype_id(new_prototype_id: String) -> void:
+    var old_prototype_id = prototype_id
+    prototype_id = new_prototype_id
+    if old_prototype_id != prototype_id:
+        emit_signal("prototype_id_changed")
+
+
+func _set_properties(new_properties: Dictionary) -> void:
+    var old_properties = properties
+    properties = new_properties
+    if old_properties != properties:
+        emit_signal("properties_changed")
 
 
 func _notification(what):

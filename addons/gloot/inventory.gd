@@ -4,6 +4,7 @@ tool
 
 signal item_added
 signal item_removed
+signal item_modified
 signal contents_changed
 signal protoset_changed
 
@@ -34,12 +35,26 @@ static func get_item_script() -> Script:
 
 
 func _ready() -> void:
-    connect("item_added", self, "_emit_content_changed")
-    connect("item_removed", self, "_emit_content_changed")
+    connect("item_added", self, "_on_item_added")
+    connect("item_removed", self, "_on_item_removed")
 
 
-func _emit_content_changed(_item: InventoryItem):
+func _on_item_added(item: InventoryItem) -> void:
     emit_signal("contents_changed")
+    item.connect("protoset_changed", self, "_emit_item_modified", [item])
+    item.connect("prototype_id_changed", self, "_emit_item_modified", [item])
+    item.connect("properties_changed", self, "_emit_item_modified", [item])
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    emit_signal("contents_changed")
+    item.disconnect("protoset_changed", self, "_emit_item_modified")
+    item.disconnect("prototype_id_changed", self, "_emit_item_modified")
+    item.disconnect("properties_changed", self, "_emit_item_modified")
+
+
+func _emit_item_modified(item: InventoryItem) -> void:
+    emit_signal("item_modified", item)
 
 
 func get_items() -> Array:
