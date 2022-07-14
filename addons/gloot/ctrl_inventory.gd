@@ -60,6 +60,8 @@ func _ready():
     if has_node(inventory_path):
         _set_inventory(get_node(inventory_path))
 
+    _refresh()
+
 
 func _connect_signals() -> void:
     inventory.connect("contents_changed", self, "_refresh")
@@ -72,8 +74,9 @@ func _disconnect_signals() -> void:
 
 
 func _refresh() -> void:
-    _clear_list()
-    _populate_list()
+    if is_inside_tree():
+        _clear_list()
+        _populate_list()
 
 
 func _clear_list() -> void:
