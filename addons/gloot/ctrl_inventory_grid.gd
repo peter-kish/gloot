@@ -56,6 +56,10 @@ func _ready() -> void:
             child.queue_free()
 
     _ctrl_item_container = Control.new()
+    _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    _ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _ctrl_item_container.anchor_right = 1.0
+    _ctrl_item_container.anchor_bottom = 1.0
     add_child(_ctrl_item_container)
 
     _drag_sprite = Sprite.new()
@@ -63,7 +67,10 @@ func _ready() -> void:
     _drag_sprite.z_index = drag_sprite_z_index
     _drag_sprite.hide()
     add_child(_drag_sprite)
-    _set_inventory(get_node_or_null(inventory_path))
+    if has_node(inventory_path):
+        _set_inventory(get_node_or_null(inventory_path))
+
+    _refresh()
 
 
 func _connect_signals() -> void:
@@ -124,9 +131,9 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
-    if inventory == null:
+    if inventory == null || _ctrl_item_container == null:
         return
-
+        
     for item in inventory.get_items():
         var ctrl_inventory_item = _ctrl_inventory_item_script.new()
         ctrl_inventory_item.ctrl_inventory = self
