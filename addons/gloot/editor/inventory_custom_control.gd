@@ -41,6 +41,8 @@ func _refresh() -> void:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
         _inventory_control = CtrlInventory.new()
+    _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
+    _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
     inventory_control_container.add_child(_inventory_control)
     inventory_control_container.move_child(_inventory_control, 0)

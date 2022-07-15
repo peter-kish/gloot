@@ -18,28 +18,34 @@ size_flags_vertical = 3
 [node name="ChoiceFilter" parent="HBoxContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 916.0
+margin_right = 510.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 pick_text = "Add"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
-margin_left = 920.0
+margin_left = 514.0
 margin_right = 1024.0
 margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
-margin_right = 104.0
+margin_right = 510.0
 margin_bottom = 20.0
 
 [node name="BtnEdit" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
-margin_right = 36.0
+margin_right = 253.0
 margin_bottom = 20.0
+size_flags_horizontal = 3
+disabled = true
 text = "Edit"
 
 [node name="BtnRemove" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
-margin_left = 40.0
-margin_right = 104.0
+margin_left = 257.0
+margin_right = 510.0
 margin_bottom = 20.0
+size_flags_horizontal = 3
+disabled = true
 text = "Remove"

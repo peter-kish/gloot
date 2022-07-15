@@ -50,6 +50,8 @@ func _ready():
     _vbox_container = VBoxContainer.new()
     _vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     _vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _vbox_container.anchor_right = 1.0
+    _vbox_container.anchor_bottom = 1.0
     add_child(_vbox_container)
 
     _item_list = ItemList.new()
