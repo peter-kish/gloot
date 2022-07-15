@@ -60,5 +60,6 @@ func _on_prototype_id_picked(index: int) -> void:
     var item = InventoryItem.new()
     item.protoset = inventory.item_protoset
     item.prototype_id = prototype_id_filter.values[index]
+    item.name = item.prototype_id
     inventory.add_item(item)
     
