@@ -37,6 +37,7 @@ func _refresh() -> void:
     # Create the appropriate inventory control and populate it
     if inventory is InventoryGrid:
         _inventory_control = CtrlInventoryGrid.new()
+        _inventory_control.grid_color = Color.gray
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
