@@ -13,9 +13,22 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 1024.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 19.0
+text = "Filter:"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+margin_left = 41.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer"]
 margin_top = 28.0

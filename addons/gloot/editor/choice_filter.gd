@@ -4,7 +4,7 @@ tool
 signal choice_picked
 
 
-onready var line_edit: LineEdit = $VBoxContainer/LineEdit
+onready var line_edit: LineEdit = $VBoxContainer/HBoxContainer/LineEdit
 onready var item_list: ItemList = $VBoxContainer/ItemList
 onready var btn_pick:Button = $VBoxContainer/Button
 export(String) var pick_text: String setget _set_pick_text
