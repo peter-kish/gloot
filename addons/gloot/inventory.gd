@@ -41,6 +41,10 @@ func _enter_tree():
             _items.append(child)
 
 
+func _exit_tree():
+    _items.clear()
+
+
 func _ready() -> void:
     connect("item_added", self, "_on_item_added")
     connect("item_removed", self, "_on_item_removed")
