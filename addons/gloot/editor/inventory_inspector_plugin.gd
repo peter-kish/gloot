@@ -13,5 +13,6 @@ func can_handle(object: Object) -> bool:
 func parse_begin(object: Object) -> void:
     var inventory_custom_control = InventoryCustomControl.instance()
     inventory_custom_control.inventory = object
+    inventory_custom_control.editor_interface = editor_interface
     add_custom_control(inventory_custom_control)
 

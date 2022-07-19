@@ -39,7 +39,6 @@ margin_bottom = 20.0
 margin_right = 253.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-disabled = true
 text = "Edit"
 
 [node name="BtnRemove" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
