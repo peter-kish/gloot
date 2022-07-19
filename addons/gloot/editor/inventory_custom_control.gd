@@ -5,6 +5,7 @@ tool
 onready var prototype_id_filter = $HBoxContainer/ChoiceFilter
 onready var inventory_control_container = $HBoxContainer/VBoxContainer
 onready var btn_edit = $HBoxContainer/VBoxContainer/HBoxContainer/BtnEdit
+onready var btn_remove = $HBoxContainer/VBoxContainer/HBoxContainer/BtnRemove
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
 var _inventory_control: Control
@@ -57,6 +58,7 @@ func _refresh() -> void:
 func _ready() -> void:
     prototype_id_filter.connect("choice_picked", self, "_on_prototype_id_picked")
     btn_edit.connect("pressed", self, "_on_btn_edit")
+    btn_remove.connect("pressed", self, "_on_btn_remove")
     _refresh()
 
 
@@ -77,6 +79,15 @@ func _on_btn_edit() -> void:
         var item: Node = selected_items[0]
         # Call it deferred, so that the control can clean up
         call_deferred("_select_node", editor_interface, item)
+
+
+func _on_btn_remove() -> void:
+    if _inventory_control is CtrlInventoryGrid:
+        return
+
+    var selected_items: Array = _inventory_control.get_selected_inventory_items()
+    for item in selected_items:
+        item.queue_free()
 
 
 static func _select_node(editor_interface: EditorInterface, node: Node) -> void:

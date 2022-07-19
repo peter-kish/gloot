@@ -46,5 +46,4 @@ margin_left = 257.0
 margin_right = 510.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-disabled = true
 text = "Remove"
