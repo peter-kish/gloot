@@ -6,15 +6,18 @@ signal item_dropped
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(Color) var grid_color: Color = Color.black
+export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
 export(int) var drag_sprite_z_index: int = 1
+export(bool) var selections_enabled: bool = false setget _set_selections_enabled
 var inventory: InventoryGrid = null setget _set_inventory
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
 var _drag_sprite: Sprite
 var _ctrl_item_container: Control
+var _selected_item: InventoryItem = null
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -38,6 +41,12 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
         
     _set_inventory(node)
     update_configuration_warning()
+
+
+func _set_selections_enabled(new_selections_enabled: bool) -> void:
+    selections_enabled = new_selections_enabled
+    if !selections_enabled:
+        _select(null)
 
 
 func _set_inventory(new_inventory: InventoryGrid) -> void:
@@ -142,8 +151,17 @@ func _populate_list() -> void:
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
+    _refresh_selection()
+
+
+func _refresh_selection() -> void:
+    for ctrl_item in _ctrl_item_container.get_children():
+        ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
+        ctrl_item.selection_bg_color = selection_color
+
 
 func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
+    _select(null)
     _grabbed_ctrl_inventory_item = ctrl_inventory_item
     _grabbed_ctrl_inventory_item.hide()
     _grab_offset = offset
@@ -155,6 +173,12 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
         var texture_size = _drag_sprite.texture.get_size()
         _drag_sprite.scale = item_size * field_dimensions / texture_size
         _drag_sprite.show()
+
+
+func _select(item: InventoryItem) -> void:
+    if selections_enabled:
+        _selected_item = item
+        _refresh_selection()
 
 
 func _input(event: InputEvent) -> void:
@@ -171,6 +195,7 @@ func _input(event: InputEvent) -> void:
             else:
                 emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, global_grabbed_item_pos)
             _grabbed_ctrl_inventory_item.show()
+            _select(_grabbed_ctrl_inventory_item.item)
             _grabbed_ctrl_inventory_item = null
             if _drag_sprite:
                 _drag_sprite.hide()
