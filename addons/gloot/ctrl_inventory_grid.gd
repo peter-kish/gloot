@@ -210,3 +210,10 @@ func get_field_coords(global_pos: Vector2) -> Vector2:
     var x: int = offset.x / field_dimensions.x
     var y: int = offset.y / field_dimensions.y
     return Vector2(x, y)
+
+
+func get_selected_inventory_items() -> Array:
+    if _selected_item:
+        return [_selected_item]
+    else:
+        return []

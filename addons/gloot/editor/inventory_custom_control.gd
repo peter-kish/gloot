@@ -72,9 +72,6 @@ func _on_prototype_id_picked(index: int) -> void:
     
 
 func _on_btn_edit() -> void:
-    if _inventory_control is CtrlInventoryGrid:
-        return
-
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
     if selected_items.size() > 0:
         var item: Node = selected_items[0]
@@ -83,9 +80,6 @@ func _on_btn_edit() -> void:
 
 
 func _on_btn_remove() -> void:
-    if _inventory_control is CtrlInventoryGrid:
-        return
-
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
     for item in selected_items:
         item.queue_free()
