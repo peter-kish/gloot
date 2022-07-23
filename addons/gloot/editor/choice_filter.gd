@@ -13,7 +13,7 @@ export(Array, String) var values: Array setget _set_values
 
 func _set_values(new_values: Array) -> void:
     values = new_values
-    _refresh()
+    refresh()
 
 
 func _set_pick_text(new_pick_text: String) -> void:
@@ -22,7 +22,7 @@ func _set_pick_text(new_pick_text: String) -> void:
         btn_pick.text = pick_text
 
 
-func _refresh() -> void:
+func refresh() -> void:
     _clear()
     _populate()
 
@@ -53,7 +53,7 @@ func _populate() -> void:
 func _ready() -> void:
     btn_pick.connect("pressed", self, "_on_btn_pick")
     line_edit.connect("text_changed", self, "_on_filter_text_changed")
-    _refresh()
+    refresh()
     if btn_pick:
         btn_pick.text = pick_text
 
@@ -69,4 +69,4 @@ func _on_btn_pick() -> void:
 
 
 func _on_filter_text_changed(_new_text: String) -> void:
-    _refresh()
+    refresh()

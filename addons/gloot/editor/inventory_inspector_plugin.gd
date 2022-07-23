@@ -4,6 +4,7 @@ signal edit_requested
 
 var InventoryCustomControl = preload("res://addons/gloot/editor/inventory_custom_control.tscn")
 var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")
+var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id_editor.gd")
 var editor_interface: EditorInterface = null
 
 
@@ -23,6 +24,10 @@ func parse_property(object, type, path, hint, hint_text, usage) -> bool:
     if (object is InventoryItem) && path == "properties":
         var item_property_editor =ItemPropertyEditor.new()
         add_property_editor(path, item_property_editor)
+        return true
+    if (object is InventoryItem) && path == "prototype_id":
+        var item_prototype_id_editor =ItemPrototypeIdEditor.new()
+        add_property_editor(path, item_prototype_id_editor)
         return true
     return false
 
