@@ -1,6 +1,8 @@
 extends Control
 tool
 
+signal value_changed
+
 
 onready var grid_container = $GridContainer
 onready var lbl_name = $GridContainer/LblTitleName
@@ -13,25 +15,25 @@ export(Color) var default_color: Color = Color.white setget _set_default_color
 
 
 func _ready() -> void:
-    _refresh()
+    refresh()
 
 
 func _set_dictionary(new_dictionary: Dictionary) -> void:
     dictionary = new_dictionary
-    _refresh()
+    refresh()
 
 
 func _set_color_map(new_color_map: Dictionary) -> void:
     color_map = new_color_map
-    _refresh()
+    refresh()
 
 
 func _set_default_color(new_default_color: Color) -> void:
     default_color = new_default_color
-    _refresh()
+    refresh()
 
 
-func _refresh() -> void:
+func refresh() -> void:
     if !is_inside_tree():
         return
     _clear()
@@ -70,6 +72,7 @@ func _add_key(key: String, color: Color) -> void:
 func _add_label(key: String, color: Color) -> void:
     var label: Label = Label.new()
     label.text = key
+    label.align = Label.ALIGN_CENTER
     label.add_color_override("font_color", color)
     grid_container.add_child(label)
 
@@ -78,7 +81,7 @@ func _add_line_edit(key: String) -> void:
     var line_edit: LineEdit = LineEdit.new()
     var value = dictionary[key]
     line_edit.text = var2str(value)
-    line_edit.rect_min_size.x = 100
+    line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
     line_edit.connect("text_entered", self, "_on_value_entered", [key, line_edit])
     grid_container.add_child(line_edit)
 
@@ -89,4 +92,5 @@ func _on_value_entered(text: String, key: String, line_edit: LineEdit) -> void:
         line_edit.text = var2str(dictionary[key])
         return
     dictionary[key] = new_value
-    _refresh()
+    emit_signal("value_changed", key, new_value)
+    refresh()
