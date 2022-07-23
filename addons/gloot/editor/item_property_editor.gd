@@ -1,6 +1,7 @@
 extends EditorProperty
 
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
+const COLOR_OVERRIDDEN = Color.green
 var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
@@ -15,6 +16,12 @@ func _init() -> void:
     set_bottom_editor(_dict_editor)
     _refresh_dict_editor()
     _dict_editor.connect("value_changed", self, "_on_value_changed")
+
+
+func _ready() -> void:
+    var item: InventoryItem = get_edited_object()
+    if item:
+        item.connect("properties_changed", self, "update_property")
 
 
 func _on_value_changed(key: String, new_value) -> void:
@@ -53,6 +60,9 @@ func _get_dictionary() -> Dictionary:
     if !item.protoset:
         return {}
 
+    if !item.protoset.has(item.prototype_id):
+        return {}
+
     var result: Dictionary = item.protoset.get(item.prototype_id).duplicate()
     for key in item.properties.keys():
         result[key] = item.properties[key]
@@ -71,7 +81,7 @@ func _get_color_map() -> Dictionary:
     var dictionary: Dictionary = _get_dictionary()
     for key in dictionary.keys():
         if item.properties.has(key):
-            result[key] = Color.green
+            result[key] = COLOR_OVERRIDDEN
 
     return result
             

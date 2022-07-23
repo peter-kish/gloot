@@ -20,6 +20,11 @@ func _set_prototset(new_protoset: Resource) -> void:
     var old_protoset = protoset
     protoset = new_protoset
     if old_protoset != protoset:
+        # Reset the prototype ID (pick the first prototype from the protoset)
+        prototype_id = ""
+        if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
+            _set_prototype_id(protoset._prototypes.keys()[0])
+
         emit_signal("protoset_changed")
 
 
@@ -27,6 +32,9 @@ func _set_prototype_id(new_prototype_id: String) -> void:
     var old_prototype_id = prototype_id
     prototype_id = new_prototype_id
     if old_prototype_id != prototype_id:
+        # Reset properties
+        _set_properties({})
+
         emit_signal("prototype_id_changed")
 
 
