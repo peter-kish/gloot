@@ -53,6 +53,7 @@ func _populate() -> void:
 func _ready() -> void:
     btn_pick.connect("pressed", self, "_on_btn_pick")
     line_edit.connect("text_changed", self, "_on_filter_text_changed")
+    item_list.connect("item_activated", self, "_on_item_activated")
     refresh()
     if btn_pick:
         btn_pick.text = pick_text
@@ -70,3 +71,8 @@ func _on_btn_pick() -> void:
 
 func _on_filter_text_changed(_new_text: String) -> void:
     refresh()
+
+
+func _on_item_activated(index: int) -> void:
+    var selected_value_index = item_list.get_item_metadata(index)
+    emit_signal("choice_picked", selected_value_index)
