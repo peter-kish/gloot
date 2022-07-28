@@ -180,7 +180,7 @@ Example:
 ```
 
 Any of the item properties can be accessed from code through the `get_property()` methods of the [`InventoryItem`](docs/inventory_item.md) classes:
-```
+```gd
 var item_name = item.get_property("name", "")
 var item_description = item.get_property("description", "")
 ```
@@ -188,7 +188,7 @@ var item_description = item.get_property("description", "")
 ### Editing item properties
 
 Item properties defined in the [`ItemProtoset`](docs/item_protoset.md) resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
-```
+```gd
 # Decrease the size of an item stack by 1
 var stack_size: int = item.get_property("stack_size")
 if stack_size > 0:
@@ -201,7 +201,7 @@ All GLoot classes have a `serialize()` and a `deserialize()` method that can be 
 The `serialize()` methods serializes the class into a dictionary, that can be further serialized into JSON, binary or some other format.
 
 Example:
-```
+```gd
 # Serialize the inventory into a JSON string
 var inventory: Inventory = get_node("inventory")
 var dict: Dictionary = inventory.serialize()
@@ -211,7 +211,7 @@ var json: String = JSON.print(dict)
 The `deserialize` methods receive a dictionary as argument that has been previously generated with `serialize()` and apply the data to the current class instance.
 
 Example:
-```
+```gd
 # Deserialize the inventory from a JSON string
 var inventory: Inventory = get_node("inventory")
 var res: JSONParseResult = JSON.parse(json)
