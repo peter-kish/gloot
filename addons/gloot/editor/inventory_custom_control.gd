@@ -6,25 +6,36 @@ onready var prototype_id_filter = $HBoxContainer/ChoiceFilter
 onready var inventory_control_container = $HBoxContainer/VBoxContainer
 onready var btn_edit = $HBoxContainer/VBoxContainer/HBoxContainer/BtnEdit
 onready var btn_remove = $HBoxContainer/VBoxContainer/HBoxContainer/BtnRemove
+onready var scroll_container = $HBoxContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
 var _inventory_control: Control
 
 
 func _set_inventory(new_inventory: Inventory) -> void:
-    if inventory:
-        if inventory is InventoryStacked:
-            inventory.disconnect("capacity_changed", self, "refresh")
-        inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
-
+    disconnect_inventory_signals()
     inventory = new_inventory
-    
-    if inventory:
-        if inventory is InventoryStacked:
-            inventory.connect("capacity_changed", self, "refresh")
-        inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
+    connect_inventory_signals()
 
     _refresh()
+
+
+func connect_inventory_signals():
+    if inventory:
+        if inventory is InventoryStacked:
+            inventory.connect("capacity_changed", self, "_refresh")
+        if inventory is InventoryGrid:
+            inventory.connect("size_changed", self, "_refresh")
+        inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
+
+
+func disconnect_inventory_signals():
+    if inventory:
+        if inventory is InventoryStacked:
+            inventory.disconnect("capacity_changed", self, "_refresh")
+        if inventory is InventoryGrid:
+            inventory.disconnect("size_changed", self, "_refresh")
+        inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
 
 
 func _refresh() -> void:
@@ -33,7 +44,7 @@ func _refresh() -> void:
         
     # Remove the inventory control, if present
     if _inventory_control:
-        inventory_control_container.remove_child(_inventory_control)
+        scroll_container.remove_child(_inventory_control)
         _inventory_control.free()
         _inventory_control = null
 
@@ -49,8 +60,8 @@ func _refresh() -> void:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
-    inventory_control_container.add_child(_inventory_control)
-    inventory_control_container.move_child(_inventory_control, 0)
+
+    scroll_container.add_child(_inventory_control)
 
     # Set prototype_id_filter values
     prototype_id_filter.values = inventory.item_protoset._prototypes.keys()

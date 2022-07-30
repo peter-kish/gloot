@@ -31,9 +31,16 @@ margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
 margin_right = 510.0
-margin_bottom = 20.0
+margin_bottom = 576.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+margin_top = 580.0
+margin_right = 510.0
+margin_bottom = 600.0
 
 [node name="BtnEdit" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
 margin_right = 253.0
