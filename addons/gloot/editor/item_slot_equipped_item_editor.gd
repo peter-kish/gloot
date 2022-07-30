@@ -47,6 +47,7 @@ func _populate_option_button() -> void:
         _option_button.add_item(item.prototype_id)
         var current_item_index = _option_button.get_item_count() - 1
         _option_button.set_item_metadata(current_item_index, inventory_item_index)
+        _option_button.set_item_icon(current_item_index, _get_item_texture(item))
         if item == item_slot.item:
             selected_item_index = current_item_index
 
@@ -64,3 +65,10 @@ func _on_item_selected(item_index: int) -> void:
     var item_slot: ItemSlot = get_edited_object()
     item_slot.equipped_item = _option_button.get_item_metadata(item_index)
     updating = false
+
+
+func _get_item_texture(item: InventoryItem) -> Resource:
+    var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
+    if texture_path:
+        return load(texture_path)
+    return null
