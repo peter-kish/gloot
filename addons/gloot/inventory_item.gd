@@ -78,7 +78,9 @@ func get_property(property_name: String, default_value = null):
 
 
 func set_property(property_name: String, value) -> void:
-    var old_property = properties[property_name]
+    var old_property = null
+    if properties.has(property_name):
+        old_property = properties[property_name]
     properties[property_name] = value
     if old_property != properties[property_name]:
         emit_signal("properties_changed")
