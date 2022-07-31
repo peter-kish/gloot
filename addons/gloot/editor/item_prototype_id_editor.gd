@@ -14,6 +14,7 @@ var _btn_prototype_id: Button
 func _init() -> void:
     _choice_filter = ChoiceFilter.instance()
     _choice_filter.pick_text = "Select"
+    _choice_filter.filter_text = "Filter Prototypes:"
     _choice_filter.connect("choice_picked", self, "_on_choice_picked")
 
     _window_dialog = WindowDialog.new()

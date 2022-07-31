@@ -4,10 +4,12 @@ tool
 signal choice_picked
 
 
+onready var lbl_filter: Label = $VBoxContainer/HBoxContainer/Label
 onready var line_edit: LineEdit = $VBoxContainer/HBoxContainer/LineEdit
 onready var item_list: ItemList = $VBoxContainer/ItemList
 onready var btn_pick:Button = $VBoxContainer/Button
 export(String) var pick_text: String setget _set_pick_text
+export(String) var filter_text: String = "Filter:" setget _set_filter_text
 export(Array, String) var values: Array setget _set_values
 
 
@@ -20,6 +22,12 @@ func _set_pick_text(new_pick_text: String) -> void:
     pick_text = new_pick_text
     if btn_pick:
         btn_pick.text = pick_text
+
+
+func _set_filter_text(new_filter_text: String) -> void:
+    filter_text = new_filter_text
+    if lbl_filter:
+        lbl_filter.text = filter_text
 
 
 func refresh() -> void:
@@ -57,6 +65,8 @@ func _ready() -> void:
     refresh()
     if btn_pick:
         btn_pick.text = pick_text
+    if lbl_filter:
+        lbl_filter.text = filter_text
 
 
 func _on_btn_pick() -> void:
