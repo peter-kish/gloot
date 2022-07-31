@@ -6,15 +6,18 @@ signal item_dropped
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(Color) var grid_color: Color = Color.black
+export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
 export(int) var drag_sprite_z_index: int = 1
+export(bool) var selections_enabled: bool = false setget _set_selections_enabled
 var inventory: InventoryGrid = null setget _set_inventory
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
 var _drag_sprite: Sprite
 var _ctrl_item_container: Control
+var _selected_item: InventoryItem = null
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -40,22 +43,34 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     update_configuration_warning()
 
 
+func _set_selections_enabled(new_selections_enabled: bool) -> void:
+    selections_enabled = new_selections_enabled
+    if !selections_enabled:
+        _select(null)
+
+
 func _set_inventory(new_inventory: InventoryGrid) -> void:
-    if new_inventory == null && inventory:
-        _disconnect_signals()
+    if inventory == new_inventory:
+        return
 
+    _disconnect_inventory_signals()
     inventory = new_inventory
+    _connect_inventory_signals()
+
     _refresh()
-    _connect_signals()
 
 
-func _ready():
+func _ready() -> void:
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():
             child.queue_free()
 
     _ctrl_item_container = Control.new()
+    _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    _ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _ctrl_item_container.anchor_right = 1.0
+    _ctrl_item_container.anchor_bottom = 1.0
     add_child(_ctrl_item_container)
 
     _drag_sprite = Sprite.new()
@@ -63,16 +78,34 @@ func _ready():
     _drag_sprite.z_index = drag_sprite_z_index
     _drag_sprite.hide()
     add_child(_drag_sprite)
-    _set_inventory(get_node_or_null(inventory_path))
+    if has_node(inventory_path):
+        _set_inventory(get_node_or_null(inventory_path))
 
-func _connect_signals() -> void:
-    if inventory:
+    _refresh()
+
+
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.is_connected("contents_changed", self, "_refresh"):
         inventory.connect("contents_changed", self, "_refresh")
+    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.connect("item_modified", self, "_on_item_modified")
 
 
-func _disconnect_signals() -> void:
-    if inventory:
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.is_connected("contents_changed", self, "_refresh"):
         inventory.disconnect("contents_changed", self, "_refresh")
+    if inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.disconnect("item_modified", self, "_on_item_modified")
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
 
 
 func _refresh() -> void:
@@ -81,13 +114,13 @@ func _refresh() -> void:
     _populate_list()
 
 
-func _process(_delta):
+func _process(_delta) -> void:
     if _drag_sprite && _drag_sprite.visible:
         _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
     update()
 
 
-func _draw():
+func _draw() -> void:
     if !inventory:
         return
     _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)
@@ -123,12 +156,9 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
-    if Engine.editor_hint:
+    if inventory == null || _ctrl_item_container == null:
         return
-
-    if inventory == null:
-        return
-
+        
     for item in inventory.get_items():
         var ctrl_inventory_item = _ctrl_inventory_item_script.new()
         ctrl_inventory_item.ctrl_inventory = self
@@ -137,8 +167,17 @@ func _populate_list() -> void:
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
+    _refresh_selection()
+
+
+func _refresh_selection() -> void:
+    for ctrl_item in _ctrl_item_container.get_children():
+        ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
+        ctrl_item.selection_bg_color = selection_color
+
 
 func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
+    _select(null)
     _grabbed_ctrl_inventory_item = ctrl_inventory_item
     _grabbed_ctrl_inventory_item.hide()
     _grab_offset = offset
@@ -150,6 +189,12 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
         var texture_size = _drag_sprite.texture.get_size()
         _drag_sprite.scale = item_size * field_dimensions / texture_size
         _drag_sprite.show()
+
+
+func _select(item: InventoryItem) -> void:
+    if selections_enabled:
+        _selected_item = item
+        _refresh_selection()
 
 
 func _input(event: InputEvent) -> void:
@@ -166,6 +211,7 @@ func _input(event: InputEvent) -> void:
             else:
                 emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, global_grabbed_item_pos)
             _grabbed_ctrl_inventory_item.show()
+            _select(_grabbed_ctrl_inventory_item.item)
             _grabbed_ctrl_inventory_item = null
             if _drag_sprite:
                 _drag_sprite.hide()
@@ -180,3 +226,10 @@ func get_field_coords(global_pos: Vector2) -> Vector2:
     var x: int = offset.x / field_dimensions.x
     var y: int = offset.y / field_dimensions.y
     return Vector2(x, y)
+
+
+func get_selected_inventory_items() -> Array:
+    if _selected_item:
+        return [_selected_item]
+    else:
+        return []

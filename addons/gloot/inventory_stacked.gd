@@ -17,17 +17,9 @@ const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
 
 func _get_configuration_warning() -> String:
-    var space = _get_default_occupied_space()
-    if space > capacity:
-        return "Inventory capacity exceeded! %f/%f" % [space, capacity]
+    if occupied_space > capacity:
+        return "Inventory capacity exceeded! %f/%f" % [occupied_space, capacity]
     return ""
-
-
-func _get_default_occupied_space() -> float:
-    var space = 0.0
-    for prototype_id in contents:
-        space += _get_default_item_weight(prototype_id)
-    return space
 
 
 func _get_default_item_weight(prototype_id: String) -> float:
@@ -52,17 +44,12 @@ func _set_capacity(new_capacity: float) -> void:
     emit_signal("capacity_changed")
 
 
-func _set_contents(new_contents: Array) -> void:
-    ._set_contents(new_contents)
-    update_configuration_warning()
-
-
 func _ready():
-    _update_occupied_space()
-    connect("contents_changed", self, "_on_contents_changed")
+    _calculate_occupied_space()
+    connect("item_modified", self, "_on_item_modified")
 
 
-func _update_occupied_space() -> void:
+func _calculate_occupied_space() -> void:
     var old_occupied_space = occupied_space
     occupied_space = 0.0
     for item in get_items():
@@ -71,12 +58,32 @@ func _update_occupied_space() -> void:
     if occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed")
 
+    update_configuration_warning()
     if !Engine.editor_hint:
-        assert(has_unlimited_capacity() || occupied_space <= capacity)
+        assert(has_unlimited_capacity() || occupied_space <= capacity, "Inventory overflow!")
 
 
-func _on_contents_changed():
-    _update_occupied_space()
+func _on_item_added(item: InventoryItem) -> void:
+    ._on_item_added(item)
+    _calculate_occupied_space()
+    update_configuration_warning()
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    ._on_item_removed(item)
+    _calculate_occupied_space()
+    update_configuration_warning()
+
+
+func remove_item(item: InventoryItem) -> bool:
+    var result = .remove_item(item)
+    _calculate_occupied_space()
+    return result
+
+
+func _on_item_modified(item: InventoryItem) -> void:
+    _calculate_occupied_space()
+    update_configuration_warning()
 
 
 func get_free_space() -> float:
@@ -112,6 +119,8 @@ func _set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
 
 
 func _get_item_weight(item: InventoryItem) -> float:
+    if item == null:
+        return -1.0
     return _get_item_stack_size(item) * _get_item_unit_weight(item)
 
 
@@ -122,7 +131,7 @@ func add_item(item: InventoryItem) -> bool:
     return false
 
 
-func add_item_automerge(item: InventoryItem) -> bool:
+func _add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
@@ -153,7 +162,8 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     var new_item = item.duplicate()
     _set_item_stack_size(new_item, new_stack_size)
     _set_item_stack_size(item, stack_size - new_stack_size)
-    emit_signal("contents_changed")
+    emit_signal("occupied_space_changed")
+    _calculate_occupied_space()
     assert(add_item(new_item))
     return new_item
 
@@ -165,7 +175,8 @@ func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
 
     if remove_item(stack_2):
         _set_item_stack_size(stack_1, _get_item_stack_size(stack_1) + _get_item_stack_size(stack_2))
-        emit_signal("contents_changed")
+        emit_signal("occupied_space_changed")
+        _calculate_occupied_space()
         stack_2.queue_free()
         return true
 
@@ -187,7 +198,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if destination.has_place_for(item) && remove_item(item):
-        return destination.add_item_automerge(item)
+        return destination._add_item_automerge(item)
 
     return false
 

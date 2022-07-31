@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/gloot/editor/choice_filter.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/gloot/editor/inventory_custom_control.gd" type="Script" id=2]
+
+[node name="InventoryCustomControl" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 200 )
+script = ExtResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ChoiceFilter" parent="HBoxContainer" instance=ExtResource( 1 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 510.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+pick_text = "Add"
+filter_text = "Filter Prototypes:"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
+margin_right = 510.0
+margin_bottom = 576.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+margin_top = 580.0
+margin_right = 510.0
+margin_bottom = 600.0
+
+[node name="BtnEdit" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_right = 253.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="BtnRemove" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+margin_left = 257.0
+margin_right = 510.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Remove"

@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/gloot/editor/dict_editor.gd" type="Script" id=1]
+
+[node name="DictEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+dictionary = {
+}
+color_map = {
+}
+
+[node name="GridContainer" type="GridContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="LblTitleName" type="Label" parent="GridContainer"]
+margin_right = 38.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Name"
+
+[node name="LblTitleType" type="Label" parent="GridContainer"]
+margin_left = 42.0
+margin_right = 72.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Type"
+
+[node name="LblTitleValue" type="Label" parent="GridContainer"]
+margin_left = 76.0
+margin_right = 111.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Value"

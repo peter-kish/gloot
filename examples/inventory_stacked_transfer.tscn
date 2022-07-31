@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://images/item_key.png" type="Texture" id=5]
 [ext_resource path="res://addons/gloot/ctrl_item_slot.gd" type="Script" id=6]
 [ext_resource path="res://addons/gloot/item_slot.gd" type="Script" id=7]
+[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=8]
 
 [node name="InventoryStackedTransfer" type="Control"]
 anchor_right = 1.0
@@ -104,14 +105,54 @@ text = ">>>"
 [node name="InventoryStackedLeft" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 3 )
-contents = [ "minimal_item", "big_item", "stackable_item" ]
 capacity = 50.0
+
+[node name="minimal_item" type="Node" parent="InventoryStackedLeft"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "minimal_item"
+properties = {
+}
+
+[node name="big_item" type="Node" parent="InventoryStackedLeft"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "big_item"
+properties = {
+}
+
+[node name="stackable_item" type="Node" parent="InventoryStackedLeft"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "stackable_item"
+properties = {
+}
 
 [node name="InventoryStackedRight" type="Node" parent="."]
 script = ExtResource( 2 )
 item_protoset = ExtResource( 3 )
-contents = [ "minimal_item", "big_item", "stackable_item" ]
 capacity = 50.0
+
+[node name="minimal_item" type="Node" parent="InventoryStackedRight"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "minimal_item"
+properties = {
+}
+
+[node name="big_item" type="Node" parent="InventoryStackedRight"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "big_item"
+properties = {
+}
+
+[node name="stackable_item" type="Node" parent="InventoryStackedRight"]
+script = ExtResource( 8 )
+protoset = ExtResource( 3 )
+prototype_id = "stackable_item"
+properties = {
+}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )

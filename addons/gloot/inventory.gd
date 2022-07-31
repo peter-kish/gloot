@@ -4,12 +4,12 @@ tool
 
 signal item_added
 signal item_removed
+signal item_modified
 signal contents_changed
 signal protoset_changed
 
 export(Resource) var item_protoset: Resource setget _set_item_protoset
-export(Array, String) var contents: Array setget _set_contents
-var _items: Node
+var _items: Array = []
 
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
@@ -31,44 +31,68 @@ func _set_item_protoset(new_item_protoset: Resource) -> void:
     update_configuration_warning()
 
 
-func _set_contents(new_contents: Array) -> void:
-    contents = new_contents
-
-
-static func get_item_script() -> Script:
+static func _get_item_script() -> Script:
     return preload("inventory_item.gd")
 
 
+func _enter_tree():
+    for child in get_children():
+        if child is InventoryItem:
+            _items.append(child)
+
+
+func _exit_tree():
+    _items.clear()
+
+
 func _ready() -> void:
-    if Engine.editor_hint:
-        # Clean up, in case it is duplicated in the editor
-        for child in get_children():
-            child.queue_free()
-            
-    _items = Node.new()
-    add_child(_items)
-    _populate()
+    connect("item_added", self, "_on_item_added")
+    connect("item_removed", self, "_on_item_removed")
+
+    for item in get_items():
+        _connect_item_signals(item)
 
 
-func _populate() -> void:
-    for prototype_id in contents:
-        var prototype: Dictionary = item_protoset.get(prototype_id)
-        assert(!prototype.empty(), "Undefined item id '%s'" % prototype_id)
-        var item = get_item_script().new()
-        item.prototype_id = prototype_id
-        item.protoset = item_protoset
-        assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
+func _on_item_added(item: InventoryItem) -> void:
+    _items.append(item)
+    emit_signal("contents_changed")
+    _connect_item_signals(item)
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    _items.erase(item)
+    emit_signal("contents_changed")
+    _disconnect_item_signals(item)
+
+
+func _connect_item_signals(item: InventoryItem) -> void:
+    if !item.is_connected("protoset_changed", self, "_emit_item_modified"):
+        item.connect("protoset_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
+        item.connect("prototype_id_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("properties_changed", self, "_emit_item_modified"):
+        item.connect("properties_changed", self, "_emit_item_modified", [item])
+
+
+func _disconnect_item_signals(item:InventoryItem) -> void:
+    if item.is_connected("protoset_changed", self, "_emit_item_modified"):
+        item.disconnect("protoset_changed", self, "_emit_item_modified")
+    if item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
+        item.disconnect("prototype_id_changed", self, "_emit_item_modified")
+    if item.is_connected("properties_changed", self, "_emit_item_modified"):
+        item.disconnect("properties_changed", self, "_emit_item_modified")
+
+
+func _emit_item_modified(item: InventoryItem) -> void:
+    emit_signal("item_modified", item)
 
 
 func get_items() -> Array:
-    if _items == null:
-        return []
-
-    return _items.get_children()
+    return _items
 
 
 func has_item(item: InventoryItem) -> bool:
-    return item.get_parent() == _items
+    return item.get_parent() == self
 
 
 func add_item(item: InventoryItem) -> bool:
@@ -78,11 +102,9 @@ func add_item(item: InventoryItem) -> bool:
     if item.get_parent():
         item.get_parent().remove_child(item)
 
-    _items.add_child(item)
-    if !item.is_connected("tree_exited", self, "_on_item_tree_exited"):
-        item.connect("tree_exited", self, "_on_item_tree_exited", [item])
-    emit_signal("item_added", item)
-    emit_signal("contents_changed")
+    add_child(item)
+    if Engine.editor_hint:
+        item.owner = get_tree().edited_scene_root
     return true
 
 
@@ -90,17 +112,14 @@ func remove_item(item: InventoryItem) -> bool:
     if item == null || !has_item(item):
         return false
 
-    if item.is_connected("tree_exited", self, "_on_item_tree_exited"):
-        item.disconnect("tree_exited", self, "_on_item_tree_exited")
-    _items.remove_child(item)
-    emit_signal("item_removed", item)
-    emit_signal("contents_changed")
+    remove_child(item)
     return true
 
 
-func _on_item_tree_exited(item: InventoryItem) -> void:
-    emit_signal("contents_changed")
-    emit_signal("item_removed", item)
+func remove_all_items() -> void:
+    while get_child_count() > 0:
+        remove_child(get_child(0))
+    _items = []
 
 
 func get_item_by_id(id: String) -> InventoryItem:
@@ -129,9 +148,8 @@ func reset() -> void:
 
 func clear() -> void:
     for item in get_items():
-        remove_item(item)
         item.queue_free()
-    contents.clear()
+    remove_all_items()
 
 
 func serialize() -> Dictionary:
@@ -157,7 +175,7 @@ func deserialize(source: Dictionary) -> bool:
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
-            var item = get_item_script().new()
+            var item = _get_item_script().new()
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 

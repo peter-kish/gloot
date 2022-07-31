@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=2]
 [ext_resource path="res://tests/data/item_definitions_stack.tres" type="Resource" id=3]
 [ext_resource path="res://images/item_key.png" type="Texture" id=4]
+[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -20,5 +21,18 @@ default_item_icon = ExtResource( 4 )
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource( 1 )
 item_protoset = ExtResource( 3 )
-contents = [ "minimal_item", "stackable_item" ]
 capacity = 20.0
+
+[node name="MinimalItem" type="Node" parent="InventoryStacked"]
+script = ExtResource( 5 )
+protoset = ExtResource( 3 )
+prototype_id = "minimal_item"
+properties = {
+}
+
+[node name="StackableItem" type="Node" parent="InventoryStacked"]
+script = ExtResource( 5 )
+protoset = ExtResource( 3 )
+prototype_id = "stackable_item"
+properties = {
+}

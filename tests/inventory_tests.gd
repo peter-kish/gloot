@@ -21,10 +21,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    for i in inventory1.get_items():
-        inventory1.remove_item(i)
-    for i in inventory2.get_items():
-        inventory2.remove_item(i)
+    inventory1.remove_all_items()
+    inventory2.remove_all_items()
     inventory1.add_item(item)
 
 

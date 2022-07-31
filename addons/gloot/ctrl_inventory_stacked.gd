@@ -38,14 +38,28 @@ func _ready():
     _refresh()
 
 
-func _connect_signals() -> void:
-    inventory.connect("capacity_changed", self, "_refresh")
-    inventory.connect("occupied_space_changed", self, "_refresh")
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    ._connect_inventory_signals()
+
+    if !inventory.is_connected("capacity_changed", self, "_refresh"):
+        inventory.connect("capacity_changed", self, "_refresh")
+    if !inventory.is_connected("occupied_space_changed", self, "_refresh"):
+        inventory.connect("occupied_space_changed", self, "_refresh")
 
 
-func _disconnect_signals() -> void:
-    inventory.disconnect("capacity_changed", self, "_refresh")
-    inventory.disconnect("occupied_space_changed", self, "_refresh")
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    ._disconnect_inventory_signals()
+
+    if !inventory.is_connected("capacity_changed", self, "_refresh"):
+        inventory.disconnect("capacity_changed", self, "_refresh")
+    if !inventory.is_connected("occupied_space_changed", self, "_refresh"):
+        inventory.disconnect("occupied_space_changed", self, "_refresh")
 
 
 func _refresh():

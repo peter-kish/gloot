@@ -8,12 +8,12 @@ Inventory that has a limited item capacity in terms of weight.
 
 ## Properties
 
-* `capacity: float` - Maximum weight the inventory can hold.
+* `capacity: float` - Maximum weight the inventory can hold. Set to 0.0 for unlimited capacity.
 * `occupied_space: float` - Currently occupied space in the inventory.
 
 ## Methods
 
-* `has_unlimited_capacity() -> bool` - Checks if the inventory has unlimited capacity.
+* `has_unlimited_capacity() -> bool` - Checks if the inventory has unlimited capacity (i.e. capacity is 0.0).
 * `get_free_space() -> float` - Returns the free available space in the inventory.
 * `has_place_for(item: InventoryItem) -> bool` - Checks if the inventory has enough free space for the given item.
 * `split(item: InventoryItem, new_stack_size: int) -> InventoryItem` - Splits the given item stack into two. The newly created stack will have the size `new_stack_size`, while the old stack will contain the remainder.

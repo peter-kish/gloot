@@ -5,6 +5,7 @@
 </p>
 
 A universal inventory system for the Godot game engine (version 3.x and newer).
+> **NOTE**: The current version in development is v2.0, which is not compatible with older versions (see [Releases](https://github.com/peter-kish/gloot/releases)).
 
 ## Table of Contents
 
@@ -30,7 +31,7 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Item Prototypes
 
-* ![](addons/gloot/images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of inventory [item prototypes](#creating-item-prototypes) in JSON format.
+* ![](addons/gloot/images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of [inventory item prototypes](#creating-item-prototypes) in JSON format.
 
 ### Inventory Items
 
@@ -73,16 +74,21 @@ User interfaces are usually unique for each project, but it often helps to have 
 
 1. Create an [`ItemProtoset`](docs/item_protoset.md) resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for [`InventoryStacked`](docs/inventory_stacked.md) and [`InventoryGrid`](docs/inventory_grid.md)) and set its `item_protoset` property (previously created).
-3. Add items using the custom control in the inspector:
+3. Add items to the inventory:
+    1. Add items using the custom control in the inspector:
 
-![](images/screenshots/ss_inspector.png "Custom Inspector Control")
+    ![](images/screenshots/ss_inspector.png "Custom Inspector Control")
 
-> **NOTE**: Pay attention to the inventory capacity to avoid assertions when the scene is loaded.
-4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
+    2. Add items by creating `InventoryItem` nodes as child nodes of the inventory node.
+        > **NOTE**: When an `InventoryItem` node is added to an inventory node, its `protoset` property is automatically set to be the same as the `item_protoset` property of the inventory node.
+
+4. (*Optional*) Create [item slots](#item-slots) that will hold various items (for example the currently equipped weapon or armor).
 5. Create some [UI controls](#ui-controls) to display the created inventory and its contents.
 6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the [documentation](#the-documentation) for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
+
+An item prototype is a set of item properties that all items based on that prototype will contain. Items based on a specific prototype can override these properties or add new properties that are not defined in the prototype.
 
 Item protosets represent a number of item prototypes based on which future inventory items will be created.
 An item prototype is defined by its ID and its properties.
@@ -194,6 +200,10 @@ var stack_size: int = item.get_property("stack_size")
 if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
 ```
+
+Item properties can also be modified and overridden using the inspector when an `InventoryItem` is selected. Properties marked with green color represent overridden properties.
+
+![](images/screenshots/ss_inspector_inventory_item.png "Editing InventoryItem Properties")
 
 ## Serialization
 

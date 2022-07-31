@@ -19,3 +19,5 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 * `set_property(property_name: String, value) -> void` - Sets the property with the given name for this item.
 * `clear_property(property_name: String) -> void` - Clears the property with the given name for this item.
 * `reset() -> void` - Resets all properties to default values.
+* `serialize() -> Dictionary` - Serializes the item into a dictionary.
+* `deserialize(source: Dictionary) -> bool` - Deserializes the item from a given dictionary.

@@ -5,7 +5,24 @@ signal grabbed
 
 var item: InventoryItem setget _set_item
 var ctrl_inventory
-var texture: Texture
+var texture: Texture setget _set_texture
+var selected: bool = false setget _set_selected
+var selection_bg_color: Color = Color.gray setget _set_selection_bg_color
+
+
+func _set_texture(new_texture: Texture) -> void:
+    texture = new_texture
+    update()
+
+
+func _set_selected(new_selected: bool) -> void:
+    selected = new_selected
+    update()
+
+
+func _set_selection_bg_color(new_selection_bg_color: Color) -> void:
+    selection_bg_color = new_selection_bg_color
+    update()
 
 
 func _set_item(new_item: InventoryItem) -> void:
@@ -13,7 +30,7 @@ func _set_item(new_item: InventoryItem) -> void:
     if item && ctrl_inventory:
         var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
         if texture_path:
-            texture = load(texture_path)
+            _set_texture(load(texture_path))
         var item_size = _get_item_size()
         var item_pos = _get_item_position()
         rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
@@ -47,6 +64,10 @@ func _ready() -> void:
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, rect_size)
+
+    if selected:
+        draw_rect(rect, Color.gray, true)
+
     if texture:
         var src_rect: Rect2 = Rect2(0, 0, texture.get_width(), texture.get_height())
         draw_texture_rect_region(texture, rect, src_rect)

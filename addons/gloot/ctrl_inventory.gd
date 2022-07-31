@@ -31,14 +31,14 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
 
 
 func _set_inventory(new_inventory: Inventory) -> void:
-    if new_inventory == null && inventory:
-        _disconnect_signals()
-
+    if new_inventory == inventory:
+        return
+  
+    _disconnect_inventory_signals()
     inventory = new_inventory
+    _connect_inventory_signals()
 
-    if inventory:
-        _refresh()
-        _connect_signals()
+    _refresh()
 
 
 func _ready():
@@ -50,6 +50,8 @@ func _ready():
     _vbox_container = VBoxContainer.new()
     _vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     _vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _vbox_container.anchor_right = 1.0
+    _vbox_container.anchor_bottom = 1.0
     add_child(_vbox_container)
 
     _item_list = ItemList.new()
@@ -60,18 +62,37 @@ func _ready():
     if has_node(inventory_path):
         _set_inventory(get_node(inventory_path))
 
-
-func _connect_signals() -> void:
-    inventory.connect("contents_changed", self, "_refresh")
+    _refresh()
 
 
-func _disconnect_signals() -> void:
-    inventory.disconnect("contents_changed", self, "_refresh")
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.is_connected("contents_changed", self, "_refresh"):
+        inventory.connect("contents_changed", self, "_refresh")
+    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.connect("item_modified", self, "_on_item_modified")
+
+
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.is_connected("contents_changed", self, "_refresh"):
+        inventory.disconnect("contents_changed", self, "_refresh")
+    if inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.disconnect("item_modified", self, "_on_item_modified")
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
 
 
 func _refresh() -> void:
-    _clear_list()
-    _populate_list()
+    if is_inside_tree():
+        _clear_list()
+        _populate_list()
 
 
 func _clear_list() -> void:
@@ -80,9 +101,6 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
-    if Engine.editor_hint:
-        return
-
     if inventory == null:
         return
 
@@ -92,6 +110,9 @@ func _populate_list() -> void:
 
 
 func _get_item_title(item: InventoryItem) -> String:
+    if item == null:
+        return ""
+
     var title = item.get_property(KEY_NAME, item.prototype_id)
     if !(title is String):
         title = item.prototype_id
@@ -105,6 +126,9 @@ func _get_item_title(item: InventoryItem) -> String:
 
 
 func _get_item_texture(item: InventoryItem) -> Resource:
+    if item == null:
+        return null
+
     var texture_path = item.get_property(KEY_IMAGE)
     if texture_path:
         return load(texture_path)

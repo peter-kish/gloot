@@ -26,8 +26,7 @@ func init_suite() -> void:
 
 func init_test() -> void:
     inventory.capacity = 10.0
-    for i in inventory.get_items():
-        inventory.remove_item(i)
+    inventory.remove_all_items()
 
 
 func test_space() -> void:
