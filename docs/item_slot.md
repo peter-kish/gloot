@@ -8,6 +8,8 @@ Holds a reference to a given item from a given inventory. The slot can be cleare
 
 ## Properties
 
+* `inventory_path: NodePath` - Path of the inventory that this slot is linked to.
+* `equipped_item: int` - Index of the `InventoryItem` this slot is linked to inside the inventory. Use -1 to leave the slot empty.
 * `inventory: Inventory` - An `Inventory` this item slot is linked to.
 * `item: InventoryItem` - The `InventoryItem` held by this slot.
 
