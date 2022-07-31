@@ -22,20 +22,24 @@ func _set_inventory(new_inventory: Inventory) -> void:
 
 func connect_inventory_signals():
     if inventory:
-        if inventory is InventoryStacked:
-            inventory.connect("capacity_changed", self, "_refresh")
-        if inventory is InventoryGrid:
-            inventory.connect("size_changed", self, "_refresh")
-        inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
+        return
+
+    if inventory is InventoryStacked:
+        inventory.connect("capacity_changed", self, "_refresh")
+    if inventory is InventoryGrid:
+        inventory.connect("size_changed", self, "_refresh")
+    inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
 
 
 func disconnect_inventory_signals():
     if inventory:
-        if inventory is InventoryStacked:
-            inventory.disconnect("capacity_changed", self, "_refresh")
-        if inventory is InventoryGrid:
-            inventory.disconnect("size_changed", self, "_refresh")
-        inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
+        return
+        
+    if inventory is InventoryStacked:
+        inventory.disconnect("capacity_changed", self, "_refresh")
+    if inventory is InventoryGrid:
+        inventory.disconnect("size_changed", self, "_refresh")
+    inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
 
 
 func _refresh() -> void:

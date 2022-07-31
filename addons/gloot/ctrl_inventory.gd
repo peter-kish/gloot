@@ -31,14 +31,14 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
 
 
 func _set_inventory(new_inventory: Inventory) -> void:
-    if new_inventory == null && inventory:
-        _disconnect_signals()
-
+    if new_inventory == inventory:
+        return
+  
+    _disconnect_inventory_signals()
     inventory = new_inventory
+    _connect_inventory_signals()
 
-    if inventory:
-        _refresh()
-        _connect_signals()
+    _refresh()
 
 
 func _ready():
@@ -65,14 +65,28 @@ func _ready():
     _refresh()
 
 
-func _connect_signals() -> void:
-    inventory.connect("contents_changed", self, "_refresh")
-    inventory.connect("item_modified", self, "_refresh")
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.is_connected("contents_changed", self, "_refresh"):
+        inventory.connect("contents_changed", self, "_refresh")
+    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.connect("item_modified", self, "_on_item_modified")
 
 
-func _disconnect_signals() -> void:
-    inventory.disconnect("contents_changed", self, "_refresh")
-    inventory.disconnect("item_modified", self, "_refresh")
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.is_connected("contents_changed", self, "_refresh"):
+        inventory.disconnect("contents_changed", self, "_refresh")
+    if inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.disconnect("item_modified", self, "_on_item_modified")
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
 
 
 func _refresh() -> void:

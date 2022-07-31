@@ -47,26 +47,35 @@ func _set_item_slot(new_item_slot: ItemSlot) -> void:
     if new_item_slot == item_slot:
         return
 
-    if item_slot:
-        _disconnect_signals()
-
+    _disconnect_item_slot_signals()
     item_slot = new_item_slot
-
-    if item_slot:
-        _refresh()
-        _connect_signals()
-
-
-func _connect_signals() -> void:
-    item_slot.connect("item_set", self, "_on_item_set")
-    item_slot.connect("item_cleared", self, "_refresh")
-    item_slot.connect("inventory_changed", self, "_on_inventory_changed")
+    _connect_item_slot_signals()
+    
+    _refresh()
 
 
-func _disconnect_signals() -> void:
-    item_slot.disconnect("item_set", self, "_on_item_set")
-    item_slot.disconnect("item_cleared", self, "_refresh")
-    item_slot.disconnect("inventory_changed", self, "_on_inventory_changed")
+func _connect_item_slot_signals() -> void:
+    if !item_slot:
+        return
+
+    if !item_slot.is_connected("item_set", self, "_on_item_set"):
+        item_slot.connect("item_set", self, "_on_item_set")
+    if !item_slot.is_connected("item_cleared", self, "_refresh"):
+        item_slot.connect("item_cleared", self, "_refresh")
+    if !item_slot.is_connected("inventory_changed", self, "_on_inventory_changed"):
+        item_slot.connect("inventory_changed", self, "_on_inventory_changed")
+
+
+func _disconnect_item_slot_signals() -> void:
+    if !item_slot:
+        return
+
+    if item_slot.is_connected("item_set", self, "_on_item_set"):
+        item_slot.disconnect("item_set", self, "_on_item_set")
+    if item_slot.is_connected("item_cleared", self, "_refresh"):
+        item_slot.disconnect("item_cleared", self, "_refresh")
+    if item_slot.is_connected("inventory_changed", self, "_on_inventory_changed"):
+        item_slot.disconnect("inventory_changed", self, "_on_inventory_changed")
 
 
 func _on_item_set(_item: InventoryItem) -> void:

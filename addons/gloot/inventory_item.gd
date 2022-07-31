@@ -39,10 +39,8 @@ func _set_prototype_id(new_prototype_id: String) -> void:
 
 
 func _set_properties(new_properties: Dictionary) -> void:
-    var old_properties = properties
     properties = new_properties
-    if old_properties != properties:
-        emit_signal("properties_changed")
+    emit_signal("properties_changed")
 
 
 func _notification(what):
@@ -80,7 +78,10 @@ func get_property(property_name: String, default_value = null):
 
 
 func set_property(property_name: String, value) -> void:
+    var old_property = properties[property_name]
     properties[property_name] = value
+    if old_property != properties[property_name]:
+        emit_signal("properties_changed")
 
 
 func clear_property(property_name: String) -> void:

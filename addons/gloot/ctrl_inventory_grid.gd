@@ -50,12 +50,14 @@ func _set_selections_enabled(new_selections_enabled: bool) -> void:
 
 
 func _set_inventory(new_inventory: InventoryGrid) -> void:
-    if new_inventory == null && inventory:
-        _disconnect_signals()
+    if inventory == new_inventory:
+        return
 
+    _disconnect_inventory_signals()
     inventory = new_inventory
+    _connect_inventory_signals()
+
     _refresh()
-    _connect_signals()
 
 
 func _ready() -> void:
@@ -82,14 +84,28 @@ func _ready() -> void:
     _refresh()
 
 
-func _connect_signals() -> void:
-    if inventory:
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.is_connected("contents_changed", self, "_refresh"):
         inventory.connect("contents_changed", self, "_refresh")
+    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.connect("item_modified", self, "_on_item_modified")
 
 
-func _disconnect_signals() -> void:
-    if inventory:
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.is_connected("contents_changed", self, "_refresh"):
         inventory.disconnect("contents_changed", self, "_refresh")
+    if inventory.is_connected("item_modified", self, "_on_item_modified"):
+        inventory.disconnect("item_modified", self, "_on_item_modified")
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
 
 
 func _refresh() -> void:
