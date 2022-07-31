@@ -5,6 +5,7 @@
 </p>
 
 A universal inventory system for the Godot game engine (version 3.x and newer).
+> **NOTE**: The current version in development is v2.0, which is not compatible with older versions (see [Releases](https://github.com/peter-kish/gloot/releases)).
 
 ## Table of Contents
 
