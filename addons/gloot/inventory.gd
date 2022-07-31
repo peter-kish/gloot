@@ -31,7 +31,7 @@ func _set_item_protoset(new_item_protoset: Resource) -> void:
     update_configuration_warning()
 
 
-static func get_item_script() -> Script:
+static func _get_item_script() -> Script:
     return preload("inventory_item.gd")
 
 
@@ -175,7 +175,7 @@ func deserialize(source: Dictionary) -> bool:
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
-            var item = get_item_script().new()
+            var item = _get_item_script().new()
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 

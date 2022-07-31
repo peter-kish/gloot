@@ -59,7 +59,7 @@ func get_item_rect(item: InventoryItem) -> Rect2:
 func _ready():
     assert(size.x > 0, "Inventory width must be positive!")
     assert(size.y > 0, "Inventory height must be positive!")
-    sort_if_needed()
+    _sort_if_needed()
     connect("item_modified", self, "_on_item_modified")
     update_configuration_warning()
 
@@ -84,7 +84,7 @@ func _on_item_added(item: InventoryItem) -> void:
         if GlootVerify.vector_positive(free_place):
             move_item(item, free_place)
     
-    sort_if_needed()
+    _sort_if_needed()
 
     ._on_item_added(item)
     update_configuration_warning()
@@ -99,7 +99,7 @@ func _on_item_removed(item: InventoryItem) -> void:
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
-    sort_if_needed()
+    _sort_if_needed()
     update_configuration_warning()
 
 
@@ -226,7 +226,7 @@ func sort() -> bool:
     return true
 
 
-func sort_if_needed() -> void:
+func _sort_if_needed() -> void:
     if !_is_sorted() || _bounds_broken():
         sort()
 

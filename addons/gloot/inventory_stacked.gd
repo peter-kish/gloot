@@ -131,7 +131,7 @@ func add_item(item: InventoryItem) -> bool:
     return false
 
 
-func add_item_automerge(item: InventoryItem) -> bool:
+func _add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
@@ -198,7 +198,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if destination.has_place_for(item) && remove_item(item):
-        return destination.add_item_automerge(item)
+        return destination._add_item_automerge(item)
 
     return false
 
