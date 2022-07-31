@@ -30,7 +30,7 @@ A universal inventory system for the Godot game engine (version 3.x and newer).
 
 ### Item Prototypes
 
-* ![](addons/gloot/images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of inventory [item prototypes](#creating-item-prototypes) in JSON format.
+* ![](addons/gloot/images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of [inventory item prototypes](#creating-item-prototypes) in JSON format.
 
 ### Inventory Items
 
@@ -86,6 +86,8 @@ User interfaces are usually unique for each project, but it often helps to have 
 6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the [documentation](#the-documentation) for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
+
+An item prototype is a set of item properties that all items based on that prototype will contain. Items based on a specific prototype can override these properties or add new properties that are not defined in the prototype.
 
 Item protosets represent a number of item prototypes based on which future inventory items will be created.
 An item prototype is defined by its ID and its properties.
