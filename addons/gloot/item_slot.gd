@@ -9,7 +9,7 @@ signal inventory_changed
 
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(int) var equipped_item: int = -1 setget _set_equipped_item
-var inventory: Inventory setget _set_inventory
+var inventory: Inventory setget _set_inventory, _get_inventory
 var item: InventoryItem setget _set_item
 
 const KEY_INVENTORY: String = "inventory"
@@ -38,19 +38,42 @@ func _set_equipped_item(new_equipped_item: int) -> void:
 
 
 func _set_inventory(new_inv: Inventory) -> void:
-    if inventory != null:
-        inventory.disconnect("tree_exiting", self, "_on_inventory_tree_exiting")
-        inventory.disconnect("item_removed", self, "_on_item_removed")
+    if new_inv == inventory:
+        return
 
-    if new_inv != inventory:
-        _set_item(null)
-
+    _disconnect_inventory_signals()
+    _set_item(null)
     inventory = new_inv
-    if inventory != null:
-        inventory.connect("tree_exiting", self, "_on_inventory_tree_exiting")
-        inventory.connect("item_removed", self, "_on_item_removed")
+    _connect_inventory_signals()
 
     emit_signal("inventory_changed", inventory)
+
+
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.is_connected("tree_exiting", self, "_on_inventory_tree_exiting"):
+        inventory.connect("tree_exiting", self, "_on_inventory_tree_exiting")
+    if !inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.connect("item_removed", self, "_on_item_removed")
+
+
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.is_connected("tree_exiting", self, "_on_inventory_tree_exiting"):
+        inventory.disconnect("tree_exiting", self, "_on_inventory_tree_exiting")
+    if inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.disconnect("item_removed", self, "_on_item_removed")
+
+
+func _get_inventory() -> Inventory:
+    if !inventory && !inventory_path.is_empty():
+        _set_inventory(get_node_or_null(inventory_path))
+
+    return inventory
 
 
 func _set_item(new_item: InventoryItem) -> void:
