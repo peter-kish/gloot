@@ -21,7 +21,7 @@ func _set_inventory(new_inventory: Inventory) -> void:
 
 
 func connect_inventory_signals():
-    if inventory:
+    if !inventory:
         return
 
     if inventory is InventoryStacked:
@@ -32,7 +32,7 @@ func connect_inventory_signals():
 
 
 func disconnect_inventory_signals():
-    if inventory:
+    if !inventory:
         return
         
     if inventory is InventoryStacked:
