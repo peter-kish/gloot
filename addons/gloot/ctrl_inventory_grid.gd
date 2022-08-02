@@ -61,6 +61,7 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
 
 
 func _ready() -> void:
+	self.add_to_group("Inventory Grid")
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         for child in get_children():

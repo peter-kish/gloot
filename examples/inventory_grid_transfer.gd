@@ -17,20 +17,25 @@ func _ready() -> void:
 
 
 func _on_item_dropped(item: InventoryItem, drop_pos: Vector2, ctrl_source_inventory: CtrlInventoryGrid) -> void:
-    var ctrl_dest_inventory: CtrlInventoryGrid = null
-    if ctrl_source_inventory == ctrl_inventory_left:
-        ctrl_dest_inventory = ctrl_inventory_right
-    elif ctrl_source_inventory == ctrl_inventory_right:
-        ctrl_dest_inventory = ctrl_inventory_left
-    else:
-        return
+	var ctrl_dest_inventory: CtrlInventoryGrid = null
+	## figure out destination ##
+	var mousePos = get_viewport().get_mouse_position()
+	for node in get_tree().get_nodes_in_group("Inventory Grid"):
+		if node.get_global_rect().has_point(mousePos):
+            #this will cause issues if there are overlaping grids
+            #in different windows, where the most recent one will
+            #be picked
+			ctrl_dest_inventory = node
+			break
+	if ctrl_dest_inventory == null:
+		return #dropped outside of any grid
 
-    var field_coords: Vector2 = ctrl_dest_inventory.get_field_coords(drop_pos)
-    if !ctrl_source_inventory.inventory.transfer_to( \
-            item, \
-            ctrl_dest_inventory.inventory, \
-            field_coords):
-        var slot_rect = ctrl_slot.get_global_rect()
+	var field_coords: Vector2 = ctrl_dest_inventory.get_field_coords(drop_pos)
+	if !ctrl_source_inventory.inventory.transfer_to( \
+        item, \
+        ctrl_dest_inventory.inventory, \
+        field_coords):
+		var slot_rect = ctrl_slot.get_global_rect()
         if slot_rect.has_point(drop_pos) && ctrl_slot.item_slot.can_hold_item(item):
             ctrl_slot.item_slot.item = item
 
