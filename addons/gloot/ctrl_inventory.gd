@@ -2,6 +2,8 @@ class_name CtrlInventory
 extends Control
 tool
 
+signal inventory_item_activated
+
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_icon: Texture
 var inventory: Inventory = null setget _set_inventory
@@ -57,6 +59,7 @@ func _ready():
     _item_list = ItemList.new()
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
+    _item_list.connect("item_activated", self, "_on_list_item_activated")
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
@@ -83,6 +86,10 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("contents_changed", self, "_refresh")
     if inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.disconnect("item_modified", self, "_on_item_modified")
+
+
+func _on_list_item_activated(index: int) -> void:
+    emit_signal("inventory_item_activated", _get_inventory_item(index))
 
 
 func _on_item_modified(_item: InventoryItem) -> void:

@@ -2,6 +2,7 @@ class_name CtrlInventoryItemRect
 extends Control
 
 signal grabbed
+signal activated
 
 var item: InventoryItem setget _set_item
 var ctrl_inventory
@@ -76,9 +77,17 @@ func _draw() -> void:
 
 
 func _input(event: InputEvent) -> void:
-    if event is InputEventMouseButton:
-        var mb_event: InputEventMouseButton = event
-        if mb_event.is_pressed() && mb_event.button_index == BUTTON_LEFT:
-            if get_global_rect().has_point(get_global_mouse_position()):
-                var offset: Vector2 = get_global_mouse_position() - get_global_rect().position
-                emit_signal("grabbed", self, offset)
+    if !(event is InputEventMouseButton):
+        return
+
+    var mb_event: InputEventMouseButton = event
+    if mb_event.button_index != BUTTON_LEFT:
+        return
+
+    if mb_event.doubleclick:
+        if get_global_rect().has_point(get_global_mouse_position()):
+            emit_signal("activated", self)
+    elif mb_event.is_pressed():
+        if get_global_rect().has_point(get_global_mouse_position()):
+            var offset: Vector2 = get_global_mouse_position() - get_global_rect().position
+            emit_signal("grabbed", self, offset)
