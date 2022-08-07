@@ -64,11 +64,16 @@ func _refresh() -> void:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
+    _inventory_control.connect("inventory_item_activated", self, "_on_inventory_item_activated")
 
     scroll_container.add_child(_inventory_control)
 
     # Set prototype_id_filter values
     prototype_id_filter.values = inventory.item_protoset._prototypes.keys()
+
+
+func _on_inventory_item_activated(item: InventoryItem) -> void:
+    item.queue_free()
 
 
 func _ready() -> void:

@@ -3,6 +3,7 @@ extends Control
 tool
 
 signal item_dropped
+signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(Color) var grid_color: Color = Color.black
@@ -140,10 +141,12 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
 
 
 func _refresh_grid_container() -> void:
-    if inventory:
-        rect_min_size = Vector2(inventory.size.x * field_dimensions.x, \
-            inventory.size.y * field_dimensions.y)
-        rect_size = rect_min_size
+    if !inventory:
+        return
+
+    rect_min_size = Vector2(inventory.size.x * field_dimensions.x, \
+        inventory.size.y * field_dimensions.y)
+    rect_size = rect_min_size
 
 
 func _clear_list() -> void:
@@ -153,6 +156,8 @@ func _clear_list() -> void:
     for ctrl_inventory_item in _ctrl_item_container.get_children():
         _ctrl_item_container.remove_child(ctrl_inventory_item)
         ctrl_inventory_item.queue_free()
+
+    _grabbed_ctrl_inventory_item = null
 
 
 func _populate_list() -> void:
@@ -165,12 +170,16 @@ func _populate_list() -> void:
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
+        ctrl_inventory_item.connect("activated", self, "_on_item_activated")
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
 
 
 func _refresh_selection() -> void:
+    if !_ctrl_item_container:
+        return
+
     for ctrl_item in _ctrl_item_container.get_children():
         ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
         ctrl_item.selection_bg_color = selection_color
@@ -191,6 +200,18 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
         _drag_sprite.show()
 
 
+func _on_item_activated(ctrl_inventory_item) -> void:
+    var item: InventoryItem = ctrl_inventory_item.item
+    if !item:
+        return
+
+    _grabbed_ctrl_inventory_item = null
+    if _drag_sprite:
+        _drag_sprite.hide()
+
+    emit_signal("inventory_item_activated", item)
+
+
 func _select(item: InventoryItem) -> void:
     if selections_enabled:
         _selected_item = item
@@ -198,23 +219,28 @@ func _select(item: InventoryItem) -> void:
 
 
 func _input(event: InputEvent) -> void:
-    if event is InputEventMouseButton:
-        var mb_event: InputEventMouseButton = event
-        if !mb_event.is_pressed() && \
-            mb_event.button_index == BUTTON_LEFT && \
-            _grabbed_ctrl_inventory_item:
+    if !(event is InputEventMouseButton):
+        return
 
-            var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
-            if _is_mouse_hovering():
-                var field_coords = get_field_coords(global_grabbed_item_pos)
-                inventory.move_item(_grabbed_ctrl_inventory_item.item, field_coords)
-            else:
-                emit_signal("item_dropped", _grabbed_ctrl_inventory_item.item, global_grabbed_item_pos)
-            _grabbed_ctrl_inventory_item.show()
-            _select(_grabbed_ctrl_inventory_item.item)
-            _grabbed_ctrl_inventory_item = null
-            if _drag_sprite:
-                _drag_sprite.hide()
+    if !_grabbed_ctrl_inventory_item:
+        return
+
+    var mb_event: InputEventMouseButton = event
+    if mb_event.is_pressed() || mb_event.button_index != BUTTON_LEFT:
+        return
+
+    var item: InventoryItem = _grabbed_ctrl_inventory_item.item
+
+    var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
+    if _is_mouse_hovering():
+        var field_coords = get_field_coords(global_grabbed_item_pos)
+        inventory.move_item(item, field_coords)
+    else:
+        emit_signal("item_dropped", item, global_grabbed_item_pos)
+    _select(item)
+    _grabbed_ctrl_inventory_item = null
+    if _drag_sprite:
+        _drag_sprite.hide()
 
 
 func _is_mouse_hovering() -> bool:
