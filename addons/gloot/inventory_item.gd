@@ -125,7 +125,7 @@ func deserialize(source: Dictionary) -> bool:
     return true
 
 
-func get_texture() -> Resource:
+func get_texture() -> Texture:
     var texture_path = get_property(KEY_IMAGE)
     if texture_path && ResourceLoader.exists(texture_path):
         var texture = load(texture_path)
