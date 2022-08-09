@@ -230,6 +230,7 @@ func _input(event: InputEvent) -> void:
         return
 
     var item: InventoryItem = _grabbed_ctrl_inventory_item.item
+    _grabbed_ctrl_inventory_item.show()
 
     var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
     if _is_mouse_hovering():
