@@ -112,7 +112,7 @@ func _populate_list() -> void:
         return
 
     for item in inventory.get_items():
-        _item_list.add_item(_get_item_title(item), _get_item_texture(item))
+        _item_list.add_item(_get_item_title(item), item.get_texture())
         _item_list.set_item_metadata(_item_list.get_item_count() - 1, item)
 
 
@@ -120,26 +120,13 @@ func _get_item_title(item: InventoryItem) -> String:
     if item == null:
         return ""
 
-    var title = item.get_property(KEY_NAME, item.prototype_id)
-    if !(title is String):
-        title = item.prototype_id
-
+    var title = item.get_title()
     var stack_size: int = item.get_property(InventoryStacked.KEY_STACK_SIZE, \
             InventoryStacked.DEFAULT_STACK_SIZE)
     if stack_size > 1:
         title = "%s (x%d)" % [title, stack_size]
 
     return title
-
-
-func _get_item_texture(item: InventoryItem) -> Resource:
-    if item == null:
-        return null
-
-    var texture_path = item.get_property(KEY_IMAGE)
-    if texture_path:
-        return load(texture_path)
-    return default_item_icon
 
 
 func get_selected_inventory_items() -> Array:

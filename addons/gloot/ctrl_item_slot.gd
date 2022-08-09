@@ -126,7 +126,7 @@ func _refresh() -> void:
     if _label:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _texture_rect:
-        _texture_rect.texture = _get_item_texture(item)
+        _texture_rect.texture = item.get_texture()
 
 
 func _clear() -> void:
@@ -135,9 +135,3 @@ func _clear() -> void:
     if _texture_rect:
         _texture_rect.texture = null
 
-
-func _get_item_texture(item: InventoryItem) -> Resource:
-    var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
-    if texture_path:
-        return load(texture_path)
-    return default_item_icon
