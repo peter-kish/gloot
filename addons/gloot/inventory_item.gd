@@ -11,9 +11,11 @@ export(String) var prototype_id: String setget _set_prototype_id
 export(Dictionary) var properties: Dictionary setget _set_properties
 var _inventory: Node
 
-const PROTOSET_KEY: String = "protoset"
-const PROTOTYE_ID_KEY: String = "prototype_id"
-const PROPERTIES_KEY: String = "properties"
+const KEY_PROTOSET: String = "protoset"
+const KEY_PROTOTYE_ID: String = "prototype_id"
+const KEY_PROPERTIES: String = "properties"
+const KEY_IMAGE: String = "image"
+const KEY_NAME: String = "name"
 
 
 func _set_prototset(new_protoset: Resource) -> void:
@@ -99,25 +101,42 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[PROTOSET_KEY] = protoset.resource_path
-    result[PROTOTYE_ID_KEY] = prototype_id
+    result[KEY_PROTOSET] = protoset.resource_path
+    result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.empty():
-        result[PROPERTIES_KEY] = properties
+        result[KEY_PROPERTIES] = properties
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, PROTOSET_KEY, TYPE_STRING) ||\
-        !GlootVerify.dict(source, true, PROTOTYE_ID_KEY, TYPE_STRING) ||\
-        !GlootVerify.dict(source, false, PROPERTIES_KEY, TYPE_DICTIONARY):
+    if !GlootVerify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
+        !GlootVerify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
+        !GlootVerify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()
 
-    protoset = load(source[PROTOSET_KEY])
-    prototype_id = source[PROTOTYE_ID_KEY]
-    if source.has(PROPERTIES_KEY):
-        properties = source[PROPERTIES_KEY]
+    protoset = load(source[KEY_PROTOSET])
+    prototype_id = source[KEY_PROTOTYE_ID]
+    if source.has(KEY_PROPERTIES):
+        properties = source[KEY_PROPERTIES]
 
     return true
+
+
+func get_texture() -> Resource:
+    var texture_path = get_property(KEY_IMAGE)
+    if texture_path && ResourceLoader.exists(texture_path):
+        var texture = load(texture_path)
+        if texture is Texture:
+            return texture
+    return null
+
+
+func get_title() -> String:
+    var title = get_property(KEY_NAME, prototype_id)
+    if !(title is String):
+        title = prototype_id
+
+    return title
