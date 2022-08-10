@@ -19,6 +19,7 @@ func parse_begin(object: Object) -> void:
         var inventory_custom_control = InventoryCustomControl.instance()
         inventory_custom_control.inventory = object
         inventory_custom_control.editor_interface = editor_interface
+        inventory_custom_control.undo_redo = undo_redo
         add_custom_control(inventory_custom_control)
 
 

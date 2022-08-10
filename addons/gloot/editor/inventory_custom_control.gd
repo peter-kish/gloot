@@ -9,6 +9,7 @@ onready var btn_remove = $HBoxContainer/VBoxContainer/HBoxContainer/BtnRemove
 onready var scroll_container = $HBoxContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
+var undo_redo: UndoRedo
 var _inventory_control: Control
 
 
@@ -73,7 +74,11 @@ func _refresh() -> void:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    item.queue_free()
+    var item_data = item.serialize()
+    undo_redo.create_action("Remove Inventory Item")
+    undo_redo.add_do_method(self, "_remove_item", item_data)
+    undo_redo.add_undo_method(self, "_add_item", item_data)
+    undo_redo.commit_action()
 
 
 func _ready() -> void:
@@ -84,11 +89,18 @@ func _ready() -> void:
 
 
 func _on_prototype_id_picked(index: int) -> void:
+    # Create an temporary InventoryItem just to calculate its hash
     var item = InventoryItem.new()
     item.protoset = inventory.item_protoset
     item.prototype_id = prototype_id_filter.values[index]
     item.name = item.prototype_id
-    inventory.add_item(item)
+    var item_data = item.serialize()
+    item.free()
+
+    undo_redo.create_action("Add Inventory Item")
+    undo_redo.add_do_method(self, "_add_item", item_data)
+    undo_redo.add_undo_method(self, "_remove_item", item_data)
+    undo_redo.commit_action()
     
 
 func _on_btn_edit() -> void:
@@ -101,11 +113,41 @@ func _on_btn_edit() -> void:
 
 func _on_btn_remove() -> void:
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
+    var item_data: Array
     for item in selected_items:
-        item.queue_free()
+        item_data.append(item.serialize())
+
+    undo_redo.create_action("Remove Inventory Items")
+    undo_redo.add_do_method(self, "_remove_items", item_data)
+    undo_redo.add_undo_method(self, "_add_items", item_data)
+    undo_redo.commit_action()
 
 
 static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
     editor_interface.get_selection().clear()
     editor_interface.get_selection().add_node(node)
     editor_interface.edit_node(node)
+
+
+func _add_item(item_data: Dictionary) -> void:
+    var item = InventoryItem.new()
+    item.deserialize(item_data)
+    inventory.add_item(item)
+
+
+func _add_items(item_data: Array) -> void:
+    for data in item_data:
+        _add_item(data)
+
+
+func _remove_item(item_data: Dictionary) -> void:
+    var item_data_hash = item_data.hash()
+    for item in inventory.get_items():
+        if item.serialize().hash() == item_data_hash:
+            item.queue_free()
+            return
+
+
+func _remove_items(item_data: Array) -> void:
+    for data in item_data:
+        _remove_item(data)
