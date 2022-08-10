@@ -112,15 +112,11 @@ item_protoset = ExtResource( 3 )
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "item1"
-properties = {
-}
 
 [node name="InventoryItem2" type="Node" parent="Inventory"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "item2"
-properties = {
-}
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -130,15 +126,11 @@ item_protoset = ExtResource( 3 )
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "item1"
-properties = {
-}
 
 [node name="InventoryItem4" type="Node" parent="Inventory2"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "item2"
-properties = {
-}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )

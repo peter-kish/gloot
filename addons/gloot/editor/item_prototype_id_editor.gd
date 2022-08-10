@@ -9,6 +9,7 @@ var updating: bool = false
 var _choice_filter: Control
 var _window_dialog: WindowDialog
 var _btn_prototype_id: Button
+var undo_redo: UndoRedo = null
 
 
 func _init() -> void:
@@ -42,6 +43,8 @@ func _init() -> void:
 
 
 func _ready() -> void:
+    var item: InventoryItem = get_edited_object()
+    item.connect("prototype_id_changed", self, "_on_prototype_id_changed")
     _refresh_button()
 
 
@@ -51,8 +54,20 @@ func _on_btn_prototype_id() -> void:
 
 func _on_choice_picked(value_index: int) -> void:
     var item: InventoryItem = get_edited_object()
-    item.prototype_id = _choice_filter.values[value_index]
+    var new_prototype_id = _choice_filter.values[value_index]
+    if new_prototype_id == item.prototype_id:
+        return
+
+    undo_redo.create_action("Set prototype_id")
+    undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
+    undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
+    undo_redo.commit_action()
+
     _window_dialog.hide()
+    _refresh_button()
+
+
+func _on_prototype_id_changed() -> void:
     _refresh_button()
 
 

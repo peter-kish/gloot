@@ -2,6 +2,7 @@ extends EditorProperty
 
 var updating: bool = false
 var _option_button: OptionButton
+var undo_redo: UndoRedo = null
 
 
 func _init() -> void:
@@ -14,10 +15,20 @@ func _init() -> void:
 func _ready() -> void:
     var item_slot: ItemSlot = get_edited_object()
     item_slot.connect("inventory_changed", self, "_on_inventory_changed")
+    item_slot.connect("item_set", self, "_on_item_set")
+    item_slot.connect("item_cleared", self, "_on_item_cleared")
     _refresh_option_button()
 
 
 func _on_inventory_changed(inventory: Inventory) -> void:
+    _refresh_option_button()
+
+
+func _on_item_set(item: InventoryItem) -> void:
+    _refresh_option_button()
+
+
+func _on_item_cleared() -> void:
     _refresh_option_button()
 
 
@@ -54,14 +65,16 @@ func _populate_option_button() -> void:
 
 
 func _on_item_selected(item_index: int) -> void:
-    if !get_edited_object():
-        return
-
-    if updating:
+    if !get_edited_object() || updating:
         return
 
     updating = true
     var item_slot: ItemSlot = get_edited_object()
-    item_slot.equipped_item = _option_button.get_item_metadata(item_index)
+    var new_equipped_item = _option_button.get_item_metadata(item_index)
+    if item_slot.equipped_item != new_equipped_item:
+        undo_redo.create_action("Set equipped_item")
+        undo_redo.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
+        undo_redo.add_do_property(item_slot, "equipped_item", new_equipped_item)
+        undo_redo.commit_action()
     updating = false
 

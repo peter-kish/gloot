@@ -5,6 +5,7 @@ const COLOR_OVERRIDDEN = Color.green
 var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
+var undo_redo: UndoRedo = null
 
 
 func _init() -> void:
@@ -26,11 +27,20 @@ func _ready() -> void:
 
 func _on_value_changed(key: String, new_value) -> void:
     var item: InventoryItem = get_edited_object()
-    item.properties[key] = new_value
+    var new_properties = item.properties.duplicate()
+    new_properties[key] = new_value
 
     var item_prototype: Dictionary = item.protoset.get(item.prototype_id)
     if item_prototype.has(key) && (item_prototype[key] == new_value):
-        item.properties.erase(key)
+        new_properties.erase(key)
+
+    if new_properties.hash() == item.properties.hash():
+        return
+
+    undo_redo.create_action("Set properties")
+    undo_redo.add_undo_property(item, "properties", item.properties)
+    undo_redo.add_do_property(item, "properties", new_properties)
+    undo_redo.commit_action()
 
     _refresh_dict_editor()
 
