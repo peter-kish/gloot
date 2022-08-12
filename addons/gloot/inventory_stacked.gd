@@ -10,7 +10,7 @@ const KEY_STACK_SIZE: String = "stack_size"
 const DEFAULT_STACK_SIZE: int = 1
 
 export(float) var capacity: float setget _set_capacity
-var occupied_space: float
+var occupied_space: float setget _set_occupied_space
 
 const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
@@ -42,6 +42,10 @@ func _set_capacity(new_capacity: float) -> void:
     capacity = new_capacity
     update_configuration_warning()
     emit_signal("capacity_changed")
+
+
+func _set_occupied_space(new_occupied_space: float) -> void:
+    assert(false, "occupied_space is read-only!")
 
 
 func _ready():
