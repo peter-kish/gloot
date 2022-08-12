@@ -11,6 +11,7 @@ signal protoset_changed
 export(Resource) var item_protoset: Resource setget _set_item_protoset
 var _items: Array = []
 
+const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
 
@@ -63,6 +64,25 @@ func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     emit_signal("contents_changed")
     _disconnect_item_signals(item)
+
+
+func move_child(child_node: Node, to_position: int) -> void:
+    _move_item(child_node.get_index(), to_position)
+    .move_child(child_node, to_position)
+    emit_signal("contents_changed")
+
+
+func _move_item(from: int, to: int) -> void:
+    assert(from >= 0)
+    assert(from < _items.size())
+    assert(to >= 0)
+    assert(to < _items.size())
+    if from == to:
+        return
+
+    var item = _items[from]
+    _items.remove(from)
+    _items.insert(to, item)
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
@@ -155,6 +175,7 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
+    result[KEY_NODE_NAME] = name
     result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
     if !get_items().empty():
         result[KEY_ITEMS] = []
@@ -165,12 +186,14 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+    if !GlootVerify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
+        !GlootVerify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
         !GlootVerify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
         return false
 
     reset()
 
+    name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]

@@ -14,6 +14,8 @@ var _inventory: Node
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
 const KEY_PROPERTIES: String = "properties"
+const KEY_NODE_NAME: String = "node_name"
+
 const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
@@ -101,6 +103,7 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
+    result[KEY_NODE_NAME] = name
     result[KEY_PROTOSET] = protoset.resource_path
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.empty():
@@ -110,13 +113,15 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
+    if !GlootVerify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
+        !GlootVerify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
         !GlootVerify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
         !GlootVerify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()
 
+    name = source[KEY_NODE_NAME]
     protoset = load(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
