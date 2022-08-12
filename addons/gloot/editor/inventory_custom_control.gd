@@ -77,7 +77,7 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
     var item_data = item.serialize()
     undo_redo.create_action("Remove Inventory Item")
     undo_redo.add_do_method(self, "_remove_item", item_data)
-    undo_redo.add_undo_method(self, "_add_item", item_data)
+    undo_redo.add_undo_method(self, "_add_item", item_data, item.get_index())
     undo_redo.commit_action()
 
 
@@ -114,12 +114,14 @@ func _on_btn_edit() -> void:
 func _on_btn_remove() -> void:
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
     var item_data: Array
+    var item_indexes: Array
     for item in selected_items:
         item_data.append(item.serialize())
+        item_indexes.append(item.get_index())
 
     undo_redo.create_action("Remove Inventory Items")
     undo_redo.add_do_method(self, "_remove_items", item_data)
-    undo_redo.add_undo_method(self, "_add_items", item_data)
+    undo_redo.add_undo_method(self, "_add_items", item_data, item_indexes)
     undo_redo.commit_action()
 
 
@@ -129,15 +131,19 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
     editor_interface.edit_node(node)
 
 
-func _add_item(item_data: Dictionary) -> void:
+func _add_item(item_data: Dictionary, preferred_index: int = -1) -> void:
     var item = InventoryItem.new()
     item.deserialize(item_data)
     inventory.add_item(item)
+    if preferred_index < 0 || preferred_index >= inventory.get_child_count():
+        return
+        
+    inventory.move_child(item, preferred_index)
 
 
-func _add_items(item_data: Array) -> void:
-    for data in item_data:
-        _add_item(data)
+func _add_items(item_data: Array, item_indexes: Array) -> void:
+    for i in range(item_data.size()):
+        _add_item(item_data[i], item_indexes[i])
 
 
 func _remove_item(item_data: Dictionary) -> void:

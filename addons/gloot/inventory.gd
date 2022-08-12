@@ -66,6 +66,25 @@ func _on_item_removed(item: InventoryItem) -> void:
     _disconnect_item_signals(item)
 
 
+func move_child(child_node: Node, to_position: int) -> void:
+    _move_item(child_node.get_index(), to_position)
+    .move_child(child_node, to_position)
+    emit_signal("contents_changed")
+
+
+func _move_item(from: int, to: int) -> void:
+    assert(from >= 0)
+    assert(from < _items.size())
+    assert(to >= 0)
+    assert(to < _items.size())
+    if from == to:
+        return
+
+    var item = _items[from]
+    _items.remove(from)
+    _items.insert(to, item)
+
+
 func _connect_item_signals(item: InventoryItem) -> void:
     if !item.is_connected("protoset_changed", self, "_emit_item_modified"):
         item.connect("protoset_changed", self, "_emit_item_modified", [item])
