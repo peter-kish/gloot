@@ -111,22 +111,16 @@ capacity = 50.0
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "minimal_item"
-properties = {
-}
 
 [node name="big_item" type="Node" parent="InventoryStackedLeft"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "big_item"
-properties = {
-}
 
 [node name="stackable_item" type="Node" parent="InventoryStackedLeft"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "stackable_item"
-properties = {
-}
 
 [node name="InventoryStackedRight" type="Node" parent="."]
 script = ExtResource( 2 )
@@ -137,22 +131,16 @@ capacity = 50.0
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "minimal_item"
-properties = {
-}
 
 [node name="big_item" type="Node" parent="InventoryStackedRight"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "big_item"
-properties = {
-}
 
 [node name="stackable_item" type="Node" parent="InventoryStackedRight"]
 script = ExtResource( 8 )
 protoset = ExtResource( 3 )
 prototype_id = "stackable_item"
-properties = {
-}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )

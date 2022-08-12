@@ -27,8 +27,6 @@ size = Vector2( 5, 5 )
 script = ExtResource( 5 )
 protoset = ExtResource( 1 )
 prototype_id = "item_2x2"
-properties = {
-}
 
 [node name="item_1x1" type="Node" parent="InventoryGrid"]
 script = ExtResource( 5 )

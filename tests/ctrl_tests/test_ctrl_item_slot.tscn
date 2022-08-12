@@ -26,8 +26,6 @@ item_protoset = ExtResource( 1 )
 script = ExtResource( 6 )
 protoset = ExtResource( 1 )
 prototype_id = "item1"
-properties = {
-}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 4 )
