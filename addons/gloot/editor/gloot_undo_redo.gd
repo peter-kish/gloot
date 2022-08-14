@@ -74,3 +74,34 @@ func _remove_item(inventory: Inventory, item_data: Dictionary) -> void:
 func _remove_items(inventory: Inventory, item_data: Array) -> void:
     for data in item_data:
         _remove_item(inventory, data)
+
+
+func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
+    undo_redo.create_action("Set item properties")
+    undo_redo.add_undo_property(item, "properties", item.properties)
+    undo_redo.add_do_property(item, "properties", new_properties)
+    undo_redo.commit_action()
+
+
+func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
+    undo_redo.create_action("Set prototype_id")
+    undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
+    undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
+    undo_redo.commit_action()
+
+
+func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
+    undo_redo.create_action("Set equipped_item")
+    undo_redo.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
+    undo_redo.add_do_property(item_slot, "equipped_item", new_equipped_item)
+    undo_redo.commit_action()
+
+
+func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2) -> void:
+    var old_item_position = inventory.get_item_position(item)
+    if old_item_position == position:
+        return
+    undo_redo.create_action("Move Inventory Item")
+    undo_redo.add_undo_method(inventory, "move_item_to", item, old_item_position)
+    undo_redo.add_do_method(inventory, "move_item_to", item, position)
+    undo_redo.commit_action()

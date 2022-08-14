@@ -9,7 +9,7 @@ var updating: bool = false
 var _choice_filter: Control
 var _window_dialog: WindowDialog
 var _btn_prototype_id: Button
-var undo_redo: UndoRedo = null
+var gloot_undo_redo = null
 
 
 func _init() -> void:
@@ -58,10 +58,7 @@ func _on_choice_picked(value_index: int) -> void:
     if new_prototype_id == item.prototype_id:
         return
 
-    undo_redo.create_action("Set prototype_id")
-    undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
-    undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
-    undo_redo.commit_action()
+    gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
 
     _window_dialog.hide()
     _refresh_button()

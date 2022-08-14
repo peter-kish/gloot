@@ -39,17 +39,17 @@ func parse_begin(object: Object) -> void:
 func parse_property(object, type, path, hint, hint_text, usage) -> bool:
     if (object is InventoryItem) && path == "properties":
         var item_property_editor =ItemPropertyEditor.new()
-        item_property_editor.undo_redo = undo_redo
+        item_property_editor.gloot_undo_redo = gloot_undo_redo
         add_property_editor(path, item_property_editor)
         return true
     if (object is InventoryItem) && path == "prototype_id":
         var item_prototype_id_editor =ItemPrototypeIdEditor.new()
-        item_prototype_id_editor.undo_redo = undo_redo
+        item_prototype_id_editor.gloot_undo_redo = gloot_undo_redo
         add_property_editor(path, item_prototype_id_editor)
         return true
     if (object is ItemSlot) && path == "equipped_item":
         var item_slot_equipped_item_editor =ItemSlotEquippedItemEditor.new()
-        item_slot_equipped_item_editor.undo_redo = undo_redo
+        item_slot_equipped_item_editor.gloot_undo_redo = gloot_undo_redo
         add_property_editor(path, item_slot_equipped_item_editor)
         return true
     return false
