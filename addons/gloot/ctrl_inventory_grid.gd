@@ -235,7 +235,7 @@ func _input(event: InputEvent) -> void:
     var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
     if _is_mouse_hovering():
         var field_coords = get_field_coords(global_grabbed_item_pos)
-        inventory.move_item(item, field_coords)
+        inventory.move_item_to(item, field_coords)
     else:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
     _select(item)

@@ -15,6 +15,9 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 ## Methods
 
 * `get_items() -> Array` - Returns an array containing all the items in the inventory.
+* `move_item(from: int, to: int) -> void` - Moves the inventory item at index `from` to the new index `to`. This does not change the order of the inventory child nodes. It only affects the internal item ordering.
+* `get_item_index(item: InventoryItem) -> int:` - Returns the internal item index of the given item. Returns `-1` if the item is not inside the inventory.
+* `get_item_count() -> int` - Returns the number of items in the inventory.
 * `has_item(item: InventoryItem) -> bool` - Checks if the inventory contains the given item.
 * `add_item(item: InventoryItem) -> bool` - Adds the given item to the inventory.
 * `remove_item(item: InventoryItem) -> bool` - Removes the given item from the inventory.

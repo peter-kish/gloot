@@ -82,7 +82,7 @@ func _on_item_added(item: InventoryItem) -> void:
     if !rect_free(get_item_rect(item), item):
         var free_place = find_free_place(item)
         if GlootVerify.vector_positive(free_place):
-            move_item(item, free_place)
+            move_item_to(item, free_place)
     
     _sort_if_needed()
 
@@ -145,7 +145,7 @@ func add_item_at(item: InventoryItem, position: Vector2) -> bool:
     return false
 
 
-func move_item(item: InventoryItem, position: Vector2) -> bool:
+func move_item_to(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
     if rect_free(rect, item):
@@ -167,7 +167,7 @@ func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vect
     var rect: Rect2 = Rect2(position, item_size)
     if destination.rect_free(rect):
         if .transfer(item, destination):
-            destination.move_item(item, position)
+            destination.move_item_to(item, position)
             return true
 
     return false
@@ -215,13 +215,13 @@ func sort() -> bool:
     item_array.sort_custom(self, "_compare_items")
 
     for item in get_items():
-        move_item(item, size)
+        move_item_to(item, size)
 
     for item in item_array:
         var free_place: Vector2 = find_free_place(item)
         if !GlootVerify.vector_positive(free_place):
             return false
-        move_item(item, free_place)
+        move_item_to(item, free_place)
 
     return true
 

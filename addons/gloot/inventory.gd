@@ -66,13 +66,7 @@ func _on_item_removed(item: InventoryItem) -> void:
     _disconnect_item_signals(item)
 
 
-func move_child(child_node: Node, to_position: int) -> void:
-    _move_item(child_node.get_index(), to_position)
-    .move_child(child_node, to_position)
-    emit_signal("contents_changed")
-
-
-func _move_item(from: int, to: int) -> void:
+func move_item(from: int, to: int) -> void:
     assert(from >= 0)
     assert(from < _items.size())
     assert(to >= 0)
@@ -83,6 +77,16 @@ func _move_item(from: int, to: int) -> void:
     var item = _items[from]
     _items.remove(from)
     _items.insert(to, item)
+
+    emit_signal("contents_changed")
+
+
+func get_item_index(item: InventoryItem) -> int:
+    return _items.find(item)
+
+
+func get_item_count() -> int:
+    return _items.size()
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
