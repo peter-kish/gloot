@@ -9,7 +9,7 @@ onready var btn_remove = $HBoxContainer/VBoxContainer/HBoxContainer/BtnRemove
 onready var scroll_container = $HBoxContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
-var undo_redo: UndoRedo
+var gloot_undo_redo
 var _inventory_control: Control
 
 
@@ -59,7 +59,8 @@ func _refresh() -> void:
         _inventory_control.grid_color = Color.gray
         _inventory_control.selections_enabled = true
         # TODO: Find a better way for undoing/redoing item movements:
-        _inventory_control._undo_redo = undo_redo
+        if gloot_undo_redo:
+            _inventory_control._undo_redo = gloot_undo_redo.undo_redo
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
@@ -76,11 +77,8 @@ func _refresh() -> void:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    var item_data = item.serialize()
-    undo_redo.create_action("Remove Inventory Item")
-    undo_redo.add_do_method(self, "_remove_item", item_data)
-    undo_redo.add_undo_method(self, "_add_item", item_data, inventory.get_item_index(item))
-    undo_redo.commit_action()
+    assert(gloot_undo_redo)
+    gloot_undo_redo.remove_inventory_item(inventory, item)
 
 
 func _ready() -> void:
@@ -91,18 +89,9 @@ func _ready() -> void:
 
 
 func _on_prototype_id_picked(index: int) -> void:
-    # Create an temporary InventoryItem just to calculate its hash
-    var item = InventoryItem.new()
-    item.protoset = inventory.item_protoset
-    item.prototype_id = prototype_id_filter.values[index]
-    item.name = item.prototype_id
-    var item_data = item.serialize()
-    item.free()
-
-    undo_redo.create_action("Add Inventory Item")
-    undo_redo.add_do_method(self, "_add_item", item_data)
-    undo_redo.add_undo_method(self, "_remove_item", item_data)
-    undo_redo.commit_action()
+    assert(gloot_undo_redo)
+    var prototype_id = prototype_id_filter.values[index]
+    gloot_undo_redo.add_inventory_item(inventory, prototype_id)
     
 
 func _on_btn_edit() -> void:
@@ -114,19 +103,9 @@ func _on_btn_edit() -> void:
 
 
 func _on_btn_remove() -> void:
+    assert(gloot_undo_redo)
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
-    var item_data: Array
-    var item_indexes: Array
-    var node_indexes: Array
-    for item in selected_items:
-        item_data.append(item.serialize())
-        item_indexes.append(inventory.get_item_index(item))
-        node_indexes.append(item.get_index())
-
-    undo_redo.create_action("Remove Inventory Items")
-    undo_redo.add_do_method(self, "_remove_items", item_data)
-    undo_redo.add_undo_method(self, "_add_items", item_data, item_indexes, node_indexes)
-    undo_redo.commit_action()
+    gloot_undo_redo.remove_inventory_items(inventory, selected_items)
 
 
 static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
@@ -134,32 +113,3 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
     editor_interface.get_selection().add_node(node)
     editor_interface.edit_node(node)
 
-
-func _add_item(item_data: Dictionary, item_index: int = -1, node_index: int = -1) -> void:
-    var item = InventoryItem.new()
-    item.deserialize(item_data)
-    inventory.add_item(item)
-
-    if item_index >= 0 && item_index < inventory.get_item_count():
-        inventory.move_item(inventory.get_item_index(item), item_index)
-
-    if node_index >= 0 && node_index < inventory.get_child_count():
-        inventory.move_child(item, node_index) 
-
-
-func _add_items(item_data: Array, item_indexes: Array, node_indexes: Array) -> void:
-    for i in range(item_data.size()):
-        _add_item(item_data[i], item_indexes[i], node_indexes[i])
-
-
-func _remove_item(item_data: Dictionary) -> void:
-    var item_data_hash = item_data.hash()
-    for item in inventory.get_items():
-        if item.serialize().hash() == item_data_hash:
-            item.queue_free()
-            return
-
-
-func _remove_items(item_data: Array) -> void:
-    for data in item_data:
-        _remove_item(data)

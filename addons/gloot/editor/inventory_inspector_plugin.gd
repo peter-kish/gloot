@@ -6,8 +6,21 @@ var InventoryCustomControl = preload("res://addons/gloot/editor/inventory_custom
 var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")
 var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id_editor.gd")
 var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_equipped_item_editor.gd")
+var GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 var editor_interface: EditorInterface = null
-var undo_redo: UndoRedo = null
+var undo_redo: UndoRedo = null setget _set_undo_redo
+var gloot_undo_redo = null
+
+
+func _set_undo_redo(new_undo_redo: UndoRedo) -> void:
+    undo_redo = new_undo_redo
+    if gloot_undo_redo:
+        gloot_undo_redo.undo_redo = undo_redo
+
+
+func _init():
+    gloot_undo_redo = GlootUndoRedo.new()
+    gloot_undo_redo.undo_redo = undo_redo
 
 
 func can_handle(object: Object) -> bool:
@@ -19,7 +32,7 @@ func parse_begin(object: Object) -> void:
         var inventory_custom_control = InventoryCustomControl.instance()
         inventory_custom_control.inventory = object
         inventory_custom_control.editor_interface = editor_interface
-        inventory_custom_control.undo_redo = undo_redo
+        inventory_custom_control.gloot_undo_redo = gloot_undo_redo
         add_custom_control(inventory_custom_control)
 
 
