@@ -58,6 +58,8 @@ func _refresh() -> void:
         _inventory_control = CtrlInventoryGrid.new()
         _inventory_control.grid_color = Color.gray
         _inventory_control.selections_enabled = true
+        # TODO: Find a better way for undoing/redoing item movements:
+        _inventory_control._undo_redo = undo_redo
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
