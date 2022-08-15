@@ -74,13 +74,18 @@ User interfaces are usually unique for each project, but it often helps to have 
 
 1. Create an [`ItemProtoset`](docs/item_protoset.md) resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an inventory node in your scene. Set its capacity if needed (required for [`InventoryStacked`](docs/inventory_stacked.md) and [`InventoryGrid`](docs/inventory_grid.md)) and set its `item_protoset` property (previously created).
-3. Add items to the inventory:
+3. Add items to the inventory in one of the following ways:
     1. Add items using the custom control in the inspector:
 
     ![](images/screenshots/ss_inspector.png "Custom Inspector Control")
 
     2. Add items by creating `InventoryItem` nodes as child nodes of the inventory node.
         > **NOTE**: When an `InventoryItem` node is added to an inventory node, its `protoset` property is automatically set to be the same as the `item_protoset` property of the inventory node.
+
+    3. Add items from code. Use [`create_and_add_item()`](docs/inventory.md) to create and add items based on the given prototype ID:
+    ```gd
+    inventory.create_and_add_item("Item1")
+    ```
 
 4. (*Optional*) Create [item slots](#item-slots) that will hold various items (for example the currently equipped weapon or armor).
 5. Create some [UI controls](#ui-controls) to display the created inventory and its contents.

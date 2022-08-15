@@ -132,6 +132,16 @@ func add_item(item: InventoryItem) -> bool:
     return true
 
 
+func create_and_add_item(prototype_id: String) -> InventoryItem:
+    var item: InventoryItem = InventoryItem.new()
+    item.prototype_id = prototype_id
+    if add_item(item):
+        return item
+    else:
+        item.free()
+        return null
+
+
 func remove_item(item: InventoryItem) -> bool:
     if item == null || !has_item(item):
         return false
@@ -146,16 +156,16 @@ func remove_all_items() -> void:
     _items = []
 
 
-func get_item_by_id(id: String) -> InventoryItem:
+func get_item_by_id(prototype_id: String) -> InventoryItem:
     for item in get_items():
-        if item.prototype_id == id:
+        if item.prototype_id == prototype_id:
             return item
             
     return null
 
 
-func has_item_by_id(id: String) -> bool:
-    return get_item_by_id(id) != null
+func has_item_by_id(prototype_id: String) -> bool:
+    return get_item_by_id(prototype_id) != null
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
