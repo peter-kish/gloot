@@ -14,6 +14,7 @@ func init_suite():
         "test_size",
         "test_has_item",
         "test_add_remove",
+        "test_create_and_add",
         "test_transfer",
         "test_remove_item",
         "test_serialize"

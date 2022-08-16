@@ -145,6 +145,20 @@ func add_item_at(item: InventoryItem, position: Vector2) -> bool:
     return false
 
 
+func create_and_add_item_at(prototype_id: String, position: Vector2) -> InventoryItem:
+    var item = create_and_add_item(prototype_id)
+    if item:
+        move_item_to(item, position)
+    return item
+
+
+func get_item_at(position: Vector2) -> InventoryItem:
+    for item in get_items():
+        if get_item_rect(item).has_point(position):
+            return item
+    return null
+
+
 func move_item_to(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
