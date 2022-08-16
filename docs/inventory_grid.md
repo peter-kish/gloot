@@ -18,6 +18,8 @@ Inventory that has a limited capacity in terms of space. The inventory capacity 
 * `get_item_size(item: InventoryItem) -> Vector2` - Returns the size of the given item.
 * `get_item_rect(item: InventoryItem) -> Rect2` - Returns the position and size of the given item in the inventory.
 * `add_item_at(item: InventoryItem, position: Vector2) -> bool` - Adds the given to the inventory, at the given position.
+* `create_and_add_item_at(prototype_id: String, position: Vector2) -> InventoryItem` - Creates an `InventoryItem` based on the given prototype ID and adds it to the inventory at the given position. Returns `null` if the item cannot be added.
+* `get_item_at(position: Vector2) -> InventoryItem` - Returns the item at the given position in the inventory. Returns `null` if the given field is empty.
 * `move_item_to(item: InventoryItem, position: Vector2) -> bool` - Moves the given item in the inventory to the new given position.
 * `transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2) -> bool` - Transfers the given item to the given inventory to the given position.
 * `rect_free(rect: Rect2, exception: InventoryItem = null) -> bool` - Checks if the given rectangle is not occupied by any items (with a given optional exception).
