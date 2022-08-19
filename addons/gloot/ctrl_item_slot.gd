@@ -89,8 +89,8 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 func _ready():
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
-        for child in get_children():
-            child.queue_free()
+        if _hbox_container:
+            _hbox_container.queue_free()
 
     _hbox_container = HBoxContainer.new()
     _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
