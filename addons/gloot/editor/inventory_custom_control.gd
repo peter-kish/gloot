@@ -29,7 +29,7 @@ func connect_inventory_signals():
         inventory.connect("capacity_changed", self, "_refresh")
     if inventory is InventoryGrid:
         inventory.connect("size_changed", self, "_refresh")
-    inventory.connect("protoset_changed", self, "_on_inventory_protoset_changed")
+    inventory.connect("protoset_changed", self, "_refresh")
 
 
 func disconnect_inventory_signals():
@@ -40,7 +40,7 @@ func disconnect_inventory_signals():
         inventory.disconnect("capacity_changed", self, "_refresh")
     if inventory is InventoryGrid:
         inventory.disconnect("size_changed", self, "_refresh")
-    inventory.disconnect("protoset_changed", self, "_on_inventory_protoset_changed")
+    inventory.disconnect("protoset_changed", self, "_refresh")
 
 
 func _refresh() -> void:
