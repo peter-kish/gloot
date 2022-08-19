@@ -46,8 +46,8 @@ func _set_inventory(new_inventory: Inventory) -> void:
 func _ready():
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
-        for child in get_children():
-            child.queue_free()
+        if _vbox_container:
+            _vbox_container.queue_free()
 
     _vbox_container = VBoxContainer.new()
     _vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL

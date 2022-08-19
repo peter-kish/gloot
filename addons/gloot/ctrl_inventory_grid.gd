@@ -65,8 +65,10 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
 func _ready() -> void:
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
-        for child in get_children():
-            child.queue_free()
+        if _ctrl_item_container:
+            _ctrl_item_container.queue_free()
+        if _drag_sprite:
+            _drag_sprite.queue_free()
 
     _ctrl_item_container = Control.new()
     _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
