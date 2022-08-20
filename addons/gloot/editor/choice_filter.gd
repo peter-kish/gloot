@@ -4,10 +4,10 @@ tool
 signal choice_picked
 
 
-onready var lbl_filter: Label = $VBoxContainer/HBoxContainer/Label
-onready var line_edit: LineEdit = $VBoxContainer/HBoxContainer/LineEdit
-onready var item_list: ItemList = $VBoxContainer/ItemList
-onready var btn_pick:Button = $VBoxContainer/Button
+onready var lbl_filter: Label = $HBoxContainer/Label
+onready var line_edit: LineEdit = $HBoxContainer/LineEdit
+onready var item_list: ItemList = $ItemList
+onready var btn_pick:Button = $Button
 export(String) var pick_text: String setget _set_pick_text
 export(String) var filter_text: String = "Filter:" setget _set_filter_text
 export(Array, String) var values: Array setget _set_values

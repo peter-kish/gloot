@@ -2,11 +2,12 @@ extends Control
 tool
 
 
-onready var prototype_id_filter = $HBoxContainer/ChoiceFilter
-onready var inventory_control_container = $HBoxContainer/VBoxContainer
-onready var btn_edit = $HBoxContainer/VBoxContainer/HBoxContainer/BtnEdit
-onready var btn_remove = $HBoxContainer/VBoxContainer/HBoxContainer/BtnRemove
-onready var scroll_container = $HBoxContainer/VBoxContainer/ScrollContainer
+onready var hsplit_container = $HSplitContainer
+onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
+onready var inventory_control_container = $HSplitContainer/VBoxContainer
+onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
+onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
+onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
 var gloot_undo_redo
@@ -116,6 +117,8 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
 
 
 func _apply_editor_settings() -> void:
+    if !editor_interface:
+        return
     var editor_settings: EditorSettings = editor_interface.get_editor_settings()
     var control_height: int = editor_settings.get_setting("gloot/inspector_control_height")
     rect_min_size.y = control_height
