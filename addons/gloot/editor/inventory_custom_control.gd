@@ -117,8 +117,5 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
 
 
 func _apply_editor_settings() -> void:
-    if !editor_interface:
-        return
-    var editor_settings: EditorSettings = editor_interface.get_editor_settings()
-    var control_height: int = editor_settings.get_setting("gloot/inspector_control_height")
+    var control_height: int = ProjectSettings.get_setting("gloot/inspector_control_height")
     rect_min_size.y = control_height

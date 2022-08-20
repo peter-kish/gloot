@@ -52,12 +52,12 @@ func _add_settings() -> void:
 
 
 func _add_setting(name: String, type: int, value) -> void:
-    if !get_editor_interface().get_editor_settings().has_setting(name):
-        get_editor_interface().get_editor_settings().set(name, value)
+    if !ProjectSettings.has_setting(name):
+        ProjectSettings.set(name, value)
 
     var property_info = {
         "name": name,
         "type": type
     }
-    get_editor_interface().get_editor_settings().add_property_info(property_info)
-    get_editor_interface().get_editor_settings().set_initial_value(name, value, false)
+    ProjectSettings.add_property_info(property_info)
+    ProjectSettings.set_initial_value(name, value)
