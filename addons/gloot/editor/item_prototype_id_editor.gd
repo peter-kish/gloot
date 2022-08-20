@@ -55,10 +55,8 @@ func _on_btn_prototype_id() -> void:
 func _on_choice_picked(value_index: int) -> void:
     var item: InventoryItem = get_edited_object()
     var new_prototype_id = _choice_filter.values[value_index]
-    if new_prototype_id == item.prototype_id:
-        return
-
-    gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
+    if new_prototype_id != item.prototype_id:
+        gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
 
     _window_dialog.hide()
     _refresh_button()
