@@ -86,7 +86,7 @@ func _ready() -> void:
         _set_inventory(get_node_or_null(inventory_path))
 
     _refresh()
-    GLoot.connect("item_dropped", self, "_on_global_item_dropped")
+    GLoot.connect("item_dropped", self, "_on_item_dropped")
 
 
 func _connect_inventory_signals() -> void:
@@ -249,7 +249,7 @@ func _input(event: InputEvent) -> void:
         _drag_sprite.hide()
 
 
-func _on_global_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
+func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
     if !_is_hovering(global_drop_pos):
         return
 
