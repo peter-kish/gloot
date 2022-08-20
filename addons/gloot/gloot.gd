@@ -4,7 +4,7 @@ extends EditorPlugin
 var inspector_plugin: EditorInspectorPlugin
 
 
-func _enter_tree():
+func _enter_tree() -> void:
     add_custom_type("ItemProtoSet", "Resource", preload("item_protoset.gd"), preload("images/icon_item_protoset.svg"))
 
     add_custom_type("InventoryItem", "Node", preload("inventory_item.gd"), preload("images/icon_item.svg"))
@@ -25,8 +25,10 @@ func _enter_tree():
     inspector_plugin.undo_redo = get_undo_redo()
     add_inspector_plugin(inspector_plugin)
 
+    _add_settings()
 
-func _exit_tree():
+
+func _exit_tree() -> void:
     remove_inspector_plugin(inspector_plugin)
 
     remove_custom_type("ItemProtoSet")
@@ -44,3 +46,18 @@ func _exit_tree():
     remove_custom_type("CtrlInventoryGrid")
     remove_custom_type("CtrlItemSlot")
     
+
+func _add_settings() -> void:
+    _add_setting("gloot/inspector_control_height", TYPE_INT, 200)
+
+
+func _add_setting(name: String, type: int, value) -> void:
+    if !get_editor_interface().get_editor_settings().has_setting(name):
+        get_editor_interface().get_editor_settings().set(name, value)
+
+    var property_info = {
+        "name": name,
+        "type": type
+    }
+    get_editor_interface().get_editor_settings().add_property_info(property_info)
+    get_editor_interface().get_editor_settings().set_initial_value(name, value, false)

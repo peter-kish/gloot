@@ -81,6 +81,8 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
+    _apply_editor_settings()
+
     prototype_id_filter.connect("choice_picked", self, "_on_prototype_id_picked")
     btn_edit.connect("pressed", self, "_on_btn_edit")
     btn_remove.connect("pressed", self, "_on_btn_remove")
@@ -112,3 +114,8 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
     editor_interface.get_selection().add_node(node)
     editor_interface.edit_node(node)
 
+
+func _apply_editor_settings() -> void:
+    var editor_settings: EditorSettings = editor_interface.get_editor_settings()
+    var control_height: int = editor_settings.get_setting("gloot/inspector_control_height")
+    rect_min_size.y = control_height
