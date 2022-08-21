@@ -1,9 +1,8 @@
 extends Object
 
-var undo_redo: UndoRedo
 
 func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
-    assert(undo_redo)
+    assert(GLoot._undo_redo)
 
     # Create an temporary InventoryItem just to serialize it
     var item = InventoryItem.new()
@@ -13,25 +12,25 @@ func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
     var item_data = item.serialize()
     item.free()
 
-    undo_redo.create_action("Add Inventory Item")
-    undo_redo.add_do_method(self, "_add_item", inventory, item_data)
-    undo_redo.add_undo_method(self, "_remove_item", inventory, item_data)
-    undo_redo.commit_action()
+    GLoot._undo_redo.create_action("Add Inventory Item")
+    GLoot._undo_redo.add_do_method(self, "_add_item", inventory, item_data)
+    GLoot._undo_redo.add_undo_method(self, "_remove_item", inventory, item_data)
+    GLoot._undo_redo.commit_action()
 
 
 func remove_inventory_item(inventory: Inventory, item: InventoryItem) -> void:
-    assert(undo_redo)
+    assert(GLoot._undo_redo)
 
     var item_data = item.serialize()
     var item_index = inventory.get_item_index(item)
-    undo_redo.create_action("Remove Inventory Item")
-    undo_redo.add_do_method(self, "_remove_item", inventory, item_data)
-    undo_redo.add_undo_method(self, "_add_item", inventory, item_data, item_index)
-    undo_redo.commit_action()
+    GLoot._undo_redo.create_action("Remove Inventory Item")
+    GLoot._undo_redo.add_do_method(self, "_remove_item", inventory, item_data)
+    GLoot._undo_redo.add_undo_method(self, "_add_item", inventory, item_data, item_index)
+    GLoot._undo_redo.commit_action()
 
 
 func remove_inventory_items(inventory: Inventory, items: Array) -> void:
-    assert(undo_redo)
+    assert(GLoot._undo_redo)
 
     var item_data: Array
     var item_indexes: Array
@@ -41,10 +40,10 @@ func remove_inventory_items(inventory: Inventory, items: Array) -> void:
         item_indexes.append(inventory.get_item_index(item))
         node_indexes.append(item.get_index())
 
-    undo_redo.create_action("Remove Inventory Items")
-    undo_redo.add_do_method(self, "_remove_items", inventory, item_data)
-    undo_redo.add_undo_method(self, "_add_items", inventory, item_data, item_indexes, node_indexes)
-    undo_redo.commit_action()
+    GLoot._undo_redo.create_action("Remove Inventory Items")
+    GLoot._undo_redo.add_do_method(self, "_remove_items", inventory, item_data)
+    GLoot._undo_redo.add_undo_method(self, "_add_items", inventory, item_data, item_indexes, node_indexes)
+    GLoot._undo_redo.commit_action()
 
 
 func _add_item(inventory: Inventory, item_data: Dictionary, item_index: int = -1, node_index: int = -1) -> void:
@@ -77,31 +76,36 @@ func _remove_items(inventory: Inventory, item_data: Array) -> void:
 
 
 func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
-    undo_redo.create_action("Set item properties")
-    undo_redo.add_undo_property(item, "properties", item.properties)
-    undo_redo.add_do_property(item, "properties", new_properties)
-    undo_redo.commit_action()
+    assert(GLoot._undo_redo)
+    GLoot._undo_redo.create_action("Set item properties")
+    GLoot._undo_redo.add_undo_property(item, "properties", item.properties)
+    GLoot._undo_redo.add_do_property(item, "properties", new_properties)
+    GLoot._undo_redo.commit_action()
 
 
 func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
-    undo_redo.create_action("Set prototype_id")
-    undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
-    undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
-    undo_redo.commit_action()
+    assert(GLoot._undo_redo)
+    GLoot._undo_redo.create_action("Set prototype_id")
+    GLoot._undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
+    GLoot._undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
+    GLoot._undo_redo.commit_action()
 
 
 func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
-    undo_redo.create_action("Set equipped_item")
-    undo_redo.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
-    undo_redo.add_do_property(item_slot, "equipped_item", new_equipped_item)
-    undo_redo.commit_action()
+    assert(GLoot._undo_redo)
+    GLoot._undo_redo.create_action("Set equipped_item")
+    GLoot._undo_redo.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
+    GLoot._undo_redo.add_do_property(item_slot, "equipped_item", new_equipped_item)
+    GLoot._undo_redo.commit_action()
 
 
 func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2) -> void:
+    assert(GLoot._undo_redo)
+    
     var old_item_position = inventory.get_item_position(item)
     if old_item_position == position:
         return
-    undo_redo.create_action("Move Inventory Item")
-    undo_redo.add_undo_method(inventory, "move_item_to", item, old_item_position)
-    undo_redo.add_do_method(inventory, "move_item_to", item, position)
-    undo_redo.commit_action()
+    GLoot._undo_redo.create_action("Move Inventory Item")
+    GLoot._undo_redo.add_undo_method(inventory, "move_item_to", item, old_item_position)
+    GLoot._undo_redo.add_do_method(inventory, "move_item_to", item, position)
+    GLoot._undo_redo.commit_action()

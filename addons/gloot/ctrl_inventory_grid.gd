@@ -13,7 +13,6 @@ export(Texture) var default_item_texture: Texture
 export(int) var drag_sprite_z_index: int = 1
 export(bool) var selections_enabled: bool = false setget _set_selections_enabled
 var inventory: InventoryGrid = null setget _set_inventory
-var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
@@ -285,7 +284,7 @@ func get_selected_inventory_items() -> Array:
 # TODO: Find a better way for undoing/redoing item movements
 func _move_item(item_index: int, position: Vector2) -> void:
     var item = inventory.get_items()[item_index]
-    if _gloot_undo_redo:
-        _gloot_undo_redo.move_inventory_item(inventory, item, position)
+    if GLoot._gloot_undo_redo:
+        GLoot._gloot_undo_redo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)

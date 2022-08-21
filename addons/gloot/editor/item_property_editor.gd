@@ -5,7 +5,6 @@ const COLOR_OVERRIDDEN = Color.green
 var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
-var gloot_undo_redo = null
 
 
 func _init() -> void:
@@ -37,7 +36,7 @@ func _on_value_changed(key: String, new_value) -> void:
     if new_properties.hash() == item.properties.hash():
         return
 
-    gloot_undo_redo.set_item_properties(item, new_properties)
+    GLoot._gloot_undo_redo.set_item_properties(item, new_properties)
 
     _refresh_dict_editor()
 

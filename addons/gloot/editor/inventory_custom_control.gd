@@ -9,8 +9,6 @@ onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
 onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
 onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
-var editor_interface: EditorInterface
-var gloot_undo_redo
 var _inventory_control: Control
 
 
@@ -59,8 +57,6 @@ func _refresh() -> void:
         _inventory_control = CtrlInventoryGrid.new()
         _inventory_control.grid_color = Color.gray
         _inventory_control.selections_enabled = true
-        # TODO: Find a better way for undoing/redoing item movements:
-        _inventory_control._gloot_undo_redo = gloot_undo_redo
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
@@ -77,12 +73,17 @@ func _refresh() -> void:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    assert(gloot_undo_redo)
-    gloot_undo_redo.remove_inventory_item(inventory, item)
+    assert(GLoot._gloot_undo_redo)
+    GLoot._gloot_undo_redo.remove_inventory_item(inventory, item)
 
 
 func _ready() -> void:
     _apply_editor_settings()
+
+    prototype_id_filter.pick_icon = GLoot._get_editor_icon("Add")
+    prototype_id_filter.filter_icon = GLoot._get_editor_icon("Search")
+    btn_edit.icon = GLoot._get_editor_icon("Edit")
+    btn_remove.icon = GLoot._get_editor_icon("Remove")
 
     prototype_id_filter.connect("choice_picked", self, "_on_prototype_id_picked")
     btn_edit.connect("pressed", self, "_on_btn_edit")
@@ -91,9 +92,9 @@ func _ready() -> void:
 
 
 func _on_prototype_id_picked(index: int) -> void:
-    assert(gloot_undo_redo)
+    assert(GLoot._gloot_undo_redo)
     var prototype_id = prototype_id_filter.values[index]
-    gloot_undo_redo.add_inventory_item(inventory, prototype_id)
+    GLoot._gloot_undo_redo.add_inventory_item(inventory, prototype_id)
     
 
 func _on_btn_edit() -> void:
@@ -101,19 +102,19 @@ func _on_btn_edit() -> void:
     if selected_items.size() > 0:
         var item: Node = selected_items[0]
         # Call it deferred, so that the control can clean up
-        call_deferred("_select_node", editor_interface, item)
+        call_deferred("_select_node", item)
 
 
 func _on_btn_remove() -> void:
-    assert(gloot_undo_redo)
+    assert(GLoot._gloot_undo_redo)
     var selected_items: Array = _inventory_control.get_selected_inventory_items()
-    gloot_undo_redo.remove_inventory_items(inventory, selected_items)
+    GLoot._gloot_undo_redo.remove_inventory_items(inventory, selected_items)
 
 
-static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
-    editor_interface.get_selection().clear()
-    editor_interface.get_selection().add_node(node)
-    editor_interface.edit_node(node)
+static func _select_node(node: Node) -> void:
+    GLoot._editor_interface.get_selection().clear()
+    GLoot._editor_interface.get_selection().add_node(node)
+    GLoot._editor_interface.edit_node(node)
 
 
 func _apply_editor_settings() -> void:
