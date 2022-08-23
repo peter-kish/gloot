@@ -12,7 +12,6 @@
 * [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
 * [`CtrlItemSlot`](./ctrl_item_slot.md)
-* [`GLoot`](./gloot.md) (auto loaded singleton)
 
 ## JSON Reference
 

@@ -86,7 +86,6 @@ func _ready() -> void:
         _set_inventory(get_node_or_null(inventory_path))
 
     _refresh()
-    GLoot.connect("item_dropped", self, "_on_item_dropped")
 
 
 func _connect_inventory_signals() -> void:
@@ -237,35 +236,19 @@ func _input(event: InputEvent) -> void:
     _grabbed_ctrl_inventory_item.show()
 
     var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
-    if _is_hovering(global_grabbed_item_pos):
+    if _is_mouse_hovering():
         var field_coords = get_field_coords(global_grabbed_item_pos)
         _move_item(inventory.get_item_index(item), field_coords)
     else:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
-        GLoot.emit_signal("item_dropped", item, global_grabbed_item_pos)
     _select(item)
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite:
         _drag_sprite.hide()
 
 
-func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
-    if !_is_hovering(global_drop_pos):
-        return
-
-    if !inventory:
-        return
-
-    var source_inventory: InventoryGrid = item.get_inventory()
-    if source_inventory.item_protoset != inventory.item_protoset:
-        return
-
-    var field_coords = get_field_coords(global_drop_pos)
-    source_inventory.transfer_to(item, inventory, field_coords)
-
-
-func _is_hovering(global_pos: Vector2) -> bool:
-    return get_global_rect().has_point(global_pos)
+func _is_mouse_hovering() -> bool:
+    return get_global_rect().has_point(get_global_mouse_position())
 
 
 func get_field_coords(global_pos: Vector2) -> Vector2:

@@ -96,10 +96,6 @@ config/name="GLoot"
 run/main_scene="res://tests/gloot_test.tscn"
 config/icon="res://images/gloot_logo_128x128.png"
 
-[autoload]
-
-GLoot="*res://addons/gloot/gloot_autoload.gd"
-
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/gloot/plugin.cfg" )
