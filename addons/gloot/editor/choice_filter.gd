@@ -9,9 +9,7 @@ onready var line_edit: LineEdit = $HBoxContainer/LineEdit
 onready var item_list: ItemList = $ItemList
 onready var btn_pick:Button = $Button
 export(String) var pick_text: String setget _set_pick_text
-export(Texture) var pick_icon: Texture setget _set_pick_icon
 export(String) var filter_text: String = "Filter:" setget _set_filter_text
-export(Texture) var filter_icon: Texture setget _set_filter_icon
 export(Array, String) var values: Array setget _set_values
 
 
@@ -26,22 +24,10 @@ func _set_pick_text(new_pick_text: String) -> void:
         btn_pick.text = pick_text
 
 
-func _set_pick_icon(new_pick_icon: Texture) -> void:
-    pick_icon = new_pick_icon
-    if btn_pick:
-        btn_pick.icon = pick_icon
-
-
 func _set_filter_text(new_filter_text: String) -> void:
     filter_text = new_filter_text
     if lbl_filter:
         lbl_filter.text = filter_text
-
-
-func _set_filter_icon(new_filter_icon: Texture) -> void:
-    filter_icon = new_filter_icon
-    if line_edit:
-        line_edit.right_icon = filter_icon
 
 
 func refresh() -> void:

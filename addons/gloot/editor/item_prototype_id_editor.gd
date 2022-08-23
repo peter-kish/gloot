@@ -9,6 +9,7 @@ var updating: bool = false
 var _choice_filter: Control
 var _window_dialog: WindowDialog
 var _btn_prototype_id: Button
+var gloot_undo_redo = null
 
 
 func _init() -> void:
@@ -55,7 +56,7 @@ func _on_choice_picked(value_index: int) -> void:
     var item: InventoryItem = get_edited_object()
     var new_prototype_id = _choice_filter.values[value_index]
     if new_prototype_id != item.prototype_id:
-        GLoot._gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
+        gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
 
     _window_dialog.hide()
     _refresh_button()

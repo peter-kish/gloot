@@ -20,11 +20,12 @@ func _enter_tree() -> void:
     add_custom_type("CtrlInventoryGrid", "Control", preload("ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
     add_custom_type("CtrlItemSlot", "Control", preload("ctrl_item_slot.gd"), preload("images/icon_ctrl_item_slot.svg"))
 
-    add_inspector_plugin(preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new())
+    inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
+    inspector_plugin.editor_interface = get_editor_interface()
+    inspector_plugin.undo_redo = get_undo_redo()
+    add_inspector_plugin(inspector_plugin)
 
     add_autoload_singleton("GLoot", "res://addons/gloot/gloot_autoload.gd")
-    GLoot._editor_interface = get_editor_interface()
-    GLoot._undo_redo = get_undo_redo()
 
     _add_settings()
 

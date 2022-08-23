@@ -2,6 +2,7 @@ extends EditorProperty
 
 var updating: bool = false
 var _option_button: OptionButton
+var gloot_undo_redo = null
 
 
 func _init() -> void:
@@ -71,6 +72,6 @@ func _on_item_selected(item_index: int) -> void:
     var item_slot: ItemSlot = get_edited_object()
     var new_equipped_item = _option_button.get_item_metadata(item_index)
     if item_slot.equipped_item != new_equipped_item:
-        GLoot._gloot_undo_redo.set_item_slot_equipped_item(item_slot, new_equipped_item)
+        gloot_undo_redo.set_item_slot_equipped_item(item_slot, new_equipped_item)
     updating = false
 
