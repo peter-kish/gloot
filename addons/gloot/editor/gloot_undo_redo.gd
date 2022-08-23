@@ -9,16 +9,7 @@ func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
     item.protoset = inventory.item_protoset
     item.prototype_id = prototype_id
     item.name = prototype_id
-
-    # Actually adding it to the inventory is important as it might add some properties (position)
-    # and change the item name (in case of duplicate names).
-    if !inventory.add_item(item):
-        # Item can't be added. Nothing to do.
-        item.free()
-        return
-
     var item_data = item.serialize()
-    inventory.remove_item(item)
     item.free()
 
     GLoot._undo_redo.create_action("Add Inventory Item")
@@ -78,7 +69,6 @@ func _remove_item(inventory: Inventory, item_data: Dictionary) -> void:
         if item.serialize().hash() == item_data_hash:
             item.queue_free()
             return
-    assert(false, "Failed to remove item!")
 
 func _remove_items(inventory: Inventory, item_data: Array) -> void:
     for data in item_data:
