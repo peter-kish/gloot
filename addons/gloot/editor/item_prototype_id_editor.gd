@@ -10,6 +10,7 @@ var _choice_filter: Control
 var _window_dialog: WindowDialog
 var _btn_prototype_id: Button
 var gloot_undo_redo = null
+var editor_interface: EditorInterface
 
 
 func _init() -> void:
@@ -43,9 +44,21 @@ func _init() -> void:
 
 
 func _ready() -> void:
+    _choice_filter.filter_icon = _get_editor_icon("Search")
     var item: InventoryItem = get_edited_object()
     item.connect("prototype_id_changed", self, "_on_prototype_id_changed")
     _refresh_button()
+
+
+# TODO: Move this function to a common place, as it is used by inventory_custom_control.gd too.
+func _get_editor_icon(name: String) -> Texture:
+    if editor_interface:
+        var gui = editor_interface.get_base_control()
+        var icon = gui.get_icon(name, "EditorIcons")
+        print("icon found %s" % icon.get_size())
+        return icon
+
+    return null
 
 
 func _on_btn_prototype_id() -> void:

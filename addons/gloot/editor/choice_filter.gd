@@ -79,8 +79,11 @@ func _ready() -> void:
     refresh()
     if btn_pick:
         btn_pick.text = pick_text
+        btn_pick.icon = pick_icon
     if lbl_filter:
         lbl_filter.text = filter_text
+    if line_edit:
+        line_edit.right_icon = filter_icon
 
 
 func _on_btn_pick() -> void:

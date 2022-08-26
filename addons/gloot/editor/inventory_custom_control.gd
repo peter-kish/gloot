@@ -95,6 +95,7 @@ func _ready() -> void:
     _refresh()
 
 
+# TODO: Move this function to a common place, as it is used by item_prototype_id_editor.gd too.
 func _get_editor_icon(name: String) -> Texture:
     if editor_interface:
         var gui = editor_interface.get_base_control()
