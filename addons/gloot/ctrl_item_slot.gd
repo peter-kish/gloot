@@ -111,6 +111,16 @@ func _ready():
     _set_item_slot(node)
 
     _refresh()
+    GLoot.connect("item_dropped", self, "_on_item_dropped")
+
+
+func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
+    if !item_slot:
+        return
+        
+    var slot_rect = get_global_rect()
+    if slot_rect.has_point(global_drop_pos) && item_slot.can_hold_item(item):
+        item_slot.item = item
 
 
 func _refresh() -> void:
