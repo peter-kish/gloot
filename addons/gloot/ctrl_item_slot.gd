@@ -11,6 +11,7 @@ var item_slot: ItemSlot setget _set_item_slot
 var _hbox_container: HBoxContainer
 var _texture_rect: TextureRect
 var _label: Label
+var _gloot: Node = null
 
 
 func _get_configuration_warning() -> String:
@@ -87,6 +88,8 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 
 
 func _ready():
+    _gloot = _get_gloot()
+
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         if _hbox_container:
@@ -111,7 +114,20 @@ func _ready():
     _set_item_slot(node)
 
     _refresh()
-    GLoot.connect("item_dropped", self, "_on_item_dropped")
+    if !Engine.editor_hint && _gloot:
+        _gloot.connect("item_dropped", self, "_on_item_dropped")
+
+
+func _get_gloot() -> Node:
+    # This is a "temporary" hack until a better solution is found!
+    # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
+    # not visible - leading to errors inside the editor.
+    # To work around that, we obtain the sigleton by name.
+    return get_tree().root.get_node_or_null("GLoot")
+
+
+func _get_singleton() -> Node:
+    return null
 
 
 func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:

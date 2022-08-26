@@ -20,6 +20,7 @@ var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
 var _drag_sprite: Sprite
 var _ctrl_item_container: Control
 var _selected_item: InventoryItem = null
+var _gloot: Node = null
 
 
 func _set_field_dimensions(new_field_dimensions) -> void:
@@ -63,6 +64,8 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
 
 
 func _ready() -> void:
+    _gloot = _get_gloot()
+
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
         if _ctrl_item_container:
@@ -86,7 +89,16 @@ func _ready() -> void:
         _set_inventory(get_node_or_null(inventory_path))
 
     _refresh()
-    GLoot.connect("item_dropped", self, "_on_item_dropped")
+    if !Engine.editor_hint && _gloot:
+        _gloot.connect("item_dropped", self, "_on_item_dropped")
+
+
+func _get_gloot() -> Node:
+    # This is a "temporary" hack until a better solution is found!
+    # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
+    # not visible - leading to errors inside the editor.
+    # To work around that, we obtain the sigleton by name.
+    return get_tree().root.get_node_or_null("GLoot")
 
 
 func _connect_inventory_signals() -> void:
@@ -242,7 +254,8 @@ func _input(event: InputEvent) -> void:
         _move_item(inventory.get_item_index(item), field_coords)
     else:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
-        GLoot.emit_signal("item_dropped", item, global_grabbed_item_pos)
+        if !Engine.editor_hint && _gloot:
+            _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
     _select(item)
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite:
