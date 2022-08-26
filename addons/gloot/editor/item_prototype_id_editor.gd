@@ -55,7 +55,6 @@ func _get_editor_icon(name: String) -> Texture:
     if editor_interface:
         var gui = editor_interface.get_base_control()
         var icon = gui.get_icon(name, "EditorIcons")
-        print("icon found %s" % icon.get_size())
         return icon
 
     return null
