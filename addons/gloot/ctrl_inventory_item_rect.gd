@@ -32,12 +32,24 @@ func _set_item(new_item: InventoryItem) -> void:
         var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
         if texture_path:
             _set_texture(load(texture_path))
-        var item_size = _get_item_size()
-        var item_pos = _get_item_position()
-        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
-            item_size.y * ctrl_inventory.field_dimensions.y)
-        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
-            item_pos.y * ctrl_inventory.field_dimensions.y)
+        _refresh()
+
+
+func _refresh() -> void:
+    _calculate_size()
+    _calculate_pos()
+
+
+func _calculate_size() -> void:
+    rect_size = ctrl_inventory._get_item_sprite_size(item)
+
+
+func _calculate_pos() -> void:
+    var item_pos = _get_item_position()
+
+    rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
+        item_pos.y * ctrl_inventory.field_dimensions.y)
+    rect_position += ctrl_inventory.item_spacing * item_pos
 
 
 func _get_item_size() -> Vector2:
@@ -54,13 +66,7 @@ func _get_item_position() -> Vector2:
 
 func _ready() -> void:
     if item && ctrl_inventory:
-        var item_size = _get_item_size()
-        var item_pos = _get_item_position()
-        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
-            item_size.y * ctrl_inventory.field_dimensions.y)
-        rect_min_size = rect_size
-        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
-            item_pos.y * ctrl_inventory.field_dimensions.y)
+        _refresh()
 
 
 func _draw() -> void:
