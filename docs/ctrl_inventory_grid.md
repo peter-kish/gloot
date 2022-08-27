@@ -9,12 +9,13 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 ## Properties
 
 * `field_dimensions: Vector2` - The size of each inventory field.
+* `enable_grid: bool` - Displays a grid if true.
 * `grid_color: Color` - The color of the grid.
+* `enable_selections: bool` - If true, items can be selected. Use `get_selected_inventory_items()` to get the currently selected item.
 * `selection_color: Color` - The color of the selection.
 * `inventory_path: NodePath` - Path to an `Inventory` node.
 * `default_item_texture: Texture` - The default texture that will be used for items with no `image` property.
 * `drag_sprite_z_index: int` - The z-index used for the dragged `InventoryItem` in order to appear above other UI elements.
-* `selections_enabled: bool` - If true, items can be selected. Use `get_selected_inventory_items()` to get the currently selected item.
 * `inventory: InventoryGrid` - The `Inventory` node linked to this control.
 
 ## Methods

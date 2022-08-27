@@ -6,12 +6,15 @@ signal item_dropped
 signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
+export(int) var item_spacing: int = 0 setget _set_item_spacing
+export(bool) var enable_grid: bool = true
 export(Color) var grid_color: Color = Color.black
+export(bool) var enable_selections: bool = false setget _set_enable_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
+export(bool) var stretch_item_sprites: bool = true setget _set_stretch_item_sprites
 export(int) var drag_sprite_z_index: int = 1
-export(bool) var selections_enabled: bool = false setget _set_selections_enabled
 var inventory: InventoryGrid = null setget _set_inventory
 var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
@@ -23,9 +26,14 @@ var _selected_item: InventoryItem = null
 var _gloot: Node = null
 
 
-func _set_field_dimensions(new_field_dimensions) -> void:
+func _set_field_dimensions(new_field_dimensions: Vector2) -> void:
     field_dimensions = new_field_dimensions
     _refresh_grid_container()
+
+
+func _set_item_spacing(new_item_spacing: int) -> void:
+    item_spacing = new_item_spacing
+    _refresh()
 
 
 func _get_configuration_warning() -> String:
@@ -46,9 +54,14 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     update_configuration_warning()
 
 
-func _set_selections_enabled(new_selections_enabled: bool) -> void:
-    selections_enabled = new_selections_enabled
-    if !selections_enabled:
+func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
+    stretch_item_sprites = new_stretch_item_sprites
+    _refresh()
+
+
+func _set_enable_selections(new_enable_selections: bool) -> void:
+    enable_selections = new_enable_selections
+    if !enable_selections:
         _select(null)
 
 
@@ -140,28 +153,52 @@ func _process(_delta) -> void:
 func _draw() -> void:
     if !inventory:
         return
-    _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)
+    if enable_grid:
+        _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions, item_spacing)
 
 
-func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
-    var rect = Rect2(pos, Vector2(w * fsize.x, h * fsize.y))
-    draw_rect(rect, grid_color, false)
-    for i in range(w):
-        var from: Vector2 = Vector2(i * fsize.x, 0) + pos
-        var to: Vector2 = Vector2(i * fsize.x, h * fsize.y) + pos
-        draw_line(from, to, grid_color)
-    for j in range(h):
-        var from: Vector2 = Vector2(0, j * fsize.y) + pos
-        var to: Vector2 = Vector2(w * fsize.x, j * fsize.y) + pos
-        draw_line(from, to, grid_color)
+func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2, spacing: int) -> void:
+    if w <= 0 || h <= 0 || spacing < 0:
+        return
+
+    if spacing <= 1:
+        var rect = Rect2(pos, _get_inventory_size_px())
+        draw_rect(rect, grid_color, false)
+        for i in range(w):
+            var from: Vector2 = Vector2(i * fsize.x, 0) + pos
+            var to: Vector2 = Vector2(i * fsize.x, rect.size.y) + pos
+            from += Vector2(spacing, 0)
+            to += Vector2(spacing, 0)
+            draw_line(from, to, grid_color)
+        for j in range(h):
+            var from: Vector2 = Vector2(0, j * fsize.y) + pos
+            var to: Vector2 = Vector2(rect.size.x, j * fsize.y) + pos
+            from += Vector2(0, spacing)
+            to += Vector2(0, spacing)
+            draw_line(from, to, grid_color)
+    else:
+        for i in range(w):
+            for j in range(h):
+                var field_pos = pos + Vector2(i * fsize.x, j * fsize.y) + Vector2(i, j) * spacing
+                var field_rect = Rect2(field_pos, fsize)
+                draw_rect(field_rect, grid_color, false)
+
+
+func _get_inventory_size_px() -> Vector2:
+    var result: Vector2 = Vector2(inventory.size.x * field_dimensions.x, \
+        inventory.size.y * field_dimensions.y)
+
+    # Also take item spacing into consideration
+    result += (inventory.size - Vector2.ONE) * item_spacing
+
+    return result
 
 
 func _refresh_grid_container() -> void:
     if !inventory:
         return
 
-    rect_min_size = Vector2(inventory.size.x * field_dimensions.x, \
-        inventory.size.y * field_dimensions.y)
+    rect_min_size = _get_inventory_size_px()
     rect_size = rect_min_size
 
 
@@ -210,10 +247,21 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
         _drag_sprite.texture = ctrl_inventory_item.texture
         if _drag_sprite.texture == null:
             _drag_sprite.texture = default_item_texture
-        var item_size = inventory.get_item_size(ctrl_inventory_item.item)
-        var texture_size = _drag_sprite.texture.get_size()
-        _drag_sprite.scale = item_size * field_dimensions / texture_size
+        if stretch_item_sprites:
+            var texture_size: Vector2 = _drag_sprite.texture.get_size()
+            var streched_size: Vector2 = _get_streched_item_sprite_size(ctrl_inventory_item.item)
+            _drag_sprite.scale = streched_size / texture_size
         _drag_sprite.show()
+
+
+func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
+    var item_size: Vector2 = inventory.get_item_size(item)
+    var sprite_size: Vector2 = item_size * field_dimensions
+
+    # Also take item spacing into consideration
+    sprite_size += (item_size - Vector2.ONE) * item_spacing
+
+    return sprite_size
 
 
 func _on_item_activated(ctrl_inventory_item) -> void:
@@ -229,7 +277,7 @@ func _on_item_activated(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
-    if selections_enabled:
+    if enable_selections:
         _selected_item = item
         _refresh_selection()
 
@@ -282,9 +330,18 @@ func _is_hovering(global_pos: Vector2) -> bool:
 
 
 func get_field_coords(global_pos: Vector2) -> Vector2:
-    var offset = global_pos - get_global_rect().position
-    var x: int = offset.x / field_dimensions.x
-    var y: int = offset.y / field_dimensions.y
+    var local_pos = global_pos - get_global_rect().position
+
+    # We have to consider the item spacing when calculating field coordinates, thus we expand the
+    # size of each field by Vector2(item_spacing, item_spacing).
+    var field_dimensions_ex = field_dimensions + Vector2(item_spacing, item_spacing)
+
+    # We also don't want the item spacing to disturb snapping to the closest field, so we add half
+    # the spacing to the local coordinates.
+    var local_pos_ex = local_pos + Vector2(item_spacing, item_spacing) / 2
+
+    var x: int = local_pos_ex.x / (field_dimensions_ex.x)
+    var y: int = local_pos_ex.y / (field_dimensions_ex.y)
     return Vector2(x, y)
 
 

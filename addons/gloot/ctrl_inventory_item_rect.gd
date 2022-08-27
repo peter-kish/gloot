@@ -29,15 +29,38 @@ func _set_selection_bg_color(new_selection_bg_color: Color) -> void:
 func _set_item(new_item: InventoryItem) -> void:
     item = new_item
     if item && ctrl_inventory:
-        var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
+        var texture_path: String = item.get_property(CtrlInventory.KEY_IMAGE)
         if texture_path:
             _set_texture(load(texture_path))
-        var item_size = _get_item_size()
-        var item_pos = _get_item_position()
-        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
-            item_size.y * ctrl_inventory.field_dimensions.y)
-        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
-            item_pos.y * ctrl_inventory.field_dimensions.y)
+        _refresh()
+
+
+func _refresh() -> void:
+    _calculate_size()
+    _calculate_pos()
+
+
+func _calculate_size() -> void:
+    if ctrl_inventory.stretch_item_sprites:
+        rect_size = ctrl_inventory._get_streched_item_sprite_size(item)
+    else:
+        rect_size = texture.get_size()
+
+
+func _calculate_pos() -> void:
+    var item_pos: Vector2 = _get_item_position()
+
+    rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
+        item_pos.y * ctrl_inventory.field_dimensions.y)
+    rect_position += ctrl_inventory.item_spacing * item_pos
+
+    if !ctrl_inventory.stretch_item_sprites:
+        # Position the item centered when it's not streched
+        rect_position += _get_unstreched_sprite_offset()
+
+
+func _get_unstreched_sprite_offset() -> Vector2:
+    return (ctrl_inventory._get_streched_item_sprite_size(item) - texture.get_size()) / 2
 
 
 func _get_item_size() -> Vector2:
@@ -54,13 +77,7 @@ func _get_item_position() -> Vector2:
 
 func _ready() -> void:
     if item && ctrl_inventory:
-        var item_size = _get_item_size()
-        var item_pos = _get_item_position()
-        rect_size = Vector2(item_size.x * ctrl_inventory.field_dimensions.x, \
-            item_size.y * ctrl_inventory.field_dimensions.y)
-        rect_min_size = rect_size
-        rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
-            item_pos.y * ctrl_inventory.field_dimensions.y)
+        _refresh()
 
 
 func _draw() -> void:
