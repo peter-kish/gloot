@@ -161,16 +161,20 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2, spacing: int) -> v
     if w <= 0 || h <= 0 || spacing < 0:
         return
 
-    if spacing == 0:
-        var rect = Rect2(pos, Vector2(w * fsize.x, h * fsize.y))
+    if spacing <= 1:
+        var rect = Rect2(pos, _get_inventory_size_px())
         draw_rect(rect, grid_color, false)
         for i in range(w):
             var from: Vector2 = Vector2(i * fsize.x, 0) + pos
-            var to: Vector2 = Vector2(i * fsize.x, h * fsize.y) + pos
+            var to: Vector2 = Vector2(i * fsize.x, rect.size.y) + pos
+            from += Vector2(spacing, 0)
+            to += Vector2(spacing, 0)
             draw_line(from, to, grid_color)
         for j in range(h):
             var from: Vector2 = Vector2(0, j * fsize.y) + pos
-            var to: Vector2 = Vector2(w * fsize.x, j * fsize.y) + pos
+            var to: Vector2 = Vector2(rect.size.x, j * fsize.y) + pos
+            from += Vector2(0, spacing)
+            to += Vector2(0, spacing)
             draw_line(from, to, grid_color)
     else:
         for i in range(w):
@@ -180,13 +184,21 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2, spacing: int) -> v
                 draw_rect(field_rect, grid_color, false)
 
 
+func _get_inventory_size_px() -> Vector2:
+    var result: Vector2 = Vector2(inventory.size.x * field_dimensions.x, \
+        inventory.size.y * field_dimensions.y)
+
+    # Also take item spacing into consideration
+    result += (inventory.size - Vector2.ONE) * item_spacing
+
+    return result
+
+
 func _refresh_grid_container() -> void:
     if !inventory:
         return
 
-    rect_min_size = Vector2(inventory.size.x * field_dimensions.x, \
-        inventory.size.y * field_dimensions.y)
-    rect_min_size += (inventory.size - Vector2.ONE) * item_spacing
+    rect_min_size = _get_inventory_size_px()
     rect_size = rect_min_size
 
 
