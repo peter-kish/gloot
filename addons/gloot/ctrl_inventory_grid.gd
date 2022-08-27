@@ -13,6 +13,7 @@ export(bool) var enable_selections: bool = false setget _set_enable_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
+export(bool) var stretch_item_sprites: bool = true setget _set_stretch_item_sprites
 export(int) var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null setget _set_inventory
 var _gloot_undo_redo = null
@@ -51,6 +52,11 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
         
     _set_inventory(node)
     update_configuration_warning()
+
+
+func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
+    stretch_item_sprites = new_stretch_item_sprites
+    _refresh()
 
 
 func _set_enable_selections(new_enable_selections: bool) -> void:
@@ -229,15 +235,20 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
         _drag_sprite.texture = ctrl_inventory_item.texture
         if _drag_sprite.texture == null:
             _drag_sprite.texture = default_item_texture
-        var texture_size = _drag_sprite.texture.get_size()
-        var sprite_size = _get_item_sprite_size(ctrl_inventory_item.item)
-        _drag_sprite.scale = sprite_size / texture_size
+        if stretch_item_sprites:
+            var texture_size: Vector2 = _drag_sprite.texture.get_size()
+            var streched_size: Vector2 = _get_streched_item_sprite_size(ctrl_inventory_item.item)
+            _drag_sprite.scale = streched_size / texture_size
         _drag_sprite.show()
 
 
-func _get_item_sprite_size(item: InventoryItem) -> Vector2:
-    var item_size = inventory.get_item_size(item)
-    var sprite_size = (item_size * field_dimensions) + ((item_size - Vector2.ONE) * item_spacing)
+func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
+    var item_size: Vector2 = inventory.get_item_size(item)
+    var sprite_size: Vector2 = item_size * field_dimensions
+
+    # Also take item spacing into consideration
+    sprite_size += (item_size - Vector2.ONE) * item_spacing
+
     return sprite_size
 
 
