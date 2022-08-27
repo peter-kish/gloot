@@ -308,9 +308,17 @@ func _is_hovering(global_pos: Vector2) -> bool:
 
 func get_field_coords(global_pos: Vector2) -> Vector2:
     var local_pos = global_pos - get_global_rect().position
-    local_pos += Vector2(item_spacing, item_spacing) / 2
-    var x: int = local_pos.x / (field_dimensions.x + item_spacing)
-    var y: int = local_pos.y / (field_dimensions.y + item_spacing)
+
+    # We have to consider the item spacing when calculating field coordinates, thus we expand the
+    # size of each field by Vector2(item_spacing, item_spacing).
+    var field_dimensions_ex = field_dimensions + Vector2(item_spacing, item_spacing)
+
+    # We also don't want the item spacing to disturb snapping to the closest field, so we add half
+    # the spacing to the local coordinates.
+    var local_pos_ex = local_pos + Vector2(item_spacing, item_spacing) / 2
+
+    var x: int = local_pos_ex.x / (field_dimensions_ex.x)
+    var y: int = local_pos_ex.y / (field_dimensions_ex.y)
     return Vector2(x, y)
 
 
