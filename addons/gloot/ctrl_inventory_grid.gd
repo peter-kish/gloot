@@ -6,12 +6,13 @@ signal item_dropped
 signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
+export(bool) var enable_grid: bool = true
 export(Color) var grid_color: Color = Color.black
+export(bool) var enable_selections: bool = false setget _set_enable_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture
 export(int) var drag_sprite_z_index: int = 1
-export(bool) var selections_enabled: bool = false setget _set_selections_enabled
 var inventory: InventoryGrid = null setget _set_inventory
 var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
@@ -46,9 +47,9 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     update_configuration_warning()
 
 
-func _set_selections_enabled(new_selections_enabled: bool) -> void:
-    selections_enabled = new_selections_enabled
-    if !selections_enabled:
+func _set_enable_selections(new_enable_selections: bool) -> void:
+    enable_selections = new_enable_selections
+    if !enable_selections:
         _select(null)
 
 
@@ -140,7 +141,8 @@ func _process(_delta) -> void:
 func _draw() -> void:
     if !inventory:
         return
-    _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)
+    if enable_grid:
+        _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions)
 
 
 func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2) -> void:
@@ -229,7 +231,7 @@ func _on_item_activated(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
-    if selections_enabled:
+    if enable_selections:
         _selected_item = item
         _refresh_selection()
 
