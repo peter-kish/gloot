@@ -18,3 +18,7 @@
 
 * [`Item Protoset`](./json_item_protoset.md)
 * [`Item Prototype`](./json_item_prototype.md)
+
+## Code organization
+
+If you want to take a look at the source code for all of the above, the page describing the [source code organization](./code_organization.md) could be useful.
