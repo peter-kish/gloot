@@ -88,16 +88,48 @@ func _remove_items(inventory: Inventory, item_data: Array) -> void:
 
 func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
     undo_redo.create_action("Set item properties")
-    undo_redo.add_undo_property(item, "properties", item.properties)
-    undo_redo.add_do_property(item, "properties", new_properties)
+    var inventory: Inventory = item.get_inventory()
+    if inventory:
+        var old_inventory_data: Dictionary = inventory.serialize()
+        var item_data: Dictionary = item.serialize()
+        undo_redo.add_do_method(self, "_set_properties", inventory, item_data, new_properties)
+        undo_redo.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
+    else:
+        undo_redo.add_undo_property(item, "properties", item.properties)
+        undo_redo.add_do_property(item, "properties", new_properties)
     undo_redo.commit_action()
+
+
+func _set_properties(inventory: Inventory, item_data: Dictionary, properties: Dictionary):
+    var item_data_hash = item_data.hash()
+    for item in inventory.get_items():
+        if item.serialize().hash() == item_data_hash:
+            item.properties = properties.duplicate()
 
 
 func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
     undo_redo.create_action("Set prototype_id")
-    undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
-    undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
+    var inventory: Inventory = item.get_inventory()
+    if inventory:
+        var old_inventory_data: Dictionary = inventory.serialize()
+        var item_data: Dictionary = item.serialize()
+        undo_redo.add_do_method(self, "_set_prototype_id", inventory, item_data, new_prototype_id)
+        undo_redo.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
+    else:
+        undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
+        undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
     undo_redo.commit_action()
+
+
+func _set_prototype_id(inventory: Inventory, item_data: Dictionary, new_prototype_id: String) -> void:
+    var item_data_hash = item_data.hash()
+    for item in inventory.get_items():
+        if item.serialize().hash() == item_data_hash:
+            item.prototype_id = new_prototype_id
+
+
+func _set_inventory(inventory: Inventory, inventory_data: Dictionary) -> void:
+    inventory.deserialize(inventory_data)
 
 
 func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
