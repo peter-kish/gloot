@@ -122,6 +122,8 @@ func _connect_inventory_signals() -> void:
         inventory.connect("contents_changed", self, "_refresh")
     if !inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.connect("item_modified", self, "_on_item_modified")
+    if !inventory.is_connected("size_changed", self, "_refresh"):
+        inventory.connect("size_changed", self, "_refresh")
 
 
 func _disconnect_inventory_signals() -> void:
@@ -132,6 +134,8 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("contents_changed", self, "_refresh")
     if inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.disconnect("item_modified", self, "_on_item_modified")
+    if inventory.is_connected("size_changed", self, "_refresh"):
+        inventory.disconnect("size_changed", self, "_refresh")
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
@@ -142,12 +146,12 @@ func _refresh() -> void:
     _refresh_grid_container()
     _clear_list()
     _populate_list()
+    update()
 
 
 func _process(_delta) -> void:
     if _drag_sprite && _drag_sprite.visible:
         _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
-    update()
 
 
 func _draw() -> void:
