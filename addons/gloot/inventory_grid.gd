@@ -251,7 +251,7 @@ func _sort_if_needed() -> void:
 
 func reset() -> void:
     .reset()
-    size = DEFAULT_SIZE
+    _set_size(DEFAULT_SIZE)
 
 
 func serialize() -> Dictionary:
@@ -270,5 +270,5 @@ func deserialize(source: Dictionary) -> bool:
     if !.deserialize(source):
         return false
 
-    size = source[KEY_SIZE]
+    _set_size(source[KEY_SIZE])
     return true
