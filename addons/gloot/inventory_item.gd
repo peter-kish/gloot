@@ -114,7 +114,7 @@ func serialize() -> Dictionary:
     result[KEY_PROTOSET] = protoset.resource_path
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.empty():
-        result[KEY_PROPERTIES] = properties
+        result[KEY_PROPERTIES] = properties.duplicate()
 
     return result
 
@@ -132,7 +132,7 @@ func deserialize(source: Dictionary) -> bool:
     protoset = load(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
-        properties = source[KEY_PROPERTIES]
+        properties = source[KEY_PROPERTIES].duplicate()
 
     return true
 
