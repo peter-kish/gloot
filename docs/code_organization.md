@@ -7,6 +7,8 @@ The plugin source code is organized into the following directories:
 * `examples` - Examples
 * `tests` - Tests
 
+The contents of `examples` and `tests` are not required for the plugin to function properly.
+
 ## Core functionality (`addons/gloot/`)
 
 Mostly contains code that implements classes visible to the user:
@@ -65,7 +67,7 @@ The unit tests are implemented in the files with the `_test` suffix:
 * [`verification_test.gd`](../tests/verification_test.gd) - Tests the helper functions from [`verify.gd`](../addons/gloot/verify.gd).
 
 The UI control tests are just scenes that contain a single instance of the UI control they are supposed to test:
-* [`test_ctrl_inventory.tscn`](../tests/ctrl_tests/test_ctrl_inventory.tscn) - Tests [`CtrlInventory`](./ctrl_inventory.md)
-* [`test_ctrl_inventory_stacked.tscn`](../tests/ctrl_tests/test_ctrl_inventory_stacked.tscn) - Tests [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
-* [`test_ctrl_inventory_grid.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid.tscn) - Tests [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
-* [`test_ctrl_item_slot.tscn`](../tests/ctrl_tests/test_ctrl_item_slot.tscn) - Tests [`CtrlItemSlot`](./ctrl_item_slot.md)
+* [`test_ctrl_inventory.tscn`](../tests/ctrl_tests/test_ctrl_inventory.tscn) - Tests [`CtrlInventory`](./ctrl_inventory.md).
+* [`test_ctrl_inventory_stacked.tscn`](../tests/ctrl_tests/test_ctrl_inventory_stacked.tscn) - Tests [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md).
+* [`test_ctrl_inventory_grid.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid.tscn) - Tests [`CtrlInventoryGrid`](./ctrl_inventory_grid.md).
+* [`test_ctrl_item_slot.tscn`](../tests/ctrl_tests/test_ctrl_item_slot.tscn) - Tests [`CtrlItemSlot`](./ctrl_item_slot.md).
