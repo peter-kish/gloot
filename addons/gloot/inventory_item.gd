@@ -36,15 +36,22 @@ func _set_prototype_id(new_prototype_id: String) -> void:
     var old_prototype_id = prototype_id
     prototype_id = new_prototype_id
     if old_prototype_id != prototype_id:
-        # Reset properties
-        _set_properties({})
-
+        reset_properties()
         emit_signal("prototype_id_changed")
 
 
 func _set_properties(new_properties: Dictionary) -> void:
     properties = new_properties
     emit_signal("properties_changed")
+
+
+func reset_properties() -> void:
+    # Reset (erase) all properties from the current prototype but preserve the rest
+    var prototype: Dictionary = protoset.get(prototype_id)
+    var keys: Array = properties.keys().duplicate()
+    for property in keys:
+        if prototype.has(property):
+            properties.erase(property)
 
 
 func _notification(what):
