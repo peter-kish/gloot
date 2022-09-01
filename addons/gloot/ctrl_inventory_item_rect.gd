@@ -50,9 +50,7 @@ func _calculate_size() -> void:
 func _calculate_pos() -> void:
     var item_pos: Vector2 = _get_item_position()
 
-    rect_position = Vector2(item_pos.x * ctrl_inventory.field_dimensions.x, \
-        item_pos.y * ctrl_inventory.field_dimensions.y)
-    rect_position += ctrl_inventory.item_spacing * item_pos
+    rect_position = ctrl_inventory._get_field_position(item_pos)
 
     if !ctrl_inventory.stretch_item_sprites:
         # Position the item centered when it's not streched

@@ -7,12 +7,12 @@ signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(int) var item_spacing: int = 0 setget _set_item_spacing
-export(bool) var enable_grid: bool = true
-export(Color) var grid_color: Color = Color.black
+export(bool) var enable_grid: bool = true setget _set_enable_grid
+export(Color) var grid_color: Color = Color.black setget _set_grid_color
 export(bool) var enable_selections: bool = false setget _set_enable_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
-export(Texture) var default_item_texture: Texture
+export(Texture) var default_item_texture: Texture setget _set_default_item_texture
 export(bool) var stretch_item_sprites: bool = true setget _set_stretch_item_sprites
 export(int) var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null setget _set_inventory
@@ -29,6 +29,16 @@ var _gloot: Node = null
 func _set_field_dimensions(new_field_dimensions: Vector2) -> void:
     field_dimensions = new_field_dimensions
     _refresh_grid_container()
+
+
+func _set_enable_grid(new_enable_grid: bool) -> void:
+    enable_grid = new_enable_grid
+    _refresh()
+
+
+func _set_grid_color(new_grid_color: Color) -> void:
+    grid_color = new_grid_color
+    _refresh()
 
 
 func _set_item_spacing(new_item_spacing: int) -> void:
@@ -52,6 +62,11 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
         
     _set_inventory(node)
     update_configuration_warning()
+
+
+func _set_default_item_texture(new_default_item_texture: Texture) -> void:
+    default_item_texture = new_default_item_texture
+    _refresh()
 
 
 func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
@@ -363,3 +378,10 @@ func _move_item(item_index: int, position: Vector2) -> void:
         _gloot_undo_redo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)
+
+
+func _get_field_position(field_coords: Vector2) -> Vector2:
+    var field_position = Vector2(field_coords.x * field_dimensions.x, \
+        field_coords.y * field_dimensions.y)
+    field_position += item_spacing * field_coords
+    return field_position

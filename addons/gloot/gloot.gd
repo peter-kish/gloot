@@ -18,6 +18,7 @@ func _enter_tree() -> void:
     add_custom_type("CtrlInventory", "Control", preload("ctrl_inventory.gd"), preload("images/icon_ctrl_inventory.svg"))
     add_custom_type("CtrlInventoryStacked", "Control", preload("ctrl_inventory_stacked.gd"), preload("images/icon_ctrl_inventory_stacked.svg"))
     add_custom_type("CtrlInventoryGrid", "Control", preload("ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
+    add_custom_type("CtrlInventoryGridEx", "Control", preload("ctrl_inventory_grid_ex.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
     add_custom_type("CtrlItemSlot", "Control", preload("ctrl_item_slot.gd"), preload("images/icon_ctrl_item_slot.svg"))
 
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
@@ -48,6 +49,7 @@ func _exit_tree() -> void:
     remove_custom_type("CtrlInventory")
     remove_custom_type("CtrlInventoryStacked")
     remove_custom_type("CtrlInventoryGrid")
+    remove_custom_type("CtrlInventoryGridEx")
     remove_custom_type("CtrlItemSlot")
     
 
