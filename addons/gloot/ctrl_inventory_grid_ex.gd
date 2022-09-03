@@ -79,6 +79,16 @@ func _input(event) -> void:
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
+    var grabbed_item: InventoryItem = get_grabbed_item()
+    if grabbed_item:
+        var global_grabbed_item_pos: Vector2 = _get_grabbed_item_global_pos()
+        if _is_hovering(global_grabbed_item_pos):
+            var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
+            var item_size: Vector2 = inventory.get_item_size(grabbed_item)
+            var rect: Rect2 = Rect2(grabbed_item_coords, item_size)
+            return rect.has_point(field_coords)
+        return false
+
     var item: InventoryItem = _get_item_on_field(field_coords)
     if item:
         return _is_item_highlighted(item)
