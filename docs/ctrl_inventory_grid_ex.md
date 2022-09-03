@@ -4,7 +4,7 @@ Inherits: [CtrlInventoryGrid](./ctrl_inventory_grid.md)
 
 ## Description
 
-A UI control similar to [`InventoryGrid`](./ctrl_inventory_grid.md) but with extended options for customization.
+A UI control similar to [`CtrlInventoryGrid`](./ctrl_inventory_grid.md) but with extended options for customization.
 
 ## Properties
 
