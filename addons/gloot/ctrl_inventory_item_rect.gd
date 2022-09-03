@@ -82,7 +82,7 @@ func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, rect_size)
 
     if selected:
-        draw_rect(rect, Color.gray, true)
+        draw_rect(rect, selection_bg_color, true)
 
     if texture:
         var src_rect: Rect2 = Rect2(0, 0, texture.get_width(), texture.get_height())

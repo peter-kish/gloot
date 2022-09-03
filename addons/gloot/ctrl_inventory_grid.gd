@@ -385,3 +385,7 @@ func _get_field_position(field_coords: Vector2) -> Vector2:
         field_coords.y * field_dimensions.y)
     field_position += item_spacing * field_coords
     return field_position
+
+
+func _get_global_field_position(field_coords: Vector2) -> Vector2:
+    return _get_field_position(field_coords) + rect_global_position

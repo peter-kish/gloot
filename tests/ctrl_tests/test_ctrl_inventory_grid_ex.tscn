@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://tests/data/item_definitions_grid.tres" type="Resource" id=1]
 [ext_resource path="res://addons/gloot/ctrl_inventory_grid_ex.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://icon.png" type="Texture" id=4]
 [ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
 [ext_resource path="res://images/field_background.png" type="Texture" id=6]
+[ext_resource path="res://images/field_highlighted_background.png" type="Texture" id=7]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -20,6 +21,7 @@ enable_grid = false
 inventory_path = NodePath("../InventoryGrid")
 default_item_texture = ExtResource( 4 )
 field_background = ExtResource( 6 )
+field_highlighted_background = ExtResource( 7 )
 
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource( 3 )
