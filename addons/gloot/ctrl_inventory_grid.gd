@@ -323,7 +323,8 @@ func _input(event: InputEvent) -> void:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
         if !Engine.editor_hint && _gloot:
             _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
-    _select(item)
+    if inventory.has_item(item):
+        _select(item)
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite:
         _drag_sprite.hide()
