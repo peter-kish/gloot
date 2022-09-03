@@ -20,6 +20,7 @@ Mostly contains code that implements classes visible to the user:
 * [`ctrl_inventory.gd`](../addons/gloot/ctrl_inventory.gd) - Implements [`CtrlInventory`](./ctrl_inventory.md)
 * [`ctrl_inventory_stacked.gd`](../addons/gloot/ctrl_inventory_stacked.gd) - Implements [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`ctrl_inventory_grid.gd`](../addons/gloot/ctrl_inventory_grid.gd) - Implements [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
+* [`ctrl_inventory_grid_ex.gd`](../addons/gloot/ctrl_inventory_grid_ex.gd) - Implements [`CtrlInventoryGridEx`](./ctrl_inventory_grid.md)
 * [`ctrl_item_slot.gd`](../addons/gloot/ctrl_item_slot.gd) - Implements [`CtrlItemSlot`](./ctrl_item_slot.md)
 * [`item_slot.gd`](../addons/gloot/item_slot.gd) - Implements [`ItemSlot`](./item_slot.md.md)
 * [`gloot_autoload.gd`](../addons/gloot/gloot_autoload.gd) - Implements [`GLoot`](./gloot.md)

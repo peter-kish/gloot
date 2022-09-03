@@ -1,0 +1,65 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://tests/data/item_definitions_grid.tres" type="Resource" id=1]
+[ext_resource path="res://addons/gloot/ctrl_inventory_grid_ex.gd" type="Script" id=2]
+[ext_resource path="res://addons/gloot/inventory_grid.gd" type="Script" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
+[ext_resource path="res://images/field_background.png" type="Texture" id=6]
+[ext_resource path="res://images/field_highlighted_background.png" type="Texture" id=7]
+[ext_resource path="res://images/field_selected_background.png" type="Texture" id=8]
+
+[sub_resource type="StyleBoxTexture" id=1]
+texture = ExtResource( 6 )
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 7 )
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="StyleBoxTexture" id=3]
+texture = ExtResource( 8 )
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.00784314, 1, 0, 1 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CtrlInventoryGridEx" type="Control" parent="."]
+margin_right = 160.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 160, 160 )
+script = ExtResource( 2 )
+draw_grid = false
+inventory_path = NodePath("../InventoryGrid")
+default_item_texture = ExtResource( 4 )
+field_style = SubResource( 1 )
+field_highlighted_style = SubResource( 2 )
+field_selected_style = SubResource( 3 )
+selection_style = SubResource( 4 )
+
+[node name="InventoryGrid" type="Node" parent="."]
+script = ExtResource( 3 )
+item_protoset = ExtResource( 1 )
+size = Vector2( 5, 5 )
+
+[node name="item_2x2" type="Node" parent="InventoryGrid"]
+script = ExtResource( 5 )
+protoset = ExtResource( 1 )
+prototype_id = "item_2x2"
+
+[node name="item_1x1" type="Node" parent="InventoryGrid"]
+script = ExtResource( 5 )
+protoset = ExtResource( 1 )
+prototype_id = "item_1x1"
+properties = {
+"grid_position": Vector2( 0, 2 )
+}

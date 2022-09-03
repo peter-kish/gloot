@@ -10,9 +10,9 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 
 * `field_dimensions: Vector2` - The size of each inventory field in pixels.
 * `item_spacing: int` - The spacing between items in pixels.
-* `enable_grid: bool` - Displays a grid if true.
+* `draw_grid: bool` - Displays a grid if true.
 * `grid_color: Color` - The color of the grid.
-* `enable_selections: bool` - If true, items can be selected. Use `get_selected_inventory_items()` to get the currently selected item.
+* `draw_selections: bool` - Draws a rectangle behind the selected item if true.
 * `selection_color: Color` - The color of the selection.
 * `inventory_path: NodePath` - Path to an `Inventory` node.
 * `default_item_texture: Texture` - The default texture that will be used for items with no `image` property.

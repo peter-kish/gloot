@@ -7,12 +7,12 @@ signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(int) var item_spacing: int = 0 setget _set_item_spacing
-export(bool) var enable_grid: bool = true
-export(Color) var grid_color: Color = Color.black
-export(bool) var enable_selections: bool = false setget _set_enable_selections
+export(bool) var draw_grid: bool = true setget _set_draw_grid
+export(Color) var grid_color: Color = Color.black setget _set_grid_color
+export(bool) var draw_selections: bool = false setget _set_draw_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
-export(Texture) var default_item_texture: Texture
+export(Texture) var default_item_texture: Texture setget _set_default_item_texture
 export(bool) var stretch_item_sprites: bool = true setget _set_stretch_item_sprites
 export(int) var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null setget _set_inventory
@@ -29,6 +29,16 @@ var _gloot: Node = null
 func _set_field_dimensions(new_field_dimensions: Vector2) -> void:
     field_dimensions = new_field_dimensions
     _refresh_grid_container()
+
+
+func _set_draw_grid(new_draw_grid: bool) -> void:
+    draw_grid = new_draw_grid
+    _refresh()
+
+
+func _set_grid_color(new_grid_color: Color) -> void:
+    grid_color = new_grid_color
+    _refresh()
 
 
 func _set_item_spacing(new_item_spacing: int) -> void:
@@ -54,15 +64,18 @@ func _set_inventory_path(new_inv_path: NodePath) -> void:
     update_configuration_warning()
 
 
+func _set_default_item_texture(new_default_item_texture: Texture) -> void:
+    default_item_texture = new_default_item_texture
+    _refresh()
+
+
 func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
     stretch_item_sprites = new_stretch_item_sprites
     _refresh()
 
 
-func _set_enable_selections(new_enable_selections: bool) -> void:
-    enable_selections = new_enable_selections
-    if !enable_selections:
-        _select(null)
+func _set_draw_selections(new_draw_selections: bool) -> void:
+    draw_selections = new_draw_selections
 
 
 func _set_inventory(new_inventory: InventoryGrid) -> void:
@@ -110,7 +123,7 @@ func _get_gloot() -> Node:
     # This is a "temporary" hack until a better solution is found!
     # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
     # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the sigleton by name.
+    # To work around that, we obtain the singleton by name.
     return get_tree().root.get_node_or_null("GLoot")
 
 
@@ -124,6 +137,8 @@ func _connect_inventory_signals() -> void:
         inventory.connect("item_modified", self, "_on_item_modified")
     if !inventory.is_connected("size_changed", self, "_refresh"):
         inventory.connect("size_changed", self, "_refresh")
+    if !inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.connect("item_removed", self, "_on_item_removed")
 
 
 func _disconnect_inventory_signals() -> void:
@@ -136,10 +151,17 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("item_modified", self, "_on_item_modified")
     if inventory.is_connected("size_changed", self, "_refresh"):
         inventory.disconnect("size_changed", self, "_refresh")
+    if inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.disconnect("item_removed", self, "_on_item_removed")
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
     _refresh()
+
+
+func _on_item_removed(_item: InventoryItem) -> void:
+    if _item == _selected_item:
+        _select(null)
 
 
 func _refresh() -> void:
@@ -157,7 +179,7 @@ func _process(_delta) -> void:
 func _draw() -> void:
     if !inventory:
         return
-    if enable_grid:
+    if draw_grid:
         _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions, item_spacing)
 
 
@@ -234,6 +256,9 @@ func _populate_list() -> void:
 
 
 func _refresh_selection() -> void:
+    if !draw_selections:
+        return
+
     if !_ctrl_item_container:
         return
 
@@ -247,6 +272,9 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
     _grabbed_ctrl_inventory_item = ctrl_inventory_item
     _grabbed_ctrl_inventory_item.hide()
     _grab_offset = offset
+    if _gloot:
+        _gloot._grabbed_inventory_item = get_grabbed_item()
+        _gloot._grab_offset = _grab_offset
     if _drag_sprite:
         _drag_sprite.texture = ctrl_inventory_item.texture
         if _drag_sprite.texture == null:
@@ -281,9 +309,8 @@ func _on_item_activated(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
-    if enable_selections:
-        _selected_item = item
-        _refresh_selection()
+    _selected_item = item
+    _refresh_selection()
 
 
 func _input(event: InputEvent) -> void:
@@ -300,7 +327,10 @@ func _input(event: InputEvent) -> void:
     var item: InventoryItem = _grabbed_ctrl_inventory_item.item
     _grabbed_ctrl_inventory_item.show()
 
-    var global_grabbed_item_pos = get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
+    if _gloot:
+        _gloot._grabbed_inventory_item = null
+
+    var global_grabbed_item_pos = _get_grabbed_item_global_pos()
     if _is_hovering(global_grabbed_item_pos):
         var field_coords = get_field_coords(global_grabbed_item_pos)
         _move_item(inventory.get_item_index(item), field_coords)
@@ -308,10 +338,15 @@ func _input(event: InputEvent) -> void:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
         if !Engine.editor_hint && _gloot:
             _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
-    _select(item)
+    if inventory.has_item(item):
+        _select(item)
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite:
         _drag_sprite.hide()
+
+
+func _get_grabbed_item_global_pos() -> Vector2:
+    return get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
 
 
 func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
@@ -363,3 +398,21 @@ func _move_item(item_index: int, position: Vector2) -> void:
         _gloot_undo_redo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)
+
+
+func _get_field_position(field_coords: Vector2) -> Vector2:
+    var field_position = Vector2(field_coords.x * field_dimensions.x, \
+        field_coords.y * field_dimensions.y)
+    field_position += item_spacing * field_coords
+    return field_position
+
+
+func _get_global_field_position(field_coords: Vector2) -> Vector2:
+    return _get_field_position(field_coords) + rect_global_position
+
+
+func get_grabbed_item() -> InventoryItem:
+    if _grabbed_ctrl_inventory_item:
+        return _grabbed_ctrl_inventory_item.item
+
+    return null

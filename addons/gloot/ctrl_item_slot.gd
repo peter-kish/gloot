@@ -122,7 +122,7 @@ func _get_gloot() -> Node:
     # This is a "temporary" hack until a better solution is found!
     # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
     # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the sigleton by name.
+    # To work around that, we obtain the singleton by name.
     return get_tree().root.get_node_or_null("GLoot")
 
 
@@ -135,7 +135,7 @@ func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
         return
         
     var slot_rect = get_global_rect()
-    if slot_rect.has_point(global_drop_pos) && item_slot.can_hold_item(item):
+    if slot_rect.has_point(get_global_mouse_position()) && item_slot.can_hold_item(item):
         item_slot.item = item
 
 
