@@ -33,7 +33,7 @@ func _set_selection_style(new_selection_style: StyleBox) -> void:
 
 func _refresh() -> void:
     ._refresh()
-    refresh_field_background_grid()
+    _refresh_field_background_grid()
 
 
 func _refresh_selection() -> void:
@@ -48,7 +48,7 @@ func _refresh_selection() -> void:
         _selection_panel.rect_size = selection_size
 
 
-func refresh_field_background_grid() -> void:
+func _refresh_field_background_grid() -> void:
     if _field_background_grid:
         remove_child(_field_background_grid)
         _field_background_grid.queue_free()
