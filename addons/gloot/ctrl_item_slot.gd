@@ -135,7 +135,7 @@ func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
         return
         
     var slot_rect = get_global_rect()
-    if slot_rect.has_point(global_drop_pos) && item_slot.can_hold_item(item):
+    if slot_rect.has_point(get_global_mouse_position()) && item_slot.can_hold_item(item):
         item_slot.item = item
 
 
