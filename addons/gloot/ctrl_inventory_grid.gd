@@ -7,9 +7,9 @@ signal inventory_item_activated
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(int) var item_spacing: int = 0 setget _set_item_spacing
-export(bool) var enable_grid: bool = true setget _set_enable_grid
+export(bool) var draw_grid: bool = true setget _set_draw_grid
 export(Color) var grid_color: Color = Color.black setget _set_grid_color
-export(bool) var enable_selections: bool = false setget _set_enable_selections
+export(bool) var draw_selections: bool = false setget _set_draw_selections
 export(Color) var selection_color: Color = Color.gray
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_texture: Texture setget _set_default_item_texture
@@ -31,8 +31,8 @@ func _set_field_dimensions(new_field_dimensions: Vector2) -> void:
     _refresh_grid_container()
 
 
-func _set_enable_grid(new_enable_grid: bool) -> void:
-    enable_grid = new_enable_grid
+func _set_draw_grid(new_draw_grid: bool) -> void:
+    draw_grid = new_draw_grid
     _refresh()
 
 
@@ -74,10 +74,8 @@ func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
     _refresh()
 
 
-func _set_enable_selections(new_enable_selections: bool) -> void:
-    enable_selections = new_enable_selections
-    if !enable_selections:
-        _select(null)
+func _set_draw_selections(new_draw_selections: bool) -> void:
+    draw_selections = new_draw_selections
 
 
 func _set_inventory(new_inventory: InventoryGrid) -> void:
@@ -172,7 +170,7 @@ func _process(_delta) -> void:
 func _draw() -> void:
     if !inventory:
         return
-    if enable_grid:
+    if draw_grid:
         _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions, item_spacing)
 
 
@@ -296,8 +294,8 @@ func _on_item_activated(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
-    if enable_selections:
-        _selected_item = item
+    _selected_item = item
+    if draw_selections:
         _refresh_selection()
 
 
