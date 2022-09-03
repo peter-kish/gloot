@@ -2,31 +2,25 @@ class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
 tool
 
-export(Texture) var field_background: Texture setget _set_field_background
-export(Texture) var field_highlighted_background: Texture setget _set_field_highlighted_background
-export(Texture) var field_selected_background: Texture setget _set_field_selected_background
-export(bool) var stretch_background_sprites: bool = true setget _set_stretch_background_sprites
+export(StyleBox) var field_style: StyleBox setget _set_field_style
+export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
+export(StyleBox) var field_selected_style: StyleBox setget _set_field_selected_style
 var _field_background_grid: Control
 var _field_backgrounds: Array
 
 
-func _set_field_background(new_field_background: Texture) -> void:
-    field_background = new_field_background
+func _set_field_style(new_field_style: StyleBox) -> void:
+    field_style = new_field_style
     _refresh()
 
 
-func _set_field_highlighted_background(new_field_highlighted_background: Texture) -> void:
-    field_highlighted_background = new_field_highlighted_background
+func _set_field_highlighted_style(new_field_highlighted_style: StyleBox) -> void:
+    field_highlighted_style = new_field_highlighted_style
     _refresh()
 
 
-func _set_field_selected_background(new_field_selected_background: Texture) -> void:
-    field_selected_background = new_field_selected_background
-    _refresh()
-
-
-func _set_stretch_background_sprites(new_value: bool) -> void:
-    stretch_background_sprites = new_value
+func _set_field_selected_style(new_field_selected_style: StyleBox) -> void:
+    field_selected_style = new_field_selected_style
     _refresh()
 
 
@@ -42,7 +36,7 @@ func refresh_field_background_grid() -> void:
         _field_background_grid = null
         _field_backgrounds = []
 
-    if !inventory || !field_background:
+    if !inventory:
         return
 
     _field_background_grid = Control.new()
@@ -52,30 +46,30 @@ func refresh_field_background_grid() -> void:
     for i in range(inventory.size.x):
         _field_backgrounds.append([])
         for j in range(inventory.size.y):
-            var field_texture_rect: TextureRect = TextureRect.new()
-            field_texture_rect.texture = field_background
-            if stretch_background_sprites:
-                var sprite_size: Vector2 = field_background.get_size()
-                field_texture_rect.rect_scale = Vector2(field_dimensions.x / sprite_size.x, \
-                    field_dimensions.y / sprite_size.y)
-            else:
-                field_texture_rect.rect_size = field_dimensions
-            field_texture_rect.rect_position = _get_field_position(Vector2(i, j))
-            _field_background_grid.add_child(field_texture_rect)
-            _field_backgrounds[i].append(field_texture_rect)
+            var field_panel: Panel = Panel.new()
+            _set_field_panel_style(field_panel, field_style)
+            field_panel.rect_size = field_dimensions
+            field_panel.rect_position = _get_field_position(Vector2(i, j))
+            _field_background_grid.add_child(field_panel)
+            _field_backgrounds[i].append(field_panel)
+
+
+func _set_field_panel_style(field_panel: Panel, style: StyleBox) -> void:
+    field_panel.remove_stylebox_override("panel")
+    field_panel.add_stylebox_override("panel", style)
 
 
 func _input(event) -> void:
     if event is InputEventMouseMotion:
         for i in range(inventory.size.x):
             for j in range(inventory.size.y):
-                var field_texture_rect = _field_backgrounds[i][j]
-                if _is_field_selected(Vector2(i, j)) && field_selected_background:
-                    field_texture_rect.texture = field_selected_background
-                elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_background:
-                    field_texture_rect.texture = field_highlighted_background
+                var field_panel: Panel = _field_backgrounds[i][j]
+                if _is_field_selected(Vector2(i, j)) && field_selected_style:
+                    _set_field_panel_style(field_panel, field_selected_style)
+                elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_style:
+                    _set_field_panel_style(field_panel, field_highlighted_style)
                 else:
-                    field_texture_rect.texture = field_background
+                    _set_field_panel_style(field_panel, field_style)
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
