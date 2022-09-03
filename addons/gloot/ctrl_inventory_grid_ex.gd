@@ -4,6 +4,7 @@ tool
 
 export(Texture) var field_background: Texture setget _set_field_background
 export(Texture) var field_highlighted_background: Texture setget _set_field_highlighted_background
+export(Texture) var field_selected_background: Texture setget _set_field_selected_background
 export(bool) var stretch_background_sprites: bool = true setget _set_stretch_background_sprites
 var _field_background_grid: Control
 var _field_backgrounds: Array
@@ -16,6 +17,11 @@ func _set_field_background(new_field_background: Texture) -> void:
 
 func _set_field_highlighted_background(new_field_highlighted_background: Texture) -> void:
     field_highlighted_background = new_field_highlighted_background
+    _refresh()
+
+
+func _set_field_selected_background(new_field_selected_background: Texture) -> void:
+    field_selected_background = new_field_selected_background
     _refresh()
 
 
@@ -64,7 +70,9 @@ func _input(event) -> void:
         for i in range(inventory.size.x):
             for j in range(inventory.size.y):
                 var field_texture_rect = _field_backgrounds[i][j]
-                if _is_field_highlighted(Vector2(i, j)) && field_highlighted_background:
+                if _is_field_selected(Vector2(i, j)) && field_selected_background:
+                    field_texture_rect.texture = field_selected_background
+                elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_background:
                     field_texture_rect.texture = field_highlighted_background
                 else:
                     field_texture_rect.texture = field_background
@@ -78,6 +86,17 @@ func _is_field_highlighted(field_coords: Vector2) -> bool:
     var mouse_pos: Vector2 = get_global_mouse_position()
     var rect: Rect2 = Rect2(_get_global_field_position(field_coords), field_dimensions)
     return rect.has_point(mouse_pos)
+
+
+func _is_field_selected(field_coords: Vector2) -> bool:
+    if !_selected_item:
+        return false
+
+    var item: InventoryItem = _get_item_on_field(field_coords)
+    if !item:
+        return false
+
+    return item == _selected_item
 
 
 func _get_item_on_field(field_coords: Vector2) -> InventoryItem:
