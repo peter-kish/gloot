@@ -5,8 +5,10 @@ tool
 export(StyleBox) var field_style: StyleBox setget _set_field_style
 export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
 export(StyleBox) var field_selected_style: StyleBox setget _set_field_selected_style
+export(StyleBox) var selection_style: StyleBox setget _set_selection_style
 var _field_background_grid: Control
 var _field_backgrounds: Array
+var _selection_panel: Panel
 
 
 func _set_field_style(new_field_style: StyleBox) -> void:
@@ -24,9 +26,26 @@ func _set_field_selected_style(new_field_selected_style: StyleBox) -> void:
     _refresh()
 
 
+func _set_selection_style(new_selection_style: StyleBox) -> void:
+    selection_style = new_selection_style
+    _refresh()
+
+
 func _refresh() -> void:
     ._refresh()
     refresh_field_background_grid()
+
+
+func _refresh_selection() -> void:
+    ._refresh_selection()
+    _selection_panel.visible = (_selected_item != null) && (selection_style != null)
+    if _selected_item:
+        move_child(_selection_panel, get_child_count() - 1)
+
+        var selection_pos = _get_field_position(inventory.get_item_position(_selected_item))
+        var selection_size = _get_streched_item_sprite_size(_selected_item)
+        _selection_panel.rect_position = selection_pos
+        _selection_panel.rect_size = selection_size
 
 
 func refresh_field_background_grid() -> void:
@@ -35,6 +54,13 @@ func refresh_field_background_grid() -> void:
         _field_background_grid.queue_free()
         _field_background_grid = null
         _field_backgrounds = []
+
+    if !_selection_panel:
+        _selection_panel = Panel.new()
+        add_child(_selection_panel);
+        move_child(_selection_panel, get_child_count() - 1)
+    _set_panel_style(_selection_panel, selection_style)
+    _selection_panel.visible = (_selected_item != null) && (selection_style != null)
 
     if !inventory:
         return
@@ -47,16 +73,16 @@ func refresh_field_background_grid() -> void:
         _field_backgrounds.append([])
         for j in range(inventory.size.y):
             var field_panel: Panel = Panel.new()
-            _set_field_panel_style(field_panel, field_style)
+            _set_panel_style(field_panel, field_style)
             field_panel.rect_size = field_dimensions
             field_panel.rect_position = _get_field_position(Vector2(i, j))
             _field_background_grid.add_child(field_panel)
             _field_backgrounds[i].append(field_panel)
 
 
-func _set_field_panel_style(field_panel: Panel, style: StyleBox) -> void:
-    field_panel.remove_stylebox_override("panel")
-    field_panel.add_stylebox_override("panel", style)
+func _set_panel_style(panel: Panel, style: StyleBox) -> void:
+    panel.remove_stylebox_override("panel")
+    panel.add_stylebox_override("panel", style)
 
 
 func _input(event) -> void:
@@ -65,11 +91,11 @@ func _input(event) -> void:
             for j in range(inventory.size.y):
                 var field_panel: Panel = _field_backgrounds[i][j]
                 if _is_field_selected(Vector2(i, j)) && field_selected_style:
-                    _set_field_panel_style(field_panel, field_selected_style)
+                    _set_panel_style(field_panel, field_selected_style)
                 elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_style:
-                    _set_field_panel_style(field_panel, field_highlighted_style)
+                    _set_panel_style(field_panel, field_highlighted_style)
                 else:
-                    _set_field_panel_style(field_panel, field_style)
+                    _set_panel_style(field_panel, field_style)
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:

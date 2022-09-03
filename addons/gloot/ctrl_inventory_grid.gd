@@ -247,6 +247,9 @@ func _populate_list() -> void:
 
 
 func _refresh_selection() -> void:
+    if !draw_selections:
+        return
+
     if !_ctrl_item_container:
         return
 
@@ -295,8 +298,7 @@ func _on_item_activated(ctrl_inventory_item) -> void:
 
 func _select(item: InventoryItem) -> void:
     _selected_item = item
-    if draw_selections:
-        _refresh_selection()
+    _refresh_selection()
 
 
 func _input(event: InputEvent) -> void:

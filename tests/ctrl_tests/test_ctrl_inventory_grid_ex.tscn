@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://tests/data/item_definitions_grid.tres" type="Resource" id=1]
 [ext_resource path="res://addons/gloot/ctrl_inventory_grid_ex.gd" type="Script" id=2]
@@ -21,6 +21,14 @@ region_rect = Rect2( 0, 0, 32, 32 )
 texture = ExtResource( 8 )
 region_rect = Rect2( 0, 0, 32, 32 )
 
+[sub_resource type="StyleBoxFlat" id=4]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.00784314, 1, 0, 1 )
+
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,6 +44,7 @@ default_item_texture = ExtResource( 4 )
 field_style = SubResource( 1 )
 field_highlighted_style = SubResource( 2 )
 field_selected_style = SubResource( 3 )
+selection_style = SubResource( 4 )
 
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource( 3 )
