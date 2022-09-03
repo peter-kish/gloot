@@ -99,9 +99,9 @@ func _input(event) -> void:
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
-    var grabbed_item: InventoryItem = get_grabbed_item()
+    var grabbed_item: InventoryItem = _get_global_grabbed_item()
     if grabbed_item:
-        var global_grabbed_item_pos: Vector2 = _get_grabbed_item_global_pos()
+        var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_global_pos()
         if _is_hovering(global_grabbed_item_pos):
             var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
             var item_size: Vector2 = inventory.get_item_size(grabbed_item)
@@ -117,6 +117,19 @@ func _is_field_highlighted(field_coords: Vector2) -> bool:
     var rect: Rect2 = Rect2(_get_global_field_position(field_coords), field_dimensions)
     return rect.has_point(mouse_pos)
 
+
+func _get_global_grabbed_item() -> InventoryItem:
+    var grabbed_item: InventoryItem = get_grabbed_item()
+    if !grabbed_item && _gloot:
+        grabbed_item = _gloot._grabbed_inventory_item
+    return grabbed_item
+
+
+func _get_global_grabbed_item_global_pos() -> Vector2:
+    if _gloot && _gloot._grabbed_inventory_item:
+        return get_global_mouse_position() - _gloot._grab_offset + (field_dimensions / 2)
+    return Vector2(-1, -1)
+    
 
 func _is_field_selected(field_coords: Vector2) -> bool:
     if !_selected_item:

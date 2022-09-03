@@ -263,6 +263,9 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
     _grabbed_ctrl_inventory_item = ctrl_inventory_item
     _grabbed_ctrl_inventory_item.hide()
     _grab_offset = offset
+    if _gloot:
+        _gloot._grabbed_inventory_item = get_grabbed_item()
+        _gloot._grab_offset = _grab_offset
     if _drag_sprite:
         _drag_sprite.texture = ctrl_inventory_item.texture
         if _drag_sprite.texture == null:
@@ -314,6 +317,9 @@ func _input(event: InputEvent) -> void:
 
     var item: InventoryItem = _grabbed_ctrl_inventory_item.item
     _grabbed_ctrl_inventory_item.show()
+
+    if _gloot:
+        _gloot._grabbed_inventory_item = null
 
     var global_grabbed_item_pos = _get_grabbed_item_global_pos()
     if _is_hovering(global_grabbed_item_pos):
