@@ -122,7 +122,7 @@ func _get_gloot() -> Node:
     # This is a "temporary" hack until a better solution is found!
     # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
     # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the sigleton by name.
+    # To work around that, we obtain the singleton by name.
     return get_tree().root.get_node_or_null("GLoot")
 
 

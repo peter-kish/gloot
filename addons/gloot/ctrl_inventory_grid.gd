@@ -123,7 +123,7 @@ func _get_gloot() -> Node:
     # This is a "temporary" hack until a better solution is found!
     # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
     # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the sigleton by name.
+    # To work around that, we obtain the singleton by name.
     return get_tree().root.get_node_or_null("GLoot")
 
 
@@ -137,6 +137,8 @@ func _connect_inventory_signals() -> void:
         inventory.connect("item_modified", self, "_on_item_modified")
     if !inventory.is_connected("size_changed", self, "_refresh"):
         inventory.connect("size_changed", self, "_refresh")
+    if !inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.connect("item_removed", self, "_on_item_removed")
 
 
 func _disconnect_inventory_signals() -> void:
@@ -149,10 +151,17 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("item_modified", self, "_on_item_modified")
     if inventory.is_connected("size_changed", self, "_refresh"):
         inventory.disconnect("size_changed", self, "_refresh")
+    if inventory.is_connected("item_removed", self, "_on_item_removed"):
+        inventory.disconnect("item_removed", self, "_on_item_removed")
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
     _refresh()
+
+
+func _on_item_removed(_item: InventoryItem) -> void:
+    if _item == _selected_item:
+        _select(null)
 
 
 func _refresh() -> void:

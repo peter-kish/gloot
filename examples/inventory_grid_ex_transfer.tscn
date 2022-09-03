@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://tests/data/item_definitions_grid.tres" type="Resource" id=1]
 [ext_resource path="res://addons/gloot/inventory_grid.gd" type="Script" id=2]
@@ -19,6 +19,14 @@ region_rect = Rect2( 0, 0, 32, 32 )
 texture = ExtResource( 10 )
 region_rect = Rect2( 0, 0, 32, 32 )
 
+[sub_resource type="StyleBoxFlat" id=5]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 0.92549, 0.152941, 1 )
+
 [sub_resource type="StyleBoxTexture" id=3]
 texture = ExtResource( 9 )
 region_rect = Rect2( 0, 0, 32, 32 )
@@ -26,6 +34,14 @@ region_rect = Rect2( 0, 0, 32, 32 )
 [sub_resource type="StyleBoxTexture" id=4]
 texture = ExtResource( 10 )
 region_rect = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 0.92549, 0.152941, 1 )
 
 [node name="InventoryGridTransfer" type="Control"]
 anchor_right = 1.0
@@ -62,6 +78,7 @@ inventory_path = NodePath("../../../../../InventoryGridLeft")
 default_item_texture = ExtResource( 5 )
 field_style = SubResource( 1 )
 field_highlighted_style = SubResource( 2 )
+selection_style = SubResource( 5 )
 
 [node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 margin_top = 178.0
@@ -91,6 +108,7 @@ inventory_path = NodePath("../../../../../InventoryGridRight")
 default_item_texture = ExtResource( 5 )
 field_style = SubResource( 3 )
 field_highlighted_style = SubResource( 4 )
+selection_style = SubResource( 6 )
 
 [node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
 margin_top = 178.0
