@@ -1,0 +1,44 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://tests/data/item_definitions_basic.tres" type="Resource" id=1]
+[ext_resource path="res://addons/gloot/inventory.gd" type="Script" id=2]
+[ext_resource path="res://addons/gloot/ctrl_item_slot_ex.gd" type="Script" id=3]
+[ext_resource path="res://addons/gloot/item_slot.gd" type="Script" id=4]
+[ext_resource path="res://images/field_background.png" type="Texture" id=5]
+[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=6]
+[ext_resource path="res://images/field_highlighted_background.png" type="Texture" id=7]
+
+[sub_resource type="StyleBoxTexture" id=1]
+texture = ExtResource( 5 )
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 7 )
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CtrlItemSlotEx" type="Control" parent="."]
+margin_right = 32.0
+margin_bottom = 32.0
+script = ExtResource( 3 )
+item_slot_path = NodePath("../ItemSlot")
+label_visible = false
+slot_style = SubResource( 1 )
+slot_highlighted_style = SubResource( 2 )
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource( 2 )
+item_protoset = ExtResource( 1 )
+
+[node name="InventoryItem" type="Node" parent="Inventory"]
+script = ExtResource( 6 )
+protoset = ExtResource( 1 )
+prototype_id = "item1"
+
+[node name="ItemSlot" type="Node" parent="."]
+script = ExtResource( 4 )
+inventory_path = NodePath("../Inventory")
+equipped_item = 0

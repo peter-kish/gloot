@@ -4,7 +4,7 @@ tool
 
 
 export(NodePath) var item_slot_path: NodePath setget _set_item_slot_path
-export(Texture) var default_item_icon: Texture
+export(Texture) var default_item_icon: Texture setget _set_default_item_icon
 export(bool) var item_texture_visible: bool = true setget _set_item_texture_visible
 export(bool) var label_visible: bool = true setget _set_label_visible
 var item_slot: ItemSlot setget _set_item_slot
@@ -30,6 +30,11 @@ func _set_item_slot_path(new_item_slot_path: NodePath) -> void:
         
     _set_item_slot(node)
     update_configuration_warning()
+
+
+func _set_default_item_icon(new_default_item_icon: Texture) -> void:
+    default_item_icon = new_default_item_icon
+    _refresh()
 
 
 func _set_item_texture_visible(new_item_texture_visible: bool) -> void:
