@@ -149,8 +149,8 @@ rect_min_size = Vector2( 32, 32 )
 script = ExtResource( 6 )
 item_slot_path = NodePath("../../../../../ItemSlot")
 label_visible = false
-field_style = SubResource( 7 )
-field_highlighted_style = SubResource( 8 )
+slot_style = SubResource( 7 )
+slot_highlighted_style = SubResource( 8 )
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
 margin_top = 68.0

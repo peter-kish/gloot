@@ -2,18 +2,18 @@ class_name CtrlItemSlotEx
 extends CtrlItemSlot
 tool
 
-export(StyleBox) var field_style: StyleBox setget _set_field_style
-export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
+export(StyleBox) var slot_style: StyleBox setget _set_slot_style
+export(StyleBox) var slot_highlighted_style: StyleBox setget _set_slot_highlighted_style
 var _background_panel: Panel
 
 
-func _set_field_style(new_field_style: StyleBox) -> void:
-    field_style = new_field_style
+func _set_slot_style(new_slot_style: StyleBox) -> void:
+    slot_style = new_slot_style
     _refresh()
 
 
-func _set_field_highlighted_style(new_field_highlighted_style: StyleBox) -> void:
-    field_highlighted_style = new_field_highlighted_style
+func _set_slot_highlighted_style(new_slot_highlighted_style: StyleBox) -> void:
+    slot_highlighted_style = new_slot_highlighted_style
     _refresh()
 
 
@@ -28,7 +28,12 @@ func _update_background() -> void:
         _background_panel.rect_size = rect_size
         add_child(_background_panel)
         move_child(_background_panel, 0)
-    _set_panel_style(_background_panel, field_style)
+
+    _background_panel.show()
+    if slot_style:
+        _set_panel_style(_background_panel, slot_style)
+    else:
+        _background_panel.hide()
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
@@ -38,8 +43,11 @@ func _set_panel_style(panel: Panel, style: StyleBox) -> void:
 
 func _input(event) -> void:
     if event is InputEventMouseMotion:
-        if get_global_rect().has_point(get_global_mouse_position()) && field_highlighted_style:
-            _set_panel_style(_background_panel, field_highlighted_style)
+        if get_global_rect().has_point(get_global_mouse_position()) && slot_highlighted_style:
+            _set_panel_style(_background_panel, slot_highlighted_style)
             return
         
-        _set_panel_style(_background_panel, field_style)
+        if slot_style:
+            _set_panel_style(_background_panel, slot_style)
+        else:
+            _background_panel.hide()

@@ -26,8 +26,8 @@ margin_bottom = 32.0
 script = ExtResource( 3 )
 item_slot_path = NodePath("../ItemSlot")
 label_visible = false
-field_style = SubResource( 1 )
-field_highlighted_style = SubResource( 2 )
+slot_style = SubResource( 1 )
+slot_highlighted_style = SubResource( 2 )
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource( 2 )

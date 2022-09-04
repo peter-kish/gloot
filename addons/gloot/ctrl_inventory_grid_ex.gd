@@ -74,6 +74,7 @@ func _refresh_field_background_grid() -> void:
         for j in range(inventory.size.y):
             var field_panel: Panel = Panel.new()
             _set_panel_style(field_panel, field_style)
+            field_panel.visible = (field_style != null)
             field_panel.rect_size = field_dimensions
             field_panel.rect_position = _get_field_position(Vector2(i, j))
             _field_background_grid.add_child(field_panel)
@@ -90,12 +91,15 @@ func _input(event) -> void:
         for i in range(inventory.size.x):
             for j in range(inventory.size.y):
                 var field_panel: Panel = _field_backgrounds[i][j]
+                field_panel.show()
                 if _is_field_selected(Vector2(i, j)) && field_selected_style:
                     _set_panel_style(field_panel, field_selected_style)
                 elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_style:
                     _set_panel_style(field_panel, field_highlighted_style)
-                else:
+                elif field_style:
                     _set_panel_style(field_panel, field_style)
+                else:
+                    field_panel.hide()
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
