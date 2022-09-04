@@ -60,7 +60,11 @@ User interfaces are usually unique for each project, but it often helps to have 
 * ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging. Uses the `image` item property (path to a texture) to display the item on the grid.
 
 ![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
+* ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGridEx icon") [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) - Similar to [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) but with extended options for customization.
+
+![](images/screenshots/ss_inventory_grid_ex.png "CtrlInventoryGridEx")
 * ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlot icon") [`CtrlItemSlot`](docs/ctrl_item_slot.md) - UI control representing an ([`ItemSlot`](docs/item_slot.md)).
+* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlotEx icon") [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md) - Similar to [`CtrlItemSlot`](docs/ctrl_item_slot.md) but with extended options for customization.
 
 ## Installation
 
@@ -251,3 +255,6 @@ Take a look at the `examples` directory for some example scenes:
 * `inventory_grid_transfer.tscn` - Displaying two grid based inventories (`InventoryGrid`) and transferring items between them using drag and drop.
 
 ![](images/screenshots/ss_example_inventory_grid_transfer.png "inventory_grid_transfer.tscn")
+* `inventory_grid_ex_transfer.tscn` - Similar to `inventory_grid_transfer.tscn`, but using [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md).
+
+![](images/screenshots/ss_example_inventory_grid_transfer_ex.png "inventory_grid_transfer.tscn")

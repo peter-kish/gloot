@@ -1,4 +1,4 @@
-# `CtrlInventoryGrid`
+# `CtrlInventoryGridEx`
 
 Inherits: [CtrlInventoryGrid](./ctrl_inventory_grid.md)
 

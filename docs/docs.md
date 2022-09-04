@@ -13,6 +13,7 @@
 * [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
 * [`CtrlInventoryGridEx`](./ctrl_inventory_grid_ex.md)
 * [`CtrlItemSlot`](./ctrl_item_slot.md)
+* [`CtrlItemSlotEx`](./ctrl_item_slot_ex.md)
 * [`GLoot`](./gloot.md) (auto loaded singleton)
 
 ## JSON Reference

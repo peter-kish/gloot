@@ -22,6 +22,7 @@ Mostly contains code that implements classes visible to the user:
 * [`ctrl_inventory_grid.gd`](../addons/gloot/ctrl_inventory_grid.gd) - Implements [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
 * [`ctrl_inventory_grid_ex.gd`](../addons/gloot/ctrl_inventory_grid_ex.gd) - Implements [`CtrlInventoryGridEx`](./ctrl_inventory_grid.md)
 * [`ctrl_item_slot.gd`](../addons/gloot/ctrl_item_slot.gd) - Implements [`CtrlItemSlot`](./ctrl_item_slot.md)
+* [`ctrl_item_slot_ex.gd`](../addons/gloot/ctrl_item_slot_ex.gd) - Implements [`CtrlItemSlotEx`](./ctrl_item_slot_ex.md)
 * [`item_slot.gd`](../addons/gloot/item_slot.gd) - Implements [`ItemSlot`](./item_slot.md.md)
 * [`gloot_autoload.gd`](../addons/gloot/gloot_autoload.gd) - Implements [`GLoot`](./gloot.md)
 
@@ -49,8 +50,9 @@ Contains code that implements the inspector plugin and UI controls that will be 
 
 Contains example code (and scenes) that demonstrates how to use some common features of the plugin.
 * [`inventory_transfer.gd`](../examples/inventory_transfer.gd) and [`inventory_transfer.tscn`](../examples/inventory_transfer.tscn) - Implements basic item transfer between two [`Inventory`](./inventory.md) nodes.
-* [`inventory_transfer_stacked.gd`](../examples/inventory_transfer_stacked.gd) and [`inventory_transfer_stacked.tscn`](../examples/inventory_transfer_stacked.tscn) - Implements basic item transfer between two [`InventoryStacked`](./inventory_stacked.md) nodes.
-* [`inventory_transfer_grid.gd`](../examples/inventory_transfer_grid.gd) and [`inventory_transfer_grid.tscn`](../examples/inventory_transfer_grid.tscn) - Implements basic item transfer between two [`InventoryGrid`](./inventory_grid.md) nodes.
+* [`inventory_stacked_transfer.gd`](../examples/inventory_stacked_transfer.gd) and [`inventory_stacked_transfer.tscn`](../examples/inventory_stacked_transfer.tscn) - Implements basic item transfer between two [`InventoryStacked`](./inventory_stacked.md) nodes.
+* [`inventory_grid_transfer.gd`](../examples/inventory_grid_transfer.gd) and [`inventory_grid_transfer.tscn`](../examples/inventory_grid_transfer.tscn) - Implements basic item transfer between two [`InventoryGrid`](./inventory_grid.md) nodes.
+* [`inventory_grid_ex_transfer.gd`](../examples/inventory_grid_ex_transfer.gd) and [`inventory_grid_ex_transfer.tscn`](../examples/inventory_grid_ex_transfer.tscn) - Similar to the previous, but using [`CtrlInventoryGridEx`](ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](ctrl_item_slot_ex.md).
 
 ## Tests (`tests`)
 
@@ -71,4 +73,6 @@ The UI control tests are just scenes that contain a single instance of the UI co
 * [`test_ctrl_inventory.tscn`](../tests/ctrl_tests/test_ctrl_inventory.tscn) - Tests [`CtrlInventory`](./ctrl_inventory.md).
 * [`test_ctrl_inventory_stacked.tscn`](../tests/ctrl_tests/test_ctrl_inventory_stacked.tscn) - Tests [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md).
 * [`test_ctrl_inventory_grid.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid.tscn) - Tests [`CtrlInventoryGrid`](./ctrl_inventory_grid.md).
+* [`test_ctrl_inventory_grid_ex.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid_ex.tscn) - Tests [`CtrlInventoryGridEx`](./ctrl_inventory_grid_ex.md).
 * [`test_ctrl_item_slot.tscn`](../tests/ctrl_tests/test_ctrl_item_slot.tscn) - Tests [`CtrlItemSlot`](./ctrl_item_slot.md).
+* [`test_ctrl_item_slot_ex.tscn`](../tests/ctrl_tests/test_ctrl_item_slot_ex.tscn) - Tests [`CtrlItemSlotEx`](./ctrl_item_slot_ex.md).
