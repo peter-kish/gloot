@@ -8,34 +8,55 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
-dictionary = {
-}
-color_map = {
-}
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 3
 
-[node name="LblTitleName" type="Label" parent="GridContainer"]
+[node name="LblTitleName" type="Label" parent="VBoxContainer/GridContainer"]
 margin_right = 38.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Name"
 
-[node name="LblTitleType" type="Label" parent="GridContainer"]
+[node name="LblTitleType" type="Label" parent="VBoxContainer/GridContainer"]
 margin_left = 42.0
 margin_right = 72.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Type"
 
-[node name="LblTitleValue" type="Label" parent="GridContainer"]
+[node name="LblTitleValue" type="Label" parent="VBoxContainer/GridContainer"]
 margin_left = 76.0
 margin_right = 111.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Value"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 576.0
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+margin_right = 950.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 954.0
+margin_right = 983.0
+margin_bottom = 24.0
+
+[node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 987.0
+margin_right = 1024.0
+margin_bottom = 24.0
+text = "Add"
