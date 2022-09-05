@@ -69,6 +69,7 @@ func update_property() -> void:
 func _refresh_dict_editor() -> void:
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
+    _dict_editor.remove_title_map = _get_remove_title_map()
     _dict_editor.refresh()
 
 
@@ -105,3 +106,20 @@ func _get_color_map() -> Dictionary:
 
     return result
             
+
+func _get_remove_title_map() -> Dictionary:
+    if !get_edited_object():
+        return {}
+
+    var item: InventoryItem = get_edited_object()
+    if !item.protoset:
+        return {}
+
+    var result: Dictionary = {}
+    var dictionary: Dictionary = _get_dictionary()
+    for key in dictionary.keys():
+        if item.protoset.get(item.prototype_id).has(key):
+            result[key] = "Reset"
+        else:
+            result[key] = "Remove"
+    return result

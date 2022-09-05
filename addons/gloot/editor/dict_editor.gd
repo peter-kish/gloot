@@ -16,6 +16,7 @@ onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
 
 export(Dictionary) var dictionary: Dictionary setget _set_dictionary
 export(Dictionary) var color_map: Dictionary setget _set_color_map
+export(Dictionary) var remove_title_map: Dictionary setget _set_remove_title_map
 export(Color) var default_color: Color = Color.white setget _set_default_color
 
 
@@ -51,6 +52,11 @@ func _set_dictionary(new_dictionary: Dictionary) -> void:
 
 func _set_color_map(new_color_map: Dictionary) -> void:
     color_map = new_color_map
+    refresh()
+
+
+func _set_remove_title_map(new_remove_title_map: Dictionary) -> void:
+    remove_title_map = new_remove_title_map
     refresh()
 
 
@@ -104,7 +110,7 @@ func _add_key(key: String, color: Color) -> void:
     _add_label(key, color)
     _add_label(GlootVerify.type_names[typeof(dictionary[key])], color)
     _add_line_edit(key)
-    _add_remove_button(key, "Remove")
+    _add_remove_button(key)
 
 
 func _add_label(key: String, color: Color) -> void:
@@ -124,9 +130,11 @@ func _add_line_edit(key: String) -> void:
     grid_container.add_child(line_edit)
 
 
-func _add_remove_button(key: String, title: String) -> void:
+func _add_remove_button(key: String) -> void:
     var button: Button = Button.new()
-    button.text = title
+    button.text = "Remove"
+    if remove_title_map.has(key):
+        button.text = remove_title_map[key]
     button.connect("pressed", self, "_on_remove_button", [key])
     grid_container.add_child(button)
 
