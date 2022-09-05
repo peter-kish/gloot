@@ -2,12 +2,14 @@ extends Control
 tool
 
 signal value_changed
+signal value_removed
 
 
 onready var grid_container = $VBoxContainer/GridContainer
 onready var lbl_name = $VBoxContainer/GridContainer/LblTitleName
 onready var lbl_type = $VBoxContainer/GridContainer/LblTitleType
 onready var lbl_value = $VBoxContainer/GridContainer/LblTitleValue
+onready var ctrl_dummy = $VBoxContainer/GridContainer/CtrlDummy
 onready var edt_property_name = $VBoxContainer/HBoxContainer/EdtPropertyName
 onready var opt_type = $VBoxContainer/HBoxContainer/OptType
 onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
@@ -80,7 +82,7 @@ func _clear() -> void:
     opt_type.clear()
 
     for child in grid_container.get_children():
-        if (child == lbl_name) || (child == lbl_type) || (child == lbl_value):
+        if (child == lbl_name) || (child == lbl_type) || (child == lbl_value) || (child == ctrl_dummy):
             continue
         child.queue_free()
 
@@ -102,6 +104,7 @@ func _add_key(key: String, color: Color) -> void:
     _add_label(key, color)
     _add_label(GlootVerify.type_names[typeof(dictionary[key])], color)
     _add_line_edit(key)
+    _add_remove_button(key, "Remove")
 
 
 func _add_label(key: String, color: Color) -> void:
@@ -121,6 +124,13 @@ func _add_line_edit(key: String) -> void:
     grid_container.add_child(line_edit)
 
 
+func _add_remove_button(key: String, title: String) -> void:
+    var button: Button = Button.new()
+    button.text = title
+    button.connect("pressed", self, "_on_remove_button", [key])
+    grid_container.add_child(button)
+
+
 func _on_value_entered(text: String, key: String, line_edit: LineEdit) -> void:
     var new_value = str2var(text)
     if typeof(new_value) != typeof(dictionary[key]):
@@ -128,4 +138,10 @@ func _on_value_entered(text: String, key: String, line_edit: LineEdit) -> void:
         return
     dictionary[key] = new_value
     emit_signal("value_changed", key, new_value)
+    refresh()
+
+
+func _on_remove_button(key: String) -> void:
+    dictionary.erase(key)
+    emit_signal("value_removed", key)
     refresh()

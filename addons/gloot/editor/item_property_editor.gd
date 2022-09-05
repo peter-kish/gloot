@@ -17,6 +17,7 @@ func _init() -> void:
     set_bottom_editor(_dict_editor)
     _refresh_dict_editor()
     _dict_editor.connect("value_changed", self, "_on_value_changed")
+    _dict_editor.connect("value_removed", self, "_on_value_removed")
 
 
 func _ready() -> void:
@@ -40,6 +41,18 @@ func _on_value_changed(key: String, new_value) -> void:
     gloot_undo_redo.set_item_properties(item, new_properties)
 
     _refresh_dict_editor()
+
+
+func _on_value_removed(key: String) -> void:
+    var item: InventoryItem = get_edited_object()
+    var new_properties = item.properties.duplicate()
+    new_properties.erase(key)
+
+    _refresh_dict_editor()
+    if new_properties.hash() == item.properties.hash():
+        return
+
+    gloot_undo_redo.set_item_properties(item, new_properties)
 
 
 func update_property() -> void:

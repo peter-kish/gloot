@@ -18,7 +18,7 @@ margin_right = 1024.0
 margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-columns = 3
+columns = 4
 
 [node name="LblTitleName" type="Label" parent="VBoxContainer/GridContainer"]
 margin_right = 38.0
@@ -40,20 +40,28 @@ margin_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Value"
 
+[node name="CtrlDummy" type="Control" parent="VBoxContainer/GridContainer"]
+margin_left = 115.0
+margin_right = 115.0
+margin_bottom = 14.0
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 576.0
 margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
-margin_right = 950.0
+margin_right = 914.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
-margin_left = 954.0
+margin_left = 918.0
 margin_right = 983.0
 margin_bottom = 24.0
+text = "String"
+items = [ "bool", null, false, 1, null, "int", null, false, 2, null, "float", null, false, 3, null, "String", null, false, 4, null, "Vector2", null, false, 5, null, "Rect2", null, false, 6, null, "Vector3", null, false, 7, null, "Transform2D", null, false, 8, null, "Plane", null, false, 9, null, "Quat", null, false, 10, null, "AABB", null, false, 11, null, "Basis", null, false, 12, null, "Transform", null, false, 13, null, "Color", null, false, 14, null, "NodePath", null, false, 15, null, "RID", null, false, 16, null, "Object", null, false, 17, null, "Dictionary", null, false, 18, null, "Array", null, false, 19, null, "PoolByteArray", null, false, 20, null, "PoolIntArray", null, false, 21, null, "PoolRealArray", null, false, 22, null, "PoolStringArray", null, false, 23, null, "PoolVector2Array", null, false, 24, null, "PoolVector3Array", null, false, 25, null, "PoolColorArray", null, false, 26, null ]
+selected = 3
 
 [node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_left = 987.0
