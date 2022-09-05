@@ -10,6 +10,7 @@ export(Resource) var protoset: Resource setget _set_prototset
 export(String) var prototype_id: String setget _set_prototype_id
 export(Dictionary) var properties: Dictionary setget _set_properties
 var _inventory: Node
+var _inventory_script = load("res://addons/gloot/inventory.gd")
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -60,6 +61,9 @@ func reset_properties() -> void:
 
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
+        if !(get_parent() is _inventory_script):
+            _inventory = null
+            return
         _inventory = get_parent()
         var inv_item_protoset = get_parent().get("item_protoset")
         if inv_item_protoset:
@@ -71,12 +75,12 @@ func _notification(what):
 
 
 func _emit_removed(obj: Object):
-    if obj.has_signal("item_removed"):
+    if obj && obj.has_signal("item_removed"):
         obj.emit_signal("item_removed", self)
 
 
 func _emit_added(obj: Object):
-    if obj.has_signal("item_added"):
+    if obj && obj.has_signal("item_added"):
         obj.emit_signal("item_added", self)
 
 
