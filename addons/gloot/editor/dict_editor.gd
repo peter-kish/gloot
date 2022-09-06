@@ -5,11 +5,11 @@ signal value_changed
 signal value_removed
 
 
-onready var grid_container = $VBoxContainer/GridContainer
-onready var lbl_name = $VBoxContainer/GridContainer/LblTitleName
-onready var lbl_type = $VBoxContainer/GridContainer/LblTitleType
-onready var lbl_value = $VBoxContainer/GridContainer/LblTitleValue
-onready var ctrl_dummy = $VBoxContainer/GridContainer/CtrlDummy
+onready var grid_container = $VBoxContainer/ScrollContainer/GridContainer
+onready var lbl_name = $VBoxContainer/ScrollContainer/GridContainer/LblTitleName
+onready var lbl_type = $VBoxContainer/ScrollContainer/GridContainer/LblTitleType
+onready var lbl_value = $VBoxContainer/ScrollContainer/GridContainer/LblTitleValue
+onready var ctrl_dummy = $VBoxContainer/ScrollContainer/GridContainer/CtrlDummy
 onready var edt_property_name = $VBoxContainer/HBoxContainer/EdtPropertyName
 onready var opt_type = $VBoxContainer/HBoxContainer/OptType
 onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd

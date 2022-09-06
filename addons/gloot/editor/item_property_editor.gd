@@ -3,29 +3,58 @@ extends EditorProperty
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.green
+const POPUP_SIZE = Vector2(600, 300)
+const POPUP_MARGIN = 10
 var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
 var gloot_undo_redo = null
 var editor_interface: EditorInterface
+var _window_dialog: WindowDialog
+var _btn_prototype_id: Button
 
 
 func _init() -> void:
-    rect_min_size.y = 200
-
     _dict_editor = DictEditor.instance()
-    add_child(_dict_editor)
-    add_focusable(_dict_editor)
-    set_bottom_editor(_dict_editor)
-    _refresh_dict_editor()
     _dict_editor.connect("value_changed", self, "_on_value_changed")
     _dict_editor.connect("value_removed", self, "_on_value_removed")
 
+    _window_dialog = WindowDialog.new()
+    _window_dialog.window_title = "Edit Item Properties"
+    _window_dialog.resizable = true
+    _window_dialog.rect_size = POPUP_SIZE
+    _window_dialog.rect_min_size = POPUP_SIZE
+    add_child(_window_dialog)
+
+    var _margin_container = MarginContainer.new()
+    _margin_container.margin_bottom = -POPUP_MARGIN
+    _margin_container.margin_left = POPUP_MARGIN
+    _margin_container.margin_right = -POPUP_MARGIN
+    _margin_container.margin_top = POPUP_MARGIN
+    _margin_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    _margin_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _margin_container.anchor_bottom = 1.0
+    _margin_container.anchor_right = 1.0
+    _margin_container.add_child(_dict_editor)
+    _window_dialog.add_child(_margin_container)
+
+    _btn_prototype_id = Button.new()
+    _btn_prototype_id.text = "Edit Properties"
+    _btn_prototype_id.connect("pressed", self, "_on_btn_edit")
+    add_child(_btn_prototype_id)
+
+    _refresh_dict_editor()
+
 
 func _ready() -> void:
+    _btn_prototype_id.icon = EditorIcons.get_icon(editor_interface, "Edit")
     var item: InventoryItem = get_edited_object()
     if item:
         item.connect("properties_changed", self, "update_property")
+
+
+func _on_btn_edit() -> void:
+    _window_dialog.popup_centered(POPUP_SIZE)
 
 
 func _on_value_changed(key: String, new_value) -> void:
