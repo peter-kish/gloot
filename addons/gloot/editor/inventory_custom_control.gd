@@ -1,6 +1,7 @@
 extends Control
 tool
 
+const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 
 onready var hsplit_container = $HSplitContainer
 onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
@@ -84,25 +85,15 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 func _ready() -> void:
     _apply_editor_settings()
 
-    prototype_id_filter.pick_icon = _get_editor_icon("Add")
-    prototype_id_filter.filter_icon = _get_editor_icon("Search")
-    btn_edit.icon = _get_editor_icon("Edit")
-    btn_remove.icon = _get_editor_icon("Remove")
+    prototype_id_filter.pick_icon = EditorIcons.get_icon(editor_interface, "Add")
+    prototype_id_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
+    btn_edit.icon = EditorIcons.get_icon(editor_interface, "Edit")
+    btn_remove.icon = EditorIcons.get_icon(editor_interface, "Remove")
 
     prototype_id_filter.connect("choice_picked", self, "_on_prototype_id_picked")
     btn_edit.connect("pressed", self, "_on_btn_edit")
     btn_remove.connect("pressed", self, "_on_btn_remove")
     _refresh()
-
-
-# TODO: Move this function to a common place, as it is used by item_prototype_id_editor.gd too.
-func _get_editor_icon(name: String) -> Texture:
-    if editor_interface:
-        var gui = editor_interface.get_base_control()
-        var icon = gui.get_icon(name, "EditorIcons")
-        return icon
-
-    return null
 
 
 func _on_prototype_id_picked(index: int) -> void:
