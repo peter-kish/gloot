@@ -4,6 +4,21 @@ tool
 signal value_changed
 signal value_removed
 
+const supported_types: Array = [
+    TYPE_BOOL,
+    TYPE_INT,
+    TYPE_REAL,
+    TYPE_STRING,
+    TYPE_VECTOR2,
+    TYPE_RECT2,
+    TYPE_VECTOR3,
+    TYPE_TRANSFORM2D,
+    TYPE_PLANE,
+    TYPE_QUAT,
+    TYPE_AABB,
+    TYPE_TRANSFORM,
+    TYPE_COLOR,
+]
 
 onready var grid_container = $VBoxContainer/ScrollContainer/GridContainer
 onready var lbl_name = $VBoxContainer/ScrollContainer/GridContainer/LblTitleName
@@ -78,9 +93,9 @@ func refresh() -> void:
 
 
 func _refresh_add_property() -> void:
-    for i in range(1, GlootVerify.type_names.size()):
-        opt_type.add_item(GlootVerify.type_names[i], i)
-    opt_type.select(TYPE_STRING - 1)
+    for type in supported_types:
+        opt_type.add_item(GlootVerify.type_names[type], type)
+    opt_type.select(supported_types.find(TYPE_STRING))
 
 
 func _clear() -> void:
