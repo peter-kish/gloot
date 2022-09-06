@@ -6,6 +6,7 @@ var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
 var gloot_undo_redo = null
+var editor_interface: EditorInterface
 
 
 func _init() -> void:
@@ -67,9 +68,11 @@ func update_property() -> void:
 
 
 func _refresh_dict_editor() -> void:
+    if _dict_editor.btn_add:
+        _dict_editor.btn_add.icon = _get_editor_icon("Add")
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
-    _dict_editor.remove_title_map = _get_remove_title_map()
+    _dict_editor.remove_button_map = _get_remove_button_map()
     _dict_editor.refresh()
 
 
@@ -107,7 +110,7 @@ func _get_color_map() -> Dictionary:
     return result
             
 
-func _get_remove_title_map() -> Dictionary:
+func _get_remove_button_map() -> Dictionary:
     if !get_edited_object():
         return {}
 
@@ -118,8 +121,23 @@ func _get_remove_title_map() -> Dictionary:
     var result: Dictionary = {}
     var dictionary: Dictionary = _get_dictionary()
     for key in dictionary.keys():
+        result[key] = {}
         if item.protoset.get(item.prototype_id).has(key):
-            result[key] = "Reset"
+            result[key]["text"] = ""
+            result[key]["icon"] = _get_editor_icon("Reload")
         else:
-            result[key] = "Remove"
+            result[key]["text"] = ""
+            result[key]["icon"] = _get_editor_icon("Remove")
+
+        result[key]["disabled"] = (not key in item.properties)
     return result
+
+
+# TODO: Move this function to a common place, as it is used by inventory_custom_control.gd too.
+func _get_editor_icon(name: String) -> Texture:
+    if editor_interface:
+        var gui = editor_interface.get_base_control()
+        var icon = gui.get_icon(name, "EditorIcons")
+        return icon
+
+    return null

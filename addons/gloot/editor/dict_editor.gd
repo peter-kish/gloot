@@ -16,7 +16,7 @@ onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
 
 export(Dictionary) var dictionary: Dictionary setget _set_dictionary
 export(Dictionary) var color_map: Dictionary setget _set_color_map
-export(Dictionary) var remove_title_map: Dictionary setget _set_remove_title_map
+export(Dictionary) var remove_button_map: Dictionary setget _set_remove_button_map
 export(Color) var default_color: Color = Color.white setget _set_default_color
 
 
@@ -55,8 +55,8 @@ func _set_color_map(new_color_map: Dictionary) -> void:
     refresh()
 
 
-func _set_remove_title_map(new_remove_title_map: Dictionary) -> void:
-    remove_title_map = new_remove_title_map
+func _set_remove_button_map(new_remove_button_map: Dictionary) -> void:
+    remove_button_map = new_remove_button_map
     refresh()
 
 
@@ -133,8 +133,10 @@ func _add_line_edit(key: String) -> void:
 func _add_remove_button(key: String) -> void:
     var button: Button = Button.new()
     button.text = "Remove"
-    if remove_title_map.has(key):
-        button.text = remove_title_map[key]
+    if remove_button_map.has(key):
+        button.text = remove_button_map[key].text
+        button.disabled = remove_button_map[key].disabled
+        button.icon = remove_button_map[key].icon
     button.connect("pressed", self, "_on_remove_button", [key])
     grid_container.add_child(button)
 

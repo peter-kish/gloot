@@ -40,6 +40,7 @@ func parse_property(object, type, path, hint, hint_text, usage) -> bool:
     if (object is InventoryItem) && path == "properties":
         var item_property_editor =ItemPropertyEditor.new()
         item_property_editor.gloot_undo_redo = gloot_undo_redo
+        item_property_editor.editor_interface = editor_interface
         add_property_editor(path, item_property_editor)
         return true
     if (object is InventoryItem) && path == "prototype_id":
