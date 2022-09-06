@@ -1,6 +1,7 @@
 extends EditorProperty
 
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
+const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.green
 var _dict_editor: Control
 var current_value: Dictionary
@@ -69,7 +70,7 @@ func update_property() -> void:
 
 func _refresh_dict_editor() -> void:
     if _dict_editor.btn_add:
-        _dict_editor.btn_add.icon = _get_editor_icon("Add")
+        _dict_editor.btn_add.icon = EditorIcons.get_icon(editor_interface, "Add")
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
     _dict_editor.remove_button_map = _get_remove_button_map()
@@ -124,20 +125,11 @@ func _get_remove_button_map() -> Dictionary:
         result[key] = {}
         if item.protoset.get(item.prototype_id).has(key):
             result[key]["text"] = ""
-            result[key]["icon"] = _get_editor_icon("Reload")
+            result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Reload")
         else:
             result[key]["text"] = ""
-            result[key]["icon"] = _get_editor_icon("Remove")
+            result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Remove")
 
         result[key]["disabled"] = (not key in item.properties)
     return result
 
-
-# TODO: Move this function to a common place, as it is used by inventory_custom_control.gd too.
-func _get_editor_icon(name: String) -> Texture:
-    if editor_interface:
-        var gui = editor_interface.get_base_control()
-        var icon = gui.get_icon(name, "EditorIcons")
-        return icon
-
-    return null

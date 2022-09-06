@@ -2,6 +2,7 @@ extends EditorProperty
 
 
 const ChoiceFilter = preload("res://addons/gloot/editor/choice_filter.tscn")
+const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const POPUP_SIZE = Vector2(300, 300)
 const POPUP_MARGIN = 10
 var current_value: String
@@ -44,20 +45,10 @@ func _init() -> void:
 
 
 func _ready() -> void:
-    _choice_filter.filter_icon = _get_editor_icon("Search")
+    _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
     var item: InventoryItem = get_edited_object()
     item.connect("prototype_id_changed", self, "_on_prototype_id_changed")
     _refresh_button()
-
-
-# TODO: Move this function to a common place, as it is used by inventory_custom_control.gd too.
-func _get_editor_icon(name: String) -> Texture:
-    if editor_interface:
-        var gui = editor_interface.get_base_control()
-        var icon = gui.get_icon(name, "EditorIcons")
-        return icon
-
-    return null
 
 
 func _on_btn_prototype_id() -> void:

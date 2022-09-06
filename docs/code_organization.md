@@ -39,6 +39,7 @@ Contains code that implements the inspector plugin and UI controls that will be 
 * [`choice_filter_test.tscn`](../addons/gloot/editor/choice_filter_test.tscn) - A scene for testing [`choice_filter.gd`](../addons/gloot/editor/choice_filter.gd) and [`choice_filter.tscn`](../addons/gloot/editor/choice_filter.tscn).
 * [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd) and [`dict_editor.tscn`](../addons/gloot/editor/dict_editor.tscn) - Implements a UI control for editing dictionaries. Used for editing [`InventoryItem`](./inventory_item.md) properties.
 * [`dict_editor_test.tscn`](../addons/gloot/editor/dict_editor_test.tscn) - A scene for testing [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd) and [`dict_editor.tscn`](../addons/gloot/editor/dict_editor.tscn).
+* [`editor_icons.gd`](../addons/gloot/editor/editor_icons.gd) - A script for obtaining built-in editor icons.
 * [`gloot_undo_redo.gd`](../addons/gloot/editor/gloot_undo_redo.gd) - Implements editor actions as undoable and redoable operations.
 * [`inventory_custom_control.gd`](../addons/gloot/editor/inventory_custom_control.gd) and [`inventory_custom_control.tscn`](../addons/gloot/editor/inventory_custom_control.tscn) - Implements a custom control for editing [`Inventory`](./inventory.md) nodes.
 * [`item_property_editor.gd`](../addons/gloot/editor/item_property_editor.gd) - Implements an [`EditorProperty`](https://docs.godotengine.org/en/stable/classes/class_editorproperty.html) for editing [`InventoryItem`](./inventory_item.md) properties.
