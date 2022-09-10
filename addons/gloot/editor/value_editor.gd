@@ -29,7 +29,9 @@ func _add_control() -> void:
 
     match type:
         TYPE_COLOR:
-            _create_color_picker();
+            _create_color_picker()
+        TYPE_BOOL:
+            _create_checkbox()
         _:
             _add_line_edit()
 
@@ -65,4 +67,19 @@ func _create_color_picker() -> void:
 
 func _on_color_picked(picker: ColorPickerButton) -> void:
     value = picker.color
+    emit_signal("value_changed", value)
+
+
+func _create_checkbox() -> void:
+    var checkbox: CheckButton = CheckButton.new()
+    checkbox.pressed = value
+    checkbox.size_flags_horizontal = SIZE_EXPAND_FILL
+    checkbox.anchor_right = 1.0
+    checkbox.anchor_bottom = 1.0
+    checkbox.connect("pressed", self, "_on_checkbox", [checkbox])
+    add_child(checkbox)
+
+
+func _on_checkbox(checkbox: CheckButton) -> void:
+    value = checkbox.pressed
     emit_signal("value_changed", value)
