@@ -4,6 +4,7 @@ signal value_changed
 
 var values: Array = [] setget _set_values
 var titles: Array = [] setget _set_titles
+var enabled: bool = true
 
 
 func _set_values(new_values: Array) -> void:
@@ -33,6 +34,7 @@ func _ready() -> void:
         line_edit.text = var2str(values[i])
         line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
         line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit, i])
+        line_edit.editable = enabled
         hbox.add_child(line_edit)
 
         add_child(hbox)

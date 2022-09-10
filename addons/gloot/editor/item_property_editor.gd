@@ -6,6 +6,8 @@ const COLOR_OVERRIDDEN = Color.green
 const POPUP_SIZE = Vector2(800, 300)
 const POPUP_MIN_SIZE = Vector2(400, 200)
 const POPUP_MARGIN = 10
+const IMMUTABLE_KEYS = [ItemProtoset.KEY_ID, InventoryGrid.KEY_GRID_POSITION]
+
 var _dict_editor: Control
 var current_value: Dictionary
 var updating: bool = false
@@ -104,6 +106,7 @@ func _refresh_dict_editor() -> void:
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
     _dict_editor.remove_button_map = _get_remove_button_map()
+    _dict_editor.immutable_keys = IMMUTABLE_KEYS
     _dict_editor.refresh()
 
 
@@ -160,6 +163,6 @@ func _get_remove_button_map() -> Dictionary:
             result[key]["text"] = ""
             result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Remove")
 
-        result[key]["disabled"] = (not key in item.properties)
+        result[key]["disabled"] = (not key in item.properties) or (key in IMMUTABLE_KEYS)
     return result
 

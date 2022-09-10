@@ -5,6 +5,7 @@ signal value_changed
 const MultifloatEditor = preload("res://addons/gloot/editor/multifloat_editor.gd")
 
 var value setget _set_value
+var enabled: bool = true
 
 
 func _set_value(new_value) -> void:
@@ -56,6 +57,7 @@ func _add_control() -> void:
 func _create_line_edit() -> LineEdit:
     var line_edit: LineEdit = LineEdit.new()
     line_edit.text = var2str(value)
+    line_edit.editable = enabled
     _expand_control(line_edit)
     line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit])
     return line_edit
@@ -73,6 +75,7 @@ func _on_line_edit_value_entered(text: String, line_edit: LineEdit) -> void:
 func _create_color_picker() -> ColorPickerButton:
     var picker: ColorPickerButton = ColorPickerButton.new()
     picker.color = value
+    picker.disabled = !enabled
     _expand_control(picker)
     picker.connect("popup_closed", self, "_on_color_picked", [picker])
     return picker
@@ -86,6 +89,7 @@ func _on_color_picked(picker: ColorPickerButton) -> void:
 func _create_checkbox() -> CheckButton:
     var checkbox: CheckButton = CheckButton.new()
     checkbox.pressed = value
+    checkbox.disabled = !enabled
     _expand_control(checkbox)
     checkbox.connect("pressed", self, "_on_checkbox", [checkbox])
     return checkbox
@@ -99,7 +103,7 @@ func _on_checkbox(checkbox: CheckButton) -> void:
 func _create_v2_editor() -> Control:
     var values = [value.x, value.y]
     var titles = ["X", "Y"]
-    var v2_editor = _create_multifloat_editor(2, values, titles, "_on_v2_value_changed")
+    var v2_editor = _create_multifloat_editor(2, enabled, values, titles, "_on_v2_value_changed")
     return v2_editor
 
 
@@ -112,7 +116,7 @@ func _on_v2_value_changed(_idx: int, v2_editor: Control) -> void:
 func _create_v3_editor() -> Control:
     var values = [value.x, value.y, value.z]
     var titles = ["X", "Y", "Z"]
-    var v3_editor = _create_multifloat_editor(3, values, titles, "_on_v3_value_changed")
+    var v3_editor = _create_multifloat_editor(3, enabled, values, titles, "_on_v3_value_changed")
     return v3_editor
 
 
@@ -126,7 +130,7 @@ func _on_v3_value_changed(_idx: int, v3_editor: Control) -> void:
 func _create_r2_editor() -> Control:
     var values = [value.position.x, value.position.y, value.size.x, value.size.y]
     var titles = ["Position X", "Position Y", "Size X", "Size Y"]
-    var r2_editor = _create_multifloat_editor(2, values, titles, "_on_r2_value_changed")
+    var r2_editor = _create_multifloat_editor(2, enabled, values, titles, "_on_r2_value_changed")
     return r2_editor
 
 
@@ -141,8 +145,8 @@ func _on_r2_value_changed(_idx: int, r2_editor: Control) -> void:
 func _create_plane_editor() -> Control:
     var values = [value.x, value.y, value.z, value.d]
     var titles = ["X", "Y", "Z", "D"]
-    var plane_editor = _create_multifloat_editor(2, values, titles, "_on_plane_value_changed")
-    return plane_editor
+    var editor = _create_multifloat_editor(2, enabled, values, titles, "_on_plane_value_changed")
+    return editor
 
 
 func _on_plane_value_changed(_idx: int, plane_editor: Control) -> void:
@@ -156,8 +160,8 @@ func _on_plane_value_changed(_idx: int, plane_editor: Control) -> void:
 func _create_quat_editor() -> Control:
     var values = [value.x, value.y, value.z, value.w]
     var titles = ["X", "Y", "Z", "W"]
-    var quat_editor = _create_multifloat_editor(2, values, titles, "_on_quat_value_changed")
-    return quat_editor
+    var editor = _create_multifloat_editor(2, enabled, values, titles, "_on_quat_value_changed")
+    return editor
 
 
 func _on_quat_value_changed(_idx: int, quat_editor: Control) -> void:
@@ -169,10 +173,11 @@ func _on_quat_value_changed(_idx: int, quat_editor: Control) -> void:
 
 
 func _create_aabb_editor() -> Control:
-    var values = [value.position.x, value.position.y, value.position.z, value.size.x, value.size.y, value.size.z]
+    var values = [value.position.x, value.position.y, value.position.z, \
+        value.size.x, value.size.y, value.size.z]
     var titles = ["Position X", "Position Y", "Position Z", "Size X", "Size Y", "Size Z"]
-    var aabb_editor = _create_multifloat_editor(3, values, titles, "_on_aabb_value_changed")
-    return aabb_editor
+    var editor = _create_multifloat_editor(3, enabled, values, titles, "_on_aabb_value_changed")
+    return editor
 
 
 func _on_aabb_value_changed(_idx: int, aabb_editor: Control) -> void:
@@ -187,6 +192,7 @@ func _on_aabb_value_changed(_idx: int, aabb_editor: Control) -> void:
 
 func _create_multifloat_editor(
         columns: int,
+        enabled: bool,
         values: Array,
         titles: Array,
         value_changed_handler: String) -> Control:
@@ -194,6 +200,7 @@ func _create_multifloat_editor(
     multifloat_editor.columns = columns
     multifloat_editor.values = values
     multifloat_editor.titles = titles
+    multifloat_editor.enabled = enabled
     _expand_control(multifloat_editor)
     multifloat_editor.connect("value_changed", self, value_changed_handler, [multifloat_editor])
     return multifloat_editor

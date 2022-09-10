@@ -32,6 +32,7 @@ onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
 export(Dictionary) var dictionary: Dictionary setget _set_dictionary
 export(Dictionary) var color_map: Dictionary setget _set_color_map
 export(Dictionary) var remove_button_map: Dictionary setget _set_remove_button_map
+export(Array) var immutable_keys: Array setget _set_immutable_keys
 export(Color) var default_color: Color = Color.white setget _set_default_color
 
 
@@ -72,6 +73,11 @@ func _set_color_map(new_color_map: Dictionary) -> void:
 
 func _set_remove_button_map(new_remove_button_map: Dictionary) -> void:
     remove_button_map = new_remove_button_map
+    refresh()
+
+
+func _set_immutable_keys(new_immutable_keys: Array) -> void:
+    immutable_keys = new_immutable_keys
     refresh()
 
 
@@ -140,6 +146,7 @@ func _add_value_editor(key: String) -> void:
     var value_editor: Control = ValueEditor.new()
     value_editor.value = dictionary[key]
     value_editor.size_flags_horizontal = SIZE_EXPAND_FILL
+    value_editor.enabled = (not key in immutable_keys)
     value_editor.connect("value_changed", self, "_on_value_changed", [key, value_editor])
     grid_container.add_child(value_editor)
 
