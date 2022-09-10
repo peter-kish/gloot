@@ -14,11 +14,9 @@ const supported_types: Array = [
     TYPE_VECTOR2,
     TYPE_RECT2,
     TYPE_VECTOR3,
-    TYPE_TRANSFORM2D,
     TYPE_PLANE,
     TYPE_QUAT,
     TYPE_AABB,
-    TYPE_TRANSFORM,
     TYPE_COLOR,
 ]
 

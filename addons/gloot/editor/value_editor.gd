@@ -41,6 +41,12 @@ func _add_control() -> void:
             control = _create_v3_editor()
         TYPE_RECT2:
             control = _create_r2_editor()
+        TYPE_PLANE:
+            control = _create_plane_editor()
+        TYPE_QUAT:
+            control = _create_quat_editor()
+        TYPE_AABB:
+            control = _create_aabb_editor()
         _:
             control = _create_line_edit()
 
@@ -129,6 +135,53 @@ func _on_r2_value_changed(_idx: int, r2_editor: Control) -> void:
     value.position.y = r2_editor.values[1]
     value.size.x = r2_editor.values[2]
     value.size.y = r2_editor.values[3]
+    emit_signal("value_changed")
+
+
+func _create_plane_editor() -> Control:
+    var values = [value.x, value.y, value.z, value.d]
+    var titles = ["X", "Y", "Z", "D"]
+    var plane_editor = _create_multifloat_editor(2, values, titles, "_on_plane_value_changed")
+    return plane_editor
+
+
+func _on_plane_value_changed(_idx: int, plane_editor: Control) -> void:
+    value.x = plane_editor.values[0]
+    value.y = plane_editor.values[1]
+    value.z = plane_editor.values[2]
+    value.d = plane_editor.values[3]
+    emit_signal("value_changed")
+
+
+func _create_quat_editor() -> Control:
+    var values = [value.x, value.y, value.z, value.w]
+    var titles = ["X", "Y", "Z", "W"]
+    var quat_editor = _create_multifloat_editor(2, values, titles, "_on_quat_value_changed")
+    return quat_editor
+
+
+func _on_quat_value_changed(_idx: int, quat_editor: Control) -> void:
+    value.x = quat_editor.values[0]
+    value.y = quat_editor.values[1]
+    value.z = quat_editor.values[2]
+    value.d = quat_editor.values[3]
+    emit_signal("value_changed")
+
+
+func _create_aabb_editor() -> Control:
+    var values = [value.position.x, value.position.y, value.position.z, value.size.x, value.size.y, value.size.z]
+    var titles = ["Position X", "Position Y", "Position Z", "Size X", "Size Y", "Size Z"]
+    var aabb_editor = _create_multifloat_editor(3, values, titles, "_on_aabb_value_changed")
+    return aabb_editor
+
+
+func _on_aabb_value_changed(_idx: int, aabb_editor: Control) -> void:
+    value.position.x = aabb_editor.values[0]
+    value.position.y = aabb_editor.values[1]
+    value.position.z = aabb_editor.values[2]
+    value.size.x = aabb_editor.values[3]
+    value.size.y = aabb_editor.values[4]
+    value.size.z = aabb_editor.values[5]
     emit_signal("value_changed")
 
 
