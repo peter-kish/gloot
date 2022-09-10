@@ -210,7 +210,7 @@ if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
 ```
 
-Item properties can also be modified and overridden using the inspector when an `InventoryItem` is selected. Properties marked with green color represent overridden properties.
+Item properties can also be modified and overridden using the inspector when an `InventoryItem` is selected. Properties marked with green color represent overridden properties. Some properties are disabled for editing, as they are managed by the plugin itself (for example `id` and `grid_position`).
 
 ![](images/screenshots/ss_inspector_inventory_item.png "Editing InventoryItem Properties")
 
