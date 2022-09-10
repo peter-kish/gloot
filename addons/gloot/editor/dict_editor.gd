@@ -146,9 +146,9 @@ func _add_value_editor(key: String) -> void:
     grid_container.add_child(value_editor)
 
 
-func _on_value_changed(new_value, key: String, value_editor: Control) -> void:
-    dictionary[key] = new_value
-    emit_signal("value_changed", key, new_value)
+func _on_value_changed(key: String, value_editor: Control) -> void:
+    dictionary[key] = value_editor.value
+    emit_signal("value_changed", key, value_editor.value)
 
 
 func _add_remove_button(key: String) -> void:
