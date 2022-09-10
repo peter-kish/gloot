@@ -5,6 +5,7 @@ signal value_changed
 signal value_removed
 
 const Verify = preload("res://addons/gloot/verify.gd")
+const ValueEditor = preload("res://addons/gloot/editor/value_editor.gd")
 const supported_types: Array = [
     TYPE_BOOL,
     TYPE_INT,
@@ -125,7 +126,7 @@ func _add_key(key: String, color: Color) -> void:
     var value = dictionary[key]
     _add_label(key, color)
     _add_label(Verify.type_names[typeof(dictionary[key])], color)
-    _add_line_edit(key)
+    _add_value_editor(key)
     _add_remove_button(key)
 
 
@@ -137,13 +138,17 @@ func _add_label(key: String, color: Color) -> void:
     grid_container.add_child(label)
 
 
-func _add_line_edit(key: String) -> void:
-    var line_edit: LineEdit = LineEdit.new()
-    var value = dictionary[key]
-    line_edit.text = var2str(value)
-    line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
-    line_edit.connect("text_entered", self, "_on_value_entered", [key, line_edit])
-    grid_container.add_child(line_edit)
+func _add_value_editor(key: String) -> void:
+    var value_editor: Control = ValueEditor.new()
+    value_editor.value = dictionary[key]
+    value_editor.size_flags_horizontal = SIZE_EXPAND_FILL
+    value_editor.connect("value_changed", self, "_on_value_changed", [key, value_editor])
+    grid_container.add_child(value_editor)
+
+
+func _on_value_changed(new_value, key: String, value_editor: Control) -> void:
+    dictionary[key] = new_value
+    emit_signal("value_changed", key, new_value)
 
 
 func _add_remove_button(key: String) -> void:
@@ -155,16 +160,6 @@ func _add_remove_button(key: String) -> void:
         button.icon = remove_button_map[key].icon
     button.connect("pressed", self, "_on_remove_button", [key])
     grid_container.add_child(button)
-
-
-func _on_value_entered(text: String, key: String, line_edit: LineEdit) -> void:
-    var new_value = str2var(text)
-    if typeof(new_value) != typeof(dictionary[key]):
-        line_edit.text = var2str(dictionary[key])
-        return
-    dictionary[key] = new_value
-    emit_signal("value_changed", key, new_value)
-    refresh()
 
 
 func _on_remove_button(key: String) -> void:
