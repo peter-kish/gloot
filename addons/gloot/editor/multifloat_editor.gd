@@ -34,14 +34,19 @@ func _ready() -> void:
         line_edit.text = var2str(values[i])
         line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
         line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit, i])
+        line_edit.connect("focus_exited", self, "_on_line_edit_focus_exited", [line_edit, i])
         line_edit.editable = enabled
         hbox.add_child(line_edit)
 
         add_child(hbox)
 
 
-func _on_line_edit_value_entered(text: String, line_edit: LineEdit, idx: int) -> void:
-    var value = str2var(text)
+func _on_line_edit_value_entered(_text: String, line_edit: LineEdit, idx: int) -> void:
+    _on_line_edit_focus_exited(line_edit, idx)
+
+
+func _on_line_edit_focus_exited(line_edit: LineEdit, idx: int) -> void:
+    var value = str2var(line_edit.text)
     if typeof(value) != TYPE_REAL:
         line_edit.text = var2str(values[idx])
         return

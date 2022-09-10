@@ -60,11 +60,16 @@ func _create_line_edit() -> LineEdit:
     line_edit.editable = enabled
     _expand_control(line_edit)
     line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit])
+    line_edit.connect("focus_exited", self, "_on_line_edit_focus_exited", [line_edit])
     return line_edit
 
 
-func _on_line_edit_value_entered(text: String, line_edit: LineEdit) -> void:
-    var new_value = str2var(text)
+func _on_line_edit_value_entered(_text: String, line_edit: LineEdit) -> void:
+    _on_line_edit_focus_exited(line_edit)
+
+
+func _on_line_edit_focus_exited(line_edit: LineEdit) -> void:
+    var new_value = str2var(line_edit.text)
     if typeof(new_value) != typeof(value):
         line_edit.text = var2str(value)
         return
