@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends GridContainer
 
 signal value_changed
 
@@ -18,17 +18,24 @@ func _set_titles(new_titles: Array) -> void:
 
 func _ready() -> void:
     for i in values.size():
-        if i < titles.size():
+        var hbox: HBoxContainer = HBoxContainer.new()
+        hbox.size_flags_horizontal = SIZE_EXPAND_FILL
 
+        if i < titles.size():
             var label: Label = Label.new()
             label.text = "%s:" % titles[i]
-            add_child(label)
+            hbox.add_child(label)
+        else:
+            var dummy: Control = Control.new()
+            hbox.add_child(dummy)
 
         var line_edit: LineEdit = LineEdit.new()
         line_edit.text = var2str(values[i])
         line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
         line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit, i])
-        add_child(line_edit)
+        hbox.add_child(line_edit)
+
+        add_child(hbox)
 
 
 func _on_line_edit_value_entered(text: String, line_edit: LineEdit, idx: int) -> void:
