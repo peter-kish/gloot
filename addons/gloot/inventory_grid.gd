@@ -81,7 +81,7 @@ func _is_sorted() -> bool:
 func _on_item_added(item: InventoryItem) -> void:
     if !rect_free(get_item_rect(item), item):
         var free_place = find_free_place(item)
-        if GlootVerify.vector_positive(free_place):
+        if Verify.vector_positive(free_place):
             move_item_to(item, free_place)
     
     _sort_if_needed()
@@ -131,7 +131,7 @@ func add_item(item: InventoryItem) -> bool:
         return add_item_at(item, item_position)
 
     var free_place = find_free_place(item)
-    if !GlootVerify.vector_positive(free_place):
+    if !Verify.vector_positive(free_place):
         return false
 
     return add_item_at(item, free_place)
@@ -237,7 +237,7 @@ func sort() -> bool:
 
     for item in item_array:
         var free_place: Vector2 = find_free_place(item)
-        if !GlootVerify.vector_positive(free_place):
+        if !Verify.vector_positive(free_place):
             return false
         move_item_to(item, free_place)
 
@@ -262,7 +262,7 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_SIZE, TYPE_VECTOR2):
+    if !Verify.dict(source, true, KEY_SIZE, TYPE_VECTOR2):
         return false
 
     reset()

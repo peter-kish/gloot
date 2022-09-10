@@ -1,4 +1,3 @@
-class_name GlootVerify
 
 const type_names: Array = [
     "null",

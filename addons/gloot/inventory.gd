@@ -14,6 +14,7 @@ var _items: Array = []
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_ITEMS: String = "items"
+const Verify = preload("res://addons/gloot/verify.gd")
 
 
 func _get_configuration_warning() -> String:
@@ -200,9 +201,9 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !GlootVerify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
-        !GlootVerify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
+    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
         return false
 
     reset()

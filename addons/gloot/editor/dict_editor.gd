@@ -4,6 +4,7 @@ tool
 signal value_changed
 signal value_removed
 
+const Verify = preload("res://addons/gloot/verify.gd")
 const supported_types: Array = [
     TYPE_BOOL,
     TYPE_INT,
@@ -56,7 +57,7 @@ func _on_text_entered(_new_text: String) -> void:
 func _add_dict_field(name: String, type: int) -> bool:
     if (name.empty() || type < 0 || dictionary.has(name)):
         return false
-    dictionary[name] = GlootVerify.create_var(type)
+    dictionary[name] = Verify.create_var(type)
     return true
 
 
@@ -94,7 +95,7 @@ func refresh() -> void:
 
 func _refresh_add_property() -> void:
     for type in supported_types:
-        opt_type.add_item(GlootVerify.type_names[type], type)
+        opt_type.add_item(Verify.type_names[type], type)
     opt_type.select(supported_types.find(TYPE_STRING))
 
 
@@ -123,7 +124,7 @@ func _add_key(key: String, color: Color) -> void:
 
     var value = dictionary[key]
     _add_label(key, color)
-    _add_label(GlootVerify.type_names[typeof(dictionary[key])], color)
+    _add_label(Verify.type_names[typeof(dictionary[key])], color)
     _add_line_edit(key)
     _add_remove_button(key)
 

@@ -20,6 +20,8 @@ const KEY_NODE_NAME: String = "node_name"
 const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
+const Verify = preload("res://addons/gloot/verify.gd")
+
 
 func _set_prototset(new_protoset: Resource) -> void:
     var old_protoset = protoset
@@ -128,10 +130,10 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !GlootVerify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
-        !GlootVerify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
-        !GlootVerify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
+    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
+        !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()

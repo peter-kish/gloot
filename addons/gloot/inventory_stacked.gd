@@ -236,8 +236,8 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, true, KEY_CAPACITY, TYPE_REAL) ||\
-        !GlootVerify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_REAL):
+    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_REAL) ||\
+        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_REAL):
         return false
 
     reset()

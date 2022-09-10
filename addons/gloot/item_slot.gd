@@ -14,6 +14,7 @@ var item: InventoryItem setget _set_item
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"
+const Verify = preload("res://addons/gloot/verify.gd")
 
 
 func _set_inventory_path(new_inv_path: NodePath) -> void:
@@ -145,8 +146,8 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !GlootVerify.dict(source, false, KEY_INVENTORY, TYPE_NODE_PATH) ||\
-        !GlootVerify.dict(source, false, KEY_ITEM, TYPE_NODE_PATH):
+    if !Verify.dict(source, false, KEY_INVENTORY, TYPE_NODE_PATH) ||\
+        !Verify.dict(source, false, KEY_ITEM, TYPE_NODE_PATH):
         return false
 
     reset()

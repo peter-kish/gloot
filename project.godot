@@ -44,11 +44,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gloot/ctrl_item_slot_ex.gd"
 }, {
-"base": "Reference",
-"class": "GlootVerify",
-"language": "GDScript",
-"path": "res://addons/gloot/verify.gd"
-}, {
 "base": "Node",
 "class": "Inventory",
 "language": "GDScript",
@@ -92,7 +87,6 @@ _global_script_class_icons={
 "CtrlInventoryStacked": "",
 "CtrlItemSlot": "",
 "CtrlItemSlotEx": "",
-"GlootVerify": "",
 "Inventory": "",
 "InventoryGrid": "",
 "InventoryItem": "",
