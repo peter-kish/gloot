@@ -46,6 +46,8 @@ Contains code that implements the inspector plugin and UI controls that will be 
 * [`item_prototype_editor.gd`](../addons/gloot/editor/item_prototype_editor.gd) - Implements an [`EditorProperty`](https://docs.godotengine.org/en/stable/classes/class_editorproperty.html) for editing [`InventoryItem`](./inventory_item.md) prototype IDs.
 * [`item_slot_equipped_item_editor.gd`](../addons/gloot/editor/item_slot_equipped_item_editor.gd) - Implements an [`EditorProperty`](https://docs.godotengine.org/en/stable/classes/class_editorproperty.html) for editing the equipped item of an [`ItemSlot`](./item_slot.md).
 * [`inventory_inspector_plugin.gd`](../addons/gloot/editor/inventory_inspector_plugin.gd) - Implements the GLoot [`EditorInspectorPlugin`](https://docs.godotengine.org/en/stable/classes/class_editorinspectorplugin.html#class-editorinspectorplugin).
+* [`multifloat_editor.gd`](../addons/gloot/editor/multifloat_editor.gd) - Implements a UI control for editing multiple float values (like [`Vector2`](https://docs.godotengine.org/en/stable/classes/class_vector2.html) and [`Vector3`](https://docs.godotengine.org/en/stable/classes/class_vector3.html)). Used by [`value_editor.gd`](../addons/gloot/editor/value_editor.gd).
+* [`value_editor.gd`](../addons/gloot/editor/value_editor.gd) - Implements a UI control for editing a value of arbitrary type. Used by [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd).
 
 ## Examples (`examples`)
 
