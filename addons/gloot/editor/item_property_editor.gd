@@ -3,7 +3,7 @@ extends EditorProperty
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.green
-const POPUP_SIZE = Vector2(600, 300)
+const POPUP_SIZE = Vector2(800, 300)
 const POPUP_MARGIN = 10
 var _dict_editor: Control
 var current_value: Dictionary
