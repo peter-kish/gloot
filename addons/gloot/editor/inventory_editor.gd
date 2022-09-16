@@ -83,8 +83,6 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
-    _apply_editor_settings()
-
     prototype_id_filter.pick_icon = EditorIcons.get_icon(editor_interface, "Add")
     prototype_id_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
     btn_edit.icon = EditorIcons.get_icon(editor_interface, "Edit")
@@ -121,7 +119,3 @@ static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
     editor_interface.get_selection().add_node(node)
     editor_interface.edit_node(node)
 
-
-func _apply_editor_settings() -> void:
-    var control_height: int = ProjectSettings.get_setting("gloot/inspector_control_height")
-    rect_min_size.y = control_height

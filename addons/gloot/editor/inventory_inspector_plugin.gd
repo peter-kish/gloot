@@ -2,7 +2,7 @@ extends EditorInspectorPlugin
 
 signal edit_requested
 
-var InventoryEditor = preload("res://addons/gloot/editor/inventory_editor.tscn")
+var InventoryInspector = preload("res://addons/gloot/editor/inventory_inspector.tscn")
 var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")
 var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id_editor.gd")
 var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_equipped_item_editor.gd")
@@ -29,11 +29,11 @@ func can_handle(object: Object) -> bool:
 
 func parse_begin(object: Object) -> void:
     if object is Inventory:
-        var inventory_editor = InventoryEditor.instance()
-        inventory_editor.inventory = object
-        inventory_editor.editor_interface = editor_interface
-        inventory_editor.gloot_undo_redo = gloot_undo_redo
-        add_custom_control(inventory_editor)
+        var inventory_inspector = InventoryInspector.instance()
+        inventory_inspector.inventory = object
+        inventory_inspector.editor_interface = editor_interface
+        inventory_inspector.gloot_undo_redo = gloot_undo_redo
+        add_custom_control(inventory_inspector)
 
 
 func parse_property(object, type, path, hint, hint_text, usage) -> bool:
