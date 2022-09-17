@@ -2,6 +2,7 @@ extends EditorInspectorPlugin
 
 signal edit_requested
 
+var EditProtosetButton = preload("res://addons/gloot/editor/edit_protoset_button.tscn")
 var InventoryInspector = preload("res://addons/gloot/editor/inventory_inspector.tscn")
 var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")
 var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id_editor.gd")
@@ -24,7 +25,10 @@ func _init():
 
 
 func can_handle(object: Object) -> bool:
-    return (object is Inventory) || (object is InventoryItem) || (object is ItemSlot)
+    return (object is Inventory) || \
+            (object is InventoryItem) || \
+            (object is ItemSlot) || \
+            (object is ItemProtoset)
 
 
 func parse_begin(object: Object) -> void:
@@ -34,6 +38,10 @@ func parse_begin(object: Object) -> void:
         inventory_inspector.editor_interface = editor_interface
         inventory_inspector.gloot_undo_redo = gloot_undo_redo
         add_custom_control(inventory_inspector)
+    if object is ItemProtoset:
+        var edit_protoset_button = EditProtosetButton.instance()
+        edit_protoset_button.protoset = object
+        add_custom_control(edit_protoset_button)
 
 
 func parse_property(object, type, path, hint, hint_text, usage) -> bool:
