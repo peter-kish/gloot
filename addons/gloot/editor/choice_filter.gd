@@ -2,12 +2,14 @@ extends Control
 tool
 
 signal choice_picked
+signal choice_selected
 
 
 onready var lbl_filter: Label = $HBoxContainer/Label
 onready var line_edit: LineEdit = $HBoxContainer/LineEdit
 onready var item_list: ItemList = $ItemList
 onready var btn_pick:Button = $Button
+export(bool) var pick_button_visible: bool = true setget _set_pick_button_visible
 export(String) var pick_text: String setget _set_pick_text
 export(Texture) var pick_icon: Texture setget _set_pick_icon
 export(String) var filter_text: String = "Filter:" setget _set_filter_text
@@ -18,6 +20,12 @@ export(Array, String) var values: Array setget _set_values
 func _set_values(new_values: Array) -> void:
     values = new_values
     refresh()
+
+
+func _set_pick_button_visible(new_pick_button_visible: bool) -> void:
+    pick_button_visible = new_pick_button_visible
+    if btn_pick:
+        btn_pick.visible = pick_button_visible
 
 
 func _set_pick_text(new_pick_text: String) -> void:
@@ -76,10 +84,12 @@ func _ready() -> void:
     btn_pick.connect("pressed", self, "_on_btn_pick")
     line_edit.connect("text_changed", self, "_on_filter_text_changed")
     item_list.connect("item_activated", self, "_on_item_activated")
+    item_list.connect("item_selected", self, "_on_item_selected")
     refresh()
     if btn_pick:
         btn_pick.text = pick_text
         btn_pick.icon = pick_icon
+        btn_pick.visible = pick_button_visible
     if lbl_filter:
         lbl_filter.text = filter_text
     if line_edit:
@@ -103,3 +113,8 @@ func _on_filter_text_changed(_new_text: String) -> void:
 func _on_item_activated(index: int) -> void:
     var selected_value_index = item_list.get_item_metadata(index)
     emit_signal("choice_picked", selected_value_index)
+
+
+func _on_item_selected(index: int) -> void:
+    var selected_value_index = item_list.get_item_metadata(index)
+    emit_signal("choice_selected", selected_value_index)
