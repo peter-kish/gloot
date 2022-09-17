@@ -11,7 +11,7 @@ onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
 onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory setget _set_inventory
 var editor_interface: EditorInterface
-var gloot_undo_redo
+var gloot_undo_redo setget _set_gloot_undo_redo
 var _inventory_control: Control
 
 
@@ -21,6 +21,12 @@ func _set_inventory(new_inventory: Inventory) -> void:
     connect_inventory_signals()
 
     _refresh()
+
+
+func _set_gloot_undo_redo(new_gloot_undo_redo) -> void:
+    gloot_undo_redo = new_gloot_undo_redo
+    if _inventory_control is CtrlInventoryGrid:
+        _inventory_control._gloot_undo_redo = gloot_undo_redo
 
 
 func connect_inventory_signals():
