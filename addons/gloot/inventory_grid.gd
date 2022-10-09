@@ -99,7 +99,6 @@ func _on_item_removed(item: InventoryItem) -> void:
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
-    _sort_if_needed()
     update_configuration_warning()
 
 
