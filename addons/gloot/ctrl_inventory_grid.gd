@@ -82,6 +82,8 @@ func _set_inventory(new_inventory: InventoryGrid) -> void:
     if inventory == new_inventory:
         return
 
+    _select(null)
+
     _disconnect_inventory_signals()
     inventory = new_inventory
     _connect_inventory_signals()
