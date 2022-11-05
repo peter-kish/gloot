@@ -256,12 +256,13 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = .serialize()
 
-    result[KEY_SIZE] = size
+    # Store Vector2 as string to make JSON conversion easier later
+    result[KEY_SIZE] = var2str(size)
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_SIZE, TYPE_VECTOR2):
+    if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
         return false
 
     reset()
@@ -269,5 +270,7 @@ func deserialize(source: Dictionary) -> bool:
     if !.deserialize(source):
         return false
 
-    _set_size(source[KEY_SIZE])
+    var s: Vector2 = str2var(source[KEY_SIZE])
+    _set_size(s)
+
     return true

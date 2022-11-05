@@ -29,6 +29,20 @@ const type_names: Array = [
     "PoolColorArray"
 ]
 
+const json_supported_types: Array = [
+    TYPE_STRING,
+    TYPE_INT,
+    TYPE_REAL,
+    TYPE_BOOL,
+    TYPE_NIL,
+    TYPE_DICTIONARY,
+    TYPE_ARRAY,
+    TYPE_RAW_ARRAY,
+    TYPE_INT_ARRAY,
+    TYPE_REAL_ARRAY,
+    TYPE_STRING_ARRAY
+]
+
 
 static func create_var(type: int):
     match type:
@@ -87,23 +101,66 @@ static func create_var(type: int):
     return null
 
 
-static func dict(dict: Dictionary, mandatory: bool, key: String, value_type: int, array_type: int = -1) -> bool:
+static func dict(dict: Dictionary,
+        mandatory: bool,
+        key: String,
+        expected_value_type,
+        expected_array_type: int = -1) -> bool:
+
     if !dict.has(key):
         if !mandatory:
             return true
         print("Missing key: '%s'!" % key)
         return false
     
+    if expected_value_type is int:
+        return _check_dict_key_type(dict, key, expected_value_type, expected_array_type)
+    elif expected_value_type is Array:
+        return _check_dict_key_type_multi(dict, key, expected_value_type)
+
+    print("Warning: 'value_type' must be either int or Array!")
+    return false
+
+
+static func _check_dict_key_type(dict: Dictionary,
+        key: String,
+        expected_value_type: int,
+        expected_array_type: int = -1) -> bool:
+
     var t: int = typeof(dict[key])
-    if t != value_type:
-        print("Key '%s' has wrong type! Expected '%s', got '%s'!" % [key, value_type, t])
+    if t != expected_value_type:
+        print("Key '%s' has wrong type! Expected '%s', got '%s'!" %
+            [key, type_names[expected_value_type], type_names[t]])
         return false
 
-    if value_type == TYPE_ARRAY && array_type >= 0:
-        var array = dict[key]
-        for i in range(array.size()):
-            if typeof(array[i]) != array_type:
-                print("Array element %d has wrong type! Expected '%s', got '%s'!" % [i, array_type, array[i]])
+    if expected_value_type == TYPE_ARRAY && expected_array_type >= 0:
+        return _check_dict_key_array_type(dict, key, expected_array_type)
+
+    return true
+
+
+static func _check_dict_key_array_type(dict: Dictionary, key: String, expected_array_type: int):
+    var array: Array = dict[key]
+    for i in range(array.size()):
+        if typeof(array[i]) != expected_array_type:
+            print("Array element %d has wrong type! Expected '%s', got '%s'!" %
+                [i, type_names[expected_array_type], type_names[array[i]]])
+            return false
+
+    return true
+
+            
+static func _check_dict_key_type_multi(dict: Dictionary,
+        key: String,
+        expected_value_types: Array) -> bool:
+
+    var t: int = typeof(dict[key])
+    if !(t in expected_value_types):
+        print("Key '%s' has wrong type! Got '%s', but expected one of the following:" %
+            [key, type_names[t]])
+        for expected_type in expected_value_types:
+            print("  %s" % type_names[expected_type])
+        return false
 
     return true
 

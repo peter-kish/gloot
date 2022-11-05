@@ -126,6 +126,13 @@ func serialize() -> Dictionary:
     if !properties.empty():
         result[KEY_PROPERTIES] = properties.duplicate()
 
+        # Convert types that are not supported by JSON to string.
+        for key in result[KEY_PROPERTIES].keys():
+            var t = typeof(result[KEY_PROPERTIES][key])
+            if t in Verify.json_supported_types:
+                continue
+            result[KEY_PROPERTIES][key] = var2str(result[KEY_PROPERTIES][key])
+
     return result
 
 
@@ -143,6 +150,12 @@ func deserialize(source: Dictionary) -> bool:
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
         properties = source[KEY_PROPERTIES].duplicate()
+
+        # Some types are stored as string (for JSON support).
+        for key in properties.keys():
+            if typeof(properties[key]) != TYPE_STRING:
+                continue
+            properties[key] = str2var(properties[key])
 
     return true
 

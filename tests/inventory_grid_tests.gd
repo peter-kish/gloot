@@ -16,7 +16,8 @@ func init_suite():
         "test_change_size",
         "test_create_and_add_item_at",
         "test_get_item_at",
-        "test_serialize"
+        "test_serialize",
+        "test_serialize_json"
     ]
 
 
@@ -77,6 +78,27 @@ func test_serialize():
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().empty())
     assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
+    assert(inventory_3x3.deserialize(inventory_data))
+    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3.size.x == 3)
+    assert(inventory_3x3.size.y == 3)
+    
+
+func test_serialize_json():
+    assert(inventory_3x3.add_item_at(item_1x1, Vector2(0, 0)))
+    assert(inventory_3x3.add_item_at(item_2x2, Vector2(1, 0)))
+    var inventory_data = inventory_3x3.serialize()
+
+    # To and from JSON serialization
+    var json_string = JSON.print(inventory_data)
+    var res: JSONParseResult = JSON.parse(json_string)
+    assert(res.error == OK)
+    inventory_data = res.result
+
+    inventory_3x3.reset()
+    assert(inventory_3x3.get_items().empty())
+    assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
+
     assert(inventory_3x3.deserialize(inventory_data))
     assert(inventory_3x3.get_items().size() == 2)
     assert(inventory_3x3.size.x == 3)

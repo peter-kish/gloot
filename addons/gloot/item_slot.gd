@@ -146,8 +146,9 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, TYPE_NODE_PATH) ||\
-        !Verify.dict(source, false, KEY_ITEM, TYPE_NODE_PATH):
+    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_NODE_PATH, TYPE_STRING]):
+        return false
+    if !Verify.dict(source, false, KEY_ITEM, [TYPE_NODE_PATH, TYPE_STRING]):
         return false
 
     reset()

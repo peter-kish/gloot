@@ -20,7 +20,8 @@ func init_suite() -> void:
         "test_invalid_capacity",
         "test_contents_changed_signal",
         "test_stack_split_join",
-        "test_serialize"
+        "test_serialize",
+        "test_serialize_json"
     ]
 
 
@@ -94,6 +95,28 @@ func test_serialize() -> void:
     var inventory_data = inventory.serialize()
     var capacity = inventory.capacity
     var occupied_space = inventory.occupied_space
+    inventory.reset()
+    assert(inventory.get_items().empty())
+    assert(inventory.capacity == 0)
+    assert(inventory.occupied_space == 0)
+    assert(inventory.deserialize(inventory_data))
+    assert(inventory.get_items().size() == 1)
+    assert(inventory.capacity == capacity)
+    assert(inventory.occupied_space == occupied_space)
+    
+
+func test_serialize_json() -> void:
+    assert(inventory.add_item(item))
+    var inventory_data = inventory.serialize()
+    var capacity = inventory.capacity
+    var occupied_space = inventory.occupied_space
+
+    # To and from JSON serialization
+    var json_string = JSON.print(inventory_data)
+    var res: JSONParseResult = JSON.parse(json_string)
+    assert(res.error == OK)
+    inventory_data = res.result
+
     inventory.reset()
     assert(inventory.get_items().empty())
     assert(inventory.capacity == 0)

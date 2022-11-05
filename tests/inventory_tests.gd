@@ -17,7 +17,8 @@ func init_suite():
         "test_create_and_add",
         "test_transfer",
         "test_remove_item",
-        "test_serialize"
+        "test_serialize",
+        "test_serialize_json"
     ]
 
 
@@ -68,6 +69,22 @@ func test_remove_item() -> void:
 
 func test_serialize() -> void:
     var inventory_data = inventory1.serialize()
+    inventory1.reset()
+    assert(inventory1.get_items().empty())
+    assert(item.is_queued_for_deletion())
+    assert(inventory1.deserialize(inventory_data))
+    assert(inventory1.get_items().size() == 1)
+
+
+func test_serialize_json() -> void:
+    var inventory_data = inventory1.serialize()
+
+    # To and from JSON serialization
+    var json_string = JSON.print(inventory_data)
+    var res: JSONParseResult = JSON.parse(json_string)
+    assert(res.error == OK)
+    inventory_data = res.result
+
     inventory1.reset()
     assert(inventory1.get_items().empty())
     assert(item.is_queued_for_deletion())
