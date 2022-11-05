@@ -29,20 +29,6 @@ const type_names: Array = [
     "PoolColorArray"
 ]
 
-const json_supported_types: Array = [
-    TYPE_STRING,
-    TYPE_INT,
-    TYPE_REAL,
-    TYPE_BOOL,
-    TYPE_NIL,
-    TYPE_DICTIONARY,
-    TYPE_ARRAY,
-    TYPE_RAW_ARRAY,
-    TYPE_INT_ARRAY,
-    TYPE_REAL_ARRAY,
-    TYPE_STRING_ARRAY
-]
-
 
 static func create_var(type: int):
     match type:

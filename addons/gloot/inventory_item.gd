@@ -16,6 +16,8 @@ const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
 const KEY_PROPERTIES: String = "properties"
 const KEY_NODE_NAME: String = "node_name"
+const KEY_TYPE: String = "type"
+const KEY_VALUE: String = "value"
 
 const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
@@ -124,16 +126,23 @@ func serialize() -> Dictionary:
     result[KEY_PROTOSET] = protoset.resource_path
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.empty():
-        result[KEY_PROPERTIES] = properties.duplicate()
-
-        # Convert types that are not supported by JSON to string.
-        for key in result[KEY_PROPERTIES].keys():
-            var t = typeof(result[KEY_PROPERTIES][key])
-            if t in Verify.json_supported_types:
-                continue
-            result[KEY_PROPERTIES][key] = var2str(result[KEY_PROPERTIES][key])
+        result[KEY_PROPERTIES] = {}
+        for property_name in properties.keys():
+            result[KEY_PROPERTIES][property_name] = _serialize_property(property_name)
 
     return result
+
+
+func _serialize_property(property_name: String) -> Dictionary:
+    # Store all properties as strings for JSON support.
+    var result: Dictionary = {}
+    var property_value = properties[property_name]
+    var property_type = typeof(property_value)
+    result = {
+        KEY_TYPE: property_type,
+        KEY_VALUE: var2str(property_value)
+    }
+    return result;
 
 
 func deserialize(source: Dictionary) -> bool:
@@ -149,15 +158,25 @@ func deserialize(source: Dictionary) -> bool:
     protoset = load(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
-        properties = source[KEY_PROPERTIES].duplicate()
-
-        # Some types are stored as string (for JSON support).
-        for key in properties.keys():
-            if typeof(properties[key]) != TYPE_STRING:
-                continue
-            properties[key] = str2var(properties[key])
+        for key in source[KEY_PROPERTIES].keys():
+            properties[key] = _deserialize_property(source[KEY_PROPERTIES][key])
+            if properties[key] == null:
+                properties = {}
+                return false
 
     return true
+
+
+func _deserialize_property(data: Dictionary):
+    # Properties are stored as strings for JSON support.
+    var result = str2var(data[KEY_VALUE])
+    var expected_type: int = data[KEY_TYPE]
+    var property_type: int = typeof(result)
+    if property_type != expected_type:
+        print("Property has unexpected type: %s. Expected: %s" %
+                    [Verify.type_names[property_type], Verify.type_names[expected_type]])
+        return null
+    return result
 
 
 func get_texture() -> Texture:
