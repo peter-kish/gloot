@@ -13,6 +13,7 @@ func _set_json_data(new_json_data: String) -> void:
     json_data = new_json_data
     if !json_data.empty():
         parse(json_data)
+    emit_changed()
 
 
 func parse(json: String) -> void:
