@@ -17,8 +17,16 @@ const KEY_ITEM: String = "item"
 const Verify = preload("res://addons/gloot/verify.gd")
 
 
+func _get_configuration_warning() -> String:
+    if inventory_path.is_empty():
+        return "Inventory path not set! Inventory path needs to point to an inventory node, so " +\
+        "items from that inventory can be equipped in the slot."
+    return ""
+
+
 func _set_inventory_path(new_inv_path: NodePath) -> void:
     inventory_path = new_inv_path
+    update_configuration_warning()
     var node: Node = get_node_or_null(inventory_path)
 
     if is_inside_tree() && node:

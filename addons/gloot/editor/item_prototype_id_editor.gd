@@ -5,6 +5,7 @@ const ChoiceFilter = preload("res://addons/gloot/editor/choice_filter.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const POPUP_SIZE = Vector2(300, 300)
 const POPUP_MARGIN = 10
+const COLOR_INVALID = Color.red
 var current_value: String
 var updating: bool = false
 var _choice_filter: Control
@@ -48,6 +49,8 @@ func _ready() -> void:
     _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
     var item: InventoryItem = get_edited_object()
     item.connect("prototype_id_changed", self, "_on_prototype_id_changed")
+    if item.protoset:
+        item.protoset.connect("changed", self, "_on_protoset_changed")
     _refresh_button()
 
 
@@ -67,6 +70,11 @@ func _on_choice_picked(value_index: int) -> void:
 
 func _on_prototype_id_changed() -> void:
     _refresh_button()
+
+
+func _on_protoset_changed() -> void:
+    _refresh_button()
+    _refresh_choice_filter()
 
 
 func update_property() -> void:
@@ -89,6 +97,14 @@ func _refresh_choice_filter() -> void:
 func _refresh_button() -> void:
     var item: InventoryItem = get_edited_object()
     _btn_prototype_id.text = item.prototype_id
+    if !item.protoset.has(item.prototype_id):
+        _btn_prototype_id.add_color_override("font_color", COLOR_INVALID)
+        _btn_prototype_id.add_color_override("font_color_hover", COLOR_INVALID)
+        _btn_prototype_id.hint_tooltip = "Invalid prototype ID!"
+    else:
+        _btn_prototype_id.remove_color_override("font_color")
+        _btn_prototype_id.remove_color_override("font_color_hover")
+        _btn_prototype_id.hint_tooltip = ""
 
 
 func _get_prototype_ids() -> Array:

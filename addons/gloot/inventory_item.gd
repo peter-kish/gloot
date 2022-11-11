@@ -25,6 +25,16 @@ const KEY_NAME: String = "name"
 const Verify = preload("res://addons/gloot/verify.gd")
 
 
+func _get_configuration_warning() -> String:
+    if !protoset:
+        return ""
+
+    if !protoset.has(prototype_id):
+        return "Undefined prototype '%s'. Check the item protoset!" % prototype_id
+
+    return ""
+
+
 func _set_prototset(new_protoset: Resource) -> void:
     var old_protoset = protoset
     protoset = new_protoset
@@ -34,7 +44,10 @@ func _set_prototset(new_protoset: Resource) -> void:
         if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
             _set_prototype_id(protoset._prototypes.keys()[0])
 
+        protoset.connect("changed", self, "_on_protoset_modified")
+
         emit_signal("protoset_changed")
+        update_configuration_warning()
 
 
 func _set_prototype_id(new_prototype_id: String) -> void:
@@ -43,11 +56,17 @@ func _set_prototype_id(new_prototype_id: String) -> void:
     if old_prototype_id != prototype_id:
         reset_properties()
         emit_signal("prototype_id_changed")
+        update_configuration_warning()
 
 
 func _set_properties(new_properties: Dictionary) -> void:
     properties = new_properties
     emit_signal("properties_changed")
+    update_configuration_warning()
+
+
+func _on_protoset_modified() -> void:
+    update_configuration_warning()
 
 
 func reset_properties() -> void:
