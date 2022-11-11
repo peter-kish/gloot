@@ -99,8 +99,12 @@ func _refresh_button() -> void:
     _btn_prototype_id.text = item.prototype_id
     if !item.protoset.has(item.prototype_id):
         _btn_prototype_id.add_color_override("font_color", COLOR_INVALID)
+        _btn_prototype_id.add_color_override("font_color_hover", COLOR_INVALID)
+        _btn_prototype_id.hint_tooltip = "Invalid prototype ID!"
     else:
         _btn_prototype_id.remove_color_override("font_color")
+        _btn_prototype_id.remove_color_override("font_color_hover")
+        _btn_prototype_id.hint_tooltip = ""
 
 
 func _get_prototype_ids() -> Array:

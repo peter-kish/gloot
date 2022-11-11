@@ -30,7 +30,7 @@ func _get_configuration_warning() -> String:
         return ""
 
     if !protoset.has(prototype_id):
-        return "Undefined prototype '%s'. Check the protoset!" % prototype_id
+        return "Undefined prototype '%s'. Check the item protoset!" % prototype_id
 
     return ""
 
