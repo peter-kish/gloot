@@ -3,6 +3,7 @@ extends EditorProperty
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.green
+const COLOR_INVALID = Color.red
 const POPUP_SIZE = Vector2(800, 300)
 const POPUP_MIN_SIZE = Vector2(400, 200)
 const POPUP_MARGIN = 10
@@ -51,9 +52,17 @@ func _init() -> void:
 
 func _ready() -> void:
     _btn_prototype_id.icon = EditorIcons.get_icon(editor_interface, "Edit")
+
     var item: InventoryItem = get_edited_object()
-    if item:
-        item.connect("properties_changed", self, "update_property")
+    if !item:
+        return
+    item.connect("properties_changed", self, "update_property")
+
+    if !item.protoset:
+        return
+    item.protoset.connect("changed", self, "_on_protoset_changed")
+
+    _refresh_button()
 
 
 func _on_btn_edit() -> void:
@@ -100,6 +109,11 @@ func update_property() -> void:
     updating = false
 
 
+func _on_protoset_changed() -> void:
+    _refresh_dict_editor()
+    _refresh_button()
+
+
 func _refresh_dict_editor() -> void:
     if _dict_editor.btn_add:
         _dict_editor.btn_add.icon = EditorIcons.get_icon(editor_interface, "Add")
@@ -108,6 +122,13 @@ func _refresh_dict_editor() -> void:
     _dict_editor.remove_button_map = _get_remove_button_map()
     _dict_editor.immutable_keys = IMMUTABLE_KEYS
     _dict_editor.refresh()
+
+
+func _refresh_button() -> void:
+    var item: InventoryItem = get_edited_object()
+    if !item || !item.protoset:
+        return
+    _btn_prototype_id.disabled = !item.protoset.has(item.prototype_id)
 
 
 func _get_dictionary() -> Dictionary:
@@ -140,6 +161,8 @@ func _get_color_map() -> Dictionary:
     for key in dictionary.keys():
         if item.properties.has(key):
             result[key] = COLOR_OVERRIDDEN
+        if key == ItemProtoset.KEY_ID && !item.protoset.has(dictionary[key]):
+            result[key] = COLOR_INVALID
 
     return result
             
