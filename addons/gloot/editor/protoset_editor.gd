@@ -13,6 +13,7 @@ func _set_protoset(new_protoset: ItemProtoset) -> void:
 
 
 func _ready() -> void:
+    prototype_filter.connect("choice_selected", self, "_on_prototype_selected")
     _refresh()
 
 
@@ -31,3 +32,8 @@ func _populate() -> void:
         # TODO: Avoid accessing "private" members (_prototypes)
         prototype_filter.values = protoset._prototypes.keys().duplicate()
 
+
+func _on_prototype_selected(index: int) -> void:
+    var prototype_id: String = prototype_filter.values[index]
+    # TODO: Avoid accessing "private" members (_prototypes)
+    prototype_editor.dictionary = protoset._prototypes[prototype_id]
