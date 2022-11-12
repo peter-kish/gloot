@@ -36,4 +36,12 @@ func _populate() -> void:
 func _on_prototype_selected(index: int) -> void:
     var prototype_id: String = prototype_filter.values[index]
     # TODO: Avoid accessing "private" members (_prototypes)
-    prototype_editor.dictionary = protoset._prototypes[prototype_id]
+    prototype_editor.dictionary = protoset.get(prototype_id)
+    prototype_editor.immutable_keys = [ItemProtoset.KEY_ID]
+    prototype_editor.remove_button_map = {
+        ItemProtoset.KEY_ID: {
+            "text": "Remove",
+            "disabled": true,
+            "icon": null,
+        }
+    }
