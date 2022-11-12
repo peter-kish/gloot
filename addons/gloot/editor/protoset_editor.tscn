@@ -26,15 +26,49 @@ margin_bottom = -4.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PrototypeFilter" parent="TabContainer/Gui" instance=ExtResource( 1 )]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Gui"]
+margin_right = 502.0
+margin_bottom = 564.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PrototypeFilter" parent="TabContainer/Gui/VBoxContainer" instance=ExtResource( 1 )]
+unique_name_in_owner = true
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 502.0
-margin_bottom = 564.0
+margin_bottom = 536.0
 pick_button_visible = false
 filter_text = "Prototype Filter:"
 
-[node name="DictEditor" parent="TabContainer/Gui" instance=ExtResource( 2 )]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Gui/VBoxContainer"]
+margin_top = 540.0
+margin_right = 502.0
+margin_bottom = 564.0
+
+[node name="TxtPrototypeName" type="LineEdit" parent="TabContainer/Gui/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 261.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="BtnAddPrototype" type="Button" parent="TabContainer/Gui/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 265.0
+margin_right = 368.0
+margin_bottom = 24.0
+disabled = true
+text = "Add Prototype"
+
+[node name="BtnRemovePrototype" type="Button" parent="TabContainer/Gui/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 372.0
+margin_right = 502.0
+margin_bottom = 24.0
+text = "Remove Prototype"
+
+[node name="PropertyEditor" parent="TabContainer/Gui" instance=ExtResource( 2 )]
+unique_name_in_owner = true
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 514.0
@@ -50,12 +84,14 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="TextEdit" type="TextEdit" parent="TabContainer/Json"]
+[node name="TxtJson" type="TextEdit" parent="TabContainer/Json"]
+unique_name_in_owner = true
 margin_right = 1016.0
 margin_bottom = 540.0
 size_flags_vertical = 3
 
-[node name="BtnApply" type="Button" parent="TabContainer/Json"]
+[node name="BtnApplyJson" type="Button" parent="TabContainer/Json"]
+unique_name_in_owner = true
 margin_top = 544.0
 margin_right = 1016.0
 margin_bottom = 564.0

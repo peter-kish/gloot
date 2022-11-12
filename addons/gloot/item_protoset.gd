@@ -37,6 +37,16 @@ func get(id: String) -> Dictionary:
     return _prototypes[id]
 
 
+func add(id: String) -> void:
+    assert(!has(id), "Prototype with ID already exists: %s" % id)
+    _prototypes[id] = {KEY_ID: id}
+
+
+func remove(id: String) -> void:
+    assert(has(id), "No prototype for ID %s" % id)
+    _prototypes.erase(id)
+
+
 func has(id: String) -> bool:
     return _prototypes.has(id)
 

@@ -8,7 +8,7 @@ signal choice_selected
 onready var lbl_filter: Label = $HBoxContainer/Label
 onready var line_edit: LineEdit = $HBoxContainer/LineEdit
 onready var item_list: ItemList = $ItemList
-onready var btn_pick:Button = $Button
+onready var btn_pick: Button = $Button
 export(bool) var pick_button_visible: bool = true setget _set_pick_button_visible
 export(String) var pick_text: String setget _set_pick_text
 export(Texture) var pick_icon: Texture setget _set_pick_icon
@@ -118,3 +118,11 @@ func _on_item_activated(index: int) -> void:
 func _on_item_selected(index: int) -> void:
     var selected_value_index = item_list.get_item_metadata(index)
     emit_signal("choice_selected", selected_value_index)
+
+
+func get_selected_text() -> String:
+    var selected = item_list.get_selected_items()
+    if selected.size() > 0:
+        return item_list.get_item_text(selected[0])
+        
+    return ""
