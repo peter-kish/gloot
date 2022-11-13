@@ -50,6 +50,7 @@ margin_bottom = 590.0
 unique_name_in_owner = true
 margin_right = 324.0
 margin_bottom = 24.0
+hint_tooltip = "Prototype ID"
 size_flags_horizontal = 3
 
 [node name="BtnAddPrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
@@ -57,6 +58,7 @@ unique_name_in_owner = true
 margin_left = 328.0
 margin_right = 365.0
 margin_bottom = 24.0
+hint_tooltip = "Add a new prototype with  the entered ID"
 disabled = true
 text = "Add"
 
@@ -65,6 +67,7 @@ unique_name_in_owner = true
 margin_left = 369.0
 margin_right = 433.0
 margin_bottom = 24.0
+hint_tooltip = "Rename the selected prototype"
 disabled = true
 text = "Rename"
 
@@ -73,6 +76,8 @@ unique_name_in_owner = true
 margin_left = 437.0
 margin_right = 501.0
 margin_bottom = 24.0
+hint_tooltip = "Remove the selected prototype"
+disabled = true
 text = "Remove"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Gui"]
@@ -85,6 +90,7 @@ size_flags_horizontal = 3
 margin_right = 501.0
 margin_bottom = 14.0
 text = "Properties"
+align = 1
 
 [node name="PropertyEditor" parent="Gui/VBoxContainer2" instance=ExtResource( 2 )]
 unique_name_in_owner = true

@@ -42,6 +42,7 @@ func _refresh() -> void:
     _populate()
     _refresh_btn_add_prototype()
     _refresh_btn_rename_prototype()
+    _refresh_btn_remove_prototype()
 
 
 func _clear() -> void:
@@ -65,11 +66,14 @@ func _refresh_btn_rename_prototype() -> void:
     btn_rename_prototype.disabled = txt_prototype_id.text.empty() ||\
         protoset.has(txt_prototype_id.text)
 
+func _refresh_btn_remove_prototype() -> void:
+    btn_remove_prototype.disabled = prototype_filter.get_selected_text().empty()
+
 
 func _on_prototype_selected(index: int) -> void:
     var prototype_id: String = prototype_filter.values[index]
     var prototype: Dictionary = protoset.get(prototype_id)
-    
+
     property_editor.dictionary = prototype
     property_editor.immutable_keys = [ItemProtoset.KEY_ID]
     property_editor.remove_button_map = {}
@@ -80,6 +84,8 @@ func _on_prototype_selected(index: int) -> void:
             "disabled": property_name == ItemProtoset.KEY_ID,
             "icon": EditorIcons.get_icon(editor_interface, "Remove"),
         }
+
+    _refresh_btn_remove_prototype()
 
 
 func _on_prototype_id_changed(new_prototype_id_: String) -> void:
