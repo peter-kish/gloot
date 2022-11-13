@@ -41,6 +41,7 @@ func parse_begin(object: Object) -> void:
     if object is ItemProtoset:
         var edit_protoset_button = EditProtosetButton.instance()
         edit_protoset_button.protoset = object
+        edit_protoset_button.editor_interface = editor_interface
         add_custom_control(edit_protoset_button)
 
 

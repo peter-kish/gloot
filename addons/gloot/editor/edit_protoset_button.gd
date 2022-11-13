@@ -1,10 +1,13 @@
 extends Button
 tool
 
+const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+
 onready var window_dialog: WindowDialog = $"%WindowDialog"
 onready var protoset_editor: Control = $"%ProtosetEditor"
 
 var protoset: ItemProtoset setget _set_protoset
+var editor_interface: EditorInterface
 
 
 func _set_protoset(new_protoset: ItemProtoset) -> void:
@@ -14,8 +17,10 @@ func _set_protoset(new_protoset: ItemProtoset) -> void:
 
 
 func _ready() -> void:
+    icon = EditorIcons.get_icon(editor_interface, "Edit")
     window_dialog.connect("popup_hide", self, "_on_popup_hide")
     protoset_editor.protoset = protoset
+    protoset_editor.editor_interface = editor_interface
     connect("pressed", self, "_on_pressed")
 
 

@@ -1,6 +1,8 @@
 extends Control
 tool
 
+const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+
 onready var prototype_filter = $"%PrototypeFilter"
 onready var property_editor = $"%PropertyEditor"
 onready var txt_prototype_id = $"%TxtPrototypeName"
@@ -9,11 +11,20 @@ onready var btn_remove_prototype = $"%BtnRemovePrototype"
 onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
 var protoset: ItemProtoset setget _set_protoset
+var editor_interface: EditorInterface setget _set_editor_interface
 
 
 func _set_protoset(new_protoset: ItemProtoset) -> void:
     protoset = new_protoset
     _refresh()
+
+
+func _set_editor_interface(new_editor_interface: EditorInterface) -> void:
+    editor_interface = new_editor_interface
+    btn_add_prototype.icon = EditorIcons.get_icon(editor_interface, "Add")
+    btn_rename_prototype.icon = EditorIcons.get_icon(editor_interface, "Edit")
+    btn_remove_prototype.icon = EditorIcons.get_icon(editor_interface, "Remove")
+    prototype_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
 
 
 func _ready() -> void:
@@ -57,15 +68,18 @@ func _refresh_btn_rename_prototype() -> void:
 
 func _on_prototype_selected(index: int) -> void:
     var prototype_id: String = prototype_filter.values[index]
-    property_editor.dictionary = protoset.get(prototype_id)
+    var prototype: Dictionary = protoset.get(prototype_id)
+    
+    property_editor.dictionary = prototype
     property_editor.immutable_keys = [ItemProtoset.KEY_ID]
-    property_editor.remove_button_map = {
-        ItemProtoset.KEY_ID: {
-            "text": "Remove",
-            "disabled": true,
-            "icon": null,
+    property_editor.remove_button_map = {}
+
+    for property_name in prototype.keys():
+        property_editor.remove_button_map[property_name] = {
+            "text": "",
+            "disabled": property_name == ItemProtoset.KEY_ID,
+            "icon": EditorIcons.get_icon(editor_interface, "Remove"),
         }
-    }
 
 
 func _on_prototype_id_changed(new_prototype_id_: String) -> void:
