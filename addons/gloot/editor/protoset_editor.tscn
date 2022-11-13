@@ -30,34 +30,48 @@ unique_name_in_owner = true
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 501.0
-margin_bottom = 562.0
+margin_bottom = 538.0
 pick_button_visible = false
 filter_text = "Prototype Filter:"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Gui/VBoxContainer"]
-margin_top = 566.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="Gui/VBoxContainer"]
+margin_top = 542.0
 margin_right = 501.0
-margin_bottom = 590.0
+margin_bottom = 566.0
 
-[node name="TxtPrototypeName" type="LineEdit" parent="Gui/VBoxContainer/HBoxContainer"]
+[node name="TxtPrototypeName" type="LineEdit" parent="Gui/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
-margin_right = 260.0
+margin_right = 195.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="BtnAddPrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer"]
+[node name="BtnAddPrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
-margin_left = 264.0
-margin_right = 367.0
+margin_left = 199.0
+margin_right = 302.0
 margin_bottom = 24.0
 disabled = true
 text = "Add Prototype"
 
-[node name="BtnRemovePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer"]
+[node name="BtnRenamePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
-margin_left = 371.0
+margin_left = 306.0
 margin_right = 501.0
 margin_bottom = 24.0
+size_flags_horizontal = 3
+disabled = true
+text = "Rename Prototype"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Gui/VBoxContainer"]
+margin_top = 570.0
+margin_right = 501.0
+margin_bottom = 590.0
+
+[node name="BtnRemovePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 501.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
 text = "Remove Prototype"
 
 [node name="PropertyEditor" parent="Gui" instance=ExtResource( 2 )]

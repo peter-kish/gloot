@@ -6,6 +6,7 @@ onready var property_editor = $"%PropertyEditor"
 onready var txt_prototype_id = $"%TxtPrototypeName"
 onready var btn_add_prototype = $"%BtnAddPrototype"
 onready var btn_remove_prototype = $"%BtnRemovePrototype"
+onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
 var protoset: ItemProtoset setget _set_protoset
 
@@ -20,6 +21,7 @@ func _ready() -> void:
     txt_prototype_id.connect("text_changed", self, "_on_prototype_id_changed")
     txt_prototype_id.connect("text_entered", self, "_on_prototype_id_entered")
     btn_add_prototype.connect("pressed", self, "_on_btn_add_prototype")
+    btn_rename_prototype.connect("pressed", self, "_on_btn_rename_prototype")
     btn_remove_prototype.connect("pressed", self, "_on_btn_remove_prototype")
     _refresh()
 
@@ -28,6 +30,7 @@ func _refresh() -> void:
     _clear()
     _populate()
     _refresh_btn_add_prototype()
+    _refresh_btn_rename_prototype()
 
 
 func _clear() -> void:
@@ -47,6 +50,11 @@ func _refresh_btn_add_prototype() -> void:
         protoset.has(txt_prototype_id.text)
 
 
+func _refresh_btn_rename_prototype() -> void:
+    btn_rename_prototype.disabled = txt_prototype_id.text.empty() ||\
+        protoset.has(txt_prototype_id.text)
+
+
 func _on_prototype_selected(index: int) -> void:
     var prototype_id: String = prototype_filter.values[index]
     property_editor.dictionary = protoset.get(prototype_id)
@@ -62,6 +70,7 @@ func _on_prototype_selected(index: int) -> void:
 
 func _on_prototype_id_changed(new_prototype_id_: String) -> void:
     _refresh_btn_add_prototype()
+    _refresh_btn_rename_prototype()
 
 
 func _on_prototype_id_entered(prototype_id: String) -> void:
@@ -70,6 +79,12 @@ func _on_prototype_id_entered(prototype_id: String) -> void:
 
 func _on_btn_add_prototype() -> void:
     _add_prototype_id(txt_prototype_id.text)
+
+
+func _on_btn_rename_prototype() -> void:
+    protoset.rename(prototype_filter.get_selected_text(), txt_prototype_id.text)
+    txt_prototype_id.text = ""
+    _refresh()
 
 
 func _add_prototype_id(prototype_id: String) -> void:

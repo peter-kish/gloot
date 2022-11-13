@@ -60,6 +60,15 @@ func remove(id: String) -> void:
     _prototypes.erase(id)
 
 
+func rename(id: String, new_id: String) -> void:
+    assert(has(id), "No prototype for ID %s" % id)
+    assert(!has(new_id), "Prototype with ID already exists: %s" % new_id)
+    add(new_id)
+    _prototypes[new_id] = _prototypes[id].duplicate()
+    _prototypes[new_id][KEY_ID] = new_id
+    remove(id)
+
+
 func has(id: String) -> bool:
     return _prototypes.has(id)
 
