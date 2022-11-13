@@ -32,6 +32,19 @@ func parse(json: String) -> void:
         _prototypes[id] = prototype
 
 
+func _to_json() -> String:
+    var result: Array
+    for prototype_id in _prototypes.keys():
+        result.append(get(prototype_id))
+
+    return JSON.print(result, "    ")
+
+
+func update_json_data() -> void:
+    json_data = _to_json()
+    emit_changed()
+
+
 func get(id: String) -> Dictionary:
     assert(has(id), "No prototype for ID %s" % id)
     return _prototypes[id]

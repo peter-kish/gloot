@@ -10,6 +10,7 @@ text = "Edit Protoset"
 script = ExtResource( 2 )
 
 [node name="WindowDialog" type="WindowDialog" parent="."]
+unique_name_in_owner = true
 margin_right = 800.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 600, 200 )
@@ -17,3 +18,4 @@ window_title = "Edit Protoset"
 resizable = true
 
 [node name="ProtosetEditor" parent="WindowDialog" instance=ExtResource( 1 )]
+unique_name_in_owner = true
