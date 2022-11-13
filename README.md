@@ -200,6 +200,12 @@ var item_name = item.get_property("name", "")
 var item_description = item.get_property("description", "")
 ```
 
+### Using the Protoset Editor (WIP)
+
+Protosets can also be edited with the GUI based protoset editor. It can be opened using "Edit Protoset" button in the inspector when a protoset resource is selected.
+
+![](images/screenshots/ss_protoset_editor.png "Protoset Editor")
+
 ### Editing item properties
 
 Item properties defined in the [`ItemProtoset`](docs/item_protoset.md) resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:

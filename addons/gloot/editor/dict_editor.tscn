@@ -5,6 +5,7 @@
 [node name="DictEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_min_size = Vector2( 300, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -66,7 +67,7 @@ margin_left = 860.0
 margin_right = 925.0
 margin_bottom = 24.0
 text = "String"
-items = [ "bool", null, false, 1, null, "int", null, false, 2, null, "float", null, false, 3, null, "String", null, false, 4, null, "Vector2", null, false, 5, null, "Rect2", null, false, 6, null, "Vector3", null, false, 7, null, "Transform2D", null, false, 8, null, "Plane", null, false, 9, null, "Quat", null, false, 10, null, "AABB", null, false, 11, null, "Transform", null, false, 13, null, "Color", null, false, 14, null ]
+items = [ "bool", null, false, 1, null, "int", null, false, 2, null, "float", null, false, 3, null, "String", null, false, 4, null, "Vector2", null, false, 5, null, "Rect2", null, false, 6, null, "Vector3", null, false, 7, null, "Plane", null, false, 9, null, "Quat", null, false, 10, null, "AABB", null, false, 11, null, "Color", null, false, 14, null ]
 selected = 3
 
 [node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]

@@ -14,11 +14,11 @@ json_data = "[
     {
         \"id\": \"item1\",
         \"name\": \"item 1\",
-		\"image\": \"res://images/item_book_blue.png\"
+        \"image\": \"res://images/item_book_blue.png\"
     },
     {
         \"id\": \"item2\",
         \"name\": \"item 2\",
-		\"image\": \"res://images/item_scroll_blue.png\"
+        \"image\": \"res://images/item_scroll_blue.png\"
     }
 ]"

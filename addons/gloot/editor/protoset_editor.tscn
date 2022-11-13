@@ -1,0 +1,101 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/gloot/editor/choice_filter.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/gloot/editor/dict_editor.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/gloot/editor/protoset_editor.gd" type="Script" id=3]
+
+[node name="ProtosetEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+
+[node name="Gui" type="HSplitContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Gui"]
+margin_right = 501.0
+margin_bottom = 590.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Gui/VBoxContainer"]
+margin_right = 501.0
+margin_bottom = 14.0
+text = "Prototypes"
+align = 1
+
+[node name="PrototypeFilter" parent="Gui/VBoxContainer" instance=ExtResource( 1 )]
+unique_name_in_owner = true
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 501.0
+margin_bottom = 562.0
+pick_button_visible = false
+filter_text = "Prototype Filter:"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Gui/VBoxContainer"]
+margin_top = 566.0
+margin_right = 501.0
+margin_bottom = 590.0
+
+[node name="TxtPrototypeName" type="LineEdit" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+margin_right = 324.0
+margin_bottom = 24.0
+hint_tooltip = "Prototype ID"
+size_flags_horizontal = 3
+
+[node name="BtnAddPrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 328.0
+margin_right = 365.0
+margin_bottom = 24.0
+hint_tooltip = "Add a new prototype with  the entered ID"
+disabled = true
+text = "Add"
+
+[node name="BtnRenamePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 369.0
+margin_right = 433.0
+margin_bottom = 24.0
+hint_tooltip = "Rename the selected prototype"
+disabled = true
+text = "Rename"
+
+[node name="BtnRemovePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 437.0
+margin_right = 501.0
+margin_bottom = 24.0
+hint_tooltip = "Remove the selected prototype"
+disabled = true
+text = "Remove"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Gui"]
+margin_left = 513.0
+margin_right = 1014.0
+margin_bottom = 590.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Gui/VBoxContainer2"]
+margin_right = 501.0
+margin_bottom = 14.0
+text = "Properties"
+align = 1
+
+[node name="PropertyEditor" parent="Gui/VBoxContainer2" instance=ExtResource( 2 )]
+unique_name_in_owner = true
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 501.0
+margin_bottom = 590.0

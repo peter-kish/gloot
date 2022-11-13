@@ -32,9 +32,41 @@ func parse(json: String) -> void:
         _prototypes[id] = prototype
 
 
+func _to_json() -> String:
+    var result: Array
+    for prototype_id in _prototypes.keys():
+        result.append(get(prototype_id))
+
+    return JSON.print(result, "    ")
+
+
+func update_json_data() -> void:
+    json_data = _to_json()
+    emit_changed()
+
+
 func get(id: String) -> Dictionary:
     assert(has(id), "No prototype for ID %s" % id)
     return _prototypes[id]
+
+
+func add(id: String) -> void:
+    assert(!has(id), "Prototype with ID already exists: %s" % id)
+    _prototypes[id] = {KEY_ID: id}
+
+
+func remove(id: String) -> void:
+    assert(has(id), "No prototype for ID %s" % id)
+    _prototypes.erase(id)
+
+
+func rename(id: String, new_id: String) -> void:
+    assert(has(id), "No prototype for ID %s" % id)
+    assert(!has(new_id), "Prototype with ID already exists: %s" % new_id)
+    add(new_id)
+    _prototypes[new_id] = _prototypes[id].duplicate()
+    _prototypes[new_id][KEY_ID] = new_id
+    remove(id)
 
 
 func has(id: String) -> bool:
