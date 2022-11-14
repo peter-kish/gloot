@@ -120,9 +120,16 @@ func _on_item_selected(index: int) -> void:
     emit_signal("choice_selected", selected_value_index)
 
 
-func get_selected_text() -> String:
-    var selected = item_list.get_selected_items()
+func get_selected_item() -> int:
+    var selected := item_list.get_selected_items()
     if selected.size() > 0:
-        return item_list.get_item_text(selected[0])
+        return item_list.get_item_metadata(selected[0])
+    return -1
+
+
+func get_selected_text() -> String:
+    var selected := get_selected_item()
+    if selected >= 0:
+        return values[selected]
         
     return ""

@@ -13,11 +13,12 @@ onready var btn_rename_prototype = $"%BtnRenamePrototype"
 var protoset: ItemProtoset setget _set_protoset
 var gloot_undo_redo = null
 var editor_interface: EditorInterface setget _set_editor_interface
+var selected_prototype_id: String = ""
 
 
 func _set_protoset(new_protoset: ItemProtoset) -> void:
     protoset = new_protoset
-    protoset.connect("changed", self, "_refresh")
+    protoset.connect("changed", self, "_on_protoset_changed")
     _refresh()
 
 
@@ -31,6 +32,8 @@ func _set_editor_interface(new_editor_interface: EditorInterface) -> void:
 
 func _ready() -> void:
     prototype_filter.connect("choice_selected", self, "_on_prototype_selected")
+    property_editor.connect("value_changed", self, "_on_property_changed")
+    property_editor.connect("value_removed", self, "_on_property_removed")
     txt_prototype_id.connect("text_changed", self, "_on_prototype_id_changed")
     txt_prototype_id.connect("text_entered", self, "_on_prototype_id_entered")
     btn_add_prototype.connect("pressed", self, "_on_btn_add_prototype")
@@ -40,11 +43,15 @@ func _ready() -> void:
 
 
 func _refresh() -> void:
+    if !visible:
+        return
+
     _clear()
     _populate()
     _refresh_btn_add_prototype()
     _refresh_btn_rename_prototype()
     _refresh_btn_remove_prototype()
+    _inspect_prototype_id(selected_prototype_id)
 
 
 func _clear() -> void:
@@ -68,13 +75,26 @@ func _refresh_btn_rename_prototype() -> void:
     btn_rename_prototype.disabled = txt_prototype_id.text.empty() ||\
         protoset.has(txt_prototype_id.text)
 
+
 func _refresh_btn_remove_prototype() -> void:
     btn_remove_prototype.disabled = prototype_filter.get_selected_text().empty()
 
 
+func _on_protoset_changed() -> void:
+    _refresh()
+
+
 func _on_prototype_selected(index: int) -> void:
-    var prototype_id: String = prototype_filter.values[index]
-    var prototype: Dictionary = protoset.get(prototype_id)
+    selected_prototype_id = prototype_filter.values[index]
+    _inspect_prototype_id(selected_prototype_id)
+    _refresh_btn_remove_prototype()
+
+
+func _inspect_prototype_id(prototype_id: String) -> void:
+    if !protoset || !protoset.has(prototype_id):
+        return
+
+    var prototype: Dictionary = protoset.get(prototype_id).duplicate()
 
     property_editor.dictionary = prototype
     property_editor.immutable_keys = [ItemProtoset.KEY_ID]
@@ -87,7 +107,28 @@ func _on_prototype_selected(index: int) -> void:
             "icon": EditorIcons.get_icon(editor_interface, "Remove"),
         }
 
-    _refresh_btn_remove_prototype()
+
+func _on_property_changed(property_name: String, new_value) -> void:
+    var prototype_id = prototype_filter.get_selected_text()
+    if prototype_id.empty():
+        return
+    var new_properties = protoset.get(prototype_id).duplicate()
+    new_properties[property_name] = new_value
+
+    if new_properties.hash() == protoset.get(prototype_id).hash():
+        return
+
+    gloot_undo_redo.set_prototype_properties(protoset, prototype_id, new_properties)
+
+
+func _on_property_removed(property_name: String) -> void:
+    var prototype_id = prototype_filter.get_selected_text()
+    if prototype_id.empty():
+        return
+    var new_properties = protoset.get(prototype_id).duplicate()
+    new_properties.erase(property_name)
+
+    gloot_undo_redo.set_prototype_properties(protoset, prototype_id, new_properties)
 
 
 func _on_prototype_id_changed(new_prototype_id_: String) -> void:

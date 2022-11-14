@@ -185,3 +185,22 @@ func _prototypes_deep_copy(protoset: ItemProtoset) -> Dictionary:
 
 func _set_prototypes(protoset: ItemProtoset, prototypes: Dictionary) -> void:
     protoset._prototypes = prototypes
+
+
+func set_prototype_properties(protoset: ItemProtoset,
+        prototype_id: String,
+        new_properties: Dictionary) -> void:
+    assert(protoset.has(prototype_id))
+    var old_properties = protoset.get(prototype_id).duplicate()
+
+    undo_redo.create_action("Set prototype properties")
+    undo_redo.add_undo_method(self, "_set_prototype_properties", protoset, prototype_id, old_properties)
+    undo_redo.add_do_method(self, "_set_prototype_properties", protoset, prototype_id, new_properties)
+    undo_redo.commit_action()
+
+
+func _set_prototype_properties(protoset: ItemProtoset,
+        prototype_id: String,
+        new_properties: Dictionary) -> void:
+    protoset._prototypes[prototype_id] = new_properties
+    protoset.emit_changed()
