@@ -6,13 +6,19 @@ const KEY_ID: String = "id"
 
 export(String, MULTILINE) var json_data setget _set_json_data
 
-var _prototypes: Dictionary = {}
+var _prototypes: Dictionary = {} setget _set_prototypes
 
 
 func _set_json_data(new_json_data: String) -> void:
     json_data = new_json_data
     if !json_data.empty():
         parse(json_data)
+    emit_changed()
+
+
+func _set_prototypes(new_prototypes: Dictionary) -> void:
+    _prototypes = new_prototypes
+    update_json_data()
     emit_changed()
 
 
@@ -37,6 +43,7 @@ func _to_json() -> String:
     for prototype_id in _prototypes.keys():
         result.append(get(prototype_id))
 
+    # TODO: Add plugin settings for this
     return JSON.print(result, "    ")
 
 
@@ -53,11 +60,13 @@ func get(id: String) -> Dictionary:
 func add(id: String) -> void:
     assert(!has(id), "Prototype with ID already exists: %s" % id)
     _prototypes[id] = {KEY_ID: id}
+    emit_changed()
 
 
 func remove(id: String) -> void:
     assert(has(id), "No prototype for ID %s" % id)
     _prototypes.erase(id)
+    emit_changed()
 
 
 func rename(id: String, new_id: String) -> void:
@@ -67,6 +76,7 @@ func rename(id: String, new_id: String) -> void:
     _prototypes[new_id] = _prototypes[id].duplicate()
     _prototypes[new_id][KEY_ID] = new_id
     remove(id)
+    emit_changed()
 
 
 func has(id: String) -> bool:

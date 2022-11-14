@@ -11,11 +11,13 @@ onready var btn_remove_prototype = $"%BtnRemovePrototype"
 onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
 var protoset: ItemProtoset setget _set_protoset
+var gloot_undo_redo = null
 var editor_interface: EditorInterface setget _set_editor_interface
 
 
 func _set_protoset(new_protoset: ItemProtoset) -> void:
     protoset = new_protoset
+    protoset.connect("changed", self, "_refresh")
     _refresh()
 
 
@@ -102,19 +104,21 @@ func _on_btn_add_prototype() -> void:
 
 
 func _on_btn_rename_prototype() -> void:
-    protoset.rename(prototype_filter.get_selected_text(), txt_prototype_id.text)
+    assert(gloot_undo_redo)
+    gloot_undo_redo.rename_prototype(protoset,
+            prototype_filter.get_selected_text(),
+            txt_prototype_id.text)
     txt_prototype_id.text = ""
-    _refresh()
 
 
 func _add_prototype_id(prototype_id: String) -> void:
-    protoset.add(prototype_id)
+    assert(gloot_undo_redo)
+    gloot_undo_redo.add_prototype(protoset, prototype_id)
     txt_prototype_id.text = ""
-    _refresh()
 
 
 func _on_btn_remove_prototype() -> void:
+    assert(gloot_undo_redo)
     var prototype_id = prototype_filter.get_selected_text()
     if !prototype_id.empty():
-        protoset.remove(prototype_id)
-        _refresh()
+        gloot_undo_redo.remove_prototype(protoset, prototype_id)

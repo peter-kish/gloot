@@ -147,3 +147,41 @@ func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position
     undo_redo.add_undo_method(inventory, "move_item_to", item, old_item_position)
     undo_redo.add_do_method(inventory, "move_item_to", item, position)
     undo_redo.commit_action()
+
+
+func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> void:
+    var old_prototypes = _prototypes_deep_copy(protoset)
+
+    undo_redo.create_action("Rename Prototype")
+    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
+    undo_redo.add_do_method(protoset, "rename", id, new_id)
+    undo_redo.commit_action()
+
+
+func add_prototype(protoset: ItemProtoset, id: String) -> void:
+    var old_prototypes = _prototypes_deep_copy(protoset)
+
+    undo_redo.create_action("Add Prototype")
+    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
+    undo_redo.add_do_method(protoset, "add", id)
+    undo_redo.commit_action()
+
+
+func remove_prototype(protoset: ItemProtoset, id: String) -> void:
+    var old_prototypes = _prototypes_deep_copy(protoset)
+
+    undo_redo.create_action("Remove Prototype")
+    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
+    undo_redo.add_do_method(protoset, "remove", id)
+    undo_redo.commit_action()
+
+
+func _prototypes_deep_copy(protoset: ItemProtoset) -> Dictionary:
+    var result = protoset._prototypes.duplicate()
+    for prototype_id in result.keys():
+        result[prototype_id] = protoset._prototypes[prototype_id].duplicate()
+    return result
+
+
+func _set_prototypes(protoset: ItemProtoset, prototypes: Dictionary) -> void:
+    protoset._prototypes = prototypes

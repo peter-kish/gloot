@@ -42,6 +42,7 @@ func parse_begin(object: Object) -> void:
         var edit_protoset_button = EditProtosetButton.instance()
         edit_protoset_button.protoset = object
         edit_protoset_button.editor_interface = editor_interface
+        edit_protoset_button.gloot_undo_redo = gloot_undo_redo
         add_custom_control(edit_protoset_button)
 
 
