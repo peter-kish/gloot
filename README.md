@@ -71,7 +71,10 @@ User interfaces are usually unique for each project, but it often helps to have 
 
 1. Create an `addons` directory inside your project directory.
 2. Get the plugin from the AssetLib or from GitHub
-    * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download to install the plugin.
+    * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download and deselect everything except the `addons` directory when importing. 
+
+    ![](images/screenshots/ss_install_gloot.png)
+
     * From GitHub: Run `git clone https://github.com/peter-kish/gloot.git` and copy the contents of the `addons` directory to your projects `addons` directory.
 4. Enable the plugin in `Project Settings > Plugins`.
 

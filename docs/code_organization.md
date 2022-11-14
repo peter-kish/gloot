@@ -37,6 +37,7 @@ Other files in the directory:
 Contains code that implements the inspector plugin and UI controls that will be shown in the editor (such as the inventory editors, item property editor etc.).
 * [`choice_filter.gd`](../addons/gloot/editor/choice_filter.gd) and [`choice_filter.tscn`](../addons/gloot/editor/choice_filter.tscn) - Implements a UI control where the user can choose from a list of items and adds an option to filter the available items. Used for filtering and choosing item prototypes.
 * [`choice_filter_test.tscn`](../addons/gloot/editor/choice_filter_test.tscn) - A scene for testing [`choice_filter.gd`](../addons/gloot/editor/choice_filter.gd) and [`choice_filter.tscn`](../addons/gloot/editor/choice_filter.tscn).
+* [`edit_protoset_button.gd`](../addons/gloot/editor/edit_protoset_button.gd) and [`edit_protoset_button.tscn`](../addons/gloot/editor/edit_protoset_button.tscn) - Implements a button that opens the [`ItemProtoset`](./item_protoset.md) editor.
 * [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd) and [`dict_editor.tscn`](../addons/gloot/editor/dict_editor.tscn) - Implements a UI control for editing dictionaries. Used for editing [`InventoryItem`](./inventory_item.md) properties.
 * [`dict_editor_test.tscn`](../addons/gloot/editor/dict_editor_test.tscn) - A scene for testing [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd) and [`dict_editor.tscn`](../addons/gloot/editor/dict_editor.tscn).
 * [`editor_icons.gd`](../addons/gloot/editor/editor_icons.gd) - A script for obtaining built-in editor icons.
@@ -47,6 +48,7 @@ Contains code that implements the inspector plugin and UI controls that will be 
 * [`item_slot_equipped_item_editor.gd`](../addons/gloot/editor/item_slot_equipped_item_editor.gd) - Implements an [`EditorProperty`](https://docs.godotengine.org/en/stable/classes/class_editorproperty.html) for editing the equipped item of an [`ItemSlot`](./item_slot.md).
 * [`inventory_inspector_plugin.gd`](../addons/gloot/editor/inventory_inspector_plugin.gd) - Implements the GLoot [`EditorInspectorPlugin`](https://docs.godotengine.org/en/stable/classes/class_editorinspectorplugin.html#class-editorinspectorplugin).
 * [`multifloat_editor.gd`](../addons/gloot/editor/multifloat_editor.gd) - Implements a UI control for editing multiple float values (like [`Vector2`](https://docs.godotengine.org/en/stable/classes/class_vector2.html) and [`Vector3`](https://docs.godotengine.org/en/stable/classes/class_vector3.html)). Used by [`value_editor.gd`](../addons/gloot/editor/value_editor.gd).
+* [`protoset_editor.gd`](../addons/gloot/editor/protoset_editor.gd) and [`protoset_editor.tscn`](../addons/gloot/editor/protoset_editor.tscn) - Implements a UI control for editing [`ItemProtoset`](./item_protoset.md)s.
 * [`value_editor.gd`](../addons/gloot/editor/value_editor.gd) - Implements a UI control for editing a value of arbitrary type. Used by [`dict_editor.gd`](../addons/gloot/editor/dict_editor.gd).
 
 ## Examples (`examples`)
