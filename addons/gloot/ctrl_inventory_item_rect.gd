@@ -9,6 +9,7 @@ var ctrl_inventory
 var texture: Texture setget _set_texture
 var selected: bool = false setget _set_selected
 var selection_bg_color: Color = Color.gray setget _set_selection_bg_color
+var focus_color : Color = Color.yellowgreen
 
 
 func _set_texture(new_texture: Texture) -> void:
@@ -75,8 +76,13 @@ func _get_item_position() -> Vector2:
 
 func _ready() -> void:
     if item && ctrl_inventory:
+        focus_mode = Control.FOCUS_ALL
+        grab_focus()
         _refresh()
 
+func cancel_drag() -> void:
+    focus_mode = Control.FOCUS_ALL
+    grab_focus()
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, rect_size)
@@ -90,8 +96,18 @@ func _draw() -> void:
     else:
         draw_rect(rect, Color.white, false)
 
+    if has_focus():
+        draw_rect(rect, focus_color, false)
 
 func _input(event: InputEvent) -> void:
+    if has_focus():
+        if event.is_action_pressed("ui_select"):
+            emit_signal("activated", self)
+        elif event.is_action_pressed("ui_accept"):
+            emit_signal("grabbed", self, Vector2(5,5), true)
+            focus_mode = Control.FOCUS_NONE
+
+
     if !(event is InputEventMouseButton):
         return
 
@@ -105,4 +121,5 @@ func _input(event: InputEvent) -> void:
     elif mb_event.is_pressed():
         if get_global_rect().has_point(get_global_mouse_position()):
             var offset: Vector2 = get_global_mouse_position() - get_global_rect().position
-            emit_signal("grabbed", self, offset)
+            emit_signal("grabbed", self, offset, false)
+            focus_mode = Control.FOCUS_NONE

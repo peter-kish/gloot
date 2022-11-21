@@ -4,6 +4,7 @@ tool
 
 signal item_dropped
 signal inventory_item_activated
+signal virtual_cursor_moved_outside(grid, direction)
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(int) var item_spacing: int = 0 setget _set_item_spacing
@@ -19,6 +20,10 @@ var inventory: InventoryGrid = null setget _set_inventory
 var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
+var _grabbed_with_virtual_cursor : bool = false
+var _virtual_cursor : Vector2 # for controller/keyboard support
+var _virtual_cursor_can_drop = false # avoid dropping on the same grab action
+var _virtual_cursor_gird = null # allows the cursor to move to other gird ctrls
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
 var _drag_sprite: Sprite
 var _ctrl_item_container: Control
@@ -157,8 +162,11 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("item_removed", self, "_on_item_removed")
 
 
-func _on_item_modified(_item: InventoryItem) -> void:
-    _refresh()
+func _on_item_modified(item: InventoryItem) -> void:
+    if item == get_grabbed_item():
+        _update_grab_sprite(_grabbed_ctrl_inventory_item) # handle rotation
+    else:
+        _refresh()
 
 
 func _on_item_removed(_item: InventoryItem) -> void:
@@ -175,7 +183,10 @@ func _refresh() -> void:
 
 func _process(_delta) -> void:
     if _drag_sprite && _drag_sprite.visible:
-        _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
+        if _grabbed_with_virtual_cursor:
+            _drag_sprite.global_position = _virtual_cursor - _grab_offset
+        else:
+            _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
 
 
 func _draw() -> void:
@@ -269,14 +280,23 @@ func _refresh_selection() -> void:
         ctrl_item.selection_bg_color = selection_color
 
 
-func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
+func _on_item_grab(ctrl_inventory_item, offset: Vector2, use_virtual_cursor=false) -> void:
     _select(null)
     _grabbed_ctrl_inventory_item = ctrl_inventory_item
     _grabbed_ctrl_inventory_item.hide()
     _grab_offset = offset
+    _grabbed_with_virtual_cursor = use_virtual_cursor
+    _virtual_cursor = ctrl_inventory_item.rect_global_position
+    _virtual_cursor_can_drop = false
+    _virtual_cursor_gird = self
+
     if _gloot:
         _gloot._grabbed_inventory_item = get_grabbed_item()
         _gloot._grab_offset = _grab_offset
+        _gloot.emit_signal("item_grabbed", ctrl_inventory_item.item)
+    _update_grab_sprite(ctrl_inventory_item)
+
+func _update_grab_sprite(ctrl_inventory_item):
     if _drag_sprite:
         _drag_sprite.texture = ctrl_inventory_item.texture
         if _drag_sprite.texture == null:
@@ -314,16 +334,60 @@ func _select(item: InventoryItem) -> void:
     _selected_item = item
     _refresh_selection()
 
-
-func _input(event: InputEvent) -> void:
-    if !(event is InputEventMouseButton):
+func switch_virtual_cursor_grid(new_grid):
+    if not _grabbed_with_virtual_cursor or not new_grid:
         return
 
-    if !_grabbed_ctrl_inventory_item:
+    _virtual_cursor_gird = new_grid
+    _virtual_cursor = new_grid.rect_global_position
+
+
+func _input(event: InputEvent) -> void:
+    if event.is_action_released("ui_cancel"):
+        _cancel_grab()
+        return
+
+    _handle_virtual_cursor(event)
+    _handle_mouse(event)
+
+func _handle_virtual_cursor(event: InputEvent):
+    if not _grabbed_with_virtual_cursor:
+        return
+
+    var delta
+    if event.is_action_pressed("ui_left"):
+        delta = Vector2(-_virtual_cursor_gird.field_dimensions.x, 0)
+    if event.is_action_pressed("ui_right"):
+        delta = Vector2(_virtual_cursor_gird.field_dimensions.x, 0)
+    if event.is_action_pressed("ui_up"):
+        delta = Vector2(0, -_virtual_cursor_gird.field_dimensions.y)
+    if event.is_action_pressed("ui_down"):
+        delta = Vector2(0, _virtual_cursor_gird.field_dimensions.y)
+    if event.is_action_released("ui_accept"):
+        if _virtual_cursor_can_drop:
+            _drop_item()
+        else:
+            _virtual_cursor_can_drop = true
+
+    if delta:
+        var new_pos = _virtual_cursor + delta
+        if _virtual_cursor_gird.get_global_rect().has_point(new_pos):
+            _virtual_cursor = new_pos
+        else:
+            emit_signal("virtual_cursor_moved_outside", _virtual_cursor_gird, delta.normalized())
+
+func _handle_mouse(event: InputEvent):
+    if !(event is InputEventMouseButton):
         return
 
     var mb_event: InputEventMouseButton = event
     if mb_event.is_pressed() || mb_event.button_index != BUTTON_LEFT:
+        return
+
+    _drop_item()
+
+func _drop_item():
+    if !_grabbed_ctrl_inventory_item:
         return
 
     var item: InventoryItem = _grabbed_ctrl_inventory_item.item
@@ -346,8 +410,25 @@ func _input(event: InputEvent) -> void:
     if _drag_sprite:
         _drag_sprite.hide()
 
+    _grabbed_with_virtual_cursor = false
+    _virtual_cursor_can_drop = false
+
+func _cancel_grab():
+    var ctrl_item = _grabbed_ctrl_inventory_item
+    if _grabbed_ctrl_inventory_item:
+        _grabbed_ctrl_inventory_item.show()
+    _drag_sprite.hide()
+    _grabbed_ctrl_inventory_item = null
+    _grabbed_with_virtual_cursor = false
+    _virtual_cursor_can_drop = false
+    if ctrl_item:
+        ctrl_item.cancel_drag()
+        _gloot.emit_signal("grab_canceled", ctrl_item.item)
+
 
 func _get_grabbed_item_global_pos() -> Vector2:
+    if _grabbed_with_virtual_cursor:
+        return _virtual_cursor + (field_dimensions / 2)
     return get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
 
 
