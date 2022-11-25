@@ -154,3 +154,8 @@ prototype_id = "item_1x1"
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource( 7 )
 inventory_path = NodePath("../InventoryGridRight")
+
+[node name="LblInfo" type="Label" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 14.0

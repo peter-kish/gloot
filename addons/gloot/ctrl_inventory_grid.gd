@@ -4,6 +4,8 @@ tool
 
 signal item_dropped
 signal inventory_item_activated
+signal item_mouse_entered(item)
+signal item_mouse_exited(item)
 
 export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
 export(int) var item_spacing: int = 0 setget _set_item_spacing
@@ -252,6 +254,8 @@ func _populate_list() -> void:
         ctrl_inventory_item.item = item
         ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
         ctrl_inventory_item.connect("activated", self, "_on_item_activated")
+        ctrl_inventory_item.connect("mouse_entered", self, "_on_item_mouse_entered", [ctrl_inventory_item])
+        ctrl_inventory_item.connect("mouse_exited", self, "_on_item_mouse_exited", [ctrl_inventory_item])
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
@@ -308,6 +312,14 @@ func _on_item_activated(ctrl_inventory_item) -> void:
         _drag_sprite.hide()
 
     emit_signal("inventory_item_activated", item)
+
+
+func _on_item_mouse_entered(ctrl_inventory_item) -> void:
+    emit_signal("item_mouse_entered", ctrl_inventory_item.item)
+
+
+func _on_item_mouse_exited(ctrl_inventory_item) -> void:
+    emit_signal("item_mouse_exited", ctrl_inventory_item.item)
 
 
 func _select(item: InventoryItem) -> void:
