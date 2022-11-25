@@ -38,6 +38,8 @@ func _refresh() -> void:
 
 func _refresh_selection() -> void:
     ._refresh_selection()
+    if !_selection_panel:
+        _create_selection_panel()
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
     if _selected_item:
         move_child(_selection_panel, get_child_count() - 1)
@@ -56,9 +58,7 @@ func _refresh_field_background_grid() -> void:
         _field_backgrounds = []
 
     if !_selection_panel:
-        _selection_panel = Panel.new()
-        add_child(_selection_panel);
-        move_child(_selection_panel, get_child_count() - 1)
+        _create_selection_panel()
     _set_panel_style(_selection_panel, selection_style)
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
 
@@ -79,6 +79,12 @@ func _refresh_field_background_grid() -> void:
             field_panel.rect_position = _get_field_position(Vector2(i, j))
             _field_background_grid.add_child(field_panel)
             _field_backgrounds[i].append(field_panel)
+
+
+func _create_selection_panel() -> void:
+    _selection_panel = Panel.new()
+    add_child(_selection_panel);
+    move_child(_selection_panel, get_child_count() - 1)
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
