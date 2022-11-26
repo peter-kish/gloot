@@ -12,8 +12,7 @@ var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
 var _prev_hovered_field_coords: Vector2
-var _pending_highlight = null
-var _pending_highlight_reset = null
+var _pending_highlights: Array = []
 
 
 func _set_field_style(new_field_style: StyleBox) -> void:
@@ -34,6 +33,17 @@ func _set_field_selected_style(new_field_selected_style: StyleBox) -> void:
 func _set_selection_style(new_selection_style: StyleBox) -> void:
     selection_style = new_selection_style
     _refresh()
+
+
+func _queue_highlight(rect_: Rect2, style_: StyleBox) -> void:
+    _pending_highlights.push_back({
+        rect = rect_,
+        style = style_
+    })
+
+
+func _dequeue_highlight() -> Dictionary:
+    return _pending_highlights.pop_front()
 
 
 func _refresh() -> void:
@@ -105,15 +115,13 @@ func _ready() -> void:
 func _on_item_selected(item: InventoryItem) -> void:
     if !inventory:
         return
-
-    _pending_highlight = inventory.get_item_rect(item)
+    _queue_highlight(inventory.get_item_rect(item), field_selected_style)
 
 
 func _on_item_deselected(item: InventoryItem) -> void:
     if !inventory:
         return
-
-    _pending_highlight_reset = inventory.get_item_rect(item)
+    _queue_highlight(inventory.get_item_rect(item), field_style)
 
 
 func _input(event) -> void:
@@ -128,56 +136,54 @@ func _input(event) -> void:
 
     if _prev_hovered_field_coords != hovered_field_coords:
         _reset_highlights()
-        _highlight_hovered_fields(hovered_field_coords)
+        _highlight_hovered_fields(hovered_field_coords, field_highlighted_style)
         
     _prev_hovered_field_coords = hovered_field_coords
 
 
 func _reset_highlights() -> void:
-    _highlight_fields(_prev_hovered_field_coords, field_style)
-
-    if _pending_highlight_reset:
-        _highlight_rect(_pending_highlight_reset, field_style)
-        _pending_highlight_reset = null
-
-
-func _highlight_hovered_fields(hovered_field_coords: Vector2) -> void:
-    _highlight_fields(hovered_field_coords, field_highlighted_style)
-
-    if _pending_highlight:
-        _highlight_rect(_pending_highlight, field_selected_style)
-        _pending_highlight = null
+    while true:
+        var highlight := _dequeue_highlight()
+        if !highlight:
+            break
+        _highlight_rect(highlight.rect, highlight.style, false)
 
 
-func _highlight_fields(field_coords: Vector2, style: StyleBox) -> void:
+func _highlight_hovered_fields(field_coords: Vector2, style: StyleBox) -> void:
     if !style || !Verify.vector_positive(field_coords):
         return
 
     if _highlight_item(inventory.get_item_at(field_coords), style):
         return
 
-    if _selected_item && inventory.get_item_rect(_selected_item).has_point(field_coords):
-        # Don't highlight selected fields (done elsewhere)
-        return
-
-    _set_panel_style(_field_backgrounds[field_coords.x][field_coords.y], style)
+    _highlight_field(field_coords, style)
 
 
 func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
     if !item || !style:
         return false
     if item == _selected_item:
-        # Don't highlight the selected item (done elsewhere)
+        # Don't highlight the selected item (done in _on_item_selected())
         return false
 
-    _highlight_rect(inventory.get_item_rect(item), style)
+    _highlight_rect(inventory.get_item_rect(item), style, true)
     return true
 
 
-func _highlight_rect(rect: Rect2, style: StyleBox) -> void:
+func _highlight_field(field_coords: Vector2, style: StyleBox) -> void:
+    if _selected_item && inventory.get_item_rect(_selected_item).has_point(field_coords):
+        # Don't highlight selected fields (done in _on_item_selected())
+        return
+
+    _highlight_rect(Rect2(field_coords, Vector2.ONE), style, true)
+
+
+func _highlight_rect(rect: Rect2, style: StyleBox, queue_for_reset: bool) -> void:
     for i in range(rect.position.x, rect.size.x + rect.position.x):
         for j in range(rect.position.y, rect.size.y + rect.position.y):
             _set_panel_style(_field_backgrounds[i][j], style)
+    if queue_for_reset:
+        _queue_highlight(rect, field_style)
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
