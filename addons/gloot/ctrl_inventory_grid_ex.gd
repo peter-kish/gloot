@@ -134,8 +134,10 @@ func _input(event) -> void:
     if _is_hovering(get_global_mouse_position()):
         hovered_field_coords = get_field_coords(get_global_mouse_position())
 
+    _reset_highlights()
+    if _highlight_grabbed_item():
+        return
     if _prev_hovered_field_coords != hovered_field_coords:
-        _reset_highlights()
         _highlight_hovered_fields(hovered_field_coords, field_highlighted_style)
         
     _prev_hovered_field_coords = hovered_field_coords
@@ -159,6 +161,22 @@ func _highlight_hovered_fields(field_coords: Vector2, style: StyleBox) -> void:
     _highlight_field(field_coords, style)
 
 
+func _highlight_grabbed_item() -> bool:
+    var grabbed_item: InventoryItem = _get_global_grabbed_item()
+    if !grabbed_item:
+        return false
+
+    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_global_pos()
+    if !_is_hovering(global_grabbed_item_pos):
+        return false
+
+    var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
+    var item_size: Vector2 = inventory.get_item_size(grabbed_item)
+    var rect: Rect2 = Rect2(grabbed_item_coords, item_size)
+    _highlight_rect(rect, field_highlighted_style, true)
+    return true
+
+
 func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
     if !item || !style:
         return false
@@ -179,31 +197,13 @@ func _highlight_field(field_coords: Vector2, style: StyleBox) -> void:
 
 
 func _highlight_rect(rect: Rect2, style: StyleBox, queue_for_reset: bool) -> void:
-    for i in range(rect.position.x, rect.size.x + rect.position.x):
-        for j in range(rect.position.y, rect.size.y + rect.position.y):
+    var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
+    for i in range(rect.position.x, h_range):
+        var v_range = min(rect.size.y + rect.position.y, inventory.size.y)
+        for j in range(rect.position.y, v_range):
             _set_panel_style(_field_backgrounds[i][j], style)
     if queue_for_reset:
         _queue_highlight(rect, field_style)
-
-
-func _is_field_highlighted(field_coords: Vector2) -> bool:
-    var grabbed_item: InventoryItem = _get_global_grabbed_item()
-    if grabbed_item:
-        var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_global_pos()
-        if _is_hovering(global_grabbed_item_pos):
-            var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
-            var item_size: Vector2 = inventory.get_item_size(grabbed_item)
-            var rect: Rect2 = Rect2(grabbed_item_coords, item_size)
-            return rect.has_point(field_coords)
-        return false
-
-    var item: InventoryItem = inventory.get_item_at(field_coords)
-    if item:
-        return _is_item_highlighted(item)
-
-    var mouse_pos: Vector2 = get_global_mouse_position()
-    var rect: Rect2 = Rect2(_get_global_field_position(field_coords), field_dimensions)
-    return rect.has_point(mouse_pos)
 
 
 func _get_global_grabbed_item() -> InventoryItem:
@@ -218,25 +218,3 @@ func _get_global_grabbed_item_global_pos() -> Vector2:
         return get_global_mouse_position() - _gloot._grab_offset + (field_dimensions / 2)
     return Vector2(-1, -1)
     
-
-func _is_field_selected(field_coords: Vector2) -> bool:
-    if !_selected_item:
-        return false
-
-    var item: InventoryItem = inventory.get_item_at(field_coords)
-    if !item:
-        return false
-
-    return item == _selected_item
-
-
-func _is_item_highlighted(item: InventoryItem) -> bool:
-    var item_coords: Vector2 = inventory.get_item_position(item)
-    var item_size: Vector2 = inventory.get_item_size(item)
-    var item_global_pos: Vector2 = _get_global_field_position(item_coords)
-    var item_global_size: Vector2 = _get_streched_item_sprite_size(item)
-    if !stretch_item_sprites:
-        item_global_size = Vector2(field_dimensions.x * item_size.x, \
-            field_dimensions.y * item_size.y)
-
-    return Rect2(item_global_pos, item_global_size).has_point(get_global_mouse_position())
