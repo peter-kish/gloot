@@ -99,6 +99,16 @@ func _create_selection_panel() -> void:
     move_child(_selection_panel, get_child_count() - 1)
     _set_panel_style(_selection_panel, selection_style)
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
+    _selection_panel.connect("mouse_entered", self, "_on_selection_mouse_entered")
+    _selection_panel.connect("mouse_exited", self, "_on_selection_mouse_exited")
+
+
+func _on_selection_mouse_entered() -> void:
+    emit_signal("item_mouse_entered", _selected_item)
+
+
+func _on_selection_mouse_exited() -> void:
+    emit_signal("item_mouse_exited", _selected_item)
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
