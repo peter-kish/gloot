@@ -3,6 +3,8 @@ extends Control
 tool
 
 signal item_dropped
+signal item_selected(item)
+signal item_deselected(item)
 signal inventory_item_activated
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
@@ -323,8 +325,17 @@ func _on_item_mouse_exited(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
+    if item == _selected_item:
+        return
+
+    var prev_selected_item := _selected_item
     _selected_item = item
     _refresh_selection()
+
+    if _selected_item:
+        emit_signal("item_selected", _selected_item)
+    else:
+        emit_signal("item_deselected", prev_selected_item)
 
 
 func _input(event: InputEvent) -> void:

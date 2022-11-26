@@ -2,6 +2,9 @@ class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
 tool
 
+const Verify = preload("res://addons/gloot/verify.gd")
+const RECT_NEGATIVE = Rect2(-Vector2.ONE, -Vector2.ONE)
+
 export(StyleBox) var field_style: StyleBox setget _set_field_style
 export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
 export(StyleBox) var field_selected_style: StyleBox setget _set_field_selected_style
@@ -9,6 +12,9 @@ export(StyleBox) var selection_style: StyleBox setget _set_selection_style
 var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
+var _prev_hovered_field_coords: Vector2
+var _highlight_pending := RECT_NEGATIVE
+var _highlight_reset_pending := RECT_NEGATIVE
 
 
 func _set_field_style(new_field_style: StyleBox) -> void:
@@ -92,20 +98,79 @@ func _set_panel_style(panel: Panel, style: StyleBox) -> void:
     panel.add_stylebox_override("panel", style)
 
 
+func _ready() -> void:
+    connect("item_selected", self, "_on_item_selected")
+    connect("item_deselected", self, "_on_item_deselected")
+
+
+func _on_item_selected(item: InventoryItem) -> void:
+    if !inventory:
+        return
+
+    var item_size := inventory.get_item_size(item)
+    var item_pos := inventory.get_item_position(item)
+    _highlight_pending = Rect2(item_pos, item_size)
+
+
+func _on_item_deselected(item: InventoryItem) -> void:
+    if !inventory:
+        return
+
+    var item_size := inventory.get_item_size(item)
+    var item_pos := inventory.get_item_position(item)
+    _highlight_reset_pending = Rect2(item_pos, item_size)
+
+
 func _input(event) -> void:
-    if event is InputEventMouseMotion:
-        for i in range(inventory.size.x):
-            for j in range(inventory.size.y):
-                var field_panel: Panel = _field_backgrounds[i][j]
-                field_panel.show()
-                if _is_field_selected(Vector2(i, j)) && field_selected_style:
-                    _set_panel_style(field_panel, field_selected_style)
-                elif _is_field_highlighted(Vector2(i, j)) && field_highlighted_style:
-                    _set_panel_style(field_panel, field_highlighted_style)
-                elif field_style:
-                    _set_panel_style(field_panel, field_style)
-                else:
-                    field_panel.hide()
+    if !(event is InputEventMouseMotion):
+        return
+    
+    var hovered_field_coords := Vector2(-1, -1)
+    if _is_hovering(get_global_mouse_position()):
+        hovered_field_coords = get_field_coords(get_global_mouse_position())
+
+    if _prev_hovered_field_coords != hovered_field_coords:
+        # Reset previous highlights
+        _highlight_fields(_prev_hovered_field_coords, field_style)
+        if Verify.vector_positive(_highlight_reset_pending.position):
+            _highlight_rect(_highlight_reset_pending, field_style)
+            _highlight_reset_pending = RECT_NEGATIVE
+        # Highlight hovered fields
+        _highlight_fields(hovered_field_coords, field_highlighted_style)
+        if Verify.vector_positive(_highlight_pending.position):
+            _highlight_rect(_highlight_pending, field_highlighted_style)
+            _highlight_pending = RECT_NEGATIVE
+        
+    _prev_hovered_field_coords = hovered_field_coords
+
+
+func _highlight_fields(field_coords: Vector2, style: StyleBox) -> void:
+    if !style || !Verify.vector_positive(field_coords):
+        return
+
+    var item := inventory.get_item_at(field_coords)
+    if item:
+        var item_size := inventory.get_item_size(item)
+        if item_size.x > 1 && item_size.y > 1:
+            _highlight_item(item, style)
+            return
+
+    _set_panel_style(_field_backgrounds[field_coords.x][field_coords.y], style)
+
+
+func _highlight_item(item: InventoryItem, style: StyleBox) -> void:
+    if !item || !style:
+        return
+
+    var item_size := inventory.get_item_size(item)
+    var item_pos := inventory.get_item_position(item)
+    _highlight_rect(Rect2(item_pos, item_size), style)
+
+
+func _highlight_rect(rect: Rect2, style: StyleBox) -> void:
+    for i in range(rect.position.x, rect.size.x + rect.position.x):
+        for j in range(rect.position.y, rect.size.y + rect.position.y):
+            _set_panel_style(_field_backgrounds[i][j], style)
 
 
 func _is_field_highlighted(field_coords: Vector2) -> bool:
@@ -119,7 +184,7 @@ func _is_field_highlighted(field_coords: Vector2) -> bool:
             return rect.has_point(field_coords)
         return false
 
-    var item: InventoryItem = _get_item_on_field(field_coords)
+    var item: InventoryItem = inventory.get_item_at(field_coords)
     if item:
         return _is_item_highlighted(item)
 
@@ -145,25 +210,11 @@ func _is_field_selected(field_coords: Vector2) -> bool:
     if !_selected_item:
         return false
 
-    var item: InventoryItem = _get_item_on_field(field_coords)
+    var item: InventoryItem = inventory.get_item_at(field_coords)
     if !item:
         return false
 
     return item == _selected_item
-
-
-func _get_item_on_field(field_coords: Vector2) -> InventoryItem:
-    if !inventory:
-        return null
-
-    for item in inventory.get_items():
-        var item_coords: Vector2 = inventory.get_item_position(item)
-        var item_size: Vector2 = inventory.get_item_size(item)
-        var rect: Rect2 = Rect2(item_coords, item_size)
-        if rect.has_point(field_coords):
-            return item
-
-    return null
 
 
 func _is_item_highlighted(item: InventoryItem) -> bool:
