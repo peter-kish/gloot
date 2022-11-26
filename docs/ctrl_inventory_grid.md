@@ -29,5 +29,7 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 
 * `item_dropped(InventoryItem, Vector2)` - Emitted when a grabbed `InventoryItem` is dropped.
 * `inventory_item_activated(InventoryItem)` - Emitted when an `InventoryItem` is activated (i.e. double clicked).
+* `item_selected(InventoryItem)` - Emitted when an `InventoryItem` is selected.
+* `item_deselected(InventoryItem)` - Emitted when an `InventoryItem` is deselected.
 * `item_mouse_entered(InventoryItem)` - Emitted when the mouse enters the `Rect` area of the control representing the given `InventoryItem`.
 * `item_mouse_exited(InventoryItem)` - Emitted when the mouse leaves the `Rect` area of the control representing the given `InventoryItem`.
