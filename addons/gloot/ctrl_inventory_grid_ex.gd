@@ -115,13 +115,15 @@ func _ready() -> void:
 func _on_item_selected(item: InventoryItem) -> void:
     if !inventory:
         return
-    _queue_highlight(inventory.get_item_rect(item), field_selected_style)
+    if field_selected_style:
+        _queue_highlight(inventory.get_item_rect(item), field_selected_style)
 
 
 func _on_item_deselected(item: InventoryItem) -> void:
     if !inventory:
         return
-    _queue_highlight(inventory.get_item_rect(item), field_style)
+    if field_style:
+        _queue_highlight(inventory.get_item_rect(item), field_style)
 
 
 func _input(event) -> void:
