@@ -11,7 +11,6 @@ export(StyleBox) var selection_style: StyleBox setget _set_selection_style
 var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
-var _prev_hovered_field_coords: Vector2
 var _pending_highlights: Array = []
 
 
@@ -137,13 +136,12 @@ func _input(event) -> void:
         hovered_field_coords = get_field_coords(get_global_mouse_position())
 
     _reset_highlights()
-    if _highlight_grabbed_item():
+    if !field_highlighted_style:
         return
-    if _prev_hovered_field_coords != hovered_field_coords:
-        _highlight_hovered_fields(hovered_field_coords, field_highlighted_style)
+    if _highlight_grabbed_item(field_highlighted_style):
+        return
+    _highlight_hovered_fields(hovered_field_coords, field_highlighted_style)
         
-    _prev_hovered_field_coords = hovered_field_coords
-
 
 func _reset_highlights() -> void:
     while true:
@@ -163,7 +161,7 @@ func _highlight_hovered_fields(field_coords: Vector2, style: StyleBox) -> void:
     _highlight_field(field_coords, style)
 
 
-func _highlight_grabbed_item() -> bool:
+func _highlight_grabbed_item(style: StyleBox) -> bool:
     var grabbed_item: InventoryItem = _get_global_grabbed_item()
     if !grabbed_item:
         return false
@@ -175,7 +173,7 @@ func _highlight_grabbed_item() -> bool:
     var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
     var item_size: Vector2 = inventory.get_item_size(grabbed_item)
     var rect: Rect2 = Rect2(grabbed_item_coords, item_size)
-    _highlight_rect(rect, field_highlighted_style, true)
+    _highlight_rect(rect, style, true)
     return true
 
 
