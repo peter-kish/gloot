@@ -106,22 +106,20 @@ func _on_item_selected(item: InventoryItem) -> void:
     if !inventory:
         return
 
-    var item_size := inventory.get_item_size(item)
-    var item_pos := inventory.get_item_position(item)
-    _pending_highlight = Rect2(item_pos, item_size)
+    _pending_highlight = inventory.get_item_rect(item)
 
 
 func _on_item_deselected(item: InventoryItem) -> void:
     if !inventory:
         return
 
-    var item_size := inventory.get_item_size(item)
-    var item_pos := inventory.get_item_position(item)
-    _pending_highlight_reset = Rect2(item_pos, item_size)
+    _pending_highlight_reset = inventory.get_item_rect(item)
 
 
 func _input(event) -> void:
     if !(event is InputEventMouseMotion):
+        return
+    if !inventory:
         return
     
     var hovered_field_coords := Vector2(-1, -1)
@@ -145,7 +143,7 @@ func _reset_highlights() -> void:
 
 func _highlight_hovered_fields(hovered_field_coords: Vector2) -> void:
     _highlight_fields(hovered_field_coords, field_highlighted_style)
-    
+
     if _pending_highlight:
         _highlight_rect(_pending_highlight, field_highlighted_style)
         _pending_highlight = null
@@ -155,23 +153,25 @@ func _highlight_fields(field_coords: Vector2, style: StyleBox) -> void:
     if !style || !Verify.vector_positive(field_coords):
         return
 
-    var item := inventory.get_item_at(field_coords)
-    if item:
-        var item_size := inventory.get_item_size(item)
-        if item_size.x > 1 && item_size.y > 1:
-            _highlight_item(item, style)
-            return
+    if _highlight_item(inventory.get_item_at(field_coords), style):
+        return
+
+    if _selected_item && inventory.get_item_rect(_selected_item).has_point(field_coords):
+        # Don't highlight selected fields (done elsewhere)
+        return
 
     _set_panel_style(_field_backgrounds[field_coords.x][field_coords.y], style)
 
 
-func _highlight_item(item: InventoryItem, style: StyleBox) -> void:
+func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
     if !item || !style:
-        return
+        return false
+    if item == _selected_item:
+        # Don't highlight the selected item (done elsewhere)
+        return false
 
-    var item_size := inventory.get_item_size(item)
-    var item_pos := inventory.get_item_position(item)
-    _highlight_rect(Rect2(item_pos, item_size), style)
+    _highlight_rect(inventory.get_item_rect(item), style)
+    return true
 
 
 func _highlight_rect(rect: Rect2, style: StyleBox) -> void:
