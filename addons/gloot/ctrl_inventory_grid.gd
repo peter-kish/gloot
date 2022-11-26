@@ -3,6 +3,8 @@ extends Control
 tool
 
 signal item_dropped
+signal item_selected(item)
+signal item_deselected(item)
 signal inventory_item_activated
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
@@ -139,8 +141,8 @@ func _connect_inventory_signals() -> void:
         inventory.connect("contents_changed", self, "_refresh")
     if !inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.connect("item_modified", self, "_on_item_modified")
-    if !inventory.is_connected("size_changed", self, "_refresh"):
-        inventory.connect("size_changed", self, "_refresh")
+    if !inventory.is_connected("size_changed", self, "_on_inventory_resized"):
+        inventory.connect("size_changed", self, "_on_inventory_resized")
     if !inventory.is_connected("item_removed", self, "_on_item_removed"):
         inventory.connect("item_removed", self, "_on_item_removed")
 
@@ -153,13 +155,17 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("contents_changed", self, "_refresh")
     if inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.disconnect("item_modified", self, "_on_item_modified")
-    if inventory.is_connected("size_changed", self, "_refresh"):
-        inventory.disconnect("size_changed", self, "_refresh")
+    if inventory.is_connected("size_changed", self, "_on_inventory_resized"):
+        inventory.disconnect("size_changed", self, "_on_inventory_resized")
     if inventory.is_connected("item_removed", self, "_on_item_removed"):
         inventory.disconnect("item_removed", self, "_on_item_removed")
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
+
+
+func _on_inventory_resized() -> void:
     _refresh()
 
 
@@ -323,8 +329,17 @@ func _on_item_mouse_exited(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
+    if item == _selected_item:
+        return
+
+    var prev_selected_item := _selected_item
     _selected_item = item
     _refresh_selection()
+
+    if _selected_item:
+        emit_signal("item_selected", _selected_item)
+    else:
+        emit_signal("item_deselected", prev_selected_item)
 
 
 func _input(event: InputEvent) -> void:
