@@ -145,7 +145,7 @@ func _highlight_hovered_fields(hovered_field_coords: Vector2) -> void:
     _highlight_fields(hovered_field_coords, field_highlighted_style)
 
     if _pending_highlight:
-        _highlight_rect(_pending_highlight, field_highlighted_style)
+        _highlight_rect(_pending_highlight, field_selected_style)
         _pending_highlight = null
 
 
