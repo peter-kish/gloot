@@ -3,7 +3,6 @@ extends CtrlInventoryGrid
 tool
 
 const Verify = preload("res://addons/gloot/verify.gd")
-const RECT_NEGATIVE = Rect2(-Vector2.ONE, -Vector2.ONE)
 
 export(StyleBox) var field_style: StyleBox setget _set_field_style
 export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
@@ -13,8 +12,8 @@ var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
 var _prev_hovered_field_coords: Vector2
-var _highlight_pending := RECT_NEGATIVE
-var _highlight_reset_pending := RECT_NEGATIVE
+var _pending_highlight = null
+var _pending_highlight_reset = null
 
 
 func _set_field_style(new_field_style: StyleBox) -> void:
@@ -109,7 +108,7 @@ func _on_item_selected(item: InventoryItem) -> void:
 
     var item_size := inventory.get_item_size(item)
     var item_pos := inventory.get_item_position(item)
-    _highlight_pending = Rect2(item_pos, item_size)
+    _pending_highlight = Rect2(item_pos, item_size)
 
 
 func _on_item_deselected(item: InventoryItem) -> void:
@@ -118,7 +117,7 @@ func _on_item_deselected(item: InventoryItem) -> void:
 
     var item_size := inventory.get_item_size(item)
     var item_pos := inventory.get_item_position(item)
-    _highlight_reset_pending = Rect2(item_pos, item_size)
+    _pending_highlight_reset = Rect2(item_pos, item_size)
 
 
 func _input(event) -> void:
@@ -130,18 +129,26 @@ func _input(event) -> void:
         hovered_field_coords = get_field_coords(get_global_mouse_position())
 
     if _prev_hovered_field_coords != hovered_field_coords:
-        # Reset previous highlights
-        _highlight_fields(_prev_hovered_field_coords, field_style)
-        if Verify.vector_positive(_highlight_reset_pending.position):
-            _highlight_rect(_highlight_reset_pending, field_style)
-            _highlight_reset_pending = RECT_NEGATIVE
-        # Highlight hovered fields
-        _highlight_fields(hovered_field_coords, field_highlighted_style)
-        if Verify.vector_positive(_highlight_pending.position):
-            _highlight_rect(_highlight_pending, field_highlighted_style)
-            _highlight_pending = RECT_NEGATIVE
+        _reset_highlights()
+        _highlight_hovered_fields(hovered_field_coords)
         
     _prev_hovered_field_coords = hovered_field_coords
+
+
+func _reset_highlights() -> void:
+    _highlight_fields(_prev_hovered_field_coords, field_style)
+
+    if _pending_highlight_reset:
+        _highlight_rect(_pending_highlight_reset, field_style)
+        _pending_highlight_reset = null
+
+
+func _highlight_hovered_fields(hovered_field_coords: Vector2) -> void:
+    _highlight_fields(hovered_field_coords, field_highlighted_style)
+    
+    if _pending_highlight:
+        _highlight_rect(_pending_highlight, field_highlighted_style)
+        _pending_highlight = null
 
 
 func _highlight_fields(field_coords: Vector2, style: StyleBox) -> void:
