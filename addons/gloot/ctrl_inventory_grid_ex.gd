@@ -47,13 +47,12 @@ func _dequeue_highlight() -> Dictionary:
 
 func _refresh() -> void:
     ._refresh()
-    _refresh_field_background_grid()
 
 
 func _refresh_selection() -> void:
     ._refresh_selection()
     if !_selection_panel:
-        _create_selection_panel()
+        return
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
     if _selected_item:
         move_child(_selection_panel, get_child_count() - 1)
@@ -71,11 +70,10 @@ func _refresh_field_background_grid() -> void:
         _field_background_grid = null
         _field_backgrounds = []
 
-    if !_selection_panel:
-        _create_selection_panel()
-    _set_panel_style(_selection_panel, selection_style)
-    _selection_panel.visible = (_selected_item != null) && (selection_style != null)
+    _create_field_background_grid()
 
+
+func _create_field_background_grid() -> void:
     if !inventory:
         return
 
@@ -99,6 +97,8 @@ func _create_selection_panel() -> void:
     _selection_panel = Panel.new()
     add_child(_selection_panel);
     move_child(_selection_panel, get_child_count() - 1)
+    _set_panel_style(_selection_panel, selection_style)
+    _selection_panel.visible = (_selected_item != null) && (selection_style != null)
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
@@ -107,6 +107,8 @@ func _set_panel_style(panel: Panel, style: StyleBox) -> void:
 
 
 func _ready() -> void:
+    _create_selection_panel()
+    _create_field_background_grid()
     connect("item_selected", self, "_on_item_selected")
     connect("item_deselected", self, "_on_item_deselected")
 
@@ -123,6 +125,11 @@ func _on_item_deselected(item: InventoryItem) -> void:
         return
     if field_style:
         _queue_highlight(inventory.get_item_rect(item), field_style)
+
+
+func _on_inventory_resized() -> void:
+    ._on_inventory_resized()
+    _refresh_field_background_grid()
 
 
 func _input(event) -> void:

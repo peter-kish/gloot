@@ -141,8 +141,8 @@ func _connect_inventory_signals() -> void:
         inventory.connect("contents_changed", self, "_refresh")
     if !inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.connect("item_modified", self, "_on_item_modified")
-    if !inventory.is_connected("size_changed", self, "_refresh"):
-        inventory.connect("size_changed", self, "_refresh")
+    if !inventory.is_connected("size_changed", self, "_on_inventory_resized"):
+        inventory.connect("size_changed", self, "_on_inventory_resized")
     if !inventory.is_connected("item_removed", self, "_on_item_removed"):
         inventory.connect("item_removed", self, "_on_item_removed")
 
@@ -155,13 +155,17 @@ func _disconnect_inventory_signals() -> void:
         inventory.disconnect("contents_changed", self, "_refresh")
     if inventory.is_connected("item_modified", self, "_on_item_modified"):
         inventory.disconnect("item_modified", self, "_on_item_modified")
-    if inventory.is_connected("size_changed", self, "_refresh"):
-        inventory.disconnect("size_changed", self, "_refresh")
+    if inventory.is_connected("size_changed", self, "_on_inventory_resized"):
+        inventory.disconnect("size_changed", self, "_on_inventory_resized")
     if inventory.is_connected("item_removed", self, "_on_item_removed"):
         inventory.disconnect("item_removed", self, "_on_item_removed")
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
+    _refresh()
+
+
+func _on_inventory_resized() -> void:
     _refresh()
 
 
