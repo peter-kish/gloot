@@ -2,9 +2,9 @@ extends Node
 class_name ItemSlot
 tool
 
-signal item_set
+signal item_set(item)
 signal item_cleared
-signal inventory_changed
+signal inventory_changed(inventory)
 
 
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path

@@ -1,7 +1,7 @@
 class_name CtrlInventoryItemRect
 extends Control
 
-signal grabbed
+signal grabbed(offset)
 signal activated
 
 var item: InventoryItem setget _set_item

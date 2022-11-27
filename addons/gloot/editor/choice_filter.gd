@@ -1,8 +1,8 @@
 extends Control
 tool
 
-signal choice_picked
-signal choice_selected
+signal choice_picked(value_index)
+signal choice_selected(value_index)
 
 
 onready var lbl_filter: Label = $HBoxContainer/Label

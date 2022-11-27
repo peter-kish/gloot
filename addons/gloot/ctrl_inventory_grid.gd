@@ -2,10 +2,10 @@ class_name CtrlInventoryGrid
 extends Control
 tool
 
-signal item_dropped
+signal item_dropped(item, offset)
 signal item_selected(item)
 signal item_deselected(item)
-signal inventory_item_activated
+signal inventory_item_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 

@@ -2,9 +2,9 @@ extends Node
 class_name Inventory
 tool
 
-signal item_added
-signal item_removed
-signal item_modified
+signal item_added(item)
+signal item_removed(item)
+signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 

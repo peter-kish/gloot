@@ -2,7 +2,7 @@ class_name CtrlInventory
 extends Control
 tool
 
-signal inventory_item_activated
+signal inventory_item_activated(item)
 
 export(NodePath) var inventory_path: NodePath setget _set_inventory_path
 export(Texture) var default_item_icon: Texture

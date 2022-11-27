@@ -1,8 +1,8 @@
 extends Control
 tool
 
-signal value_changed
-signal value_removed
+signal value_changed(key, value)
+signal value_removed(key)
 
 const Verify = preload("res://addons/gloot/verify.gd")
 const ValueEditor = preload("res://addons/gloot/editor/value_editor.gd")

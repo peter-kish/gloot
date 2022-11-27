@@ -1,7 +1,5 @@
 extends EditorInspectorPlugin
 
-signal edit_requested
-
 var EditProtosetButton = preload("res://addons/gloot/editor/edit_protoset_button.tscn")
 var InventoryInspector = preload("res://addons/gloot/editor/inventory_inspector.tscn")
 var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")

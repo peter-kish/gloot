@@ -1,6 +1,6 @@
 extends GridContainer
 
-signal value_changed
+signal value_changed(value_index)
 
 var values: Array = [] setget _set_values
 var titles: Array = [] setget _set_titles
