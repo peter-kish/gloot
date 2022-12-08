@@ -5,7 +5,7 @@
 [node name="DictEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 300, 0 )
+minimum_size = Vector2( 300, 0 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -15,63 +15,63 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 572.0
+offset_right = 1024.0
+offset_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
-margin_right = 1024.0
-margin_bottom = 572.0
+offset_right = 1024.0
+offset_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 4
 
 [node name="LblTitleName" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
-margin_right = 38.0
-margin_bottom = 14.0
+offset_right = 38.0
+offset_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Name"
 
 [node name="LblTitleType" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
-margin_left = 42.0
-margin_right = 72.0
-margin_bottom = 14.0
+offset_left = 42.0
+offset_right = 72.0
+offset_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Type"
 
 [node name="LblTitleValue" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
-margin_left = 76.0
-margin_right = 111.0
-margin_bottom = 14.0
+offset_left = 76.0
+offset_right = 111.0
+offset_bottom = 14.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 text = "Value"
 
 [node name="CtrlDummy" type="Control" parent="VBoxContainer/ScrollContainer/GridContainer"]
-margin_left = 115.0
-margin_right = 115.0
-margin_bottom = 14.0
+offset_left = 115.0
+offset_right = 115.0
+offset_bottom = 14.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 576.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 576.0
+offset_right = 1024.0
+offset_bottom = 600.0
 
 [node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
-margin_right = 856.0
-margin_bottom = 24.0
+offset_right = 856.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
-margin_left = 860.0
-margin_right = 925.0
-margin_bottom = 24.0
+offset_left = 860.0
+offset_right = 925.0
+offset_bottom = 24.0
 text = "String"
-items = [ "bool", null, false, 1, null, "int", null, false, 2, null, "float", null, false, 3, null, "String", null, false, 4, null, "Vector2", null, false, 5, null, "Rect2", null, false, 6, null, "Vector3", null, false, 7, null, "Plane", null, false, 9, null, "Quat", null, false, 10, null, "AABB", null, false, 11, null, "Color", null, false, 14, null ]
+items = [ "bool", null, false, 1, null, "int", null, false, 2, null, "float", null, false, 3, null, "String", null, false, 4, null, "Vector2", null, false, 5, null, "Rect2", null, false, 6, null, "Vector3", null, false, 7, null, "Plane", null, false, 9, null, "Quaternion", null, false, 10, null, "AABB", null, false, 11, null, "Color", null, false, 14, null ]
 selected = 3
 
 [node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]
-margin_left = 929.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 929.0
+offset_right = 1024.0
+offset_bottom = 24.0
 text = "Add Property"

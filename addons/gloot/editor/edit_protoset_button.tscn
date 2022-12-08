@@ -9,13 +9,13 @@ anchor_bottom = 1.0
 text = "Edit Protoset"
 script = ExtResource( 2 )
 
-[node name="WindowDialog" type="WindowDialog" parent="."]
+[node name="Window" type="Window" parent="."]
 unique_name_in_owner = true
-margin_right = 800.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 600, 200 )
+offset_right = 800.0
+offset_bottom = 600.0
+minimum_size = Vector2( 600, 200 )
 window_title = "Edit Protoset"
 resizable = true
 
-[node name="ProtosetEditor" parent="WindowDialog" instance=ExtResource( 1 )]
+[node name="ProtosetEditor" parent="Window" instance=ExtResource( 1 )]
 unique_name_in_owner = true

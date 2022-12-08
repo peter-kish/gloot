@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=1]
 [ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=2]
 [ext_resource path="res://tests/data/item_definitions_stack.tres" type="Resource" id=3]
-[ext_resource path="res://images/item_key.png" type="Texture" id=4]
+[ext_resource path="res://images/item_key.png" type="Texture2D" id=4]
 [ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
 
 [node name="Control" type="Control"]
@@ -11,9 +11,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
-margin_top = -1.0
-margin_right = 377.0
-margin_bottom = 224.0
+offset_top = -1.0
+offset_right = 377.0
+offset_bottom = 224.0
 script = ExtResource( 2 )
 inventory_path = NodePath("../InventoryStacked")
 default_item_icon = ExtResource( 4 )
