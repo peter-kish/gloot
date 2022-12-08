@@ -6,7 +6,7 @@
 [node name="InventoryEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 200 )
+minimum_size = Vector2( 0, 200 )
 script = ExtResource( 2 )
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
@@ -16,39 +16,39 @@ anchor_bottom = 1.0
 [node name="ChoiceFilter" parent="HSplitContainer" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 506.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 175, 0 )
+offset_right = 506.0
+offset_bottom = 600.0
+minimum_size = Vector2( 175, 0 )
 pick_text = "Add"
 filter_text = "Filter Prototypes:"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
-margin_left = 518.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_left = 518.0
+offset_right = 1024.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/VBoxContainer"]
-margin_right = 506.0
-margin_bottom = 576.0
+offset_right = 506.0
+offset_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VBoxContainer"]
-margin_top = 580.0
-margin_right = 506.0
-margin_bottom = 600.0
+offset_top = 580.0
+offset_right = 506.0
+offset_bottom = 600.0
 
 [node name="BtnEdit" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
-margin_right = 251.0
-margin_bottom = 20.0
+offset_right = 251.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Edit"
 
 [node name="BtnRemove" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
-margin_left = 255.0
-margin_right = 506.0
-margin_bottom = 20.0
+offset_left = 255.0
+offset_right = 506.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Remove"

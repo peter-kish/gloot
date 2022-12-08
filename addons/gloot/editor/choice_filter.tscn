@@ -10,29 +10,29 @@ size_flags_vertical = 3
 script = ExtResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="HBoxContainer"]
-margin_top = 5.0
-margin_right = 37.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 37.0
+offset_bottom = 19.0
 text = "Filter:"
 
 [node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
-margin_left = 41.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 41.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ItemList" type="ItemList" parent="."]
-margin_top = 28.0
-margin_right = 1024.0
-margin_bottom = 576.0
+offset_top = 28.0
+offset_right = 1024.0
+offset_bottom = 576.0
 size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="."]
-margin_top = 580.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 580.0
+offset_right = 1024.0
+offset_bottom = 600.0
