@@ -1,5 +1,5 @@
 extends Control
-tool
+#@tool
 
 signal value_changed(key, value)
 signal value_removed(key)
@@ -9,36 +9,61 @@ const ValueEditor = preload("res://addons/gloot/editor/value_editor.gd")
 const supported_types: Array = [
     TYPE_BOOL,
     TYPE_INT,
-    TYPE_REAL,
+    TYPE_FLOAT,
     TYPE_STRING,
     TYPE_VECTOR2,
     TYPE_RECT2,
     TYPE_VECTOR3,
     TYPE_PLANE,
-    TYPE_QUAT,
+    TYPE_QUATERNION,
     TYPE_AABB,
     TYPE_COLOR,
 ]
 
-onready var grid_container = $VBoxContainer/ScrollContainer/GridContainer
-onready var lbl_name = $VBoxContainer/ScrollContainer/GridContainer/LblTitleName
-onready var lbl_type = $VBoxContainer/ScrollContainer/GridContainer/LblTitleType
-onready var lbl_value = $VBoxContainer/ScrollContainer/GridContainer/LblTitleValue
-onready var ctrl_dummy = $VBoxContainer/ScrollContainer/GridContainer/CtrlDummy
-onready var edt_property_name = $VBoxContainer/HBoxContainer/EdtPropertyName
-onready var opt_type = $VBoxContainer/HBoxContainer/OptType
-onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
+@onready var grid_container = $VBoxContainer/ScrollContainer/GridContainer
+@onready var lbl_name = $VBoxContainer/ScrollContainer/GridContainer/LblTitleName
+@onready var lbl_type = $VBoxContainer/ScrollContainer/GridContainer/LblTitleType
+@onready var lbl_value = $VBoxContainer/ScrollContainer/GridContainer/LblTitleValue
+@onready var ctrl_dummy = $VBoxContainer/ScrollContainer/GridContainer/CtrlDummy
+@onready var edt_property_name = $VBoxContainer/HBoxContainer/EdtPropertyName
+@onready var opt_type = $VBoxContainer/HBoxContainer/OptType
+@onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
 
-export(Dictionary) var dictionary: Dictionary setget _set_dictionary
-export(Dictionary) var color_map: Dictionary setget _set_color_map
-export(Dictionary) var remove_button_map: Dictionary setget _set_remove_button_map
-export(Array) var immutable_keys: Array setget _set_immutable_keys
-export(Color) var default_color: Color = Color.white setget _set_default_color
+@export var dictionary: Dictionary :
+    get:
+        return dictionary
+    set(new_dictionary):
+        dictionary = new_dictionary
+        refresh()
+@export var color_map: Dictionary :
+    get:
+        return color_map
+    set(new_color_map):
+        color_map = new_color_map
+        refresh()
+@export var remove_button_map: Dictionary :
+    get:
+        return remove_button_map
+    set(new_remove_button_map):
+        remove_button_map = new_remove_button_map
+        refresh()
+@export var immutable_keys: Array :
+    get:
+        return immutable_keys
+    set(new_immutable_keys):
+        immutable_keys = new_immutable_keys
+        refresh()
+@export var default_color: Color = Color.WHITE :
+    get:
+        return default_color
+    set(new_default_color):
+        default_color = new_default_color
+        refresh()
 
 
 func _ready() -> void:
-    btn_add.connect("pressed", self, "_on_btn_add")
-    edt_property_name.connect("text_entered", self, "_on_text_entered")
+    btn_add.connect("pressed", Callable(self, "_on_btn_add"))
+    edt_property_name.connect("text_submitted", Callable(self, "_on_text_entered"))
     refresh()
 
 
@@ -55,44 +80,19 @@ func _on_text_entered(_new_text: String) -> void:
 
 
 func _add_dict_field(name: String, type: int) -> bool:
-    if (name.empty() || type < 0 || dictionary.has(name)):
+    if (name.is_empty() || type < 0 || dictionary.has(name)):
         return false
     dictionary[name] = Verify.create_var(type)
     return true
-
-
-func _set_dictionary(new_dictionary: Dictionary) -> void:
-    dictionary = new_dictionary
-    refresh()
-
-
-func _set_color_map(new_color_map: Dictionary) -> void:
-    color_map = new_color_map
-    refresh()
-
-
-func _set_remove_button_map(new_remove_button_map: Dictionary) -> void:
-    remove_button_map = new_remove_button_map
-    refresh()
-
-
-func _set_immutable_keys(new_immutable_keys: Array) -> void:
-    immutable_keys = new_immutable_keys
-    refresh()
-
-
-func _set_default_color(new_default_color: Color) -> void:
-    default_color = new_default_color
-    refresh()
 
 
 func refresh() -> void:
     if !is_inside_tree():
         return
     _clear()
-    lbl_name.add_color_override("font_color", default_color)
-    lbl_type.add_color_override("font_color", default_color)
-    lbl_value.add_color_override("font_color", default_color)
+    lbl_name.add_theme_color_override("font_color", default_color)
+    lbl_type.add_theme_color_override("font_color", default_color)
+    lbl_value.add_theme_color_override("font_color", default_color)
 
     _refresh_add_property()
     _populate()
@@ -137,8 +137,8 @@ func _add_key(key: String, color: Color) -> void:
 func _add_label(key: String, color: Color) -> void:
     var label: Label = Label.new()
     label.text = key
-    label.align = Label.ALIGN_CENTER
-    label.add_color_override("font_color", color)
+    label.align = Label.ALIGNMENT_CENTER
+    label.add_theme_color_override("font_color", color)
     grid_container.add_child(label)
 
 
@@ -147,7 +147,7 @@ func _add_value_editor(key: String) -> void:
     value_editor.value = dictionary[key]
     value_editor.size_flags_horizontal = SIZE_EXPAND_FILL
     value_editor.enabled = (not key in immutable_keys)
-    value_editor.connect("value_changed", self, "_on_value_changed", [key, value_editor])
+    value_editor.connect("value_changed", Callable(self, "_on_value_changed").bind(key, value_editor))
     grid_container.add_child(value_editor)
 
 
@@ -163,7 +163,7 @@ func _add_remove_button(key: String) -> void:
         button.text = remove_button_map[key].text
         button.disabled = remove_button_map[key].disabled
         button.icon = remove_button_map[key].icon
-    button.connect("pressed", self, "_on_remove_button", [key])
+    button.connect("pressed", Callable(self, "_on_remove_button").bind(key))
     grid_container.add_child(button)
 
 

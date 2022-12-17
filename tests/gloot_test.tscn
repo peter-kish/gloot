@@ -33,11 +33,13 @@ item_protoset = ExtResource("9")
 script = ExtResource("13")
 protoset = ExtResource("9")
 prototype_id = "minimal_item"
+properties = {}
 
 [node name="MinimalItem2" type="Node" parent="ItemDefinitionsTest/Inventory"]
 script = ExtResource("13")
 protoset = ExtResource("9")
 prototype_id = "minimal_item"
+properties = {}
 
 [node name="InventoryTests" type="Node" parent="."]
 script = ExtResource("6")
@@ -50,6 +52,7 @@ item_protoset = ExtResource("9")
 script = ExtResource("13")
 protoset = ExtResource("9")
 prototype_id = "minimal_item"
+properties = {}
 
 [node name="Inventory2" type="Node" parent="InventoryTests"]
 script = ExtResource("11")
@@ -60,41 +63,46 @@ script = ExtResource("3")
 
 [node name="InventoryStacked" type="Node" parent="InventoryStackedTests"]
 script = ExtResource("12")
+capacity = 0.0
 item_protoset = ExtResource("8")
-capacity = 10.0
 
 [node name="MinimalItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource("13")
 protoset = ExtResource("8")
 prototype_id = "minimal_item"
+properties = {}
 
 [node name="StackableItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource("13")
 protoset = ExtResource("8")
 prototype_id = "stackable_item"
+properties = {}
 
 [node name="BigItem" type="Node" parent="InventoryStackedTests"]
 script = ExtResource("13")
 protoset = ExtResource("8")
 prototype_id = "big_item"
+properties = {}
 
 [node name="InventoryGridTests" type="Node" parent="."]
 script = ExtResource("5")
 
 [node name="InventoryGrid3x3" type="Node" parent="InventoryGridTests"]
 script = ExtResource("10")
-item_protoset = ExtResource("7")
 size = Vector2(3, 3)
+item_protoset = ExtResource("7")
 
 [node name="Item_1x1" type="Node" parent="InventoryGridTests"]
 script = ExtResource("13")
 protoset = ExtResource("7")
 prototype_id = "item_1x1"
+properties = {}
 
 [node name="Item_2x2" type="Node" parent="InventoryGridTests"]
 script = ExtResource("13")
 protoset = ExtResource("7")
 prototype_id = "item_2x2"
+properties = {}
 
 [node name="ItemSlotTests" type="Node" parent="."]
 script = ExtResource("4")
@@ -107,6 +115,7 @@ item_protoset = ExtResource("9")
 script = ExtResource("13")
 protoset = ExtResource("9")
 prototype_id = "minimal_item"
+properties = {}
 
 [node name="Inventory2" type="Node" parent="ItemSlotTests"]
 script = ExtResource("11")
@@ -114,3 +123,4 @@ item_protoset = ExtResource("9")
 
 [node name="ItemSlot" type="Node" parent="ItemSlotTests"]
 script = ExtResource("1")
+inventory_path = NodePath("")

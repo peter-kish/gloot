@@ -1,7 +1,7 @@
 extends Node
 class_name TestSuite
 
-export(bool) var enabled = true
+@export var enabled: bool = true
 var tests: Array
 
 

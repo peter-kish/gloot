@@ -4,13 +4,13 @@ signal value_changed
 
 const MultifloatEditor = preload("res://addons/gloot/editor/multifloat_editor.gd")
 
-var value setget _set_value
+var value :
+    get:
+        return value
+    set(new_value):
+        value = new_value
+        _refresh()
 var enabled: bool = true
-
-
-func _set_value(new_value) -> void:
-    value = new_value
-    _refresh()
 
 
 func _ready():
@@ -44,7 +44,7 @@ func _add_control() -> void:
             control = _create_r2_editor()
         TYPE_PLANE:
             control = _create_plane_editor()
-        TYPE_QUAT:
+        TYPE_QUATERNION:
             control = _create_quat_editor()
         TYPE_AABB:
             control = _create_aabb_editor()
@@ -56,11 +56,11 @@ func _add_control() -> void:
 
 func _create_line_edit() -> LineEdit:
     var line_edit: LineEdit = LineEdit.new()
-    line_edit.text = var2str(value)
+    line_edit.text = var_to_str(value)
     line_edit.editable = enabled
     _expand_control(line_edit)
-    line_edit.connect("text_entered", self, "_on_line_edit_value_entered", [line_edit])
-    line_edit.connect("focus_exited", self, "_on_line_edit_focus_exited", [line_edit])
+    line_edit.connect("text_submitted", Callable(self, "_on_line_edit_value_entered").bind(line_edit))
+    line_edit.connect("focus_exited", Callable(self, "_on_line_edit_focus_exited").bind(line_edit))
     return line_edit
 
 
@@ -69,9 +69,9 @@ func _on_line_edit_value_entered(_text: String, line_edit: LineEdit) -> void:
 
 
 func _on_line_edit_focus_exited(line_edit: LineEdit) -> void:
-    var new_value = str2var(line_edit.text)
+    var new_value = str_to_var(line_edit.text)
     if typeof(new_value) != typeof(value):
-        line_edit.text = var2str(value)
+        line_edit.text = var_to_str(value)
         return
     value = new_value
     emit_signal("value_changed")
@@ -82,7 +82,7 @@ func _create_color_picker() -> ColorPickerButton:
     picker.color = value
     picker.disabled = !enabled
     _expand_control(picker)
-    picker.connect("popup_closed", self, "_on_color_picked", [picker])
+    picker.connect("popup_closed", Callable(self, "_on_color_picked").bind(picker))
     return picker
 
 
@@ -93,10 +93,10 @@ func _on_color_picked(picker: ColorPickerButton) -> void:
 
 func _create_checkbox() -> CheckButton:
     var checkbox: CheckButton = CheckButton.new()
-    checkbox.pressed = value
+    checkbox.button_pressed = value
     checkbox.disabled = !enabled
     _expand_control(checkbox)
-    checkbox.connect("pressed", self, "_on_checkbox", [checkbox])
+    checkbox.connect("pressed", Callable(self, "_on_checkbox").bind(checkbox))
     return checkbox
 
 
@@ -207,7 +207,7 @@ func _create_multifloat_editor(
     multifloat_editor.titles = titles
     multifloat_editor.enabled = enabled
     _expand_control(multifloat_editor)
-    multifloat_editor.connect("value_changed", self, value_changed_handler, [multifloat_editor])
+    multifloat_editor.connect("value_changed", Callable(self, value_changed_handler).bind(multifloat_editor))
     return multifloat_editor
 
 

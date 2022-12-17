@@ -1,4 +1,4 @@
-tool
+#@tool
 extends EditorPlugin
 
 var inspector_plugin: EditorInspectorPlugin

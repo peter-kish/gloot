@@ -234,7 +234,7 @@ Example:
 # Serialize the inventory into a JSON string
 var inventory: Inventory = get_node("inventory")
 var dict: Dictionary = inventory.serialize()
-var json: String = JSON.print(dict)
+var json: String = JSON.stringify(dict)
 ```
 
 The `deserialize` methods receive a dictionary as argument that has been previously generated with `serialize()` and apply the data to the current class instance.

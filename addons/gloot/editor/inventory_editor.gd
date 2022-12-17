@@ -1,32 +1,32 @@
 extends Control
-tool
+#@tool
 
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 
-onready var hsplit_container = $HSplitContainer
-onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
-onready var inventory_control_container = $HSplitContainer/VBoxContainer
-onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
-onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
-onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
-var inventory: Inventory setget _set_inventory
+@onready var hsplit_container = $HSplitContainer
+@onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
+@onready var inventory_control_container = $HSplitContainer/VBoxContainer
+@onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
+@onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
+@onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
+var inventory: Inventory :
+    get:
+        return inventory
+    set(new_inventory):
+        disconnect_inventory_signals()
+        inventory = new_inventory
+        connect_inventory_signals()
+
+        _refresh()
 var editor_interface: EditorInterface
-var gloot_undo_redo setget _set_gloot_undo_redo
+var gloot_undo_redo :
+    get:
+        return gloot_undo_redo
+    set(new_gloot_undo_redo):
+        gloot_undo_redo = new_gloot_undo_redo
+        if _inventory_control is CtrlInventoryGrid:
+            _inventory_control._gloot_undo_redo = gloot_undo_redo
 var _inventory_control: Control
-
-
-func _set_inventory(new_inventory: Inventory) -> void:
-    disconnect_inventory_signals()
-    inventory = new_inventory
-    connect_inventory_signals()
-
-    _refresh()
-
-
-func _set_gloot_undo_redo(new_gloot_undo_redo) -> void:
-    gloot_undo_redo = new_gloot_undo_redo
-    if _inventory_control is CtrlInventoryGrid:
-        _inventory_control._gloot_undo_redo = gloot_undo_redo
 
 
 func connect_inventory_signals():
@@ -34,14 +34,14 @@ func connect_inventory_signals():
         return
 
     if inventory is InventoryStacked:
-        inventory.connect("capacity_changed", self, "_refresh")
+        inventory.connect("capacity_changed", Callable(self, "_refresh"))
     if inventory is InventoryGrid:
-        inventory.connect("size_changed", self, "_refresh")
-    inventory.connect("protoset_changed", self, "_refresh")
+        inventory.connect("size_changed", Callable(self, "_refresh"))
+    inventory.connect("protoset_changed", Callable(self, "_refresh"))
 
     if !inventory.item_protoset:
         return
-    inventory.item_protoset.connect("changed", self, "_refresh")
+    inventory.item_protoset.connect("changed", Callable(self, "_refresh"))
 
 
 func disconnect_inventory_signals():
@@ -49,14 +49,14 @@ func disconnect_inventory_signals():
         return
         
     if inventory is InventoryStacked:
-        inventory.disconnect("capacity_changed", self, "_refresh")
+        inventory.disconnect("capacity_changed", Callable(self, "_refresh"))
     if inventory is InventoryGrid:
-        inventory.disconnect("size_changed", self, "_refresh")
-    inventory.disconnect("protoset_changed", self, "_refresh")
+        inventory.disconnect("size_changed", Callable(self, "_refresh"))
+    inventory.disconnect("protoset_changed", Callable(self, "_refresh"))
 
     if !inventory.item_protoset:
         return
-    inventory.item_protoset.disconnect("changed", self, "_refresh")
+    inventory.item_protoset.disconnect("changed", Callable(self, "_refresh"))
 
 
 func _refresh() -> void:
@@ -72,7 +72,7 @@ func _refresh() -> void:
     # Create the appropriate inventory control and populate it
     if inventory is InventoryGrid:
         _inventory_control = CtrlInventoryGrid.new()
-        _inventory_control.grid_color = Color.gray
+        _inventory_control.grid_color = Color.GRAY
         _inventory_control.draw_selections = true
         # TODO: Find a better way for undoing/redoing item movements:
         _inventory_control._gloot_undo_redo = gloot_undo_redo
@@ -83,7 +83,7 @@ func _refresh() -> void:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
-    _inventory_control.connect("inventory_item_activated", self, "_on_inventory_item_activated")
+    _inventory_control.connect("inventory_item_activated", Callable(self, "_on_inventory_item_activated"))
 
     scroll_container.add_child(_inventory_control)
 
@@ -102,9 +102,9 @@ func _ready() -> void:
     btn_edit.icon = EditorIcons.get_icon(editor_interface, "Edit")
     btn_remove.icon = EditorIcons.get_icon(editor_interface, "Remove")
 
-    prototype_id_filter.connect("choice_picked", self, "_on_prototype_id_picked")
-    btn_edit.connect("pressed", self, "_on_btn_edit")
-    btn_remove.connect("pressed", self, "_on_btn_remove")
+    prototype_id_filter.connect("choice_picked", Callable(self, "_on_prototype_id_picked"))
+    btn_edit.connect("pressed", Callable(self, "_on_btn_edit"))
+    btn_remove.connect("pressed", Callable(self, "_on_btn_remove"))
     _refresh()
 
 

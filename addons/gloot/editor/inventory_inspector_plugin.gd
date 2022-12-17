@@ -7,14 +7,14 @@ var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id
 var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_equipped_item_editor.gd")
 var GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 var editor_interface: EditorInterface = null
-var undo_redo: UndoRedo = null setget _set_undo_redo
+var undo_redo: EditorUndoRedoManager = null :
+    get:
+        return undo_redo
+    set(new_undo_redo):
+        undo_redo = new_undo_redo
+        if gloot_undo_redo:
+            gloot_undo_redo.undo_redo = undo_redo
 var gloot_undo_redo = null
-
-
-func _set_undo_redo(new_undo_redo: UndoRedo) -> void:
-    undo_redo = new_undo_redo
-    if gloot_undo_redo:
-        gloot_undo_redo.undo_redo = undo_redo
 
 
 func _init():
@@ -31,13 +31,13 @@ func can_handle(object: Object) -> bool:
 
 func parse_begin(object: Object) -> void:
     if object is Inventory:
-        var inventory_inspector = InventoryInspector.instance()
+        var inventory_inspector = InventoryInspector.instantiate()
         inventory_inspector.inventory = object
         inventory_inspector.editor_interface = editor_interface
         inventory_inspector.gloot_undo_redo = gloot_undo_redo
         add_custom_control(inventory_inspector)
     if object is ItemProtoset:
-        var edit_protoset_button = EditProtosetButton.instance()
+        var edit_protoset_button = EditProtosetButton.instantiate()
         edit_protoset_button.protoset = object
         edit_protoset_button.editor_interface = editor_interface
         edit_protoset_button.gloot_undo_redo = gloot_undo_redo
