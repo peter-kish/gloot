@@ -1,44 +1,44 @@
 extends Control
-tool
+#@tool
 
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 
-onready var prototype_filter = $"%PrototypeFilter"
-onready var property_editor = $"%PropertyEditor"
-onready var txt_prototype_id = $"%TxtPrototypeName"
-onready var btn_add_prototype = $"%BtnAddPrototype"
-onready var btn_remove_prototype = $"%BtnRemovePrototype"
-onready var btn_rename_prototype = $"%BtnRenamePrototype"
+@onready var prototype_filter = $"%PrototypeFilter"
+@onready var property_editor = $"%PropertyEditor"
+@onready var txt_prototype_id = $"%TxtPrototypeName"
+@onready var btn_add_prototype = $"%BtnAddPrototype"
+@onready var btn_remove_prototype = $"%BtnRemovePrototype"
+@onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
-var protoset: ItemProtoset setget _set_protoset
+var protoset: ItemProtoset :
+    get:
+        return protoset
+    set(new_protoset):
+        protoset = new_protoset
+        protoset.connect("changed", Callable(self, "_on_protoset_changed"))
+        _refresh()
 var gloot_undo_redo = null
-var editor_interface: EditorInterface setget _set_editor_interface
+var editor_interface: EditorInterface :
+    get:
+        return editor_interface
+    set(new_editor_interface):
+        editor_interface = new_editor_interface
+        btn_add_prototype.icon = EditorIcons.get_icon(editor_interface, "Add")
+        btn_rename_prototype.icon = EditorIcons.get_icon(editor_interface, "Edit")
+        btn_remove_prototype.icon = EditorIcons.get_icon(editor_interface, "Remove")
+        prototype_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
 var selected_prototype_id: String = ""
 
 
-func _set_protoset(new_protoset: ItemProtoset) -> void:
-    protoset = new_protoset
-    protoset.connect("changed", self, "_on_protoset_changed")
-    _refresh()
-
-
-func _set_editor_interface(new_editor_interface: EditorInterface) -> void:
-    editor_interface = new_editor_interface
-    btn_add_prototype.icon = EditorIcons.get_icon(editor_interface, "Add")
-    btn_rename_prototype.icon = EditorIcons.get_icon(editor_interface, "Edit")
-    btn_remove_prototype.icon = EditorIcons.get_icon(editor_interface, "Remove")
-    prototype_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
-
-
 func _ready() -> void:
-    prototype_filter.connect("choice_selected", self, "_on_prototype_selected")
-    property_editor.connect("value_changed", self, "_on_property_changed")
-    property_editor.connect("value_removed", self, "_on_property_removed")
-    txt_prototype_id.connect("text_changed", self, "_on_prototype_id_changed")
-    txt_prototype_id.connect("text_entered", self, "_on_prototype_id_entered")
-    btn_add_prototype.connect("pressed", self, "_on_btn_add_prototype")
-    btn_rename_prototype.connect("pressed", self, "_on_btn_rename_prototype")
-    btn_remove_prototype.connect("pressed", self, "_on_btn_remove_prototype")
+    prototype_filter.connect("choice_selected", Callable(self, "_on_prototype_selected"))
+    property_editor.connect("value_changed", Callable(self, "_on_property_changed"))
+    property_editor.connect("value_removed", Callable(self, "_on_property_removed"))
+    txt_prototype_id.connect("text_changed", Callable(self, "_on_prototype_id_changed"))
+    txt_prototype_id.connect("text_submitted", Callable(self, "_on_prototype_id_entered"))
+    btn_add_prototype.connect("pressed", Callable(self, "_on_btn_add_prototype"))
+    btn_rename_prototype.connect("pressed", Callable(self, "_on_btn_rename_prototype"))
+    btn_remove_prototype.connect("pressed", Callable(self, "_on_btn_remove_prototype"))
     _refresh()
 
 
@@ -67,17 +67,17 @@ func _populate() -> void:
 
 
 func _refresh_btn_add_prototype() -> void:
-    btn_add_prototype.disabled = txt_prototype_id.text.empty() ||\
+    btn_add_prototype.disabled = txt_prototype_id.text.is_empty() ||\
         protoset.has(txt_prototype_id.text)
 
 
 func _refresh_btn_rename_prototype() -> void:
-    btn_rename_prototype.disabled = txt_prototype_id.text.empty() ||\
+    btn_rename_prototype.disabled = txt_prototype_id.text.is_empty() ||\
         protoset.has(txt_prototype_id.text)
 
 
 func _refresh_btn_remove_prototype() -> void:
-    btn_remove_prototype.disabled = prototype_filter.get_selected_text().empty()
+    btn_remove_prototype.disabled = prototype_filter.get_selected_text().is_empty()
 
 
 func _on_protoset_changed() -> void:
@@ -109,7 +109,7 @@ func _inspect_prototype_id(prototype_id: String) -> void:
 
 
 func _on_property_changed(property_name: String, new_value) -> void:
-    if selected_prototype_id.empty():
+    if selected_prototype_id.is_empty():
         return
     var new_properties = protoset.get(selected_prototype_id).duplicate()
     new_properties[property_name] = new_value
@@ -121,7 +121,7 @@ func _on_property_changed(property_name: String, new_value) -> void:
 
 
 func _on_property_removed(property_name: String) -> void:
-    if selected_prototype_id.empty():
+    if selected_prototype_id.is_empty():
         return
     var new_properties = protoset.get(selected_prototype_id).duplicate()
     new_properties.erase(property_name)
@@ -144,7 +144,7 @@ func _on_btn_add_prototype() -> void:
 
 func _on_btn_rename_prototype() -> void:
     assert(gloot_undo_redo)
-    if selected_prototype_id.empty():
+    if selected_prototype_id.is_empty():
         return
 
     gloot_undo_redo.rename_prototype(protoset,
@@ -161,9 +161,9 @@ func _add_prototype_id(prototype_id: String) -> void:
 
 func _on_btn_remove_prototype() -> void:
     assert(gloot_undo_redo)
-    if selected_prototype_id.empty():
+    if selected_prototype_id.is_empty():
         return
 
     var prototype_id = selected_prototype_id
-    if !prototype_id.empty():
+    if !prototype_id.is_empty():
         gloot_undo_redo.remove_prototype(protoset, prototype_id)

@@ -1,6 +1,6 @@
 extends Inventory
 class_name InventoryStacked
-tool
+#@tool
 
 signal capacity_changed
 signal occupied_space_changed
@@ -12,17 +12,32 @@ const KEY_MAX_STACK_SIZE: String = "max_stack_size"
 const DEFAULT_STACK_SIZE: int = 1
 const DEFAULT_MAX_STACK_SIZE: int = 100
 
-export(float) var capacity: float setget _set_capacity
-var occupied_space: float setget _set_occupied_space
+@export var capacity: float :
+    get:
+        return capacity
+    set(new_capacity):
+        assert(new_capacity >= 0, "Capacity must be greater or equal to 0!")
+        if !Engine.is_editor_hint():
+            if new_capacity > 0.0 && occupied_space > new_capacity:
+                return
+        capacity = new_capacity
+        update_configuration_warnings()
+        emit_signal("capacity_changed")
+var _occupied_space: float
+var occupied_space: float :
+    get:
+        return _occupied_space
+    set(new_occupied_space):
+        assert(false, "occupied_space is read-only!")
 
 const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
 
-func _get_configuration_warning() -> String:
-    if occupied_space > capacity:
-        return "Inventory capacity exceeded! %f/%f" % [occupied_space, capacity]
-    return ""
+func _get_configuration_warnings() -> PackedStringArray:
+    if _occupied_space > capacity:
+        return PackedStringArray(["Inventory capacity exceeded! %f/%f" % [_occupied_space, capacity]])
+    return PackedStringArray()
 
 
 func _get_default_item_weight(prototype_id: String) -> float:
@@ -37,67 +52,53 @@ func has_unlimited_capacity() -> bool:
     return capacity == 0.0
 
 
-func _set_capacity(new_capacity: float) -> void:
-    assert(new_capacity >= 0, "Capacity must be greater or equal to 0!")
-    if !Engine.editor_hint:
-        if new_capacity > 0.0 && occupied_space > new_capacity:
-            return
-    capacity = new_capacity
-    update_configuration_warning()
-    emit_signal("capacity_changed")
-
-
-func _set_occupied_space(new_occupied_space: float) -> void:
-    assert(false, "occupied_space is read-only!")
-
-
 func _ready():
     _calculate_occupied_space()
-    connect("item_modified", self, "_on_item_modified")
+    connect("item_modified", Callable(self, "_on_item_modified"))
 
 
 func _calculate_occupied_space() -> void:
     var old_occupied_space = occupied_space
-    occupied_space = 0.0
+    _occupied_space = 0.0
     for item in get_items():
-        occupied_space += _get_item_weight(item)
+        _occupied_space += _get_item_weight(item)
 
-    if occupied_space != old_occupied_space:
+    if _occupied_space != old_occupied_space:
         emit_signal("occupied_space_changed")
 
-    update_configuration_warning()
-    if !Engine.editor_hint:
+    update_configuration_warnings()
+    if !Engine.is_editor_hint():
         assert(has_unlimited_capacity() || occupied_space <= capacity, "Inventory overflow!")
 
 
 func _on_item_added(item: InventoryItem) -> void:
-    ._on_item_added(item)
+    super._on_item_added(item)
     _calculate_occupied_space()
-    update_configuration_warning()
+    update_configuration_warnings()
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    ._on_item_removed(item)
+    super._on_item_removed(item)
     _calculate_occupied_space()
-    update_configuration_warning()
+    update_configuration_warnings()
 
 
 func remove_item(item: InventoryItem) -> bool:
-    var result = .remove_item(item)
+    var result = super.remove_item(item)
     _calculate_occupied_space()
     return result
 
 
 func _on_item_modified(item: InventoryItem) -> void:
     _calculate_occupied_space()
-    update_configuration_warning()
+    update_configuration_warnings()
 
 
 func get_free_space() -> float:
     if has_unlimited_capacity():
         return capacity
 
-    var free_space: float = capacity - occupied_space
+    var free_space: float = capacity - _occupied_space
     if free_space < 0.0:
         free_space = 0.0
     return free_space
@@ -112,9 +113,7 @@ func has_place_for(item: InventoryItem) -> bool:
 
 func _get_item_unit_weight(item: InventoryItem) -> float:
     var weight = item.get_property(KEY_WEIGHT, 1.0)
-    if weight is float:
-        return weight
-    return 1.0
+    return weight
 
 
 func _get_item_stack_size(item: InventoryItem) -> int:
@@ -137,7 +136,7 @@ func _get_item_weight(item: InventoryItem) -> float:
 
 func add_item(item: InventoryItem) -> bool:
     if has_place_for(item):
-        return .add_item(item)
+        return super.add_item(item)
 
     return false
 
@@ -185,7 +184,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
     if !destination.has_place_for(item):
         return false
     
-    return .transfer(item, destination)
+    return super.transfer(item, destination)
 
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
@@ -253,31 +252,31 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 
 
 func reset() -> void:
-    .reset()
+    super.reset()
     capacity = 0
-    occupied_space = 0
+    _occupied_space = 0
 
 
 func serialize() -> Dictionary:
-    var result: Dictionary = .serialize()
+    var result: Dictionary = super.serialize()
 
     result[KEY_CAPACITY] = capacity
-    result[KEY_OCCUPIED_SPACE] = occupied_space
+    result[KEY_OCCUPIED_SPACE] = _occupied_space
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_REAL) ||\
-        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_REAL):
+    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) ||\
+        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
         return false
 
     reset()
 
-    if !.deserialize(source):
+    if !super.deserialize(source):
         return false
 
     capacity = source[KEY_CAPACITY]
-    occupied_space = source[KEY_OCCUPIED_SPACE]
+    _occupied_space = source[KEY_OCCUPIED_SPACE]
 
     return true

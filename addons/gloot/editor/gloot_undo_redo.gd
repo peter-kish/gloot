@@ -23,8 +23,8 @@ func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
     item.free()
 
     undo_redo.create_action("Add Inventory Item")
-    undo_redo.add_do_method(self, "_add_item", inventory, item_data)
-    undo_redo.add_undo_method(self, "_remove_item", inventory, item_data)
+    undo_redo.add_do_method(Callable(self, "_add_item").bind(inventory, item_data))
+    undo_redo.add_undo_method(Callable(self, "_remove_item").bind(inventory, item_data))
     undo_redo.commit_action()
 
 
@@ -34,8 +34,8 @@ func remove_inventory_item(inventory: Inventory, item: InventoryItem) -> void:
     var item_data = item.serialize()
     var item_index = inventory.get_item_index(item)
     undo_redo.create_action("Remove Inventory Item")
-    undo_redo.add_do_method(self, "_remove_item", inventory, item_data)
-    undo_redo.add_undo_method(self, "_add_item", inventory, item_data, item_index)
+    undo_redo.add_do_method(Callable(self, "_remove_item").bind(inventory, item_data))
+    undo_redo.add_undo_method(Callable(self, "_add_item").bind(inventory, item_data, item_index))
     undo_redo.commit_action()
 
 
@@ -51,8 +51,8 @@ func remove_inventory_items(inventory: Inventory, items: Array) -> void:
         node_indexes.append(item.get_index())
 
     undo_redo.create_action("Remove Inventory Items")
-    undo_redo.add_do_method(self, "_remove_items", inventory, item_data)
-    undo_redo.add_undo_method(self, "_add_items", inventory, item_data, item_indexes, node_indexes)
+    undo_redo.add_do_method(Callable(self, "_remove_items").bind(inventory, item_data))
+    undo_redo.add_undo_method(Callable(self, "_add_items").bind(inventory, item_data, item_indexes, node_indexes))
     undo_redo.commit_action()
 
 
@@ -92,8 +92,8 @@ func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> voi
     if inventory:
         var old_inventory_data: Dictionary = inventory.serialize()
         var item_data: Dictionary = item.serialize()
-        undo_redo.add_do_method(self, "_set_properties", inventory, item_data, new_properties)
-        undo_redo.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
+        undo_redo.add_do_method(Callable(self, "_set_properties").bind(inventory, item_data, new_properties))
+        undo_redo.add_undo_method(Callable(self, "_set_inventory").bind(inventory, old_inventory_data))
     else:
         undo_redo.add_undo_property(item, "properties", item.properties)
         undo_redo.add_do_property(item, "properties", new_properties)
@@ -113,8 +113,8 @@ func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> voi
     if inventory:
         var old_inventory_data: Dictionary = inventory.serialize()
         var item_data: Dictionary = item.serialize()
-        undo_redo.add_do_method(self, "_set_prototype_id", inventory, item_data, new_prototype_id)
-        undo_redo.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
+        undo_redo.add_do_method(Callable(self, "_set_prototype_id").bind(inventory, item_data, new_prototype_id))
+        undo_redo.add_undo_method(Callable(self, "_set_inventory").bind(inventory, old_inventory_data))
     else:
         undo_redo.add_undo_property(item, "prototype_id", item.prototype_id)
         undo_redo.add_do_property(item, "prototype_id", new_prototype_id)
@@ -144,8 +144,8 @@ func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position
     if old_item_position == position:
         return
     undo_redo.create_action("Move Inventory Item")
-    undo_redo.add_undo_method(inventory, "move_item_to", item, old_item_position)
-    undo_redo.add_do_method(inventory, "move_item_to", item, position)
+    undo_redo.add_undo_method(Callable(inventory, "move_item_to").bind(item, old_item_position))
+    undo_redo.add_do_method(Callable(inventory, "move_item_to").bind(item, position))
     undo_redo.commit_action()
 
 
@@ -153,8 +153,8 @@ func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> voi
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo.create_action("Rename Prototype")
-    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo.add_do_method(protoset, "rename", id, new_id)
+    undo_redo.add_undo_method(Callable(self, "_set_prototypes").bind(protoset, old_prototypes))
+    undo_redo.add_do_method(Callable(protoset, "rename").bind(id, new_id))
     undo_redo.commit_action()
 
 
@@ -162,8 +162,8 @@ func add_prototype(protoset: ItemProtoset, id: String) -> void:
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo.create_action("Add Prototype")
-    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo.add_do_method(protoset, "add", id)
+    undo_redo.add_undo_method(Callable(self, "_set_prototypes").bind(protoset, old_prototypes))
+    undo_redo.add_do_method(Callable(protoset, "add").bind(id))
     undo_redo.commit_action()
 
 
@@ -171,8 +171,8 @@ func remove_prototype(protoset: ItemProtoset, id: String) -> void:
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo.create_action("Remove Prototype")
-    undo_redo.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo.add_do_method(protoset, "remove", id)
+    undo_redo.add_undo_method(Callable(self, "_set_prototypes").bind(protoset, old_prototypes))
+    undo_redo.add_do_method(Callable(protoset, "remove").bind(id))
     undo_redo.commit_action()
 
 
@@ -194,8 +194,8 @@ func set_prototype_properties(protoset: ItemProtoset,
     var old_properties = protoset.get(prototype_id).duplicate()
 
     undo_redo.create_action("Set prototype properties")
-    undo_redo.add_undo_method(self, "_set_prototype_properties", protoset, prototype_id, old_properties)
-    undo_redo.add_do_method(self, "_set_prototype_properties", protoset, prototype_id, new_properties)
+    undo_redo.add_undo_method(Callable(self, "_set_prototype_properties").bind(protoset, prototype_id, old_properties))
+    undo_redo.add_do_method(Callable(self, "_set_prototype_properties").bind(protoset, prototype_id, new_properties))
     undo_redo.commit_action()
 
 

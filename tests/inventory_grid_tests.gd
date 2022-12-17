@@ -106,7 +106,7 @@ func test_serialize():
     assert(inventory_3x3.add_item_at(item_2x2, Vector2(1, 0)))
     var inventory_data = inventory_3x3.serialize()
     inventory_3x3.reset()
-    assert(inventory_3x3.get_items().empty())
+    assert(inventory_3x3.get_items().is_empty())
     assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
     assert(inventory_3x3.deserialize(inventory_data))
     assert(inventory_3x3.get_items().size() == 2)
@@ -120,13 +120,15 @@ func test_serialize_json():
     var inventory_data = inventory_3x3.serialize()
 
     # To and from JSON serialization
-    var json_string = JSON.print(inventory_data)
-    var res: JSONParseResult = JSON.parse(json_string)
+    var json_string = JSON.stringify(inventory_data)
+    var test_json_conv = JSON.new()
+    test_json_conv.parse(json_string)
+    var res: JSON = test_json_conv.get_data()
     assert(res.error == OK)
     inventory_data = res.result
 
     inventory_3x3.reset()
-    assert(inventory_3x3.get_items().empty())
+    assert(inventory_3x3.get_items().is_empty())
     assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
 
     assert(inventory_3x3.deserialize(inventory_data))

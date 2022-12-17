@@ -79,23 +79,24 @@ func test_remove_item() -> void:
 func test_serialize() -> void:
     var inventory_data = inventory1.serialize()
     inventory1.reset()
-    assert(inventory1.get_items().empty())
+    assert(inventory1.get_items().is_empty())
     assert(item.is_queued_for_deletion())
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_items().size() == 1)
 
 
 func test_serialize_json() -> void:
-    var inventory_data = inventory1.serialize()
+    var inventory_data: Dictionary = inventory1.serialize()
 
     # To and from JSON serialization
-    var json_string = JSON.print(inventory_data)
-    var res: JSONParseResult = JSON.parse(json_string)
-    assert(res.error == OK)
-    inventory_data = res.result
+    var json_string = JSON.stringify(inventory_data)
+    var test_json_conv = JSON.new()
+    test_json_conv.parse(json_string)
+    inventory_data = test_json_conv.get_data()
+    assert(inventory_data != null)
 
     inventory1.reset()
-    assert(inventory1.get_items().empty())
+    assert(inventory1.get_items().is_empty())
     assert(item.is_queued_for_deletion())
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_items().size() == 1)

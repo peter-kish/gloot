@@ -1,6 +1,6 @@
 extends Node
 class_name Inventory
-tool
+#@tool
 
 signal item_added(item)
 signal item_removed(item)
@@ -8,7 +8,16 @@ signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 
-export(Resource) var item_protoset: Resource setget _set_item_protoset
+@export var item_protoset: Resource:
+    get:
+        return item_protoset
+    set(new_item_protoset):
+        assert((new_item_protoset is ItemProtoset) || (new_item_protoset == null), \
+        "item_protoset must be an ItemProtoset resource!")
+
+        item_protoset = new_item_protoset
+        emit_signal("protoset_changed")
+        update_configuration_warnings()
 var _items: Array = []
 
 const KEY_NODE_NAME: String = "node_name"
@@ -17,20 +26,12 @@ const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/verify.gd")
 
 
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
     if item_protoset == null:
-        return "This inventory node has no protoset. Set the 'item_protoset' field to be able to " \
-        + "populate the inventory with items."
-    return ""
-
-
-func _set_item_protoset(new_item_protoset: Resource) -> void:
-    assert((new_item_protoset is ItemProtoset) || (new_item_protoset == null), \
-        "item_protoset must be an ItemProtoset resource!")
-    
-    item_protoset = new_item_protoset
-    emit_signal("protoset_changed")
-    update_configuration_warning()
+        return PackedStringArray([
+                "This inventory node has no protoset. Set the 'item_protoset' field to be able to " \
+                + "populate the inventory with items."])
+    return PackedStringArray()
 
 
 static func _get_item_script() -> Script:
@@ -81,7 +82,7 @@ func move_item(from: int, to: int) -> void:
         return
 
     var item = _items[from]
-    _items.remove(from)
+    _items.remove_at(from)
     _items.insert(to, item)
 
     emit_signal("contents_changed")
@@ -96,21 +97,21 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.is_connected("protoset_changed", self, "_emit_item_modified"):
-        item.connect("protoset_changed", self, "_emit_item_modified", [item])
-    if !item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
-        item.connect("prototype_id_changed", self, "_emit_item_modified", [item])
-    if !item.is_connected("properties_changed", self, "_emit_item_modified"):
-        item.connect("properties_changed", self, "_emit_item_modified", [item])
+    if !item.is_connected("protoset_changed", Callable(self, "_emit_item_modified")):
+        item.connect("protoset_changed", Callable(self, "_emit_item_modified").bind(item))
+    if !item.is_connected("prototype_id_changed", Callable(self, "_emit_item_modified")):
+        item.connect("prototype_id_changed", Callable(self, "_emit_item_modified").bind(item))
+    if !item.is_connected("properties_changed", Callable(self, "_emit_item_modified")):
+        item.connect("properties_changed", Callable(self, "_emit_item_modified").bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.is_connected("protoset_changed", self, "_emit_item_modified"):
-        item.disconnect("protoset_changed", self, "_emit_item_modified")
-    if item.is_connected("prototype_id_changed", self, "_emit_item_modified"):
-        item.disconnect("prototype_id_changed", self, "_emit_item_modified")
-    if item.is_connected("properties_changed", self, "_emit_item_modified"):
-        item.disconnect("properties_changed", self, "_emit_item_modified")
+    if item.is_connected("protoset_changed", Callable(self, "_emit_item_modified")):
+        item.disconnect("protoset_changed", Callable(self, "_emit_item_modified"))
+    if item.is_connected("prototype_id_changed", Callable(self, "_emit_item_modified")):
+        item.disconnect("prototype_id_changed", Callable(self, "_emit_item_modified"))
+    if item.is_connected("properties_changed", Callable(self, "_emit_item_modified")):
+        item.disconnect("properties_changed", Callable(self, "_emit_item_modified"))
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
@@ -133,7 +134,7 @@ func add_item(item: InventoryItem) -> bool:
         item.get_parent().remove_child(item)
 
     add_child(item)
-    if Engine.editor_hint:
+    if Engine.is_editor_hint():
         item.owner = get_tree().edited_scene_root
     return true
 
@@ -205,9 +206,9 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_NODE_NAME] = name
+    result[KEY_NODE_NAME] = name as String
     result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
-    if !get_items().empty():
+    if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
             result[KEY_ITEMS].append(item.serialize())
