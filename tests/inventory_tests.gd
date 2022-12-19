@@ -89,11 +89,10 @@ func test_serialize_json() -> void:
     var inventory_data: Dictionary = inventory1.serialize()
 
     # To and from JSON serialization
-    var json_string = JSON.stringify(inventory_data)
-    var test_json_conv = JSON.new()
-    test_json_conv.parse(json_string)
-    inventory_data = test_json_conv.get_data()
-    assert(inventory_data != null)
+    var json_string: String = JSON.stringify(inventory_data)
+    var test_json_conv: JSON = JSON.new()
+    assert(test_json_conv.parse(json_string) == OK)
+    inventory_data = test_json_conv.data
 
     inventory1.reset()
     assert(inventory1.get_items().is_empty())

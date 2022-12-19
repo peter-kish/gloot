@@ -26,9 +26,9 @@ var _prototypes: Dictionary = {} :
 func parse(json: String) -> void:
 	_prototypes.clear()
 
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(json)
-	var parse_result = test_json_conv.get_data()
+	var test_json_conv: JSON = JSON.new()
+	assert(test_json_conv.parse(json) == OK, "Failed to parse JSON!")
+	var parse_result = test_json_conv.data
 	assert(parse_result is Array, "JSON file must contain an array!")
 
 	for prototype in parse_result:

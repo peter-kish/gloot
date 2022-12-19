@@ -213,12 +213,10 @@ func test_serialize_json() -> void:
 	var occupied_space = inventory.occupied_space
 
 	# To and from JSON serialization
-	var json_string = JSON.stringify(inventory_data)
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(json_string)
-	var res: JSON = test_json_conv.get_data()
-	assert(res.error == OK)
-	inventory_data = res.result
+	var json_string: String = JSON.stringify(inventory_data)
+	var test_json_conv: JSON = JSON.new()
+	assert(test_json_conv.parse(json_string) == OK)
+	inventory_data = test_json_conv.data
 
 	inventory.reset()
 	assert(inventory.get_items().is_empty())
