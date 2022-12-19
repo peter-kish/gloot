@@ -44,7 +44,7 @@ func parse(json: String) -> void:
 func _to_json() -> String:
 	var result: Array
 	for prototype_id in _prototypes.keys():
-		result.append(get(prototype_id))
+		result.append(get_prototype(prototype_id))
 
 	# TODO: Add plugin settings for this
 	return JSON.stringify(result, "    ")
@@ -55,41 +55,41 @@ func update_json_data() -> void:
 	emit_changed()
 
 
-func get(id: StringName) -> Variant:
-	assert(has(id), "No prototype")
+func get_prototype(id: StringName) -> Variant:
+	assert(has_prototype(id), "No prototype")
 	return _prototypes[id]
 
 
-func add(id: String) -> void:
-	assert(!has(id), "Prototype with ID already exists")
+func add_prototype(id: String) -> void:
+	assert(!has_prototype(id), "Prototype with ID already exists")
 	_prototypes[id] = {KEY_ID: id}
 	emit_changed()
 
 
-func remove_at(id: String) -> void:
-	assert(has(id), "No prototype for ID")
+func remove_prototype(id: String) -> void:
+	assert(has_prototype(id), "No prototype for ID")
 	_prototypes.erase(id)
 	emit_changed()
 
 
-func rename(id: String, new_id: String) -> void:
-	assert(has(id), "No prototype for ID")
-	assert(!has(new_id), "Prototype with ID already exists")
-	add(new_id)
+func rename_prototype(id: String, new_id: String) -> void:
+	assert(has_prototype(id), "No prototype for ID")
+	assert(!has_prototype(new_id), "Prototype with ID already exists")
+	add_prototype(new_id)
 	_prototypes[new_id] = _prototypes[id].duplicate()
 	_prototypes[new_id][KEY_ID] = new_id
-	remove_at(id)
+	remove_prototype(id)
 	emit_changed()
 
 
-func has(id: String) -> bool:
+func has_prototype(id: String) -> bool:
 	return _prototypes.has(id)
 
 
 func get_item_property(id: String, property_name: String, default_value = null) -> Variant:
 	print(_prototypes)
-	if has(id):
-		var prototype = get(id)
+	if has_prototype(id):
+		var prototype = get_prototype(id)
 		if !prototype.is_empty() && prototype.has(property_name):
 			return prototype[property_name]
 	
