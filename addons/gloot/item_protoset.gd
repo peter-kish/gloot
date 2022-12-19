@@ -87,7 +87,6 @@ func has_prototype(id: String) -> bool:
 
 
 func get_item_property(id: String, property_name: String, default_value = null) -> Variant:
-	print(_prototypes)
 	if has_prototype(id):
 		var prototype = get_prototype(id)
 		if !prototype.is_empty() && prototype.has(property_name):
