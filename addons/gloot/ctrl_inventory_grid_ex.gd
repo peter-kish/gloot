@@ -118,6 +118,8 @@ func _set_panel_style(panel: Panel, style: StyleBox) -> void:
 
 
 func _ready() -> void:
+    super._ready()
+    
     _create_selection_panel()
     _create_field_background_grid()
     connect("item_selected", Callable(self, "_on_item_selected"))

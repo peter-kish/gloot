@@ -21,6 +21,8 @@ var _label: Label
 
 
 func _ready():
+    super._ready()
+    
     _progress_bar = ProgressBar.new()
     _progress_bar.size_flags_horizontal = SIZE_EXPAND_FILL
     _progress_bar.percent_visible = false

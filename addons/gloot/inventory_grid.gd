@@ -71,6 +71,8 @@ func get_item_rect(item: InventoryItem) -> Rect2:
 	
 
 func _ready():
+	super._ready()
+	
 	assert(size.x > 0, "Inventory width must be positive!")
 	assert(size.y > 0, "Inventory height must be positive!")
 	_sort_if_needed()
