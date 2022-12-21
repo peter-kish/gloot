@@ -11,6 +11,7 @@ func init_suite():
     item_2x2 = $Item_2x2
 
     tests = [
+        "test_add_item",
         "test_add_item_at",
         "test_find_free_place",
         "test_change_size",
@@ -23,6 +24,13 @@ func init_suite():
 
 func init_test():
     inventory_3x3.remove_all_items()
+
+
+func test_add_item() -> void:
+    assert(inventory_3x3.add_item(item_1x1))
+    assert(inventory_3x3.get_item_position(item_1x1) == Vector2(0, 0))
+    assert(inventory_3x3.add_item(item_2x2))
+    assert(inventory_3x3.get_item_position(item_2x2) == Vector2(0, 1))
 
 
 func test_add_item_at() -> void:
