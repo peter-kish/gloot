@@ -1,32 +1,35 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://dnmcyf6p4gtgp"]
 
-[ext_resource path="res://tests/data/item_definitions_basic.tres" type="Resource" id=1]
-[ext_resource path="res://addons/gloot/inventory.gd" type="Script" id=2]
-[ext_resource path="res://addons/gloot/ctrl_inventory.gd" type="Script" id=3]
-[ext_resource path="res://images/item_key.png" type="Texture2D" id=4]
-[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
+[ext_resource type="Resource" path="res://tests/data/item_definitions_basic.tres" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/inventory.gd" id="2"]
+[ext_resource type="Script" path="res://addons/gloot/ctrl_inventory.gd" id="3"]
+[ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="4"]
+[ext_resource type="Script" path="res://addons/gloot/inventory_item.gd" id="5"]
 
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="CtrlInventory" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_right = 302.0
 offset_bottom = 220.0
-script = ExtResource( 3 )
+script = ExtResource("3")
 inventory_path = NodePath("../Inventory")
-default_item_icon = ExtResource( 4 )
+default_item_icon = ExtResource("4")
 
 [node name="Inventory" type="Node" parent="."]
-script = ExtResource( 2 )
-item_protoset = ExtResource( 1 )
+script = ExtResource("2")
+item_protoset = ExtResource("1")
 
 [node name="Item1" type="Node" parent="Inventory"]
-script = ExtResource( 5 )
-protoset = ExtResource( 1 )
+script = ExtResource("5")
+protoset = ExtResource("1")
 prototype_id = "item1"
 
 [node name="Item2" type="Node" parent="Inventory"]
-script = ExtResource( 5 )
-protoset = ExtResource( 1 )
+script = ExtResource("5")
+protoset = ExtResource("1")
 prototype_id = "item2"

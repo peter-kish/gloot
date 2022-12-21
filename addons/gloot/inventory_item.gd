@@ -22,6 +22,7 @@ signal properties_changed
 
             emit_signal("protoset_changed")
             update_configuration_warnings()
+
 @export var prototype_id: String :
     get:
         return prototype_id
@@ -32,6 +33,7 @@ signal properties_changed
             emit_signal("prototype_id_changed")
             update_configuration_warnings()
         prototype_id = new_prototype_id
+
 @export var properties: Dictionary :
     get:
         return properties
@@ -39,6 +41,7 @@ signal properties_changed
         properties = new_properties
         emit_signal("properties_changed")
         update_configuration_warnings()
+
 var _inventory: Node
 
 const KEY_PROTOSET: String = "protoset"
@@ -199,8 +202,8 @@ func _deserialize_property(data: Dictionary):
 
 
 func get_texture() -> Texture2D:
-    var texture_path = get_property(KEY_IMAGE) or ""
-    if texture_path != "" && ResourceLoader.exists(texture_path):
+    var texture_path = get_property(KEY_IMAGE)
+    if texture_path && texture_path != "" && ResourceLoader.exists(texture_path):
         var texture = load(texture_path)
         if texture is Texture2D:
             return texture

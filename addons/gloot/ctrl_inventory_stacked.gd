@@ -25,16 +25,16 @@ func _ready():
     
     _progress_bar = ProgressBar.new()
     _progress_bar.size_flags_horizontal = SIZE_EXPAND_FILL
-    _progress_bar.percent_visible = false
+    _progress_bar.show_percentage = false
     _progress_bar.visible = progress_bar_visible
-    _progress_bar.minimum_size.y = 20
+    _progress_bar.custom_minimum_size.y = 20
     _vbox_container.add_child(_progress_bar)
 
     _label = Label.new()
     _label.anchor_right = 1.0
     _label.anchor_bottom = 1.0
-    _label.align = Label.ALIGNMENT_CENTER
-    _label.valign = Label.VALIGN_CENTER
+    _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    _label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
     _progress_bar.add_child(_label)
 
     _refresh()

@@ -99,7 +99,7 @@ func _input(event: InputEvent) -> void:
 	if mb_event.button_index != MOUSE_BUTTON_LEFT:
 		return
 
-	if mb_event.doubleclick:
+	if mb_event.double_click:
 		if get_global_rect().has_point(get_global_mouse_position()):
 			emit_signal("activated", self)
 	elif mb_event.is_pressed():

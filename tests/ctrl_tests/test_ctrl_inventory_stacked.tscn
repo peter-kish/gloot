@@ -1,34 +1,38 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://dcyi3nd2idb5j"]
 
-[ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=1]
-[ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=2]
-[ext_resource path="res://tests/data/item_definitions_stack.tres" type="Resource" id=3]
-[ext_resource path="res://images/item_key.png" type="Texture2D" id=4]
-[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=5]
+[ext_resource type="Script" path="res://addons/gloot/inventory_stacked.gd" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_stacked.gd" id="2"]
+[ext_resource type="Resource" path="res://tests/data/item_definitions_stack.tres" id="3"]
+[ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="4"]
+[ext_resource type="Script" path="res://addons/gloot/inventory_item.gd" id="5"]
 
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
 offset_top = -1.0
 offset_right = 377.0
 offset_bottom = 224.0
-script = ExtResource( 2 )
+script = ExtResource("2")
 inventory_path = NodePath("../InventoryStacked")
-default_item_icon = ExtResource( 4 )
+default_item_icon = ExtResource("4")
 
 [node name="InventoryStacked" type="Node" parent="."]
-script = ExtResource( 1 )
-item_protoset = ExtResource( 3 )
+script = ExtResource("1")
 capacity = 20.0
+item_protoset = ExtResource("3")
 
 [node name="MinimalItem" type="Node" parent="InventoryStacked"]
-script = ExtResource( 5 )
-protoset = ExtResource( 3 )
+script = ExtResource("5")
+protoset = ExtResource("3")
 prototype_id = "minimal_item"
 
 [node name="StackableItem" type="Node" parent="InventoryStacked"]
-script = ExtResource( 5 )
-protoset = ExtResource( 3 )
+script = ExtResource("5")
+protoset = ExtResource("3")
 prototype_id = "stackable_item"

@@ -146,6 +146,8 @@ func _on_inventory_resized() -> void:
 
 
 func _input(event) -> void:
+    super._input(event)
+    
     if !(event is InputEventMouseMotion):
         return
     if !inventory:
@@ -166,7 +168,7 @@ func _input(event) -> void:
 func _reset_highlights() -> void:
     while true:
         var highlight = _dequeue_highlight()
-        if !highlight:
+        if highlight == null:
             break
         _highlight_rect(highlight.rect, highlight.style, false)
 

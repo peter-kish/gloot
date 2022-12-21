@@ -46,7 +46,10 @@ signal item_mouse_exited(item)
 		inventory_path = new_inv_path
 		var node: Node = get_node_or_null(inventory_path)
 
-		if is_inside_tree() && node:
+		if node == null:
+			return
+
+		if is_inside_tree():
 			assert(node is InventoryGrid)
 			
 		self.inventory = node

@@ -9,11 +9,14 @@ extends Control
 	set(new_item_slot_path):
 		item_slot_path = new_item_slot_path
 		var node: Node = get_node_or_null(item_slot_path)
+		
+		if node == null:
+			return
 
-		if is_inside_tree() && node:
+		if is_inside_tree():
 			assert(node is ItemSlot)
 			
-		item_slot = node
+		self.item_slot = node
 		update_configuration_warnings()
 @export var default_item_icon: Texture2D :
 	get:
