@@ -1,125 +1,126 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=9 format=3 uid="uid://b2owv7hirds6s"]
 
-[ext_resource path="res://addons/gloot/ctrl_inventory_stacked.gd" type="Script" id=1]
-[ext_resource path="res://addons/gloot/inventory_stacked.gd" type="Script" id=2]
-[ext_resource path="res://tests/data/item_definitions_stack.tres" type="Resource" id=3]
-[ext_resource path="res://examples/inventory_stacked_transfer.gd" type="Script" id=4]
-[ext_resource path="res://images/item_key.png" type="Texture2D" id=5]
-[ext_resource path="res://addons/gloot/ctrl_item_slot.gd" type="Script" id=6]
-[ext_resource path="res://addons/gloot/item_slot.gd" type="Script" id=7]
-[ext_resource path="res://addons/gloot/inventory_item.gd" type="Script" id=8]
+[ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_stacked.gd" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/inventory_stacked.gd" id="2"]
+[ext_resource type="Resource" path="res://tests/data/item_definitions_stack.tres" id="3"]
+[ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
+[ext_resource type="Script" path="res://addons/gloot/ctrl_item_slot.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/item_slot.gd" id="7"]
+[ext_resource type="Script" path="res://addons/gloot/inventory_item.gd" id="8"]
 
 [node name="InventoryStackedTransfer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 4 )
+script = ExtResource("4")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_right = 1024.0
-offset_bottom = 491.0
+offset_right = 1152.0
+offset_bottom = 521.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-offset_right = 510.0
-offset_bottom = 491.0
+offset_right = 574.0
+offset_bottom = 521.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 1 )
+script = ExtResource("1")
 inventory_path = NodePath("../../../InventoryStackedLeft")
-default_item_icon = ExtResource( 5 )
+default_item_icon = ExtResource("5")
 
 [node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-offset_left = 514.0
-offset_right = 1024.0
-offset_bottom = 491.0
+offset_left = 578.0
+offset_right = 1152.0
+offset_bottom = 521.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 1 )
+script = ExtResource("1")
 inventory_path = NodePath("../../../InventoryStackedRight")
-default_item_icon = ExtResource( 5 )
+default_item_icon = ExtResource("5")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 495.0
-offset_right = 1024.0
-offset_bottom = 541.0
+offset_top = 525.0
+offset_right = 1152.0
+offset_bottom = 557.0
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3"]
-offset_right = 46.0
-offset_bottom = 46.0
+offset_right = 32.0
+offset_bottom = 32.0
 
 [node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer"]
-offset_left = 7.0
-offset_top = 7.0
-offset_right = 39.0
-offset_bottom = 39.0
-minimum_size = Vector2( 32, 32 )
-script = ExtResource( 6 )
+custom_minimum_size = Vector2(32, 32)
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("6")
 item_slot_path = NodePath("../../../../ItemSlot")
-default_item_icon = ExtResource( 5 )
+default_item_icon = ExtResource("5")
 label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-offset_left = 50.0
-offset_right = 97.0
-offset_bottom = 46.0
+offset_left = 36.0
+offset_right = 88.0
+offset_bottom = 32.0
 text = "Equip"
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-offset_left = 101.0
-offset_right = 159.0
-offset_bottom = 46.0
+offset_left = 92.0
+offset_right = 157.0
+offset_bottom = 32.0
 text = "Unquip"
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-offset_top = 545.0
-offset_right = 1024.0
-offset_bottom = 576.0
+offset_top = 561.0
+offset_right = 1152.0
+offset_bottom = 613.0
 text = "Use the buttons above to equip/unequip an item from the left inventory.
 Use the buttons below to transfer items from one inventory to the other."
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 580.0
-offset_right = 1024.0
-offset_bottom = 600.0
+offset_top = 617.0
+offset_right = 1152.0
+offset_bottom = 648.0
 
 [node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
-offset_right = 510.0
-offset_bottom = 20.0
+offset_right = 574.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 text = "<<<"
 
 [node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
-offset_left = 514.0
-offset_right = 1024.0
-offset_bottom = 20.0
+offset_left = 578.0
+offset_right = 1152.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
 text = ">>>"
 
 [node name="InventoryStackedLeft" type="Node" parent="."]
-script = ExtResource( 2 )
-item_protoset = ExtResource( 3 )
+script = ExtResource("2")
 capacity = 50.0
+item_protoset = ExtResource("3")
 
 [node name="minimal_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "minimal_item"
 
 [node name="big_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "big_item"
 
 [node name="stackable_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "stackable_item"
 
 [node name="limited_stackable_item" type="Node" parent="InventoryStackedLeft"]
@@ -131,23 +132,23 @@ properties = {
 }
 
 [node name="InventoryStackedRight" type="Node" parent="."]
-script = ExtResource( 2 )
-item_protoset = ExtResource( 3 )
+script = ExtResource("2")
 capacity = 50.0
+item_protoset = ExtResource("3")
 
 [node name="minimal_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "minimal_item"
 
 [node name="big_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "big_item"
 
 [node name="stackable_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource( 8 )
-protoset = ExtResource( 3 )
+script = ExtResource("8")
+protoset = ExtResource("3")
 prototype_id = "stackable_item"
 
 [node name="limited_stackable_item" type="Node" parent="InventoryStackedRight"]
@@ -159,5 +160,5 @@ properties = {
 }
 
 [node name="ItemSlot" type="Node" parent="."]
-script = ExtResource( 7 )
+script = ExtResource("7")
 inventory_path = NodePath("../InventoryStackedLeft")
