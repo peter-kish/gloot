@@ -1,6 +1,6 @@
 extends Inventory
 class_name InventoryGrid
-#@tool
+@tool
 
 signal size_changed
 

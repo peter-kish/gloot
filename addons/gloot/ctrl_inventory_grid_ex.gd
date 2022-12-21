@@ -1,6 +1,6 @@
 class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
-#@tool
+@tool
 
 const Verify = preload("res://addons/gloot/verify.gd")
 

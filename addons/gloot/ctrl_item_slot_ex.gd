@@ -1,6 +1,6 @@
 class_name CtrlItemSlotEx
 extends CtrlItemSlot
-#@tool
+@tool
 
 @export var slot_style: StyleBox :
 	get:

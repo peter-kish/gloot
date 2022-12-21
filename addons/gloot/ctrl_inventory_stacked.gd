@@ -1,6 +1,6 @@
 class_name CtrlInventoryStacked
 extends CtrlInventory
-#@tool
+@tool
 
 @export var progress_bar_visible: bool = true :
     get:

@@ -1,6 +1,6 @@
 extends Node
 class_name ItemSlot
-tool
+@tool
 
 signal item_set(item)
 signal item_cleared

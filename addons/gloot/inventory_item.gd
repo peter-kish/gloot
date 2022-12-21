@@ -1,6 +1,6 @@
 extends Node
 class_name InventoryItem
-#@tool
+@tool
 
 signal protoset_changed
 signal prototype_id_changed
@@ -61,8 +61,8 @@ func _get_configuration_warnings() -> PackedStringArray:
     if !protoset:
         return PackedStringArray()
 
-    if !protoset.has(prototype_id):
-        return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
+	if !protoset.has_prototype(prototype_id):
+		return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
 
     return PackedStringArray()
 

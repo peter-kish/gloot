@@ -137,7 +137,7 @@ func _add_key(key: String, color: Color) -> void:
 func _add_label(key: String, color: Color) -> void:
     var label: Label = Label.new()
     label.text = key
-    label.align = Label.ALIGNMENT_CENTER
+    label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     label.add_theme_color_override("font_color", color)
     grid_container.add_child(label)
 
