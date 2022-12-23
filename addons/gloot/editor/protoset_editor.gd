@@ -1,5 +1,5 @@
 extends Control
-#@tool
+@tool
 
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 
@@ -15,7 +15,8 @@ var protoset: ItemProtoset :
         return protoset
     set(new_protoset):
         protoset = new_protoset
-        protoset.connect("changed", Callable(self, "_on_protoset_changed"))
+        if protoset:
+            protoset.connect("changed", Callable(self, "_on_protoset_changed"))
         _refresh()
 var gloot_undo_redo = null
 var editor_interface: EditorInterface :
@@ -63,7 +64,8 @@ func _clear() -> void:
 func _populate() -> void:
     if protoset:
         # TODO: Avoid accessing "private" members (_prototypes)
-        prototype_filter.values = protoset._prototypes.keys().duplicate()
+        prototype_filter.values.clear()
+        prototype_filter.values.append_array(protoset._prototypes.keys().duplicate())
 
 
 func _refresh_btn_add_prototype() -> void:
@@ -91,7 +93,7 @@ func _on_prototype_selected(index: int) -> void:
 
 
 func _inspect_prototype_id(prototype_id: String) -> void:
-    if !protoset || !protoset.has(prototype_id):
+    if !protoset || !protoset.has_prototype(prototype_id):
         return
 
     var prototype: Dictionary = protoset.get(prototype_id).duplicate()

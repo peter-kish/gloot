@@ -1,5 +1,5 @@
 extends Button
-#@tool
+@tool
 
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 
@@ -31,17 +31,17 @@ var editor_interface: EditorInterface :
 
 func _ready() -> void:
     icon = EditorIcons.get_icon(editor_interface, "Edit")
-    window_dialog.connect("popup_hide", Callable(self, "_on_popup_hide"))
+    window_dialog.connect("close_requested", Callable(self, "_on_close_requested"))
     protoset_editor.protoset = protoset
     protoset_editor.gloot_undo_redo = gloot_undo_redo
     protoset_editor.editor_interface = editor_interface
     connect("pressed", Callable(self, "_on_pressed"))
 
 
-func _on_popup_hide() -> void:
+func _on_close_requested() -> void:
     protoset.update_json_data()
     protoset.notify_property_list_changed()
 
 
 func _on_pressed() -> void:
-    window_dialog.popup_centered()
+    window_dialog.popup_centered(window_dialog.size)

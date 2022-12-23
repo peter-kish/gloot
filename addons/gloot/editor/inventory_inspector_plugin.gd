@@ -22,14 +22,14 @@ func _init():
     gloot_undo_redo.undo_redo = undo_redo
 
 
-func can_handle(object: Object) -> bool:
+func _can_handle(object: Variant) -> bool:
     return (object is Inventory) || \
             (object is InventoryItem) || \
             (object is ItemSlot) || \
             (object is ItemProtoset)
 
 
-func parse_begin(object: Object) -> void:
+func _parse_begin(object: Object) -> void:
     if object is Inventory:
         var inventory_inspector = InventoryInspector.instantiate()
         inventory_inspector.inventory = object
@@ -44,7 +44,13 @@ func parse_begin(object: Object) -> void:
         add_custom_control(edit_protoset_button)
 
 
-func parse_property(object, type, path, hint, hint_text, usage) -> bool:
+func _parse_property(object: Object,
+        type: int,
+        path: String,
+        hint: int,
+        hint_text: String,
+        usage: int,
+        wide: bool) -> bool:
     if (object is InventoryItem) && path == "properties":
         var item_property_editor =ItemPropertyEditor.new()
         item_property_editor.gloot_undo_redo = gloot_undo_redo

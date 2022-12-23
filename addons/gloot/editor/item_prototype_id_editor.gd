@@ -22,9 +22,13 @@ func _init():
     _choice_filter.connect("choice_picked", Callable(self, "_on_choice_picked"))
 
     _window_dialog = Window.new()
-    _window_dialog.window_title = "Select Prototype ID"
-    _window_dialog.resizable = true
+    _window_dialog.title = "Select Prototype ID"
+    _window_dialog.unresizable = false
     _window_dialog.size = POPUP_SIZE
+    _window_dialog.visible = false
+    _window_dialog.borderless = true
+    _window_dialog.popup_window = true
+    _window_dialog.close_requested.connect(func(): _window_dialog.hide())
     add_child(_window_dialog)
     
     var _margin_container = MarginContainer.new()
@@ -90,14 +94,15 @@ func update_property() -> void:
 
 
 func _refresh_choice_filter() -> void:
-    _choice_filter.values = _get_prototype_ids()
+    _choice_filter.values.clear()
+    _choice_filter.values.append_array(_get_prototype_ids())
     _choice_filter.refresh()
 
 
 func _refresh_button() -> void:
     var item: InventoryItem = get_edited_object()
     _btn_prototype_id.text = item.prototype_id
-    if !item.protoset.has(item.prototype_id):
+    if !item.protoset.has_prototype(item.prototype_id):
         _btn_prototype_id.add_theme_color_override("font_color", COLOR_INVALID)
         _btn_prototype_id.add_theme_color_override("font_color_hover", COLOR_INVALID)
         _btn_prototype_id.tooltip_text = "Invalid prototype ID!"

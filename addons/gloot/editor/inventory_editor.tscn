@@ -1,54 +1,50 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://c6e4cxvjdxhdo"]
 
-[ext_resource path="res://addons/gloot/editor/choice_filter.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/gloot/editor/inventory_editor.gd" type="Script" id=2]
+[ext_resource type="PackedScene" path="res://addons/gloot/editor/choice_filter.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/editor/inventory_editor.gd" id="2"]
 
 [node name="InventoryEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-minimum_size = Vector2( 0, 200 )
-script = ExtResource( 2 )
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="ChoiceFilter" parent="HSplitContainer" instance=ExtResource( 1 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 506.0
-offset_bottom = 600.0
-minimum_size = Vector2( 175, 0 )
+[node name="ChoiceFilter" parent="HSplitContainer" instance=ExtResource("1")]
+layout_mode = 2
 pick_text = "Add"
 filter_text = "Filter Prototypes:"
+values = ["minimal_item", "minimal_item_2", "item1", "item2"]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
-offset_left = 518.0
-offset_right = 1024.0
-offset_bottom = 600.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/VBoxContainer"]
-offset_right = 506.0
-offset_bottom = 576.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VBoxContainer"]
-offset_top = 580.0
-offset_right = 506.0
-offset_bottom = 600.0
+layout_mode = 2
 
 [node name="BtnEdit" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
-offset_right = 251.0
-offset_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Edit"
 
 [node name="BtnRemove" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
-offset_left = 255.0
-offset_right = 506.0
-offset_bottom = 20.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Remove"

@@ -111,6 +111,10 @@ GLoot="*res://addons/gloot/gloot_autoload.gd"
 
 enabled=PackedStringArray("res://addons/gloot/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [physics]
 
 common/enable_pause_aware_picking=true

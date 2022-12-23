@@ -1,5 +1,5 @@
 extends Control
-#@tool
+@tool
 
 signal choice_picked(value_index)
 signal choice_selected(value_index)

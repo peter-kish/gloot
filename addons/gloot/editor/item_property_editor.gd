@@ -24,10 +24,12 @@ func _init():
 	_dict_editor.connect("value_removed", Callable(self, "_on_value_removed"))
 
 	_window_dialog = Window.new()
-	_window_dialog.window_title = "Edit Item Properties"
-	_window_dialog.resizable = true
+	_window_dialog.title = "Edit Item Properties"
+	_window_dialog.unresizable = false
 	_window_dialog.size = POPUP_SIZE
-	_window_dialog.minimum_size = POPUP_MIN_SIZE
+	_window_dialog.min_size = POPUP_MIN_SIZE
+	_window_dialog.close_requested.connect(func(): _window_dialog.hide())
+	_window_dialog.visible = false
 	add_child(_window_dialog)
 
 	var _margin_container = MarginContainer.new()
@@ -128,7 +130,7 @@ func _refresh_button() -> void:
 	var item: InventoryItem = get_edited_object()
 	if !item || !item.protoset:
 		return
-	_btn_prototype_id.disabled = !item.protoset.has(item.prototype_id)
+	_btn_prototype_id.disabled = !item.protoset.has_prototype(item.prototype_id)
 
 
 func _get_dictionary() -> Dictionary:
@@ -139,10 +141,10 @@ func _get_dictionary() -> Dictionary:
 	if !item.protoset:
 		return {}
 
-	if !item.protoset.has(item.prototype_id):
+	if !item.protoset.has_prototype(item.prototype_id):
 		return {}
 
-	var result: Dictionary = item.protoset.get(item.prototype_id).duplicate()
+	var result: Dictionary = item.protoset.get_prototype(item.prototype_id).duplicate()
 	for key in item.properties.keys():
 		result[key] = item.properties[key]
 	return result
@@ -161,7 +163,7 @@ func _get_color_map() -> Dictionary:
 	for key in dictionary.keys():
 		if item.properties.has(key):
 			result[key] = COLOR_OVERRIDDEN
-		if key == ItemProtoset.KEY_ID && !item.protoset.has(dictionary[key]):
+		if key == ItemProtoset.KEY_ID && !item.protoset.has_prototype(dictionary[key]):
 			result[key] = COLOR_INVALID
 
 	return result
@@ -179,7 +181,7 @@ func _get_remove_button_map() -> Dictionary:
 	var dictionary: Dictionary = _get_dictionary()
 	for key in dictionary.keys():
 		result[key] = {}
-		if item.protoset.get(item.prototype_id).has(key):
+		if item.protoset.get_prototype(item.prototype_id).has(key):
 			result[key]["text"] = ""
 			result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Reload")
 		else:

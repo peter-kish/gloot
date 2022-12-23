@@ -1,5 +1,5 @@
 extends Control
-#@tool
+@tool
 
 const InventoryEditor = preload("res://addons/gloot/editor/inventory_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
@@ -37,10 +37,12 @@ var _popup_inventory_editor: Control
 
 func _init():
     _window_dialog = Window.new()
-    _window_dialog.window_title = "Edit Inventory"
-    _window_dialog.resizable = true
+    _window_dialog.title = "Edit Inventory"
+    _window_dialog.unresizable = false
     _window_dialog.size = POPUP_SIZE
-    _window_dialog.custom_minimum_size = POPUP_MIN_SIZE
+    _window_dialog.min_size = POPUP_MIN_SIZE
+    _window_dialog.visible = false
+    _window_dialog.close_requested.connect(func(): _window_dialog.hide())
     add_child(_window_dialog)
 
     _popup_inventory_editor = InventoryEditor.instantiate()
