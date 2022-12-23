@@ -88,8 +88,7 @@ func _refresh() -> void:
     scroll_container.add_child(_inventory_control)
 
     # Set prototype_id_filter values
-    prototype_id_filter.values.clear()
-    prototype_id_filter.values.append_array(inventory.item_protoset._prototypes.keys())
+    prototype_id_filter.set_values(inventory.item_protoset._prototypes.keys())
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:

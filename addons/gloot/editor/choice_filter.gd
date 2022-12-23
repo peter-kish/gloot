@@ -44,12 +44,8 @@ signal choice_selected(value_index)
         filter_icon = new_filter_icon
         if line_edit:
             line_edit.right_icon = filter_icon
-@export var values: Array[String] :
-    get:
-        return values
-    set(new_values):
-        values = new_values
-        refresh()
+# TODO: Create a setter that calls refresh()
+@export var values: Array[String]
 
 
 func refresh() -> void:
@@ -133,3 +129,9 @@ func get_selected_text() -> String:
         return values[selected]
         
     return ""
+    
+    
+func set_values(new_values: Array) -> void:
+    values.clear()
+    values += new_values
+    refresh()

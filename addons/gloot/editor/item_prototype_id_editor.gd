@@ -56,10 +56,13 @@ func _ready() -> void:
     if item.protoset:
         item.protoset.connect("changed", Callable(self, "_on_protoset_changed"))
     _refresh_button()
+    _refresh_choice_filter()
 
 
 func _on_btn_prototype_id() -> void:
-    _window_dialog.popup(Rect2(get_global_mouse_position(), POPUP_SIZE))
+    # TODO: Prevent the popup from positioning partially out of screen
+    # _window_dialog.popup(Rect2(get_global_mouse_position(), POPUP_SIZE))
+    _window_dialog.popup_centered(POPUP_SIZE)
 
 
 func _on_choice_picked(value_index: int) -> void:

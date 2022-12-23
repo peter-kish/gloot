@@ -15,7 +15,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventory" type="VBoxContainer" parent="."]
-layout_mode = 0
 offset_right = 302.0
 offset_bottom = 220.0
 script = ExtResource("3")
