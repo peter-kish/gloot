@@ -7,19 +7,19 @@ var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id
 var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_equipped_item_editor.gd")
 var GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 var editor_interface: EditorInterface = null
-var undo_redo: EditorUndoRedoManager = null :
+var undo_redo_manager: EditorUndoRedoManager = null :
     get:
-        return undo_redo
+        return undo_redo_manager
     set(new_undo_redo):
-        undo_redo = new_undo_redo
+        undo_redo_manager = new_undo_redo
         if gloot_undo_redo:
-            gloot_undo_redo.undo_redo = undo_redo
+            gloot_undo_redo.undo_redo_manager = undo_redo_manager
 var gloot_undo_redo = null
 
 
 func _init():
     gloot_undo_redo = GlootUndoRedo.new()
-    gloot_undo_redo.undo_redo = undo_redo
+    gloot_undo_redo.undo_redo_manager = undo_redo_manager
 
 
 func _can_handle(object: Variant) -> bool:
