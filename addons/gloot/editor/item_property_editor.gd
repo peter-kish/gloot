@@ -75,7 +75,7 @@ func _on_value_changed(key: String, new_value) -> void:
     var new_properties = item.properties.duplicate()
     new_properties[key] = new_value
 
-    var item_prototype: Dictionary = item.protoset.get(item.prototype_id)
+    var item_prototype: Dictionary = item.protoset.get_prototype(item.prototype_id)
     if item_prototype.has(key) && (item_prototype[key] == new_value):
         new_properties.erase(key)
 
