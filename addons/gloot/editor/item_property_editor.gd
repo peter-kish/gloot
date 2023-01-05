@@ -49,8 +49,6 @@ func _init():
     _btn_prototype_id.connect("pressed", Callable(self, "_on_btn_edit"))
     add_child(_btn_prototype_id)
 
-    _refresh_dict_editor()
-
 
 func _ready() -> void:
     _btn_prototype_id.icon = EditorIcons.get_icon(editor_interface, "Edit")
@@ -65,6 +63,7 @@ func _ready() -> void:
     item.protoset.connect("changed", Callable(self, "_on_protoset_changed"))
 
     _refresh_button()
+    _refresh_dict_editor()
 
 
 func _on_btn_edit() -> void:
