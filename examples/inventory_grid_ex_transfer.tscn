@@ -77,6 +77,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("3")
 field_style = SubResource("1")
@@ -98,6 +99,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2"]
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("3")
 field_style = SubResource("3")
@@ -121,6 +123,7 @@ text = "Item Slot:"
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
 layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer"]
 custom_minimum_size = Vector2(32, 32)
@@ -159,6 +162,7 @@ properties = {
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
+properties = {}
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
@@ -177,6 +181,7 @@ properties = {
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_1x1"
+properties = {}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("7")

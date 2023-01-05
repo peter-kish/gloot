@@ -25,10 +25,10 @@ func _refresh() -> void:
 func _update_background() -> void:
     if !_background_panel:
         _background_panel = Panel.new()
-        _background_panel.size = size
         add_child(_background_panel)
         move_child(_background_panel, 0)
-
+        
+    _background_panel.size = size
     _background_panel.show()
     if slot_style:
         _set_panel_style(_background_panel, slot_style)
