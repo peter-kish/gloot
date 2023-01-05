@@ -200,7 +200,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     _set_item_stack_size(item, stack_size - new_stack_size)
     emit_signal("occupied_space_changed")
     _calculate_occupied_space()
-    assert(.add_item(new_item))
+    assert(super.add_item(new_item))
     return new_item
 
 
