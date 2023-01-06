@@ -3,7 +3,7 @@ extends EditorProperty
 
 const ChoiceFilter = preload("res://addons/gloot/editor/choice_filter.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
-const POPUP_SIZE = Vector2(300, 300)
+const POPUP_SIZE = Vector2i(300, 300)
 const POPUP_MARGIN = 10
 const COLOR_INVALID = Color.RED
 var current_value: String
@@ -60,9 +60,22 @@ func _ready() -> void:
 
 
 func _on_btn_prototype_id() -> void:
-    # TODO: Prevent the popup from positioning partially out of screen
-    # _window_dialog.popup(Rect2(get_global_mouse_position(), POPUP_SIZE))
-    _window_dialog.popup_centered(POPUP_SIZE)
+    _window_dialog.popup(Rect2i(_get_popup_at_mouse_position(POPUP_SIZE), POPUP_SIZE))
+
+func _get_popup_at_mouse_position(size: Vector2i) -> Vector2i:
+    var popup_pos: Vector2i
+    const CURRENT_WINDOW: int = 0
+    var current_screen: int = DisplayServer.window_get_current_screen(CURRENT_WINDOW)
+    var global_mouse_pos: Vector2i = Vector2i(get_global_mouse_position())
+    var local_mouse_pos: Vector2i = global_mouse_pos + \
+            DisplayServer.window_get_position(CURRENT_WINDOW)
+
+    # Prevent the popup from positioning partially out of screen
+    var screen_size: Vector2i = DisplayServer.screen_get_size(current_screen)
+    popup_pos.x = clamp(local_mouse_pos.x, 0, screen_size.x - size.x)
+    popup_pos.y = clamp(local_mouse_pos.y, 0, screen_size.y - size.y)
+
+    return popup_pos
 
 
 func _on_choice_picked(value_index: int) -> void:
