@@ -231,14 +231,14 @@ func sort() -> bool:
         item_array.append(item)
     item_array.sort_custom(self, "_compare_items")
 
-    for item in get_items():
-        move_item_to(item, size)
+    for item in item_array:
+        remove_item(item)
 
     for item in item_array:
         var free_place: Vector2 = find_free_place(item)
         if !Verify.vector_positive(free_place):
             return false
-        move_item_to(item, free_place)
+        add_item_at(item, free_place)
 
     return true
 
