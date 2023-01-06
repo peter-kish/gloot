@@ -38,7 +38,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventoryGridEx" type="Control" parent="."]
-layout_mode = 3
+texture_filter = 1
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 1
 anchors_preset = 0
 offset_right = 160.0
 offset_bottom = 160.0
@@ -60,6 +62,7 @@ item_protoset = ExtResource("1")
 script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
+properties = {}
 
 [node name="item_1x1" type="Node" parent="InventoryGrid"]
 script = ExtResource("5")
