@@ -166,13 +166,17 @@ func move_item_to(item: InventoryItem, position: Vector2) -> bool:
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
     if rect_free(rect, item):
-        item.properties[KEY_GRID_POSITION] = position
-        if item.properties[KEY_GRID_POSITION] == Vector2.ZERO:
-            item.properties.erase(KEY_GRID_POSITION)
+        _move_item_to_unsafe(item, position)
         emit_signal("contents_changed")
         return true
 
     return false
+
+
+func _move_item_to_unsafe(item: InventoryItem, position: Vector2) -> void:
+    item.properties[KEY_GRID_POSITION] = position
+    if item.properties[KEY_GRID_POSITION] == Vector2.ZERO:
+        item.properties.erase(KEY_GRID_POSITION)
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
@@ -232,7 +236,7 @@ func sort() -> bool:
     item_array.sort_custom(self, "_compare_items")
 
     for item in item_array:
-        remove_item(item)
+        _move_item_to_unsafe(item, -get_item_size(item))
 
     for item in item_array:
         var free_place: Vector2 = find_free_place(item)
