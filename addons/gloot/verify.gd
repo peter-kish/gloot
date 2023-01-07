@@ -6,23 +6,34 @@ const type_names: Array = [
     "float",
     "String",
     "Vector2",
+    "Vector2i",
     "Rect2",
+    "Rect2i",
     "Vector3",
+    "Vector3i",
     "Transform2D",
+    "Vector4",
+    "Vector4i",
     "Plane",
     "Quaternion",
     "AABB",
     "Basis",
     "Transform3D",
+    "Projection",
     "Color",
+    "StringName",
     "NodePath",
     "RID",
     "Object",
+    "Callable",
+    "Signal",
     "Dictionary",
     "Array",
     "PackedByteArray",
     "PackedInt32Array",
+    "PackedInt64Array",
     "PackedFloat32Array",
+    "PackedFloat64Array",
     "PackedStringArray",
     "PackedVector2Array",
     "PackedVector3Array",
@@ -42,10 +53,20 @@ static func create_var(type: int):
             return ""
         TYPE_VECTOR2:
             return Vector2()
+        TYPE_VECTOR2I:
+            return Vector2i()
         TYPE_RECT2:
             return Rect2()
+        TYPE_RECT2I:
+            return Rect2i()
         TYPE_VECTOR3:
             return Vector3()
+        TYPE_VECTOR3I:
+            return Vector3i()
+        TYPE_VECTOR4:
+            return Vector4()
+        TYPE_VECTOR4I:
+            return Vector4i()
         TYPE_TRANSFORM2D:
             return Transform2D()
         TYPE_PLANE:
@@ -58,8 +79,12 @@ static func create_var(type: int):
             return Basis()
         TYPE_TRANSFORM3D:
             return Transform3D()
+        TYPE_PROJECTION :
+            return Projection()
         TYPE_COLOR:
             return Color()
+        TYPE_STRING_NAME:
+            return ""
         TYPE_NODE_PATH:
             return NodePath()
         TYPE_RID:
@@ -74,8 +99,12 @@ static func create_var(type: int):
             return PackedByteArray()
         TYPE_PACKED_INT32_ARRAY:
             return PackedInt32Array()
+        TYPE_PACKED_INT64_ARRAY:
+            return PackedInt64Array()
         TYPE_PACKED_FLOAT32_ARRAY:
             return PackedFloat32Array()
+        TYPE_PACKED_FLOAT64_ARRAY:
+            return PackedFloat64Array()
         TYPE_PACKED_STRING_ARRAY:
             return PackedStringArray()
         TYPE_PACKED_VECTOR2_ARRAY:

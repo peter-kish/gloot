@@ -12,8 +12,11 @@ const supported_types: Array = [
     TYPE_FLOAT,
     TYPE_STRING,
     TYPE_VECTOR2,
+    TYPE_VECTOR2I,
     TYPE_RECT2,
+    TYPE_RECT2I,
     TYPE_VECTOR3,
+    TYPE_VECTOR3I,
     TYPE_PLANE,
     TYPE_QUATERNION,
     TYPE_AABB,
@@ -170,4 +173,9 @@ func _add_remove_button(key: String) -> void:
 func _on_remove_button(key: String) -> void:
     dictionary.erase(key)
     emit_signal("value_removed", key)
+    refresh()
+
+
+func set_remove_button_config(key: String, config: Dictionary) -> void:
+    remove_button_map[key] = config
     refresh()

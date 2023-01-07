@@ -2,6 +2,7 @@ extends GridContainer
 
 signal value_changed(value_index)
 
+
 var values: Array = [] :
     get:
         return values
@@ -15,6 +16,7 @@ var titles: Array = [] :
         assert(!is_inside_tree(), "Can't set titles once the node is inside a tree")
         titles = new_titles
 var enabled: bool = true
+var type: int = TYPE_FLOAT
 
 
 func _ready() -> void:
@@ -47,7 +49,7 @@ func _on_line_edit_value_entered(_text: String, line_edit: LineEdit, idx: int) -
 
 func _on_line_edit_focus_exited(line_edit: LineEdit, idx: int) -> void:
     var value = str_to_var(line_edit.text)
-    if typeof(value) != TYPE_FLOAT:
+    if typeof(value) != type:
         line_edit.text = var_to_str(values[idx])
         return
     values[idx] = value

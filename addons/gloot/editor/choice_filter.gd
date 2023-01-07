@@ -44,7 +44,6 @@ signal choice_selected(value_index)
         filter_icon = new_filter_icon
         if line_edit:
             line_edit.right_icon = filter_icon
-# TODO: Create a setter that calls refresh()
 @export var values: Array[String]
 
 

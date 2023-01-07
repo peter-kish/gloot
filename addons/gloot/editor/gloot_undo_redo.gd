@@ -154,7 +154,7 @@ func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> voi
 
     undo_redo_manager.create_action("Rename Prototype")
     undo_redo_manager.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo_manager.add_do_method(protoset, "rename", id, new_id)
+    undo_redo_manager.add_do_method(protoset, "rename_prototype", id, new_id)
     undo_redo_manager.commit_action()
 
 
@@ -163,7 +163,7 @@ func add_prototype(protoset: ItemProtoset, id: String) -> void:
 
     undo_redo_manager.create_action("Add Prototype")
     undo_redo_manager.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo_manager.add_do_method(protoset, "add", id)
+    undo_redo_manager.add_do_method(protoset, "add_prototype", id)
     undo_redo_manager.commit_action()
 
 
@@ -172,7 +172,7 @@ func remove_prototype(protoset: ItemProtoset, id: String) -> void:
 
     undo_redo_manager.create_action("Remove Prototype")
     undo_redo_manager.add_undo_method(self, "_set_prototypes", protoset, old_prototypes)
-    undo_redo_manager.add_do_method(protoset, "remove", id)
+    undo_redo_manager.add_do_method(protoset, "remove_prototype", id)
     undo_redo_manager.commit_action()
 
 
@@ -190,8 +190,8 @@ func _set_prototypes(protoset: ItemProtoset, prototypes: Dictionary) -> void:
 func set_prototype_properties(protoset: ItemProtoset,
         prototype_id: String,
         new_properties: Dictionary) -> void:
-    assert(protoset.has(prototype_id))
-    var old_properties = protoset.get(prototype_id).duplicate()
+    assert(protoset.has_prototype(prototype_id))
+    var old_properties = protoset.get_prototype(prototype_id).duplicate()
 
     undo_redo_manager.create_action("Set prototype properties")
     undo_redo_manager.add_undo_method(self, "_set_prototype_properties", protoset, prototype_id, old_properties)

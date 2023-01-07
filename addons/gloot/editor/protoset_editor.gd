@@ -64,18 +64,17 @@ func _clear() -> void:
 func _populate() -> void:
     if protoset:
         # TODO: Avoid accessing "private" members (_prototypes)
-        prototype_filter.values.clear()
-        prototype_filter.values.append_array(protoset._prototypes.keys().duplicate())
+        prototype_filter.set_values(protoset._prototypes.keys().duplicate())
 
 
 func _refresh_btn_add_prototype() -> void:
     btn_add_prototype.disabled = txt_prototype_id.text.is_empty() ||\
-        protoset.has(txt_prototype_id.text)
+        protoset.has_prototype(txt_prototype_id.text)
 
 
 func _refresh_btn_rename_prototype() -> void:
     btn_rename_prototype.disabled = txt_prototype_id.text.is_empty() ||\
-        protoset.has(txt_prototype_id.text)
+        protoset.has_prototype(txt_prototype_id.text)
 
 
 func _refresh_btn_remove_prototype() -> void:
@@ -96,27 +95,27 @@ func _inspect_prototype_id(prototype_id: String) -> void:
     if !protoset || !protoset.has_prototype(prototype_id):
         return
 
-    var prototype: Dictionary = protoset.get(prototype_id).duplicate()
+    var prototype: Dictionary = protoset.get_prototype(prototype_id).duplicate()
 
     property_editor.dictionary = prototype
     property_editor.immutable_keys = [ItemProtoset.KEY_ID]
     property_editor.remove_button_map = {}
 
     for property_name in prototype.keys():
-        property_editor.remove_button_map[property_name] = {
+        property_editor.set_remove_button_config(property_name, {
             "text": "",
             "disabled": property_name == ItemProtoset.KEY_ID,
             "icon": EditorIcons.get_icon(editor_interface, "Remove"),
-        }
+        })
 
 
 func _on_property_changed(property_name: String, new_value) -> void:
     if selected_prototype_id.is_empty():
         return
-    var new_properties = protoset.get(selected_prototype_id).duplicate()
+    var new_properties = protoset.get_prototype(selected_prototype_id).duplicate()
     new_properties[property_name] = new_value
 
-    if new_properties.hash() == protoset.get(selected_prototype_id).hash():
+    if new_properties.hash() == protoset.get_prototype(selected_prototype_id).hash():
         return
 
     gloot_undo_redo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
@@ -125,7 +124,7 @@ func _on_property_changed(property_name: String, new_value) -> void:
 func _on_property_removed(property_name: String) -> void:
     if selected_prototype_id.is_empty():
         return
-    var new_properties = protoset.get(selected_prototype_id).duplicate()
+    var new_properties = protoset.get_prototype(selected_prototype_id).duplicate()
     new_properties.erase(property_name)
 
     gloot_undo_redo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
