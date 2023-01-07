@@ -39,6 +39,7 @@ func parse(json: String) -> void:
         var id = prototype[KEY_ID]
         assert(!_prototypes.has(id), "Item definition ID '%s' already in use!")
         _prototypes[id] = prototype
+        _unstringify_prototype(_prototypes[id])
 
 
 func _to_json() -> String:
@@ -46,8 +47,27 @@ func _to_json() -> String:
     for prototype_id in _prototypes.keys():
         result.append(get_prototype(prototype_id))
 
+    for prototype in result:
+        _stringify_prototype(prototype)
+
     # TODO: Add plugin settings for this
     return JSON.stringify(result, "    ")
+
+
+func _stringify_prototype(prototype: Dictionary) -> void:
+    for key in prototype.keys():
+        var type = typeof(prototype[key])
+        if (type != TYPE_STRING) and (type != TYPE_FLOAT):
+            prototype[key] = var_to_str(prototype[key])
+
+
+func _unstringify_prototype(prototype: Dictionary) -> void:
+    for key in prototype.keys():
+        var type = typeof(prototype[key])
+        if type == TYPE_STRING:
+            var variant = str_to_var(prototype[key])
+            if variant != null:
+                prototype[key] = variant
 
 
 func update_json_data() -> void:
