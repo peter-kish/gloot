@@ -107,7 +107,7 @@ func _create_checkbox() -> CheckButton:
 
 
 func _on_checkbox(checkbox: CheckButton) -> void:
-    value = checkbox.pressed
+    value = checkbox.button_pressed
     emit_signal("value_changed")
 
 
