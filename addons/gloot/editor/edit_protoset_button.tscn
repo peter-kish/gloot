@@ -17,6 +17,7 @@ unique_name_in_owner = true
 title = "Edit Protoset"
 size = Vector2i(800, 600)
 visible = false
+exclusive = true
 min_size = Vector2i(600, 200)
 
 [node name="ProtosetEditor" parent="Window" instance=ExtResource("1")]

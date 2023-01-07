@@ -42,6 +42,7 @@ func _init():
     _window_dialog.size = POPUP_SIZE
     _window_dialog.min_size = POPUP_MIN_SIZE
     _window_dialog.visible = false
+    _window_dialog.exclusive = true
     _window_dialog.close_requested.connect(func(): _window_dialog.hide())
     add_child(_window_dialog)
 

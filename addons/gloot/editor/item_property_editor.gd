@@ -30,6 +30,7 @@ func _init():
     _window_dialog.min_size = POPUP_MIN_SIZE
     _window_dialog.close_requested.connect(func(): _window_dialog.hide())
     _window_dialog.visible = false
+    _window_dialog.exclusive = true
     add_child(_window_dialog)
 
     var _margin_container = MarginContainer.new()
