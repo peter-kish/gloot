@@ -24,8 +24,8 @@ var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
-var _drag_sprite: Sprite
-var _ctrl_item_container: Control
+var _drag_sprite: WeakRef = weakref(null)
+var _ctrl_item_container: WeakRef = weakref(null)
 var _selected_item: InventoryItem = null
 var _gloot: Node = null
 
@@ -100,23 +100,27 @@ func _ready() -> void:
 
     if Engine.editor_hint:
         # Clean up, in case it is duplicated in the editor
-        if _ctrl_item_container:
-            _ctrl_item_container.queue_free()
-        if _drag_sprite:
-            _drag_sprite.queue_free()
+        var ctrl_item_container = _ctrl_item_container.get_ref()
+        if ctrl_item_container:
+            ctrl_item_container.queue_free()
+        if _drag_sprite.get_ref():
+            _drag_sprite.get_ref().queue_free()
 
-    _ctrl_item_container = Control.new()
-    _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
-    _ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
-    _ctrl_item_container.anchor_right = 1.0
-    _ctrl_item_container.anchor_bottom = 1.0
-    add_child(_ctrl_item_container)
+    var ctrl_item_container = Control.new()
+    ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
+    ctrl_item_container.anchor_right = 1.0
+    ctrl_item_container.anchor_bottom = 1.0
+    add_child(ctrl_item_container)
+    _ctrl_item_container = weakref(ctrl_item_container)
 
-    _drag_sprite = Sprite.new()
-    _drag_sprite.centered = false
-    _drag_sprite.z_index = drag_sprite_z_index
-    _drag_sprite.hide()
-    add_child(_drag_sprite)
+    var drag_sprite = Sprite.new()
+    drag_sprite.centered = false
+    drag_sprite.z_index = drag_sprite_z_index
+    drag_sprite.hide()
+    add_child(drag_sprite)
+    _drag_sprite = weakref(drag_sprite)
+
     if has_node(inventory_path):
         _set_inventory(get_node_or_null(inventory_path))
 
@@ -182,8 +186,9 @@ func _refresh() -> void:
 
 
 func _process(_delta) -> void:
-    if _drag_sprite && _drag_sprite.visible:
-        _drag_sprite.global_position = get_global_mouse_position() - _grab_offset
+    var drag_sprite = _drag_sprite.get_ref()
+    if drag_sprite && drag_sprite.visible:
+        drag_sprite.global_position = get_global_mouse_position() - _grab_offset
 
 
 func _draw() -> void:
@@ -239,18 +244,20 @@ func _refresh_grid_container() -> void:
 
 
 func _clear_list() -> void:
-    if !_ctrl_item_container:
+    var ctrl_item_container = _ctrl_item_container.get_ref()
+    if !ctrl_item_container:
         return
 
-    for ctrl_inventory_item in _ctrl_item_container.get_children():
-        _ctrl_item_container.remove_child(ctrl_inventory_item)
+    for ctrl_inventory_item in ctrl_item_container.get_children():
+        ctrl_item_container.remove_child(ctrl_inventory_item)
         ctrl_inventory_item.queue_free()
 
     _grabbed_ctrl_inventory_item = null
 
 
 func _populate_list() -> void:
-    if inventory == null || _ctrl_item_container == null:
+    var ctrl_item_container = _ctrl_item_container.get_ref()
+    if inventory == null || ctrl_item_container == null:
         return
         
     for item in inventory.get_items():
@@ -262,7 +269,7 @@ func _populate_list() -> void:
         ctrl_inventory_item.connect("activated", self, "_on_item_activated")
         ctrl_inventory_item.connect("mouse_entered", self, "_on_item_mouse_entered", [ctrl_inventory_item])
         ctrl_inventory_item.connect("mouse_exited", self, "_on_item_mouse_exited", [ctrl_inventory_item])
-        _ctrl_item_container.add_child(ctrl_inventory_item)
+        ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
 
@@ -271,10 +278,10 @@ func _refresh_selection() -> void:
     if !draw_selections:
         return
 
-    if !_ctrl_item_container:
+    if !_ctrl_item_container.get_ref():
         return
 
-    for ctrl_item in _ctrl_item_container.get_children():
+    for ctrl_item in _ctrl_item_container.get_ref().get_children():
         ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
         ctrl_item.selection_bg_color = selection_color
 
@@ -287,15 +294,16 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
     if _gloot:
         _gloot._grabbed_inventory_item = get_grabbed_item()
         _gloot._grab_offset = _grab_offset
-    if _drag_sprite:
-        _drag_sprite.texture = ctrl_inventory_item.texture
-        if _drag_sprite.texture == null:
-            _drag_sprite.texture = default_item_texture
+    var drag_sprite = _drag_sprite.get_ref()
+    if drag_sprite:
+        drag_sprite.texture = ctrl_inventory_item.texture
+        if drag_sprite.texture == null:
+            drag_sprite.texture = default_item_texture
         if stretch_item_sprites:
-            var texture_size: Vector2 = _drag_sprite.texture.get_size()
+            var texture_size: Vector2 = drag_sprite.texture.get_size()
             var streched_size: Vector2 = _get_streched_item_sprite_size(ctrl_inventory_item.item)
-            _drag_sprite.scale = streched_size / texture_size
-        _drag_sprite.show()
+            drag_sprite.scale = streched_size / texture_size
+        drag_sprite.show()
 
 
 func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
@@ -314,8 +322,8 @@ func _on_item_activated(ctrl_inventory_item) -> void:
         return
 
     _grabbed_ctrl_inventory_item = null
-    if _drag_sprite:
-        _drag_sprite.hide()
+    if _drag_sprite.get_ref():
+        _drag_sprite.get_ref().hide()
 
     emit_signal("inventory_item_activated", item)
 
@@ -370,8 +378,8 @@ func _input(event: InputEvent) -> void:
     if inventory.has_item(item):
         _select(item)
     _grabbed_ctrl_inventory_item = null
-    if _drag_sprite:
-        _drag_sprite.hide()
+    if _drag_sprite.get_ref():
+        _drag_sprite.get_ref().hide()
 
 
 func _get_grabbed_item_global_pos() -> Vector2:
