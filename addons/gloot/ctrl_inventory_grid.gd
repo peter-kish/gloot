@@ -126,11 +126,11 @@ func _ready() -> void:
     _drag_sprite = weakref(drag_sprite)
 
     if has_node(inventory_path):
-        _set_inventory(get_node_or_null(inventory_path))
+        self.inventory = get_node_or_null(inventory_path)
 
     _refresh()
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.connect("item_dropped", self, "_on_item_dropped")
+        _gloot.connect("item_dropped", Callable(self, "_on_item_dropped"))
 
 
 func _get_gloot() -> Node:
