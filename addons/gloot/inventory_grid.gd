@@ -242,7 +242,7 @@ func sort() -> bool:
         var free_place: Vector2 = find_free_place(item)
         if !Verify.vector_positive(free_place):
             return false
-        add_item_at(item, free_place)
+        move_item_to(item, free_place)
 
     return true
 
