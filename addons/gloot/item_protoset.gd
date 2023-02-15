@@ -1,6 +1,6 @@
+@tool
 class_name ItemProtoset
 extends Resource
-@tool
 
 const KEY_ID: String = "id"
 

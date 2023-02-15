@@ -1,5 +1,5 @@
-extends Control
 @tool
+extends Control
 
 signal value_changed(key, value)
 signal value_removed(key)

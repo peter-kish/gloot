@@ -1,6 +1,6 @@
+@tool
 class_name CtrlItemSlot
 extends Control
-@tool
 
 
 @export var item_slot_path: NodePath :

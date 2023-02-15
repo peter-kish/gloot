@@ -1,6 +1,6 @@
+@tool
 class_name CtrlInventory
 extends Control
-@tool
 
 signal inventory_item_activated(item)
 

@@ -1,6 +1,6 @@
+@tool
 extends Node
 class_name InventoryItem
-@tool
 
 signal protoset_changed
 signal prototype_id_changed

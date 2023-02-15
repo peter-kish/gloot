@@ -1,5 +1,5 @@
-extends Button
 @tool
+extends Button
 
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 

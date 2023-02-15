@@ -1,6 +1,6 @@
+@tool
 class_name CtrlInventoryGrid
 extends Control
-@tool
 
 signal item_dropped(item, offset)
 signal item_selected(item)

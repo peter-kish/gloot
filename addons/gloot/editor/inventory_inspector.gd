@@ -1,5 +1,5 @@
-extends Control
 @tool
+extends Control
 
 const InventoryEditor = preload("res://addons/gloot/editor/inventory_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")

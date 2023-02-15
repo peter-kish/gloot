@@ -1,6 +1,6 @@
+@tool
 extends Inventory
 class_name InventoryStacked
-@tool
 
 signal capacity_changed
 signal occupied_space_changed

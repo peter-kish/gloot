@@ -1,6 +1,6 @@
+@tool
 extends Node
 class_name Inventory
-@tool
 
 signal item_added(item)
 signal item_removed(item)
