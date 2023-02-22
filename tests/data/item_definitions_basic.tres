@@ -1,9 +1,9 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" script_class="ItemProtoset" load_steps=2 format=3 uid="uid://nnxjxxu47mtj"]
 
-[ext_resource path="res://addons/gloot/item_protoset.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/gloot/item_protoset.gd" id="1"]
 
 [resource]
-script = ExtResource( 1 )
+script = ExtResource("1")
 json_data = "[
     {
         \"id\": \"minimal_item\"
@@ -13,12 +13,12 @@ json_data = "[
     },
     {
         \"id\": \"item1\",
-        \"name\": \"item 1\",
-        \"image\": \"res://images/item_book_blue.png\"
+        \"image\": \"res://images/item_book_blue.png\",
+        \"name\": \"item 1\"
     },
     {
         \"id\": \"item2\",
-        \"name\": \"item 2\",
-        \"image\": \"res://images/item_scroll_blue.png\"
+        \"image\": \"res://images/item_scroll_blue.png\",
+        \"name\": \"item 2\"
     }
 ]"

@@ -15,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_top = -1.0
 offset_right = 377.0
 offset_bottom = 224.0

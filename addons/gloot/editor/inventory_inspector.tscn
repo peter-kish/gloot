@@ -14,7 +14,7 @@ grow_vertical = 2
 script = ExtResource("2")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -23,17 +23,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="InventoryEditor" parent="HBoxContainer" instance=ExtResource("1")]
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_right = 1140.0
-offset_bottom = 648.0
-grow_horizontal = 1
-grow_vertical = 1
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="BtnExpand" type="Button" parent="HBoxContainer"]
-offset_left = 1144.0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 2

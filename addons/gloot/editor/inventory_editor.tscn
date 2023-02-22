@@ -13,34 +13,36 @@ grow_vertical = 2
 script = ExtResource("2")
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ChoiceFilter" parent="HSplitContainer" instance=ExtResource("1")]
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 pick_text = "Add"
 filter_text = "Filter Prototypes:"
-values = []
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="BtnEdit" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Edit"
 
 [node name="BtnRemove" type="Button" parent="HSplitContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Remove"

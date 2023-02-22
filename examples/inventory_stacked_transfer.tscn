@@ -14,24 +14,24 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("4")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_right = 1152.0
-offset_bottom = 521.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-offset_right = 574.0
-offset_bottom = 521.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
@@ -39,9 +39,7 @@ inventory_path = NodePath("../../../InventoryStackedLeft")
 default_item_icon = ExtResource("5")
 
 [node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
-offset_left = 578.0
-offset_right = 1152.0
-offset_bottom = 521.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
@@ -49,57 +47,42 @@ inventory_path = NodePath("../../../InventoryStackedRight")
 default_item_icon = ExtResource("5")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 525.0
-offset_right = 1152.0
-offset_bottom = 557.0
+layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3"]
-offset_right = 32.0
-offset_bottom = 32.0
+layout_mode = 2
 
 [node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer"]
 custom_minimum_size = Vector2(32, 32)
-offset_right = 32.0
-offset_bottom = 32.0
+layout_mode = 2
 script = ExtResource("6")
 item_slot_path = NodePath("../../../../ItemSlot")
 default_item_icon = ExtResource("5")
 label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-offset_left = 36.0
-offset_right = 88.0
-offset_bottom = 32.0
+layout_mode = 2
 text = "Equip"
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer3"]
-offset_left = 92.0
-offset_right = 157.0
-offset_bottom = 32.0
+layout_mode = 2
 text = "Unquip"
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-offset_top = 561.0
-offset_right = 1152.0
-offset_bottom = 613.0
+layout_mode = 2
 text = "Use the buttons above to equip/unequip an item from the left inventory.
 Use the buttons below to transfer items from one inventory to the other."
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 617.0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 2
 
 [node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
-offset_right = 574.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "<<<"
 
 [node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
-offset_left = 578.0
-offset_right = 1152.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = ">>>"
 

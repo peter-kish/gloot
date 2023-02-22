@@ -15,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventoryGrid" type="Container" parent="."]
+layout_mode = 0
 offset_right = 160.0
 offset_bottom = 160.0
 script = ExtResource("2")

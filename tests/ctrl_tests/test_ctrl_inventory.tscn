@@ -15,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventory" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_right = 302.0
 offset_bottom = 220.0
 script = ExtResource("3")
@@ -29,10 +30,8 @@ item_protoset = ExtResource("1")
 script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item1"
-properties = {}
 
 [node name="Item2" type="Node" parent="Inventory"]
 script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item2"
-properties = {}
