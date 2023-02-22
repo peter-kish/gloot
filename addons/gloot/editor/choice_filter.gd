@@ -132,5 +132,8 @@ func get_selected_text() -> String:
     
 func set_values(new_values: Array) -> void:
     values.clear()
-    values += new_values
+    for new_value in new_values:
+        if typeof(new_value) == TYPE_STRING:
+            values.push_back(new_value)
+
     refresh()
