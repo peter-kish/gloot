@@ -9,7 +9,7 @@ var value :
         return value
     set(new_value):
         value = new_value
-        _refresh()
+        call_deferred("_refresh")
 var enabled: bool = true
 
 
