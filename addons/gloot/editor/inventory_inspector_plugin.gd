@@ -22,7 +22,7 @@ func _init():
     gloot_undo_redo.undo_redo_manager = undo_redo_manager
 
 
-func _can_handle(object: Variant) -> bool:
+func _can_handle(object: Object) -> bool:
     return (object is Inventory) || \
             (object is InventoryItem) || \
             (object is ItemSlot) || \
@@ -45,11 +45,11 @@ func _parse_begin(object: Object) -> void:
 
 
 func _parse_property(object: Object,
-        type: int,
+        type: Variant.Type,
         path: String,
-        hint: int,
-        hint_text: String,
-        usage: int,
+        hint: PropertyHint,
+        hint_string: String,
+        usage: PropertyUsageFlags,
         wide: bool) -> bool:
     if (object is InventoryItem) && path == "properties":
         var item_property_editor =ItemPropertyEditor.new()
