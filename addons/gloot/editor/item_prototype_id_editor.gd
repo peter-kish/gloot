@@ -60,18 +60,18 @@ func _ready() -> void:
 
 
 func _on_btn_prototype_id() -> void:
-    _window_dialog.popup(Rect2i(_get_popup_at_mouse_position(POPUP_SIZE), POPUP_SIZE))
+    # TODO: Figure out how to show a popup at mouse position
+    # _window_dialog.popup(Rect2i(_get_popup_at_mouse_position(POPUP_SIZE), POPUP_SIZE))
+    _window_dialog.popup_centered(POPUP_SIZE)
 
 func _get_popup_at_mouse_position(size: Vector2i) -> Vector2i:
-    var popup_pos: Vector2i
-    const CURRENT_WINDOW: int = 0
-    var current_screen: int = DisplayServer.window_get_current_screen(CURRENT_WINDOW)
     var global_mouse_pos: Vector2i = Vector2i(get_global_mouse_position())
     var local_mouse_pos: Vector2i = global_mouse_pos + \
-            DisplayServer.window_get_position(CURRENT_WINDOW)
-
+    DisplayServer.window_get_position(DisplayServer.MAIN_WINDOW_ID)
+    
     # Prevent the popup from positioning partially out of screen
-    var screen_size: Vector2i = DisplayServer.screen_get_size(current_screen)
+    var screen_size: Vector2i = DisplayServer.screen_get_size(DisplayServer.SCREEN_OF_MAIN_WINDOW)
+    var popup_pos: Vector2i
     popup_pos.x = clamp(local_mouse_pos.x, 0, screen_size.x - size.x)
     popup_pos.y = clamp(local_mouse_pos.y, 0, screen_size.y - size.y)
 
