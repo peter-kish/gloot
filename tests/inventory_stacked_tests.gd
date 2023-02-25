@@ -42,6 +42,18 @@ func init_test() -> void:
     stackable_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
     stackable_item.prototype_id = "stackable_item"
 
+    stackable_item_2 = InventoryItem.new()
+    stackable_item_2.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    stackable_item_2.prototype_id = "stackable_item"
+
+    limited_stackable_item = InventoryItem.new()
+    limited_stackable_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    limited_stackable_item.prototype_id = "limited_stackable_item"
+
+    limited_stackable_item_2 = InventoryItem.new()
+    limited_stackable_item_2.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    limited_stackable_item_2.prototype_id = "limited_stackable_item"
+
 
 func cleanup_test() -> void:
     free_inventory(inventory)
@@ -49,6 +61,9 @@ func cleanup_test() -> void:
     free_item(item)
     free_item(big_item)
     free_item(stackable_item)
+    free_item(stackable_item_2)
+    free_item(limited_stackable_item)
+    free_item(limited_stackable_item_2)
 
 
 func test_space() -> void:
