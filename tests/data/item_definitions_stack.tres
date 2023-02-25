@@ -11,11 +11,16 @@ json_data = "[
     {
         \"id\": \"big_item\",
         \"weight\": 20,
-		\"image\": \"res://images/item_book_blue.png\"
+        \"image\": \"res://images/item_book_blue.png\"
     },
     {
         \"id\": \"stackable_item\",
         \"stack_size\": 10,
-		\"image\": \"res://images/item_scroll_blue.png\"
+        \"image\": \"res://images/item_scroll_blue.png\"
+    },
+    {
+        \"id\": \"limited_stackable_item\",
+        \"max_stack_size\": 5,
+        \"stack_size\": 5
     }
 ]"

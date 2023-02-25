@@ -4,6 +4,9 @@ var inventory: InventoryStacked
 var item: InventoryItem
 var big_item: InventoryItem
 var stackable_item: InventoryItem
+var stackable_item_2: InventoryItem
+var limited_stackable_item: InventoryItem
+var limited_stackable_item_2: InventoryItem
 
 
 func init_suite() -> void:
@@ -15,6 +18,8 @@ func init_suite() -> void:
         "test_invalid_capacity",
         "test_contents_changed_signal",
         "test_stack_split_join",
+        "test_automerge",
+        "test_max_stack_size",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -104,6 +109,24 @@ func test_stack_split_join() -> void:
     assert(inventory.join(item1, item2))
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 10)
     assert(inventory.get_items().size() == 1)
+
+
+func test_automerge() -> void:
+    stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    assert(inventory.add_item(stackable_item))
+    assert(inventory.get_items().size() == 1)
+    assert(is_instance_valid(stackable_item))
+    assert(inventory.add_item(stackable_item_2))
+    assert(inventory.get_items().size() == 1)
+
+
+func test_max_stack_size() -> void:
+    assert(inventory.add_item(limited_stackable_item))
+    assert(limited_stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 3)
+    assert(inventory.add_item(limited_stackable_item_2))
+    assert(limited_stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 5)
+    assert(limited_stackable_item_2.get_property(InventoryStacked.KEY_STACK_SIZE) == 3)
 
 
 func test_serialize() -> void:
