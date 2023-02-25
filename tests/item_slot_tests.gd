@@ -22,11 +22,17 @@ func init_suite():
 
 
 func init_test() -> void:
-    inventory1.remove_all_items()
-    inventory2.remove_all_items()
+    clear_inventory(inventory1, [item])
+    clear_inventory(inventory2, [item])
     inventory1.add_item(item)
     slot.item = null
     slot.inventory = null
+
+
+func cleanup_suite() -> void:
+    clear_inventory(inventory1)
+    clear_inventory(inventory2)
+    free_if_orphan(item)
 
 
 func test_can_hold_item() -> void:

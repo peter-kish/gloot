@@ -26,8 +26,15 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
+    clear_inventory(inventory, [item, big_item, stackable_item])
     inventory.capacity = 10.0
-    inventory.remove_all_items()
+
+
+func cleanup_suite() -> void:
+    clear_inventory(inventory)
+    free_if_orphan(item)
+    free_if_orphan(big_item)
+    free_if_orphan(stackable_item)
 
 
 func test_space() -> void:

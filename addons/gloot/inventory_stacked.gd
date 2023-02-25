@@ -181,7 +181,7 @@ func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
         _set_item_stack_size(stack_1, _get_item_stack_size(stack_1) + _get_item_stack_size(stack_2))
         emit_signal("occupied_space_changed")
         _calculate_occupied_space()
-        stack_2.queue_free()
+        stack_2.free()
         return true
 
     return false

@@ -24,7 +24,13 @@ func init_suite():
 
 
 func init_test():
-    inventory_3x3.remove_all_items()
+    clear_inventory(inventory_3x3, [item_1x1, item_2x2])
+
+
+func cleanup_suite() -> void:
+    clear_inventory(inventory_3x3)
+    free_if_orphan(item_1x1)
+    free_if_orphan(item_2x2)
 
 
 func test_add_item() -> void:
