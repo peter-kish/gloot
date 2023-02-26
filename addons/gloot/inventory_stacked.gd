@@ -137,12 +137,12 @@ func _get_item_weight(item: InventoryItem) -> float:
 
 func add_item(item: InventoryItem) -> bool:
     if has_place_for(item):
-        return _add_item_automerge(item)
+        return .add_item(item)
 
     return false
 
 
-func _add_item_automerge(item: InventoryItem) -> bool:
+func add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
@@ -154,7 +154,7 @@ func _add_item_automerge(item: InventoryItem) -> bool:
             _calculate_occupied_space()
             if item.get_inventory():
                 item.get_inventory().remove_item(item)
-            item.queue_free()
+            item.free()
             return true
 
     .add_item(item)
@@ -234,7 +234,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if destination.has_place_for(item) && remove_item(item):
-        return destination._add_item_automerge(item)
+        return destination.add_item_automerge(item)
 
     return false
 

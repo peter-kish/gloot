@@ -1,6 +1,7 @@
 extends TestSuite
 
 var inventory: InventoryStacked
+var inventory_2: InventoryStacked
 var item: InventoryItem
 var big_item: InventoryItem
 var stackable_item: InventoryItem
@@ -20,6 +21,9 @@ func init_suite() -> void:
         "test_stack_split_join",
         "test_automerge",
         "test_max_stack_size",
+        "test_transfer",
+        "test_transfer_autosplit",
+        "test_transfer_autosplitmerge",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -29,6 +33,10 @@ func init_test() -> void:
     inventory = InventoryStacked.new()
     inventory.item_protoset = preload("res://tests/data/item_definitions_stack.tres")
     inventory.capacity = 10
+
+    inventory_2 = InventoryStacked.new()
+    inventory_2.item_protoset = preload("res://tests/data/item_definitions_stack.tres")
+    inventory_2.capacity = 10
 
     item = InventoryItem.new()
     item.protoset = preload("res://tests/data/item_definitions_stack.tres")
@@ -57,6 +65,7 @@ func init_test() -> void:
 
 func cleanup_test() -> void:
     free_inventory(inventory)
+    free_inventory(inventory_2)
 
     free_item(item)
     free_item(big_item)
@@ -129,10 +138,10 @@ func test_stack_split_join() -> void:
 func test_automerge() -> void:
     stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
     stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
-    assert(inventory.add_item(stackable_item))
+    assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_items().size() == 1)
     assert(is_instance_valid(stackable_item))
-    assert(inventory.add_item(stackable_item_2))
+    assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_items().size() == 1)
 
 
@@ -140,9 +149,45 @@ func test_max_stack_size() -> void:
     limited_stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 3)
     assert(inventory.add_item(limited_stackable_item))
     assert(limited_stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 3)
-    assert(inventory.add_item(limited_stackable_item_2))
+    assert(inventory.add_item_automerge(limited_stackable_item_2))
     assert(limited_stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 5)
     assert(limited_stackable_item_2.get_property(InventoryStacked.KEY_STACK_SIZE) == 3)
+
+
+func test_transfer() -> void:
+    assert(inventory.add_item(limited_stackable_item))
+    assert(inventory_2.add_item(limited_stackable_item_2))
+    assert(inventory.transfer(limited_stackable_item, inventory_2))
+    assert(!inventory.has_item(limited_stackable_item))
+    assert(inventory_2.has_item(limited_stackable_item))
+    assert(inventory_2.has_item(limited_stackable_item_2))
+
+
+func test_transfer_autosplit() -> void:
+    stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 7)
+    stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 5)
+    assert(inventory.add_item(stackable_item))
+    assert(inventory_2.add_item(stackable_item_2))
+    assert(inventory_2.transfer_autosplit(stackable_item_2, inventory))
+    assert(stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 7)
+    assert(stackable_item_2.get_property(InventoryStacked.KEY_STACK_SIZE) == 2)
+    assert(inventory.get_items().size() == 2)
+    assert(inventory.occupied_space == 10)
+    assert(inventory_2.get_items().size() == 1)
+    assert(inventory_2.occupied_space == 2)
+
+
+func test_transfer_autosplitmerge() -> void:
+    stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 7)
+    stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 5)
+    assert(inventory.add_item(stackable_item))
+    assert(inventory_2.add_item(stackable_item_2))
+    assert(inventory_2.transfer_autosplitmerge(stackable_item_2, inventory))
+    assert(stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 10)
+    assert(stackable_item_2.get_property(InventoryStacked.KEY_STACK_SIZE) == 2)
+    assert(inventory.get_items().size() == 1)
+    assert(inventory.occupied_space == 10)
+    assert(inventory_2.get_items().size() == 1)
 
 
 func test_serialize() -> void:
