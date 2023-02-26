@@ -137,6 +137,7 @@ func test_automerge() -> void:
 
 
 func test_max_stack_size() -> void:
+    limited_stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 3)
     assert(inventory.add_item(limited_stackable_item))
     assert(limited_stackable_item.get_property(InventoryStacked.KEY_STACK_SIZE) == 3)
     assert(inventory.add_item(limited_stackable_item_2))
