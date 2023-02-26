@@ -34,11 +34,10 @@ func init_test():
 
 
 func cleanup_test() -> void:
-    clear_inventory(inventory_3x3)
-    free_if_valid(inventory_3x3)
+    free_inventory(inventory_3x3)
 
-    free_if_valid(item_1x1)
-    free_if_valid(item_2x2)
+    free_item(item_1x1)
+    free_item(item_2x2)
 
 
 func test_add_item() -> void:

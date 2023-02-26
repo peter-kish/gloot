@@ -44,20 +44,28 @@ func _run_tests():
         cleanup_test()
 
 
-func clear_inventory(inventory: Inventory, exceptions: Array = []) -> void:
+# Free the given inventory, if valid
+func free_inventory(inventory: Inventory) -> void:
+    if inventory == null || !is_instance_valid(inventory):
+        return
     while inventory.get_items().size() > 0:
         var item = inventory.get_items()[0]
         assert(inventory.remove_item(item))
-        # Free dynamically created items
-        if not (item in exceptions):
-            item.free()
-
-
-func free_if_orphan(item: InventoryItem) -> void:
-    if item != null && item.get_inventory() == null:
         item.free()
+    inventory.free()
 
 
-func free_if_valid(node: Node) -> void:
-    if node != null && is_instance_valid(node):
-        node.free()
+# Free the given inventory item, if valid
+func free_item(item: InventoryItem) -> void:
+    _free_if_valid(item)
+
+
+# Free the given item slot, if valid
+func free_slot(slot: ItemSlot) -> void:
+    _free_if_valid(slot)
+
+
+func _free_if_valid(node: Node) -> void:
+    if node == null || !is_instance_valid(node):
+        return
+    node.free()

@@ -39,12 +39,11 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    clear_inventory(inventory)
-    free_if_valid(inventory)
+    free_inventory(inventory)
 
-    free_if_valid(item)
-    free_if_valid(big_item)
-    free_if_valid(stackable_item)
+    free_item(item)
+    free_item(big_item)
+    free_item(stackable_item)
 
 
 func test_space() -> void:

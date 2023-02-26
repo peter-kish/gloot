@@ -26,12 +26,10 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    clear_inventory(inventory1)
-    free_if_valid(inventory1)
-    clear_inventory(inventory2)
-    free_if_valid(inventory2)
-    free_if_valid(item)
-    free_if_valid(slot)
+    free_inventory(inventory1)
+    free_inventory(inventory2)
+    free_item(item)
+    free_slot(slot)
 
 
 func test_can_hold_item() -> void:

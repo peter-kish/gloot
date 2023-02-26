@@ -27,11 +27,9 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    clear_inventory(inventory1)
-    free_if_valid(inventory1)
-    clear_inventory(inventory2)
-    free_if_valid(inventory2)
-    free_if_valid(item)
+    free_inventory(inventory1)
+    free_inventory(inventory2)
+    free_item(item)
 
 
 func test_size() -> void:
