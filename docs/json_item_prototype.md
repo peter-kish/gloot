@@ -25,6 +25,7 @@ An array of these `Item Prototype`s are utilized inside an [`Item Protoset (JSON
 * `name: string` - The name of the item as displayed inside controls.
 * `image: string` - A resource path to a texture to use as the item's image inside controls. Example: `"image": "res://assets/image.png"`
 * `stack_size: int` - Defines the default stack size of the item. Newly created items that use this prototype will have this stack size. Has the value of 1 if not defined.
+* `max_stack_size: int` - Defines the maximal stack size of the item. Has the value of 100 if not defined.
 * `weight: float` - Defines the unit weight of the item. Has the value of 1.0 if not defined. NOTE: The total weight of an item is defined as its unit weight multiplied by its stack size.
 * `width: int` - Defines the width of the item. Has the value of 1 if not defined.
 * `height: int` - Defines the height of the item. Has the value of 1 if not defined.
