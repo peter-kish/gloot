@@ -145,29 +145,30 @@ func reset():
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
+    # TODO: Find a better way to serialize inventory and item references
     if inventory:
-        result[KEY_INVENTORY] = inventory.get_path()
+        result[KEY_INVENTORY] = inventory.get_instance_id()
     if item:
-        result[KEY_ITEM] = item.get_path()
+        result[KEY_ITEM] = item.get_instance_id()
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_NODE_PATH, TYPE_STRING]):
+    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_INT, TYPE_REAL]):
         return false
-    if !Verify.dict(source, false, KEY_ITEM, [TYPE_NODE_PATH, TYPE_STRING]):
+    if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_REAL]):
         return false
 
     reset()
 
     if source.has(KEY_INVENTORY):
-        _set_inventory(get_node_or_null(source[KEY_INVENTORY]))
+        _set_inventory(instance_from_id(source[KEY_INVENTORY]))
         if inventory == null:
             print("Warning: Node not found (%s)!" % source[KEY_INVENTORY])
             return false
     if source.has(KEY_ITEM):
-        _set_item(get_node_or_null(source[KEY_ITEM]))
+        _set_item(instance_from_id(source[KEY_ITEM]))
         if item == null:
             print("Warning: Node not found (%s)!" % source[KEY_ITEM])
             return false

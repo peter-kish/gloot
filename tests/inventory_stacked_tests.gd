@@ -7,11 +7,6 @@ var stackable_item: InventoryItem
 
 
 func init_suite() -> void:
-    inventory = $InventoryStacked
-    item = $MinimalItem
-    big_item = $BigItem
-    stackable_item = $StackableItem
-
     tests = [
         "test_space",
         "test_big_item",
@@ -26,15 +21,29 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    clear_inventory(inventory, [item, big_item, stackable_item])
-    inventory.capacity = 10.0
+    inventory = InventoryStacked.new()
+    inventory.item_protoset = preload("res://tests/data/item_definitions_stack.tres")
+    inventory.capacity = 10
+
+    item = InventoryItem.new()
+    item.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    item.prototype_id = "minimal_item"
+
+    big_item = InventoryItem.new()
+    big_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    big_item.prototype_id = "big_item"
+
+    stackable_item = InventoryItem.new()
+    stackable_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
+    stackable_item.prototype_id = "stackable_item"
 
 
-func cleanup_suite() -> void:
-    clear_inventory(inventory)
-    free_if_orphan(item)
-    free_if_orphan(big_item)
-    free_if_orphan(stackable_item)
+func cleanup_test() -> void:
+    free_inventory(inventory)
+
+    free_item(item)
+    free_item(big_item)
+    free_item(stackable_item)
 
 
 func test_space() -> void:

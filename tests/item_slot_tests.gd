@@ -7,11 +7,6 @@ var item: InventoryItem
 
 
 func init_suite():
-    inventory1 = $Inventory1
-    inventory2 = $Inventory2
-    slot = $ItemSlot
-    item = inventory1.get_items()[0]
-
     tests = [
         "test_can_hold_item",
         "test_inventory_changed",
@@ -22,17 +17,19 @@ func init_suite():
 
 
 func init_test() -> void:
-    clear_inventory(inventory1, [item])
-    clear_inventory(inventory2, [item])
-    inventory1.add_item(item)
-    slot.item = null
-    slot.inventory = null
+    inventory1 = Inventory.new()
+    inventory1.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory2 = Inventory.new()
+    inventory2.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    item = inventory1.create_and_add_item("minimal_item");
+    slot = ItemSlot.new()
 
 
-func cleanup_suite() -> void:
-    clear_inventory(inventory1)
-    clear_inventory(inventory2)
-    free_if_orphan(item)
+func cleanup_test() -> void:
+    free_inventory(inventory1)
+    free_inventory(inventory2)
+    free_item(item)
+    free_slot(slot)
 
 
 func test_can_hold_item() -> void:

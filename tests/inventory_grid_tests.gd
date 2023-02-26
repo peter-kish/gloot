@@ -6,10 +6,6 @@ var item_2x2: InventoryItem
 
 
 func init_suite():
-    inventory_3x3 = $InventoryGrid3x3
-    item_1x1 = $Item_1x1
-    item_2x2 = $Item_2x2
-
     tests = [
         "test_add_item",
         "test_add_item_at",
@@ -24,13 +20,24 @@ func init_suite():
 
 
 func init_test():
-    clear_inventory(inventory_3x3, [item_1x1, item_2x2])
+    inventory_3x3 = InventoryGrid.new()
+    inventory_3x3.item_protoset = preload("res://tests/data/item_definitions_grid.tres")
+    inventory_3x3.size = Vector2(3, 3)
+
+    item_1x1 = InventoryItem.new()
+    item_1x1.protoset = preload("res://tests/data/item_definitions_grid.tres")
+    item_1x1.prototype_id = "item_1x1"
+
+    item_2x2 = InventoryItem.new()
+    item_2x2.protoset = preload("res://tests/data/item_definitions_grid.tres")
+    item_2x2.prototype_id = "item_2x2"
 
 
-func cleanup_suite() -> void:
-    clear_inventory(inventory_3x3)
-    free_if_orphan(item_1x1)
-    free_if_orphan(item_2x2)
+func cleanup_test() -> void:
+    free_inventory(inventory_3x3)
+
+    free_item(item_1x1)
+    free_item(item_2x2)
 
 
 func test_add_item() -> void:
