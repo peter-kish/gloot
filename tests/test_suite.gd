@@ -47,7 +47,7 @@ func _run_tests():
 func clear_inventory(inventory: Inventory, exceptions: Array = []) -> void:
     while inventory.get_items().size() > 0:
         var item = inventory.get_items()[0]
-        inventory.remove_item(item)
+        assert(inventory.remove_item(item))
         # Free dynamically created items
         if not (item in exceptions):
             item.free()
@@ -56,3 +56,8 @@ func clear_inventory(inventory: Inventory, exceptions: Array = []) -> void:
 func free_if_orphan(item: InventoryItem) -> void:
     if item != null && item.get_inventory() == null:
         item.free()
+
+
+func free_if_valid(node: Node) -> void:
+    if node != null && is_instance_valid(node):
+        node.free()

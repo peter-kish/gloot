@@ -39,18 +39,23 @@ static func _get_item_script() -> Script:
 
 func _enter_tree():
     for child in get_children():
-        if child is InventoryItem:
-            _items.append(child)
+        if not child is InventoryItem:
+            continue
+        if has_item(child):
+            continue
+        _items.append(child)
 
 
 func _exit_tree():
     _items.clear()
 
 
-func _ready() -> void:
+func _init() -> void:
     connect("item_added", self, "_on_item_added")
     connect("item_removed", self, "_on_item_removed")
 
+
+func _ready() -> void:
     for item in get_items():
         _connect_item_signals(item)
 
@@ -208,7 +213,8 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
 
-    name = source[KEY_NODE_NAME]
+    if !source[KEY_NODE_NAME].empty():
+        name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
