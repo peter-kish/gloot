@@ -24,6 +24,7 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 * `remove_item(item: InventoryItem) -> bool` - Removes the given item from the inventory.
 * `remove_all_items() -> bool` - Removes the all items from the inventory.
 * `get_item_by_id(prototype_id: String) -> InventoryItem` - Returns the first found item with the given prototype ID.
+* `get_items_by_id(prototype_id: String) -> Array` - Returns an array of items with the given prototype ID.
 * `has_item_by_id(prototype_id: String) -> bool` - Checks if the inventory contains an item with the given prototype ID.
 * `transfer(item: InventoryItem, destination: Inventory) -> bool` - Transfers the given item into the given inventory.
 * `clear() -> void` - Clears all items from the inventory.

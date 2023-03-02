@@ -7,7 +7,10 @@ signal occupied_space_changed
 
 const KEY_WEIGHT: String = "weight"
 const KEY_STACK_SIZE: String = "stack_size"
+const KEY_MAX_STACK_SIZE: String = "max_stack_size"
+
 const DEFAULT_STACK_SIZE: int = 1
+const DEFAULT_MAX_STACK_SIZE: int = 100
 
 export(float) var capacity: float setget _set_capacity
 var occupied_space: float setget _set_occupied_space
@@ -118,6 +121,10 @@ func _get_item_stack_size(item: InventoryItem) -> int:
     return item.get_property(KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
 
 
+func _get_item_max_stack_size(item: InventoryItem) -> int:
+    return item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
+
+
 func _set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
     item.set_property(KEY_STACK_SIZE, stack_size)
 
@@ -135,17 +142,42 @@ func add_item(item: InventoryItem) -> bool:
     return false
 
 
-func _add_item_automerge(item: InventoryItem) -> bool:
+func add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
-    var target_item = get_item_by_id(item.prototype_id)
-    if target_item:
-        add_item(item)
-        join(target_item, item)
-        return true
-    else:
-        return add_item(item)
+    var target_items = get_items_by_id(item.prototype_id)
+    target_items.sort_custom(self, "_compare_items_by_stack_size")
+    for target_item in target_items:
+        _merge_stacks(item, target_item)
+        if _get_item_stack_size(item) <= 0:
+            _calculate_occupied_space()
+            if item.get_inventory():
+                item.get_inventory().remove_item(item)
+            item.free()
+            return true
+
+    .add_item(item)
+    return true
+
+
+func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
+    return _get_item_stack_size(a) < _get_item_stack_size(b)
+
+
+func _merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> void:
+    var src_size: int = _get_item_stack_size(item_src)
+    if src_size <= 0:
+        return
+
+    var dst_size: int = _get_item_stack_size(item_dst)
+    var dst_max_size: int = _get_item_max_stack_size(item_dst)
+    var free_dst_stack_space: int = dst_max_size - dst_size
+    if free_dst_stack_space <= 0:
+        return
+
+    _set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
+    _set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
@@ -168,7 +200,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     _set_item_stack_size(item, stack_size - new_stack_size)
     emit_signal("occupied_space_changed")
     _calculate_occupied_space()
-    assert(add_item(new_item))
+    assert(.add_item(new_item))
     return new_item
 
 
@@ -202,7 +234,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if destination.has_place_for(item) && remove_item(item):
-        return destination._add_item_automerge(item)
+        return destination.add_item_automerge(item)
 
     return false
 
@@ -211,7 +243,7 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
     if destination.has_place_for(item):
         return transfer_automerge(item, destination)
 
-    var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item))
+    var count: int = int(destination.get_free_space() / _get_item_unit_weight(item))
     if count > 0:
         var new_item: InventoryItem = split(item, count)
         assert(new_item != null)

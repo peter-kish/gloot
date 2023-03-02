@@ -13,6 +13,7 @@ Inventory that has a limited item capacity in terms of weight.
 
 ## Methods
 
+* `add_item_automerge(item: InventoryItem) -> bool` - Adds the given item stack to the inventory, automatically merging with existing item stacks with the same prototype ID.
 * `has_unlimited_capacity() -> bool` - Checks if the inventory has unlimited capacity (i.e. capacity is 0.0).
 * `get_free_space() -> float` - Returns the free available space in the inventory.
 * `has_place_for(item: InventoryItem) -> bool` - Checks if the inventory has enough free space for the given item.

@@ -170,6 +170,16 @@ func get_item_by_id(prototype_id: String) -> InventoryItem:
     return null
 
 
+func get_items_by_id(prototype_id: String) -> Array:
+    var result := []
+
+    for item in get_items():
+        if item.prototype_id == prototype_id:
+            result.append(item)
+            
+    return result
+
+
 func has_item_by_id(prototype_id: String) -> bool:
     return get_item_by_id(prototype_id) != null
 
