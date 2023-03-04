@@ -147,7 +147,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
         return false
 
     var target_items = get_items_by_id(item.prototype_id)
-    target_items.sort_custom(self, "_compare_items_by_stack_size")
+    target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
     for target_item in target_items:
         _merge_stacks(item, target_item)
         if _get_item_stack_size(item) <= 0:
@@ -157,7 +157,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
             item.free()
             return true
 
-    .add_item(item)
+    super.add_item(item)
     return true
 
 

@@ -155,9 +155,9 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_INT, TYPE_REAL]):
+    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_INT, TYPE_FLOAT]):
         return false
-    if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_REAL]):
+    if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()

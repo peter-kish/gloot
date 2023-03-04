@@ -52,8 +52,8 @@ func _exit_tree():
 
 
 func _init() -> void:
-    connect("item_added", self, "_on_item_added")
-    connect("item_removed", self, "_on_item_removed")
+    connect("item_added", Callable(self, "_on_item_added"))
+    connect("item_removed", Callable(self, "_on_item_removed"))
 
 
 func _ready() -> void:
