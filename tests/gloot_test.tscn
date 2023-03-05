@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
 [ext_resource type="Script" path="res://tests/inventory_stacked_tests.gd" id="3"]

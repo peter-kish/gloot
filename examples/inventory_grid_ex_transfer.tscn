@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://dkfn8qojbtud4"]
 
-[ext_resource type="Resource" path="res://tests/data/item_definitions_grid.tres" id="1"]
+[ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/inventory_grid.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_grid_ex.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
@@ -152,18 +152,18 @@ script = ExtResource("2")
 size = Vector2(5, 5)
 item_protoset = ExtResource("1")
 
-[node name="L_item_2x2" type="Node" parent="InventoryGridLeft"]
+[node name="L_item_2x2_2" type="Node" parent="InventoryGridLeft"]
+script = ExtResource("8")
+protoset = ExtResource("1")
+prototype_id = "item_2x2"
+
+[node name="item_2x2" type="Node" parent="InventoryGridLeft"]
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
 properties = {
 "grid_position": Vector2(0, 2)
 }
-
-[node name="L_item_2x2_2" type="Node" parent="InventoryGridLeft"]
-script = ExtResource("8")
-protoset = ExtResource("1")
-prototype_id = "item_2x2"
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")

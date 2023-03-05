@@ -21,6 +21,7 @@ text = "Filter:"
 [node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+clear_button_enabled = true
 
 [node name="ItemList" type="ItemList" parent="."]
 layout_mode = 2

@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://c6qdqm1i436gg"]
 
-[ext_resource type="Resource" path="res://tests/data/item_definitions_grid.tres" id="1"]
+[ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_grid_ex.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/inventory_grid.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="4"]
@@ -62,7 +62,6 @@ item_protoset = ExtResource("1")
 script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
-properties = {}
 
 [node name="item_1x1" type="Node" parent="InventoryGrid"]
 script = ExtResource("5")

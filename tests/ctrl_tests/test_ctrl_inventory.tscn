@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dnmcyf6p4gtgp"]
 
-[ext_resource type="Resource" path="res://tests/data/item_definitions_basic.tres" id="1"]
+[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_inventory.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="4"]

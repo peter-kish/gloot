@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://i33jyh87gocu"]
 
-[ext_resource type="Resource" path="res://tests/data/item_definitions_grid.tres" id="1"]
+[ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_grid.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/inventory_grid.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="4"]
@@ -15,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CtrlInventoryGrid" type="Container" parent="."]
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 160.0
