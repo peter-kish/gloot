@@ -22,6 +22,7 @@ signal inventory_changed(inventory)
             return
         
         self.inventory = node
+
 @export var equipped_item: int = -1 :
     get:
         return equipped_item
@@ -34,22 +35,25 @@ signal inventory_changed(inventory)
             var items = inventory.get_items()
             if equipped_item < items.size() && can_hold_item(items[equipped_item]):
                 self.item = items[equipped_item]
+
+var _inventory
 var inventory :
     get:
-        if !inventory && !inventory_path.is_empty():
-            self.inventory = get_node_or_null(inventory_path)
+        if !_inventory && !inventory_path.is_empty():
+            self._inventory = get_node_or_null(inventory_path)
 
-        return inventory
+        return _inventory
     set(new_inv):
-        if new_inv == inventory:
+        if new_inv == _inventory:
             return
 
         _disconnect_inventory_signals()
         self.item = null
-        inventory = new_inv
+        _inventory = new_inv
         _connect_inventory_signals()
 
         emit_signal("inventory_changed", inventory)
+        
 var item: InventoryItem :
     get:
         return item
