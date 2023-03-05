@@ -56,16 +56,16 @@ func free_inventory(inventory: Inventory) -> void:
 
 
 # Free the given inventory item, if valid
-func free_item(item: InventoryItem) -> void:
+func free_item(item) -> void:
     _free_if_valid(item)
 
 
 # Free the given item slot, if valid
-func free_slot(slot: ItemSlot) -> void:
+func free_slot(slot) -> void:
     _free_if_valid(slot)
 
 
-func _free_if_valid(node: Node) -> void:
+func _free_if_valid(node) -> void:
     if node == null || !is_instance_valid(node):
         return
     node.free()

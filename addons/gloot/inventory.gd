@@ -224,7 +224,7 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
 
-    if !source[KEY_NODE_NAME].empty():
+    if !source[KEY_NODE_NAME].is_empty():
         name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
     if source.has(KEY_ITEMS):
