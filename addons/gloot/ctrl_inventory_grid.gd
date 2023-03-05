@@ -1,6 +1,6 @@
+@tool
 class_name CtrlInventoryGrid
 extends Control
-tool
 
 signal item_dropped(item, offset)
 signal item_selected(item)
@@ -9,17 +9,78 @@ signal inventory_item_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
-export(Vector2) var field_dimensions: Vector2 = Vector2(32, 32) setget _set_field_dimensions
-export(int) var item_spacing: int = 0 setget _set_item_spacing
-export(bool) var draw_grid: bool = true setget _set_draw_grid
-export(Color) var grid_color: Color = Color.black setget _set_grid_color
-export(bool) var draw_selections: bool = false setget _set_draw_selections
-export(Color) var selection_color: Color = Color.gray
-export(NodePath) var inventory_path: NodePath setget _set_inventory_path
-export(Texture) var default_item_texture: Texture setget _set_default_item_texture
-export(bool) var stretch_item_sprites: bool = true setget _set_stretch_item_sprites
-export(int) var drag_sprite_z_index: int = 1
-var inventory: InventoryGrid = null setget _set_inventory
+@export var field_dimensions: Vector2 = Vector2(32, 32) :
+    get:
+        return field_dimensions
+    set(new_field_dimensions):
+        field_dimensions = new_field_dimensions
+        _refresh_grid_container()
+@export var item_spacing: int = 0 :
+    get:
+        return item_spacing
+    set(new_item_spacing):
+        item_spacing = new_item_spacing
+        _refresh()
+@export var draw_grid: bool = true :
+    get:
+        return draw_grid
+    set(new_draw_grid):
+        draw_grid = new_draw_grid
+        _refresh()
+@export var grid_color: Color = Color.BLACK :
+    get:
+        return grid_color
+    set(new_grid_color):
+        grid_color = new_grid_color
+        _refresh()
+@export var draw_selections: bool = false :
+    get:
+        return draw_selections
+    set(new_draw_selections):
+        draw_selections = new_draw_selections
+@export var selection_color: Color = Color.GRAY
+@export var inventory_path: NodePath :
+    get:
+        return inventory_path
+    set(new_inv_path):
+        inventory_path = new_inv_path
+        var node: Node = get_node_or_null(inventory_path)
+
+        if node == null:
+            return
+
+        if is_inside_tree():
+            assert(node is InventoryGrid)
+            
+        self.inventory = node
+        update_configuration_warnings()
+@export var default_item_texture: Texture2D :
+    get:
+        return default_item_texture
+    set(new_default_item_texture):
+        default_item_texture = new_default_item_texture
+        _refresh()
+@export var stretch_item_sprites: bool = true :
+    get:
+        return stretch_item_sprites
+    set(new_stretch_item_sprites):
+        stretch_item_sprites = new_stretch_item_sprites
+        _refresh()
+@export var drag_sprite_z_index: int = 1
+var inventory: InventoryGrid = null :
+    get:
+        return inventory
+    set(new_inventory):
+        if inventory == new_inventory:
+            return
+
+        _select(null)
+
+        _disconnect_inventory_signals()
+        inventory = new_inventory
+        _connect_inventory_signals()
+
+        _refresh()
 var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
@@ -30,75 +91,18 @@ var _selected_item: InventoryItem = null
 var _gloot: Node = null
 
 
-func _set_field_dimensions(new_field_dimensions: Vector2) -> void:
-    field_dimensions = new_field_dimensions
-    _refresh_grid_container()
-
-
-func _set_draw_grid(new_draw_grid: bool) -> void:
-    draw_grid = new_draw_grid
-    _refresh()
-
-
-func _set_grid_color(new_grid_color: Color) -> void:
-    grid_color = new_grid_color
-    _refresh()
-
-
-func _set_item_spacing(new_item_spacing: int) -> void:
-    item_spacing = new_item_spacing
-    _refresh()
-
-
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
-        return "This node is not linked to an inventory, so it can't display any content.\n" + \
-               "Set the inventory_path property to point to an InventoryGrid node."
-    return ""
-
-
-func _set_inventory_path(new_inv_path: NodePath) -> void:
-    inventory_path = new_inv_path
-    var node: Node = get_node_or_null(inventory_path)
-
-    if is_inside_tree() && node:
-        assert(node is InventoryGrid)
-        
-    _set_inventory(node)
-    update_configuration_warning()
-
-
-func _set_default_item_texture(new_default_item_texture: Texture) -> void:
-    default_item_texture = new_default_item_texture
-    _refresh()
-
-
-func _set_stretch_item_sprites(new_stretch_item_sprites: bool) -> void:
-    stretch_item_sprites = new_stretch_item_sprites
-    _refresh()
-
-
-func _set_draw_selections(new_draw_selections: bool) -> void:
-    draw_selections = new_draw_selections
-
-
-func _set_inventory(new_inventory: InventoryGrid) -> void:
-    if inventory == new_inventory:
-        return
-
-    _select(null)
-
-    _disconnect_inventory_signals()
-    inventory = new_inventory
-    _connect_inventory_signals()
-
-    _refresh()
+        return PackedStringArray([
+                "This node is not linked to an inventory, so it can't display any content.\n" + \
+                "Set the inventory_path property to point to an InventoryGrid node."])
+    return PackedStringArray()
 
 
 func _ready() -> void:
     _gloot = _get_gloot()
 
-    if Engine.editor_hint:
+    if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         var ctrl_item_container = _ctrl_item_container.get_ref()
         if ctrl_item_container:
@@ -114,7 +118,7 @@ func _ready() -> void:
     add_child(ctrl_item_container)
     _ctrl_item_container = weakref(ctrl_item_container)
 
-    var drag_sprite = Sprite.new()
+    var drag_sprite = Sprite2D.new()
     drag_sprite.centered = false
     drag_sprite.z_index = drag_sprite_z_index
     drag_sprite.hide()
@@ -122,11 +126,11 @@ func _ready() -> void:
     _drag_sprite = weakref(drag_sprite)
 
     if has_node(inventory_path):
-        _set_inventory(get_node_or_null(inventory_path))
+        self.inventory = get_node_or_null(inventory_path)
 
     _refresh()
-    if !Engine.editor_hint && _gloot:
-        _gloot.connect("item_dropped", self, "_on_item_dropped")
+    if !Engine.is_editor_hint() && _gloot:
+        _gloot.connect("item_dropped", Callable(self, "_on_item_dropped"))
 
 
 func _get_gloot() -> Node:
@@ -141,28 +145,28 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.is_connected("contents_changed", self, "_refresh"):
-        inventory.connect("contents_changed", self, "_refresh")
-    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
-        inventory.connect("item_modified", self, "_on_item_modified")
-    if !inventory.is_connected("size_changed", self, "_on_inventory_resized"):
-        inventory.connect("size_changed", self, "_on_inventory_resized")
-    if !inventory.is_connected("item_removed", self, "_on_item_removed"):
-        inventory.connect("item_removed", self, "_on_item_removed")
+    if !inventory.is_connected("contents_changed", Callable(self, "_refresh")):
+        inventory.connect("contents_changed", Callable(self, "_refresh"))
+    if !inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
+        inventory.connect("item_modified", Callable(self, "_on_item_modified"))
+    if !inventory.is_connected("size_changed", Callable(self, "_on_inventory_resized")):
+        inventory.connect("size_changed", Callable(self, "_on_inventory_resized"))
+    if !inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
+        inventory.connect("item_removed", Callable(self, "_on_item_removed"))
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.is_connected("contents_changed", self, "_refresh"):
-        inventory.disconnect("contents_changed", self, "_refresh")
-    if inventory.is_connected("item_modified", self, "_on_item_modified"):
-        inventory.disconnect("item_modified", self, "_on_item_modified")
-    if inventory.is_connected("size_changed", self, "_on_inventory_resized"):
-        inventory.disconnect("size_changed", self, "_on_inventory_resized")
-    if inventory.is_connected("item_removed", self, "_on_item_removed"):
-        inventory.disconnect("item_removed", self, "_on_item_removed")
+    if inventory.is_connected("contents_changed", Callable(self, "_refresh")):
+        inventory.disconnect("contents_changed", Callable(self, "_refresh"))
+    if inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
+        inventory.disconnect("item_modified", Callable(self, "_on_item_modified"))
+    if inventory.is_connected("size_changed", Callable(self, "_on_inventory_resized")):
+        inventory.disconnect("size_changed", Callable(self, "_on_inventory_resized"))
+    if inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
+        inventory.disconnect("item_removed", Callable(self, "_on_item_removed"))
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
@@ -182,7 +186,7 @@ func _refresh() -> void:
     _refresh_grid_container()
     _clear_list()
     _populate_list()
-    update()
+    queue_redraw()
 
 
 func _process(_delta) -> void:
@@ -239,8 +243,8 @@ func _refresh_grid_container() -> void:
     if !inventory:
         return
 
-    rect_min_size = _get_inventory_size_px()
-    rect_size = rect_min_size
+    custom_minimum_size = _get_inventory_size_px()
+    size = custom_minimum_size
 
 
 func _clear_list() -> void:
@@ -265,10 +269,10 @@ func _populate_list() -> void:
         ctrl_inventory_item.ctrl_inventory = self
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        ctrl_inventory_item.connect("grabbed", self, "_on_item_grab")
-        ctrl_inventory_item.connect("activated", self, "_on_item_activated")
-        ctrl_inventory_item.connect("mouse_entered", self, "_on_item_mouse_entered", [ctrl_inventory_item])
-        ctrl_inventory_item.connect("mouse_exited", self, "_on_item_mouse_exited", [ctrl_inventory_item])
+        ctrl_inventory_item.connect("grabbed", Callable(self, "_on_item_grab"))
+        ctrl_inventory_item.connect("activated", Callable(self, "_on_item_activated"))
+        ctrl_inventory_item.connect("mouse_entered", Callable(self, "_on_item_mouse_entered").bind(ctrl_inventory_item))
+        ctrl_inventory_item.connect("mouse_exited", Callable(self, "_on_item_mouse_exited").bind(ctrl_inventory_item))
         ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
@@ -317,7 +321,7 @@ func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
 
 
 func _on_item_activated(ctrl_inventory_item) -> void:
-    var item: InventoryItem = ctrl_inventory_item.item
+    var item = ctrl_inventory_item.item
     if !item:
         return
 
@@ -340,7 +344,7 @@ func _select(item: InventoryItem) -> void:
     if item == _selected_item:
         return
 
-    var prev_selected_item := _selected_item
+    var prev_selected_item = _selected_item
     _selected_item = item
     _refresh_selection()
 
@@ -358,7 +362,7 @@ func _input(event: InputEvent) -> void:
         return
 
     var mb_event: InputEventMouseButton = event
-    if mb_event.is_pressed() || mb_event.button_index != BUTTON_LEFT:
+    if mb_event.is_pressed() || mb_event.button_index != MOUSE_BUTTON_LEFT:
         return
 
     var item: InventoryItem = _grabbed_ctrl_inventory_item.item
@@ -373,7 +377,7 @@ func _input(event: InputEvent) -> void:
         _move_item(inventory.get_item_index(item), field_coords)
     else:
         emit_signal("item_dropped", item, global_grabbed_item_pos)
-        if !Engine.editor_hint && _gloot:
+        if !Engine.is_editor_hint() && _gloot:
             _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
     if inventory.has_item(item):
         _select(item)
@@ -445,7 +449,7 @@ func _get_field_position(field_coords: Vector2) -> Vector2:
 
 
 func _get_global_field_position(field_coords: Vector2) -> Vector2:
-    return _get_field_position(field_coords) + rect_global_position
+    return _get_field_position(field_coords) + global_position
 
 
 func get_grabbed_item() -> InventoryItem:

@@ -1,30 +1,30 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://6ij3qlnr0qr3"]
 
-[ext_resource path="res://tests/item_definitions_test.gd" type="Script" id=2]
-[ext_resource path="res://tests/inventory_stacked_tests.gd" type="Script" id=3]
-[ext_resource path="res://tests/item_slot_tests.gd" type="Script" id=4]
-[ext_resource path="res://tests/inventory_grid_tests.gd" type="Script" id=5]
-[ext_resource path="res://tests/inventory_tests.gd" type="Script" id=6]
-[ext_resource path="res://tests/verification_test.gd" type="Script" id=14]
-[ext_resource path="res://tests/test_runner.gd" type="Script" id=15]
+[ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
+[ext_resource type="Script" path="res://tests/inventory_stacked_tests.gd" id="3"]
+[ext_resource type="Script" path="res://tests/item_slot_tests.gd" id="4"]
+[ext_resource type="Script" path="res://tests/inventory_grid_tests.gd" id="5"]
+[ext_resource type="Script" path="res://tests/inventory_tests.gd" id="6"]
+[ext_resource type="Script" path="res://tests/verification_test.gd" id="14"]
+[ext_resource type="Script" path="res://tests/test_runner.gd" id="15"]
 
 [node name="InventorySystemTests" type="Node"]
-script = ExtResource( 15 )
+script = ExtResource("15")
 
 [node name="VerificationTest" type="Node" parent="."]
-script = ExtResource( 14 )
+script = ExtResource("14")
 
 [node name="ItemDefinitionsTest" type="Node" parent="."]
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="InventoryTests" type="Node" parent="."]
-script = ExtResource( 6 )
+script = ExtResource("6")
 
 [node name="InventoryStackedTests" type="Node" parent="."]
-script = ExtResource( 3 )
+script = ExtResource("3")
 
 [node name="InventoryGridTests" type="Node" parent="."]
-script = ExtResource( 5 )
+script = ExtResource("5")
 
 [node name="ItemSlotTests" type="Node" parent="."]
-script = ExtResource( 4 )
+script = ExtResource("4")

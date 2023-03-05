@@ -1,37 +1,38 @@
+@tool
 class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
-tool
 
 const Verify = preload("res://addons/gloot/verify.gd")
 
-export(StyleBox) var field_style: StyleBox setget _set_field_style
-export(StyleBox) var field_highlighted_style: StyleBox setget _set_field_highlighted_style
-export(StyleBox) var field_selected_style: StyleBox setget _set_field_selected_style
-export(StyleBox) var selection_style: StyleBox setget _set_selection_style
+@export var field_style: StyleBox :
+    get:
+        return field_style
+    set(new_field_style):
+        field_style = new_field_style
+        _refresh()
+@export var field_highlighted_style: StyleBox :
+    get:
+        return field_highlighted_style
+    set(new_field_highlighted_style):
+        field_highlighted_style = new_field_highlighted_style
+        _refresh()
+@export var field_selected_style: StyleBox :
+    get:
+        return field_selected_style
+    set(new_field_selected_style):
+        field_selected_style = new_field_selected_style
+        _refresh()
+@export var selection_style: StyleBox :
+    get:
+        return selection_style
+    set(new_selection_style):
+        selection_style = new_selection_style
+        _refresh()
+
 var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
 var _pending_highlights: Array = []
-
-
-func _set_field_style(new_field_style: StyleBox) -> void:
-    field_style = new_field_style
-    _refresh()
-
-
-func _set_field_highlighted_style(new_field_highlighted_style: StyleBox) -> void:
-    field_highlighted_style = new_field_highlighted_style
-    _refresh()
-
-
-func _set_field_selected_style(new_field_selected_style: StyleBox) -> void:
-    field_selected_style = new_field_selected_style
-    _refresh()
-
-
-func _set_selection_style(new_selection_style: StyleBox) -> void:
-    selection_style = new_selection_style
-    _refresh()
 
 
 func _queue_highlight(rect_: Rect2, style_: StyleBox) -> void:
@@ -41,16 +42,16 @@ func _queue_highlight(rect_: Rect2, style_: StyleBox) -> void:
     })
 
 
-func _dequeue_highlight() -> Dictionary:
+func _dequeue_highlight():
     return _pending_highlights.pop_front()
 
 
 func _refresh() -> void:
-    ._refresh()
+    super._refresh()
 
 
 func _refresh_selection() -> void:
-    ._refresh_selection()
+    super._refresh_selection()
     if !_selection_panel:
         return
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
@@ -59,8 +60,8 @@ func _refresh_selection() -> void:
 
         var selection_pos = _get_field_position(inventory.get_item_position(_selected_item))
         var selection_size = _get_streched_item_sprite_size(_selected_item)
-        _selection_panel.rect_position = selection_pos
-        _selection_panel.rect_size = selection_size
+        _selection_panel.position = selection_pos
+        _selection_panel.size = selection_size
 
 
 func _refresh_field_background_grid() -> void:
@@ -87,8 +88,8 @@ func _create_field_background_grid() -> void:
             var field_panel: Panel = Panel.new()
             _set_panel_style(field_panel, field_style)
             field_panel.visible = (field_style != null)
-            field_panel.rect_size = field_dimensions
-            field_panel.rect_position = _get_field_position(Vector2(i, j))
+            field_panel.size = field_dimensions
+            field_panel.position = _get_field_position(Vector2(i, j))
             _field_background_grid.add_child(field_panel)
             _field_backgrounds[i].append(field_panel)
 
@@ -99,8 +100,8 @@ func _create_selection_panel() -> void:
     move_child(_selection_panel, get_child_count() - 1)
     _set_panel_style(_selection_panel, selection_style)
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
-    _selection_panel.connect("mouse_entered", self, "_on_selection_mouse_entered")
-    _selection_panel.connect("mouse_exited", self, "_on_selection_mouse_exited")
+    _selection_panel.connect("mouse_entered", Callable(self, "_on_selection_mouse_entered"))
+    _selection_panel.connect("mouse_exited", Callable(self, "_on_selection_mouse_exited"))
 
 
 func _on_selection_mouse_entered() -> void:
@@ -112,15 +113,17 @@ func _on_selection_mouse_exited() -> void:
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
-    panel.remove_stylebox_override("panel")
-    panel.add_stylebox_override("panel", style)
+    panel.remove_theme_stylebox_override("panel")
+    panel.add_theme_stylebox_override("panel", style)
 
 
 func _ready() -> void:
+    super._ready()
+    
     _create_selection_panel()
     _create_field_background_grid()
-    connect("item_selected", self, "_on_item_selected")
-    connect("item_deselected", self, "_on_item_deselected")
+    connect("item_selected", Callable(self, "_on_item_selected"))
+    connect("item_deselected", Callable(self, "_on_item_deselected"))
 
 
 func _on_item_selected(item: InventoryItem) -> void:
@@ -138,11 +141,13 @@ func _on_item_deselected(item: InventoryItem) -> void:
 
 
 func _on_inventory_resized() -> void:
-    ._on_inventory_resized()
+    super._on_inventory_resized()
     _refresh_field_background_grid()
 
 
 func _input(event) -> void:
+    super._input(event)
+    
     if !(event is InputEventMouseMotion):
         return
     if !inventory:
@@ -162,8 +167,8 @@ func _input(event) -> void:
 
 func _reset_highlights() -> void:
     while true:
-        var highlight := _dequeue_highlight()
-        if !highlight:
+        var highlight = _dequeue_highlight()
+        if highlight == null:
             break
         _highlight_rect(highlight.rect, highlight.style, false)
 

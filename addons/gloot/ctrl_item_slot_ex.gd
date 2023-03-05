@@ -1,34 +1,34 @@
+@tool
 class_name CtrlItemSlotEx
 extends CtrlItemSlot
-tool
 
-export(StyleBox) var slot_style: StyleBox setget _set_slot_style
-export(StyleBox) var slot_highlighted_style: StyleBox setget _set_slot_highlighted_style
+@export var slot_style: StyleBox :
+    get:
+        return slot_style
+    set(new_slot_style):
+        slot_style = new_slot_style
+        _refresh()
+@export var slot_highlighted_style: StyleBox :
+    get:
+        return slot_highlighted_style
+    set(new_slot_highlighted_style):
+        slot_highlighted_style = new_slot_highlighted_style
+        _refresh()
 var _background_panel: Panel
 
 
-func _set_slot_style(new_slot_style: StyleBox) -> void:
-    slot_style = new_slot_style
-    _refresh()
-
-
-func _set_slot_highlighted_style(new_slot_highlighted_style: StyleBox) -> void:
-    slot_highlighted_style = new_slot_highlighted_style
-    _refresh()
-
-
 func _refresh() -> void:
-    ._refresh()
+    super._refresh()
     _update_background()
 
 
 func _update_background() -> void:
     if !_background_panel:
         _background_panel = Panel.new()
-        _background_panel.rect_size = rect_size
         add_child(_background_panel)
         move_child(_background_panel, 0)
-
+        
+    _background_panel.size = size
     _background_panel.show()
     if slot_style:
         _set_panel_style(_background_panel, slot_style)
@@ -37,8 +37,8 @@ func _update_background() -> void:
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
-    panel.remove_stylebox_override("panel")
-    panel.add_stylebox_override("panel", style)
+    panel.remove_theme_stylebox_override("panel")
+    panel.add_theme_stylebox_override("panel", style)
 
 
 func _input(event) -> void:

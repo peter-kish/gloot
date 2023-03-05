@@ -6,27 +6,38 @@ const type_names: Array = [
     "float",
     "String",
     "Vector2",
+    "Vector2i",
     "Rect2",
+    "Rect2i",
     "Vector3",
+    "Vector3i",
     "Transform2D",
+    "Vector4",
+    "Vector4i",
     "Plane",
-    "Quat",
+    "Quaternion",
     "AABB",
     "Basis",
-    "Transform",
+    "Transform3D",
+    "Projection",
     "Color",
+    "StringName",
     "NodePath",
     "RID",
     "Object",
+    "Callable",
+    "Signal",
     "Dictionary",
     "Array",
-    "PoolByteArray",
-    "PoolIntArray",
-    "PoolRealArray",
-    "PoolStringArray",
-    "PoolVector2Array",
-    "PoolVector3Array",
-    "PoolColorArray"
+    "PackedByteArray",
+    "PackedInt32Array",
+    "PackedInt64Array",
+    "PackedFloat32Array",
+    "PackedFloat64Array",
+    "PackedStringArray",
+    "PackedVector2Array",
+    "PackedVector3Array",
+    "PackedColorArray"
 ]
 
 
@@ -36,30 +47,44 @@ static func create_var(type: int):
             return false
         TYPE_INT:
             return 0
-        TYPE_REAL:
+        TYPE_FLOAT:
             return 0.0
         TYPE_STRING:
             return ""
         TYPE_VECTOR2:
             return Vector2()
+        TYPE_VECTOR2I:
+            return Vector2i()
         TYPE_RECT2:
             return Rect2()
+        TYPE_RECT2I:
+            return Rect2i()
         TYPE_VECTOR3:
             return Vector3()
+        TYPE_VECTOR3I:
+            return Vector3i()
+        TYPE_VECTOR4:
+            return Vector4()
+        TYPE_VECTOR4I:
+            return Vector4i()
         TYPE_TRANSFORM2D:
             return Transform2D()
         TYPE_PLANE:
             return Plane()
-        TYPE_QUAT:
-            return Quat()
+        TYPE_QUATERNION:
+            return Quaternion()
         TYPE_AABB:
             return AABB()
         TYPE_BASIS:
             return Basis()
-        TYPE_TRANSFORM:
-            return Transform()
+        TYPE_TRANSFORM3D:
+            return Transform3D()
+        TYPE_PROJECTION :
+            return Projection()
         TYPE_COLOR:
             return Color()
+        TYPE_STRING_NAME:
+            return ""
         TYPE_NODE_PATH:
             return NodePath()
         TYPE_RID:
@@ -70,20 +95,24 @@ static func create_var(type: int):
             return {}
         TYPE_ARRAY:
             return []
-        TYPE_RAW_ARRAY:
-            return PoolByteArray()
-        TYPE_INT_ARRAY:
-            return PoolIntArray()
-        TYPE_REAL_ARRAY:
-            return PoolRealArray()
-        TYPE_STRING_ARRAY:
-            return PoolStringArray()
-        TYPE_VECTOR2_ARRAY:
-            return PoolVector2Array()
-        TYPE_VECTOR3_ARRAY:
-            return PoolVector3Array()
-        TYPE_COLOR_ARRAY:
-            return PoolColorArray()
+        TYPE_PACKED_BYTE_ARRAY:
+            return PackedByteArray()
+        TYPE_PACKED_INT32_ARRAY:
+            return PackedInt32Array()
+        TYPE_PACKED_INT64_ARRAY:
+            return PackedInt64Array()
+        TYPE_PACKED_FLOAT32_ARRAY:
+            return PackedFloat32Array()
+        TYPE_PACKED_FLOAT64_ARRAY:
+            return PackedFloat64Array()
+        TYPE_PACKED_STRING_ARRAY:
+            return PackedStringArray()
+        TYPE_PACKED_VECTOR2_ARRAY:
+            return PackedVector2Array()
+        TYPE_PACKED_VECTOR3_ARRAY:
+            return PackedVector3Array()
+        TYPE_PACKED_COLOR_ARRAY:
+            return PackedColorArray()
     return null
 
 

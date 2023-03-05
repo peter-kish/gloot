@@ -15,6 +15,6 @@ func _ready():
 func test_orphan_nodes() -> void:
     var orphan_count := int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))
     if orphan_count != 0:
-        print("Stray nodes (%d):" % orphan_count)
-        print_stray_nodes()
+        print("Orphan nodes (%d):" % orphan_count)
+        print_orphan_nodes()
     assert(orphan_count == 0)

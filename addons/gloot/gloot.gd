@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var inspector_plugin: EditorInspectorPlugin
@@ -24,7 +24,7 @@ func _enter_tree() -> void:
 
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
     inspector_plugin.editor_interface = get_editor_interface()
-    inspector_plugin.undo_redo = get_undo_redo()
+    inspector_plugin.undo_redo_manager = get_undo_redo()
     add_inspector_plugin(inspector_plugin)
 
     add_autoload_singleton("GLoot", "res://addons/gloot/gloot_autoload.gd")

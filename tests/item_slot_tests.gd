@@ -76,10 +76,10 @@ func test_serialize_json() -> void:
     var item_slot_data = slot.serialize()
 
     # To and from JSON serialization
-    var json_string = JSON.print(item_slot_data)
-    var res: JSONParseResult = JSON.parse(json_string)
-    assert(res.error == OK)
-    item_slot_data = res.result
+    var json_string: String = JSON.stringify(item_slot_data)
+    var test_json_conv: JSON = JSON.new()
+    assert(test_json_conv.parse(json_string) == OK)
+    item_slot_data = test_json_conv.data
 
     slot.reset()
     assert(slot.inventory == null)

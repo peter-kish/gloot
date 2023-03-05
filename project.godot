@@ -6,100 +6,13 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Control",
-"class": "CtrlInventory",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_inventory.gd"
-}, {
-"base": "Control",
-"class": "CtrlInventoryGrid",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_inventory_grid.gd"
-}, {
-"base": "CtrlInventoryGrid",
-"class": "CtrlInventoryGridEx",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_inventory_grid_ex.gd"
-}, {
-"base": "Control",
-"class": "CtrlInventoryItemRect",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_inventory_item_rect.gd"
-}, {
-"base": "CtrlInventory",
-"class": "CtrlInventoryStacked",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_inventory_stacked.gd"
-}, {
-"base": "Control",
-"class": "CtrlItemSlot",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_item_slot.gd"
-}, {
-"base": "CtrlItemSlot",
-"class": "CtrlItemSlotEx",
-"language": "GDScript",
-"path": "res://addons/gloot/ctrl_item_slot_ex.gd"
-}, {
-"base": "Node",
-"class": "Inventory",
-"language": "GDScript",
-"path": "res://addons/gloot/inventory.gd"
-}, {
-"base": "Inventory",
-"class": "InventoryGrid",
-"language": "GDScript",
-"path": "res://addons/gloot/inventory_grid.gd"
-}, {
-"base": "Node",
-"class": "InventoryItem",
-"language": "GDScript",
-"path": "res://addons/gloot/inventory_item.gd"
-}, {
-"base": "Inventory",
-"class": "InventoryStacked",
-"language": "GDScript",
-"path": "res://addons/gloot/inventory_stacked.gd"
-}, {
-"base": "Resource",
-"class": "ItemProtoset",
-"language": "GDScript",
-"path": "res://addons/gloot/item_protoset.gd"
-}, {
-"base": "Node",
-"class": "ItemSlot",
-"language": "GDScript",
-"path": "res://addons/gloot/item_slot.gd"
-}, {
-"base": "Node",
-"class": "TestSuite",
-"language": "GDScript",
-"path": "res://tests/test_suite.gd"
-} ]
-_global_script_class_icons={
-"CtrlInventory": "",
-"CtrlInventoryGrid": "",
-"CtrlInventoryGridEx": "",
-"CtrlInventoryItemRect": "",
-"CtrlInventoryStacked": "",
-"CtrlItemSlot": "",
-"CtrlItemSlotEx": "",
-"Inventory": "",
-"InventoryGrid": "",
-"InventoryItem": "",
-"InventoryStacked": "",
-"ItemProtoset": "",
-"ItemSlot": "",
-"TestSuite": ""
-}
+config_version=5
 
 [application]
 
 config/name="GLoot"
 run/main_scene="res://tests/gloot_test.tscn"
+config/features=PackedStringArray("4.0")
 config/icon="res://images/gloot_logo_128x128.png"
 
 [autoload]
@@ -108,7 +21,11 @@ GLoot="*res://addons/gloot/gloot_autoload.gd"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/gloot/plugin.cfg" )
+enabled=PackedStringArray("res://addons/gloot/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
 
 [physics]
 

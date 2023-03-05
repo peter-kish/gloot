@@ -1,6 +1,6 @@
+@tool
 extends Inventory
 class_name InventoryGrid
-tool
 
 signal size_changed
 
@@ -10,15 +10,29 @@ const KEY_SIZE: String = "size"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2 = Vector2(10, 10)
 
-export(Vector2) var size: Vector2 = DEFAULT_SIZE setget _set_size
+@export var size: Vector2 = DEFAULT_SIZE :
+    get:
+        return size
+    set(new_size):
+        new_size = new_size.round()
+        assert(new_size.x > 0, "Inventory width must be positive!")
+        assert(new_size.y > 0, "Inventory height must be positive!")
+        var old_size = size
+        size = new_size
+        update_configuration_warnings()
+        if !Engine.is_editor_hint():
+            if _bounds_broken():
+                size = old_size
+        if size != old_size:
+            emit_signal("size_changed")
 
 
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
     if !_is_sorted():
-        return "Inventory not sorted!"
+        return PackedStringArray(["Inventory not sorted!"])
     if _bounds_broken():
-        return "Inventory bounds broken!"
-    return ""
+        return PackedStringArray(["Inventory bounds broken!"])
+    return PackedStringArray()
 
 
 func _get_prototype_size(prototype_id: String) -> Vector2:
@@ -57,11 +71,13 @@ func get_item_rect(item: InventoryItem) -> Rect2:
     
 
 func _ready():
+    super._ready()
+    
     assert(size.x > 0, "Inventory width must be positive!")
     assert(size.y > 0, "Inventory height must be positive!")
     _sort_if_needed()
-    connect("item_modified", self, "_on_item_modified")
-    update_configuration_warning()
+    connect("item_modified", Callable(self, "_on_item_modified"))
+    update_configuration_warnings()
 
 
 func _is_sorted() -> bool:
@@ -86,34 +102,20 @@ func _on_item_added(item: InventoryItem) -> void:
     
     _sort_if_needed()
 
-    ._on_item_added(item)
-    update_configuration_warning()
+    super._on_item_added(item)
+    update_configuration_warnings()
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     if item.properties.has(KEY_GRID_POSITION):
         item.properties.erase(KEY_GRID_POSITION)
 
-    ._on_item_removed(item)
-    update_configuration_warning()
+    super._on_item_removed(item)
+    update_configuration_warnings()
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
-    update_configuration_warning()
-
-
-func _set_size(new_size: Vector2) -> void:
-    new_size = new_size.round()
-    assert(new_size.x > 0, "Inventory width must be positive!")
-    assert(new_size.y > 0, "Inventory height must be positive!")
-    var old_size = size
-    size = new_size
-    update_configuration_warning()
-    if !Engine.editor_hint:
-        if _bounds_broken():
-            size = old_size
-    if size != old_size:
-        emit_signal("size_changed")
+    update_configuration_warnings()
 
 
 func _bounds_broken() -> bool:
@@ -143,7 +145,7 @@ func add_item_at(item: InventoryItem, position: Vector2) -> bool:
         item.properties[KEY_GRID_POSITION] = position
         if item.properties[KEY_GRID_POSITION] == Vector2.ZERO:
             item.properties.erase(KEY_GRID_POSITION)
-        return .add_item(item)
+        return super.add_item(item)
 
     return false
 
@@ -187,7 +189,7 @@ func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vect
     var item_size = get_item_size(item)
     var rect: Rect2 = Rect2(position, item_size)
     if destination.rect_free(rect):
-        if .transfer(item, destination):
+        if super.transfer(item, destination):
             destination.move_item_to(item, position)
             return true
 
@@ -233,7 +235,7 @@ func sort() -> bool:
     var item_array: Array
     for item in get_items():
         item_array.append(item)
-    item_array.sort_custom(self, "_compare_items")
+    item_array.sort_custom(Callable(self, "_compare_items"))
 
     for item in item_array:
         _move_item_to_unsafe(item, -get_item_size(item))
@@ -253,15 +255,15 @@ func _sort_if_needed() -> void:
 
 
 func reset() -> void:
-    .reset()
-    _set_size(DEFAULT_SIZE)
+    super.reset()
+    self.size = DEFAULT_SIZE
 
 
 func serialize() -> Dictionary:
-    var result: Dictionary = .serialize()
+    var result: Dictionary = super.serialize()
 
     # Store Vector2 as string to make JSON conversion easier later
-    result[KEY_SIZE] = var2str(size)
+    result[KEY_SIZE] = var_to_str(size)
     return result
 
 
@@ -271,10 +273,10 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
 
-    if !.deserialize(source):
+    if !super.deserialize(source):
         return false
 
-    var s: Vector2 = str2var(source[KEY_SIZE])
-    _set_size(s)
+    var s: Vector2 = str_to_var(source[KEY_SIZE])
+    self.size = s
 
     return true

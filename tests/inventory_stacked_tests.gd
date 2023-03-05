@@ -117,7 +117,7 @@ func test_contents_changed_signal() -> void:
     # assert(inventory.add_item(item))
     # assert(inventory.occupied_space == 1.0)
     # item.queue_free()
-    # yield(inventory, "contents_changed")
+    # await inventory.contents_changed
     # assert(inventory.occupied_space == 0.0)
     pass
 
@@ -130,7 +130,8 @@ func test_stack_split_join() -> void:
     var item2 = inventory.get_items()[1]
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 5)
     assert(item2.get_property(InventoryStacked.KEY_STACK_SIZE) == 5)
-    assert(inventory.join(item1, item2))
+    var joined = inventory.join(item1, item2)
+    assert(joined)
     assert(item1.get_property(InventoryStacked.KEY_STACK_SIZE) == 10)
     assert(inventory.get_items().size() == 1)
 
@@ -196,7 +197,7 @@ func test_serialize() -> void:
     var capacity = inventory.capacity
     var occupied_space = inventory.occupied_space
     inventory.reset()
-    assert(inventory.get_items().empty())
+    assert(inventory.get_items().is_empty())
     assert(inventory.capacity == 0)
     assert(inventory.occupied_space == 0)
     assert(inventory.deserialize(inventory_data))
@@ -212,13 +213,13 @@ func test_serialize_json() -> void:
     var occupied_space = inventory.occupied_space
 
     # To and from JSON serialization
-    var json_string = JSON.print(inventory_data)
-    var res: JSONParseResult = JSON.parse(json_string)
-    assert(res.error == OK)
-    inventory_data = res.result
+    var json_string: String = JSON.stringify(inventory_data)
+    var test_json_conv: JSON = JSON.new()
+    assert(test_json_conv.parse(json_string) == OK)
+    inventory_data = test_json_conv.data
 
     inventory.reset()
-    assert(inventory.get_items().empty())
+    assert(inventory.get_items().is_empty())
     assert(inventory.capacity == 0)
     assert(inventory.occupied_space == 0)
     assert(inventory.deserialize(inventory_data))

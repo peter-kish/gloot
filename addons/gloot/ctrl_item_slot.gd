@@ -1,87 +1,91 @@
+@tool
 class_name CtrlItemSlot
 extends Control
-tool
 
 
-export(NodePath) var item_slot_path: NodePath setget _set_item_slot_path
-export(Texture) var default_item_icon: Texture setget _set_default_item_icon
-export(bool) var item_texture_visible: bool = true setget _set_item_texture_visible
-export(bool) var label_visible: bool = true setget _set_label_visible
-var item_slot: ItemSlot setget _set_item_slot
+@export var item_slot_path: NodePath :
+    get:
+        return item_slot_path
+    set(new_item_slot_path):
+        item_slot_path = new_item_slot_path
+        var node: Node = get_node_or_null(item_slot_path)
+        
+        if node == null:
+            return
+
+        if is_inside_tree():
+            assert(node is ItemSlot)
+            
+        self.item_slot = node
+        update_configuration_warnings()
+@export var default_item_icon: Texture2D :
+    get:
+        return default_item_icon
+    set(new_default_item_icon):
+        default_item_icon = new_default_item_icon
+        _refresh()
+@export var item_texture_visible: bool = true :
+    get:
+        return item_texture_visible
+    set(new_item_texture_visible):
+        item_texture_visible = new_item_texture_visible
+        if _texture_rect:
+            _texture_rect.visible = item_texture_visible
+@export var label_visible: bool = true :
+    get:
+        return label_visible
+    set(new_label_visible):
+        label_visible = new_label_visible
+        if _label:
+            _label.visible = label_visible
+var item_slot: ItemSlot :
+    get:
+        return item_slot
+    set(new_item_slot):
+        if new_item_slot == item_slot:
+            return
+
+        _disconnect_item_slot_signals()
+        item_slot = new_item_slot
+        _connect_item_slot_signals()
+        
+        _refresh()
 var _hbox_container: HBoxContainer
 var _texture_rect: TextureRect
 var _label: Label
 var _gloot: Node = null
 
 
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
     if item_slot_path.is_empty():
-        return "This node is not linked to an item slot, so it can't display any content.\n" + \
-               "Set the item_slot_path property to point to an ItemSlot node."
-    return ""
-
-
-func _set_item_slot_path(new_item_slot_path: NodePath) -> void:
-    item_slot_path = new_item_slot_path
-    var node: Node = get_node_or_null(item_slot_path)
-
-    if is_inside_tree() && node:
-        assert(node is ItemSlot)
-        
-    _set_item_slot(node)
-    update_configuration_warning()
-
-
-func _set_default_item_icon(new_default_item_icon: Texture) -> void:
-    default_item_icon = new_default_item_icon
-    _refresh()
-
-
-func _set_item_texture_visible(new_item_texture_visible: bool) -> void:
-    item_texture_visible = new_item_texture_visible
-    if _texture_rect:
-        _texture_rect.visible = item_texture_visible
-
-
-func _set_label_visible(new_label_visible: bool) -> void:
-    label_visible = new_label_visible
-    if _label:
-        _label.visible = label_visible
-
-
-func _set_item_slot(new_item_slot: ItemSlot) -> void:
-    if new_item_slot == item_slot:
-        return
-
-    _disconnect_item_slot_signals()
-    item_slot = new_item_slot
-    _connect_item_slot_signals()
-    
-    _refresh()
+        return PackedStringArray([
+            "This node is not linked to an item slot, so it can't display any content.\n" + \
+            "Set the item_slot_path property to point to an ItemSlot node."])
+    return PackedStringArray()
 
 
 func _connect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if !item_slot.is_connected("item_set", self, "_on_item_set"):
-        item_slot.connect("item_set", self, "_on_item_set")
-    if !item_slot.is_connected("item_cleared", self, "_refresh"):
-        item_slot.connect("item_cleared", self, "_refresh")
-    if !item_slot.is_connected("inventory_changed", self, "_on_inventory_changed"):
-        item_slot.connect("inventory_changed", self, "_on_inventory_changed")
+    if !item_slot.is_connected("item_set", Callable(self, "_on_item_set")):
+        item_slot.connect("item_set", Callable(self, "_on_item_set"))
+    if !item_slot.is_connected("item_cleared", Callable(self, "_refresh")):
+        item_slot.connect("item_cleared", Callable(self, "_refresh"))
+    if !item_slot.is_connected("inventory_changed", Callable(self, "_on_inventory_changed")):
+        item_slot.connect("inventory_changed", Callable(self, "_on_inventory_changed"))
 
 
 func _disconnect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if item_slot.is_connected("item_set", self, "_on_item_set"):
-        item_slot.disconnect("item_set", self, "_on_item_set")
-    if item_slot.is_connected("item_cleared", self, "_refresh"):
-        item_slot.disconnect("item_cleared", self, "_refresh")
-    if item_slot.is_connected("inventory_changed", self, "_on_inventory_changed"):
-        item_slot.disconnect("inventory_changed", self, "_on_inventory_changed")
+    if item_slot.is_connected("item_set", Callable(self, "_on_item_set")):
+        item_slot.disconnect("item_set", Callable(self, "_on_item_set"))
+    if item_slot.is_connected("item_cleared", Callable(self, "_refresh")):
+        item_slot.disconnect("item_cleared", Callable(self, "_refresh"))
+    if item_slot.is_connected("inventory_changed", Callable(self, "_on_inventory_changed")):
+        item_slot.disconnect("inventory_changed", Callable(self, "_on_inventory_changed"))
 
 
 func _on_item_set(_item: InventoryItem) -> void:
@@ -95,7 +99,7 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 func _ready():
     _gloot = _get_gloot()
 
-    if Engine.editor_hint:
+    if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         if _hbox_container:
             _hbox_container.queue_free()
@@ -116,11 +120,11 @@ func _ready():
     var node: Node = get_node_or_null(item_slot_path)
     if is_inside_tree() && node:
         assert(node is ItemSlot)
-    _set_item_slot(node)
+    self.item_slot = node
 
     _refresh()
-    if !Engine.editor_hint && _gloot:
-        _gloot.connect("item_dropped", self, "_on_item_dropped")
+    if !Engine.is_editor_hint() && _gloot:
+        _gloot.connect("item_dropped", Callable(self, "_on_item_dropped"))
 
 
 func _get_gloot() -> Node:

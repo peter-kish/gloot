@@ -1,12 +1,39 @@
+@tool
 class_name CtrlInventory
 extends Control
-tool
 
 signal inventory_item_activated(item)
 
-export(NodePath) var inventory_path: NodePath setget _set_inventory_path
-export(Texture) var default_item_icon: Texture
-var inventory: Inventory = null setget _set_inventory
+@export var inventory_path: NodePath :
+    get:
+        return inventory_path
+    set(new_inv_path):
+        inventory_path = new_inv_path
+        var node: Node = get_node_or_null(inventory_path)
+
+        if node == null:
+            return
+
+        if is_inside_tree():
+            assert(node is Inventory)
+            
+        self.inventory = node
+        update_configuration_warnings()
+
+
+@export var default_item_icon: Texture2D
+var inventory: Inventory = null :
+    get:
+        return inventory
+    set(new_inventory):
+        if new_inventory == inventory:
+            return
+    
+        _disconnect_inventory_signals()
+        inventory = new_inventory
+        _connect_inventory_signals()
+
+        _refresh()
 var _vbox_container: VBoxContainer
 var _item_list: ItemList
 
@@ -14,37 +41,16 @@ const KEY_IMAGE = "image"
 const KEY_NAME = "name"
 
 
-func _get_configuration_warning() -> String:
+func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
-        return "This node is not linked to an inventory, so it can't display any content.\n" + \
-               "Set the inventory_path property to point to an Inventory node."
-    return ""
-
-
-func _set_inventory_path(new_inv_path: NodePath) -> void:
-    inventory_path = new_inv_path
-    var node: Node = get_node_or_null(inventory_path)
-
-    if is_inside_tree() && node:
-        assert(node is Inventory)
-        
-    _set_inventory(node)
-    update_configuration_warning()
-
-
-func _set_inventory(new_inventory: Inventory) -> void:
-    if new_inventory == inventory:
-        return
-  
-    _disconnect_inventory_signals()
-    inventory = new_inventory
-    _connect_inventory_signals()
-
-    _refresh()
+        return PackedStringArray([
+                "This node is not linked to an inventory, so it can't display any content.\n" + \
+                "Set the inventory_path property to point to an Inventory node."])
+    return PackedStringArray()
 
 
 func _ready():
-    if Engine.editor_hint:
+    if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         if _vbox_container:
             _vbox_container.queue_free()
@@ -59,11 +65,11 @@ func _ready():
     _item_list = ItemList.new()
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
-    _item_list.connect("item_activated", self, "_on_list_item_activated")
+    _item_list.connect("item_activated", Callable(self, "_on_list_item_activated"))
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
-        _set_inventory(get_node(inventory_path))
+        self.inventory = get_node(inventory_path)
 
     _refresh()
 
@@ -72,20 +78,20 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.is_connected("contents_changed", self, "_refresh"):
-        inventory.connect("contents_changed", self, "_refresh")
-    if !inventory.is_connected("item_modified", self, "_on_item_modified"):
-        inventory.connect("item_modified", self, "_on_item_modified")
+    if !inventory.is_connected("contents_changed", Callable(self, "_refresh")):
+        inventory.connect("contents_changed", Callable(self, "_refresh"))
+    if !inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
+        inventory.connect("item_modified", Callable(self, "_on_item_modified"))
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.is_connected("contents_changed", self, "_refresh"):
-        inventory.disconnect("contents_changed", self, "_refresh")
-    if inventory.is_connected("item_modified", self, "_on_item_modified"):
-        inventory.disconnect("item_modified", self, "_on_item_modified")
+    if inventory.is_connected("contents_changed", Callable(self, "_refresh")):
+        inventory.disconnect("contents_changed", Callable(self, "_refresh"))
+    if inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
+        inventory.disconnect("item_modified", Callable(self, "_on_item_modified"))
 
 
 func _on_list_item_activated(index: int) -> void:
