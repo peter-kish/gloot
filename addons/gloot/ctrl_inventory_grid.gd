@@ -444,7 +444,7 @@ func _move_item(item_index: int, position: Vector2i) -> void:
 func _get_field_position(field_coords: Vector2i) -> Vector2:
     var field_position = Vector2(field_coords.x * field_dimensions.x, \
         field_coords.y * field_dimensions.y)
-    field_position += item_spacing * field_coords
+    field_position += Vector2(item_spacing * field_coords)
     return field_position
 
 
