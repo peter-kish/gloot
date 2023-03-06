@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://b4iegtrw2clvh"]
 
-[ext_resource type="Resource" path="res://tests/data/item_definitions_basic.tres" id="1"]
+[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_item_slot_ex.gd" id="3"]
 [ext_resource type="Script" path="res://addons/gloot/item_slot.gd" id="4"]
@@ -21,6 +21,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="CtrlItemSlotEx" type="Control" parent="."]
 layout_mode = 3

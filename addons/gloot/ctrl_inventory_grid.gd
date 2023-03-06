@@ -230,11 +230,11 @@ func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2, spacing: int) -> v
 
 
 func _get_inventory_size_px() -> Vector2:
-    var result: Vector2 = Vector2(inventory.size.x * field_dimensions.x, \
+    var result := Vector2(inventory.size.x * field_dimensions.x, \
         inventory.size.y * field_dimensions.y)
 
     # Also take item spacing into consideration
-    result += (inventory.size - Vector2.ONE) * item_spacing
+    result += Vector2(inventory.size - Vector2i.ONE) * item_spacing
 
     return result
 
@@ -311,11 +311,11 @@ func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
 
 
 func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
-    var item_size: Vector2 = inventory.get_item_size(item)
-    var sprite_size: Vector2 = item_size * field_dimensions
+    var item_size := inventory.get_item_size(item)
+    var sprite_size := Vector2(item_size) * field_dimensions
 
     # Also take item spacing into consideration
-    sprite_size += (item_size - Vector2.ONE) * item_spacing
+    sprite_size += (Vector2(item_size) - Vector2.ONE) * item_spacing
 
     return sprite_size
 
@@ -409,7 +409,7 @@ func _is_hovering(global_pos: Vector2) -> bool:
     return get_global_rect().has_point(global_pos)
 
 
-func get_field_coords(global_pos: Vector2) -> Vector2:
+func get_field_coords(global_pos: Vector2) -> Vector2i:
     var local_pos = global_pos - get_global_rect().position
 
     # We have to consider the item spacing when calculating field coordinates, thus we expand the
@@ -422,10 +422,10 @@ func get_field_coords(global_pos: Vector2) -> Vector2:
 
     var x: int = local_pos_ex.x / (field_dimensions_ex.x)
     var y: int = local_pos_ex.y / (field_dimensions_ex.y)
-    return Vector2(x, y)
+    return Vector2i(x, y)
 
 
-func get_selected_inventory_items() -> Array:
+func get_selected_inventory_items() -> Array[InventoryItem]:
     if _selected_item:
         return [_selected_item]
     else:
@@ -433,7 +433,7 @@ func get_selected_inventory_items() -> Array:
 
 
 # TODO: Find a better way for undoing/redoing item movements
-func _move_item(item_index: int, position: Vector2) -> void:
+func _move_item(item_index: int, position: Vector2i) -> void:
     var item = inventory.get_items()[item_index]
     if _gloot_undo_redo:
         _gloot_undo_redo.move_inventory_item(inventory, item, position)
@@ -441,14 +441,14 @@ func _move_item(item_index: int, position: Vector2) -> void:
         inventory.move_item_to(item, position)
 
 
-func _get_field_position(field_coords: Vector2) -> Vector2:
+func _get_field_position(field_coords: Vector2i) -> Vector2:
     var field_position = Vector2(field_coords.x * field_dimensions.x, \
         field_coords.y * field_dimensions.y)
-    field_position += item_spacing * field_coords
+    field_position += Vector2(item_spacing * field_coords)
     return field_position
 
 
-func _get_global_field_position(field_coords: Vector2) -> Vector2:
+func _get_global_field_position(field_coords: Vector2i) -> Vector2:
     return _get_field_position(field_coords) + global_position
 
 

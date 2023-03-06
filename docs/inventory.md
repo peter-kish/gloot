@@ -27,6 +27,7 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 * `get_items_by_id(prototype_id: String) -> Array` - Returns an array of items with the given prototype ID.
 * `has_item_by_id(prototype_id: String) -> bool` - Checks if the inventory contains an item with the given prototype ID.
 * `transfer(item: InventoryItem, destination: Inventory) -> bool` - Transfers the given item into the given inventory.
+* `move_item(from: int, to: int) -> void` - Moves the item at index `from` to the index `to`.
 * `clear() -> void` - Clears all items from the inventory.
 * `reset() -> void` - Resets the inventory to its default state. This includes clearing its contents and resetting all properties.
 * `serialize() -> Dictionary` - Serializes the inventory into a dictionary.

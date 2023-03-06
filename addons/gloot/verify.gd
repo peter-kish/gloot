@@ -180,7 +180,8 @@ static func _check_dict_key_type_multi(dict: Dictionary,
     return true
 
 
-static func vector_positive(v: Vector2) -> bool:
+static func vector_positive(v) -> bool:
+    assert(v is Vector2 || v is Vector2i, "v must be a Vector2 or a Vector2i!")
     return v.x >= 0 && v.y >= 0
 
 

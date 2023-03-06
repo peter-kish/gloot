@@ -4,8 +4,8 @@ const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
 const COLOR_INVALID = Color.RED
-const POPUP_SIZE = Vector2(800, 300)
-const POPUP_MIN_SIZE = Vector2(400, 200)
+const POPUP_SIZE = Vector2i(800, 300)
+const POPUP_MIN_SIZE = Vector2i(400, 200)
 const POPUP_MARGIN = 10
 var IMMUTABLE_KEYS = [ItemProtoset.KEY_ID, InventoryGrid.KEY_GRID_POSITION]
 

@@ -78,7 +78,7 @@ func reset_properties() -> void:
 
     # Reset (erase) all properties from the current prototype but preserve the rest
     var prototype: Dictionary = protoset.get(prototype_id)
-    var keys: Array = properties.keys().duplicate()
+    var keys: Array[String] = properties.keys().duplicate()
     for property in keys:
         if prototype.has(property):
             properties.erase(property)

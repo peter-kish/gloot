@@ -32,7 +32,7 @@ const Verify = preload("res://addons/gloot/verify.gd")
 var _field_background_grid: Control
 var _field_backgrounds: Array
 var _selection_panel: Panel
-var _pending_highlights: Array = []
+var _pending_highlights: Array[Dictionary] = []
 
 
 func _queue_highlight(rect_: Rect2, style_: StyleBox) -> void:
@@ -89,7 +89,7 @@ func _create_field_background_grid() -> void:
             _set_panel_style(field_panel, field_style)
             field_panel.visible = (field_style != null)
             field_panel.size = field_dimensions
-            field_panel.position = _get_field_position(Vector2(i, j))
+            field_panel.position = _get_field_position(Vector2i(i, j))
             _field_background_grid.add_child(field_panel)
             _field_backgrounds[i].append(field_panel)
 
@@ -153,7 +153,7 @@ func _input(event) -> void:
     if !inventory:
         return
     
-    var hovered_field_coords := Vector2(-1, -1)
+    var hovered_field_coords := Vector2i(-1, -1)
     if _is_hovering(get_global_mouse_position()):
         hovered_field_coords = get_field_coords(get_global_mouse_position())
 
@@ -173,7 +173,7 @@ func _reset_highlights() -> void:
         _highlight_rect(highlight.rect, highlight.style, false)
 
 
-func _highlight_hovered_fields(field_coords: Vector2, style: StyleBox) -> void:
+func _highlight_hovered_fields(field_coords: Vector2i, style: StyleBox) -> void:
     if !style || !Verify.vector_positive(field_coords):
         return
 
@@ -192,9 +192,9 @@ func _highlight_grabbed_item(style: StyleBox) -> bool:
     if !_is_hovering(global_grabbed_item_pos):
         return false
 
-    var grabbed_item_coords: Vector2 = get_field_coords(global_grabbed_item_pos)
-    var item_size: Vector2 = inventory.get_item_size(grabbed_item)
-    var rect: Rect2 = Rect2(grabbed_item_coords, item_size)
+    var grabbed_item_coords := get_field_coords(global_grabbed_item_pos)
+    var item_size := inventory.get_item_size(grabbed_item)
+    var rect := Rect2i(grabbed_item_coords, item_size)
     _highlight_rect(rect, style, true)
     return true
 
@@ -210,15 +210,15 @@ func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
     return true
 
 
-func _highlight_field(field_coords: Vector2, style: StyleBox) -> void:
+func _highlight_field(field_coords: Vector2i, style: StyleBox) -> void:
     if _selected_item && inventory.get_item_rect(_selected_item).has_point(field_coords):
         # Don't highlight selected fields (done in _on_item_selected())
         return
 
-    _highlight_rect(Rect2(field_coords, Vector2.ONE), style, true)
+    _highlight_rect(Rect2i(field_coords, Vector2i.ONE), style, true)
 
 
-func _highlight_rect(rect: Rect2, style: StyleBox, queue_for_reset: bool) -> void:
+func _highlight_rect(rect: Rect2i, style: StyleBox, queue_for_reset: bool) -> void:
     var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
     for i in range(rect.position.x, h_range):
         var v_range = min(rect.size.y + rect.position.y, inventory.size.y)
