@@ -115,7 +115,7 @@ func _on_prototype_id_picked(index: int) -> void:
     
 
 func _on_btn_edit() -> void:
-    var selected_items: Array = _inventory_control.get_selected_inventory_items()
+    var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
     if selected_items.size() > 0:
         var item: Node = selected_items[0]
         # Call it deferred, so that the control can clean up
@@ -124,7 +124,7 @@ func _on_btn_edit() -> void:
 
 func _on_btn_remove() -> void:
     assert(gloot_undo_redo)
-    var selected_items: Array = _inventory_control.get_selected_inventory_items()
+    var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
     gloot_undo_redo.remove_inventory_items(inventory, selected_items)
 
 

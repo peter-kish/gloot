@@ -6,7 +6,7 @@ signal value_removed(key)
 
 const Verify = preload("res://addons/gloot/verify.gd")
 const ValueEditor = preload("res://addons/gloot/editor/value_editor.gd")
-const supported_types: Array = [
+const supported_types: Array[int] = [
     TYPE_BOOL,
     TYPE_INT,
     TYPE_FLOAT,
@@ -50,7 +50,7 @@ const supported_types: Array = [
     set(new_remove_button_map):
         remove_button_map = new_remove_button_map
         refresh()
-@export var immutable_keys: Array :
+@export var immutable_keys: Array[String] :
     get:
         return immutable_keys
     set(new_immutable_keys):

@@ -149,7 +149,7 @@ Use the 'Unequip' button to unequip it."
 
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource("2")
-size = Vector2(5, 5)
+size = Vector2i(5, 5)
 item_protoset = ExtResource("1")
 
 [node name="L_item_2x2_2" type="Node" parent="InventoryGridLeft"]
@@ -167,7 +167,7 @@ properties = {
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
-size = Vector2(5, 5)
+size = Vector2i(5, 5)
 item_protoset = ExtResource("1")
 
 [node name="R_item_2x2" type="Node" parent="InventoryGridRight"]

@@ -39,12 +39,12 @@ func remove_inventory_item(inventory: Inventory, item: InventoryItem) -> void:
     undo_redo_manager.commit_action()
 
 
-func remove_inventory_items(inventory: Inventory, items: Array) -> void:
+func remove_inventory_items(inventory: Inventory, items: Array[InventoryItem]) -> void:
     assert(undo_redo_manager)
 
-    var item_data: Array
-    var item_indexes: Array
-    var node_indexes: Array
+    var item_data: Array[Dictionary]
+    var item_indexes: Array[int]
+    var node_indexes: Array[int]
     for item in items:
         item_data.append(item.serialize())
         item_indexes.append(inventory.get_item_index(item))
@@ -68,7 +68,10 @@ func _add_item(inventory: Inventory, item_data: Dictionary, item_index: int = -1
         inventory.move_child(item, node_index)
 
 
-func _add_items(inventory: Inventory, item_data: Array, item_indexes: Array, node_indexes: Array) -> void:
+func _add_items(inventory: Inventory,
+        item_data: Array[Dictionary],
+        item_indexes: Array[int],
+        node_indexes: Array[int]) -> void:
     for i in range(item_data.size()):
         _add_item(inventory, item_data[i], item_indexes[i], node_indexes[i])
 
@@ -81,7 +84,8 @@ func _remove_item(inventory: Inventory, item_data: Dictionary) -> void:
             return
     assert(false, "Failed to remove item!")
 
-func _remove_items(inventory: Inventory, item_data: Array) -> void:
+
+func _remove_items(inventory: Inventory, item_data: Array[Dictionary]) -> void:
     for data in item_data:
         _remove_item(inventory, data)
 
