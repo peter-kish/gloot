@@ -135,8 +135,8 @@ func _get_item_title(item: InventoryItem) -> String:
     return title
 
 
-func get_selected_inventory_items() -> Array:
-    var result: Array = []
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    var result: Array[InventoryItem] = []
     for index in _item_list.get_selected_items():
         result.push_back(_get_inventory_item(index))
     return result

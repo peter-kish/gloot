@@ -19,7 +19,7 @@ var _prototypes: Dictionary = {} :
     set(new_prototypes):
         print(new_prototypes)
         _prototypes = new_prototypes
-        update_json_data()
+        _update_json_data()
         emit_changed()
 
 
@@ -43,7 +43,7 @@ func parse(json: String) -> void:
 
 
 func _to_json() -> String:
-    var result: Array
+    var result: Array[Dictionary]
     for prototype_id in _prototypes.keys():
         result.append(get_prototype(prototype_id))
 
@@ -70,7 +70,7 @@ func _unstringify_prototype(prototype: Dictionary) -> void:
                 prototype[key] = variant
 
 
-func update_json_data() -> void:
+func _update_json_data() -> void:
     json_data = _to_json()
     emit_changed()
 

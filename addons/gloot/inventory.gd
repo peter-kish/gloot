@@ -18,7 +18,7 @@ signal protoset_changed
         item_protoset = new_item_protoset
         emit_signal("protoset_changed")
         update_configuration_warnings()
-var _items: Array = []
+var _items: Array[InventoryItem] = []
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
@@ -118,7 +118,7 @@ func _emit_item_modified(item: InventoryItem) -> void:
     emit_signal("item_modified", item)
 
 
-func get_items() -> Array:
+func get_items() -> Array[InventoryItem]:
     return _items
 
 
@@ -171,8 +171,8 @@ func get_item_by_id(prototype_id: String) -> InventoryItem:
     return null
 
 
-func get_items_by_id(prototype_id: String) -> Array:
-    var result := []
+func get_items_by_id(prototype_id: String) -> Array[InventoryItem]:
+    var result: Array[InventoryItem] = []
 
     for item in get_items():
         if item.prototype_id == prototype_id:

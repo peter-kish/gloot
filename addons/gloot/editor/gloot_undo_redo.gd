@@ -139,7 +139,7 @@ func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) ->
     undo_redo_manager.commit_action()
 
 
-func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2) -> void:
+func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2i) -> void:
     var old_item_position = inventory.get_item_position(item)
     if old_item_position == position:
         return
