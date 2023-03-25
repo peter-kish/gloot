@@ -91,7 +91,7 @@ func _draw() -> void:
         draw_rect(rect, Color.WHITE, false)
 
 
-func _input(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
     if !(event is InputEventMouseButton):
         return
 

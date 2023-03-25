@@ -354,6 +354,11 @@ func _select(item: InventoryItem) -> void:
         emit_signal("item_deselected", prev_selected_item)
 
 
+# Using _input instead of _gui_input because _gui_input is only called for "mouse released"
+# (InputEventMouseButton.pressed==false) events if the same control previously triggered the "mouse
+# pressed" event (InputEventMouseButton.pressed==true).
+# This makes dragging items from one CtrlInventoryGrid to another impossible to implement with
+# _gui_input.
 func _input(event: InputEvent) -> void:
     if !(event is InputEventMouseButton):
         return
