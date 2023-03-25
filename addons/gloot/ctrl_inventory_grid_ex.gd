@@ -100,6 +100,7 @@ func _create_selection_panel() -> void:
     move_child(_selection_panel, get_child_count() - 1)
     _set_panel_style(_selection_panel, selection_style)
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
+    _selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _selection_panel.connect("mouse_entered", Callable(self, "_on_selection_mouse_entered"))
     _selection_panel.connect("mouse_exited", Callable(self, "_on_selection_mouse_exited"))
 
