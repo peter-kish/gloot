@@ -141,6 +141,7 @@ func add_item(item: InventoryItem) -> bool:
 
 func create_and_add_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
+    item.protoset = item_protoset
     item.prototype_id = prototype_id
     if add_item(item):
         return item

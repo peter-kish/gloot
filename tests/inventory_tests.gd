@@ -57,11 +57,11 @@ func test_has_item() -> void:
 
 
 func test_create_and_add() -> void:
-    var new_item = inventory2.create_and_add_item("minimal_item")
+    var new_item = inventory2.create_and_add_item("minimal_item_2")
     assert(new_item)
     assert(inventory2.get_items().size() == 1)
     assert(inventory2.has_item(new_item))
-    assert(inventory2.has_item_by_id("minimal_item"))
+    assert(inventory2.has_item_by_id("minimal_item_2"))
 
 
 func test_transfer() -> void:
