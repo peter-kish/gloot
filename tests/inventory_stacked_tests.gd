@@ -20,6 +20,8 @@ func init_suite() -> void:
         "test_contents_changed_signal",
         "test_stack_split_join",
         "test_automerge",
+        "test_automerge_custom_dst_properties",
+        "test_automerge_custom_src_properties",
         "test_max_stack_size",
         "test_transfer",
         "test_transfer_autosplit",
@@ -144,6 +146,30 @@ func test_automerge() -> void:
     assert(is_instance_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_items().size() == 1)
+    
+    
+func test_automerge_custom_dst_properties() -> void:
+    stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    stackable_item_2.set_property("custom_property", "custom_value")
+    assert(inventory.add_item_automerge(stackable_item))
+    assert(inventory.get_items().size() == 1)
+    assert(inventory.has_item(stackable_item))
+    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(inventory.get_items().size() == 2)
+    assert(inventory.has_item(stackable_item_2))
+
+
+func test_automerge_custom_src_properties() -> void:
+    stackable_item.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    stackable_item.set_property("custom_property", "custom_value")
+    stackable_item_2.set_property(InventoryStacked.KEY_STACK_SIZE, 2)
+    assert(inventory.add_item_automerge(stackable_item))
+    assert(inventory.get_items().size() == 1)
+    assert(inventory.has_item(stackable_item))
+    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(inventory.get_items().size() == 2)
+    assert(inventory.has_item(stackable_item_2))
 
 
 func test_max_stack_size() -> void:

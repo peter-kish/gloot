@@ -146,7 +146,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
-    var target_items = get_items_by_id(item.prototype_id)
+    var target_items = _get_mergable_items(item)
     target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
     for target_item in target_items:
         _merge_stacks(item, target_item)
@@ -159,6 +159,45 @@ func add_item_automerge(item: InventoryItem) -> bool:
 
     super.add_item(item)
     return true
+
+
+func _get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:
+    var result: Array[InventoryItem] = []
+
+    for i in get_items():
+        if !_items_mergable(i, item):
+            continue
+
+        result.append(i)
+            
+    return result
+
+
+func _items_mergable(item_1: InventoryItem, item_2: InventoryItem):
+    # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
+    # custom properties that the other one doesn't have (except for "stack_size" and
+    # "max_stack_size").
+
+    if item_1.prototype_id != item_2.prototype_id:
+        return false
+
+    for property in item_1.properties.keys():
+        if property == KEY_STACK_SIZE || property == KEY_MAX_STACK_SIZE:
+            continue
+        if !_has_custom_property(item_2, property, item_1.properties[property]):
+            return false
+
+    for property in item_2.properties.keys():
+        if property == KEY_STACK_SIZE || property == KEY_MAX_STACK_SIZE:
+            continue
+        if !_has_custom_property(item_1, property, item_2.properties[property]):
+            return false
+
+    return true
+
+
+func _has_custom_property(item: InventoryItem, property: String, value) -> bool:
+    return item.properties.has(property) && item.properties[property] == value;
 
 
 func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
