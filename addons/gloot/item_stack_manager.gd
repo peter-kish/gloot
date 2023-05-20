@@ -93,3 +93,15 @@ static func merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> vo
 
     set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
     set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
+
+
+static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
+    assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
+
+    var stack_size = get_item_stack_size(item)
+    assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!")
+
+    var new_item = item.duplicate()
+    set_item_stack_size(new_item, new_stack_size)
+    set_item_stack_size(item, stack_size - new_stack_size)
+    return new_item

@@ -161,38 +161,36 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    assert(has_item(item) != null, "The inventory does not contain the given item!")
-    assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
+    assert(has_item(item), "The inventory does not contain the given item!")
 
-    var stack_size = ItemStackManager.get_item_stack_size(item)
-    assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!")
-
-    var new_item = item.duplicate()
-    ItemStackManager.set_item_stack_size(new_item, new_stack_size)
-    ItemStackManager.set_item_stack_size(item, stack_size - new_stack_size)
-    emit_signal("occupied_space_changed")
-    _calculate_occupied_space()
-    assert(super.add_item(new_item))
+    var new_item = ItemStackManager.split_stack(item, new_stack_size)
+    if new_item:
+        emit_signal("occupied_space_changed")
+        _calculate_occupied_space()
+        assert(super.add_item(new_item))
     return new_item
 
 
-func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
-    assert(has_item(stack_1) != null, "The inventory does not contain the given item!")
-    assert(has_item(stack_2) != null, "The inventory does not contain the given item!")
-    assert(stack_1.prototype_id == stack_2.prototype_id, "The two stacks must be of the same type!")
+func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    assert(has_item(item_dst), "The inventory does not contain the given item!")
+    assert(has_item(item_src), "The inventory does not contain the given item!")
+    # TODO: Document this case:
+    assert(ItemStackManager.items_mergable(item_dst, item_src), "The two stacks are not joinable!")
 
-    if remove_item(stack_2):
-        ItemStackManager.set_item_stack_size(
-            stack_1,
-            ItemStackManager.get_item_stack_size(stack_1) +
-            ItemStackManager.get_item_stack_size(stack_2)
-            )
-        emit_signal("occupied_space_changed")
-        _calculate_occupied_space()
-        stack_2.free()
-        return true
+    var dst_free_space = ItemStackManager.get_free_stack_space(item_dst)
+    if dst_free_space < ItemStackManager.get_item_stack_size(item_src):
+        return false
 
-    return false
+    ItemStackManager.merge_stacks(item_src, item_dst)
+    if ItemStackManager.get_item_stack_size(item_src) <= 0:
+        if item_src.get_inventory():
+            item_src.get_inventory().remove_item(item_src)
+        item_src.free()
+
+    emit_signal("occupied_space_changed")
+    _calculate_occupied_space()
+
+    return true
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
