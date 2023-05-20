@@ -6,11 +6,6 @@ signal capacity_changed
 signal occupied_space_changed
 
 const KEY_WEIGHT: String = "weight"
-const KEY_STACK_SIZE: String = "stack_size"
-const KEY_MAX_STACK_SIZE: String = "max_stack_size"
-
-const DEFAULT_STACK_SIZE: int = 1
-const DEFAULT_MAX_STACK_SIZE: int = 100
 
 @export var capacity: float :
     get:
@@ -33,6 +28,8 @@ var occupied_space: float :
 const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
+const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
+
 
 func _get_configuration_warnings() -> PackedStringArray:
     if _occupied_space > capacity:
@@ -43,7 +40,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _get_default_item_weight(prototype_id: String) -> float:
     if item_protoset && item_protoset.has(prototype_id):
         var weight = item_protoset.get_item_property(prototype_id, KEY_WEIGHT, 1.0)
-        var stack_size = item_protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0)
+        var stack_size = ItemStackManager.get_prototype_stack_size(item_protoset, prototype_id)
         return weight * stack_size
     return 1.0
 
@@ -117,22 +114,10 @@ func _get_item_unit_weight(item: InventoryItem) -> float:
     return weight
 
 
-func _get_item_stack_size(item: InventoryItem) -> int:
-    return item.get_property(KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
-
-
-func _get_item_max_stack_size(item: InventoryItem) -> int:
-    return item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
-
-
-func _set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
-    item.set_property(KEY_STACK_SIZE, stack_size)
-
-
 func _get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
-    return _get_item_stack_size(item) * _get_item_unit_weight(item)
+    return ItemStackManager.get_item_stack_size(item) * _get_item_unit_weight(item)
 
 
 func add_item(item: InventoryItem) -> bool:
@@ -146,11 +131,12 @@ func add_item_automerge(item: InventoryItem) -> bool:
     if !has_place_for(item):
         return false
 
-    var target_items = _get_mergable_items(item)
+    var target_items = ItemStackManager.get_mergable_items(self, item)
     target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
     for target_item in target_items:
-        _merge_stacks(item, target_item)
-        if _get_item_stack_size(item) <= 0:
+        # TODO: Consider making _merge_stacks return bool
+        ItemStackManager.merge_stacks(item, target_item)
+        if ItemStackManager.get_item_stack_size(item) <= 0:
             _calculate_occupied_space()
             if item.get_inventory():
                 item.get_inventory().remove_item(item)
@@ -161,62 +147,8 @@ func add_item_automerge(item: InventoryItem) -> bool:
     return true
 
 
-func _get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:
-    var result: Array[InventoryItem] = []
-
-    for i in get_items():
-        if !_items_mergable(i, item):
-            continue
-
-        result.append(i)
-            
-    return result
-
-
-func _items_mergable(item_1: InventoryItem, item_2: InventoryItem):
-    # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
-    # custom properties that the other one doesn't have (except for "stack_size" and
-    # "max_stack_size").
-
-    if item_1.prototype_id != item_2.prototype_id:
-        return false
-
-    for property in item_1.properties.keys():
-        if property == KEY_STACK_SIZE || property == KEY_MAX_STACK_SIZE:
-            continue
-        if !_has_custom_property(item_2, property, item_1.properties[property]):
-            return false
-
-    for property in item_2.properties.keys():
-        if property == KEY_STACK_SIZE || property == KEY_MAX_STACK_SIZE:
-            continue
-        if !_has_custom_property(item_1, property, item_2.properties[property]):
-            return false
-
-    return true
-
-
-func _has_custom_property(item: InventoryItem, property: String, value) -> bool:
-    return item.properties.has(property) && item.properties[property] == value;
-
-
 func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
-    return _get_item_stack_size(a) < _get_item_stack_size(b)
-
-
-func _merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> void:
-    var src_size: int = _get_item_stack_size(item_src)
-    if src_size <= 0:
-        return
-
-    var dst_size: int = _get_item_stack_size(item_dst)
-    var dst_max_size: int = _get_item_max_stack_size(item_dst)
-    var free_dst_stack_space: int = dst_max_size - dst_size
-    if free_dst_stack_space <= 0:
-        return
-
-    _set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
-    _set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
+    return ItemStackManager.get_item_stack_size(a) < ItemStackManager.get_item_stack_size(b)
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
@@ -231,12 +163,12 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     assert(has_item(item) != null, "The inventory does not contain the given item!")
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
 
-    var stack_size = _get_item_stack_size(item)
+    var stack_size = ItemStackManager.get_item_stack_size(item)
     assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!")
 
     var new_item = item.duplicate()
-    _set_item_stack_size(new_item, new_stack_size)
-    _set_item_stack_size(item, stack_size - new_stack_size)
+    ItemStackManager.set_item_stack_size(new_item, new_stack_size)
+    ItemStackManager.set_item_stack_size(item, stack_size - new_stack_size)
     emit_signal("occupied_space_changed")
     _calculate_occupied_space()
     assert(super.add_item(new_item))
@@ -249,7 +181,11 @@ func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
     assert(stack_1.prototype_id == stack_2.prototype_id, "The two stacks must be of the same type!")
 
     if remove_item(stack_2):
-        _set_item_stack_size(stack_1, _get_item_stack_size(stack_1) + _get_item_stack_size(stack_2))
+        ItemStackManager.set_item_stack_size(
+            stack_1,
+            ItemStackManager.get_item_stack_size(stack_1) +
+            ItemStackManager.get_item_stack_size(stack_2)
+            )
         emit_signal("occupied_space_changed")
         _calculate_occupied_space()
         stack_2.free()
