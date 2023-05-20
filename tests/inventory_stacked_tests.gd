@@ -9,6 +9,7 @@ var stackable_item_2: InventoryItem
 var limited_stackable_item: InventoryItem
 var limited_stackable_item_2: InventoryItem
 
+const TEST_PROTOSET = preload("res://tests/data/item_definitions_stack.tres")
 const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 
@@ -35,37 +36,15 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory = InventoryStacked.new()
-    inventory.item_protoset = preload("res://tests/data/item_definitions_stack.tres")
-    inventory.capacity = 10
+    inventory = create_inventory_stacked(TEST_PROTOSET, 10)
+    inventory_2 = create_inventory_stacked(TEST_PROTOSET, 10)
 
-    inventory_2 = InventoryStacked.new()
-    inventory_2.item_protoset = preload("res://tests/data/item_definitions_stack.tres")
-    inventory_2.capacity = 10
-
-    item = InventoryItem.new()
-    item.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    item.prototype_id = "minimal_item"
-
-    big_item = InventoryItem.new()
-    big_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    big_item.prototype_id = "big_item"
-
-    stackable_item = InventoryItem.new()
-    stackable_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    stackable_item.prototype_id = "stackable_item"
-
-    stackable_item_2 = InventoryItem.new()
-    stackable_item_2.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    stackable_item_2.prototype_id = "stackable_item"
-
-    limited_stackable_item = InventoryItem.new()
-    limited_stackable_item.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    limited_stackable_item.prototype_id = "limited_stackable_item"
-
-    limited_stackable_item_2 = InventoryItem.new()
-    limited_stackable_item_2.protoset = preload("res://tests/data/item_definitions_stack.tres")
-    limited_stackable_item_2.prototype_id = "limited_stackable_item"
+    item = create_item(TEST_PROTOSET, "minimal_item")
+    big_item = create_item(TEST_PROTOSET, "big_item")
+    stackable_item = create_item(TEST_PROTOSET, "stackable_item")
+    stackable_item_2 = create_item(TEST_PROTOSET, "stackable_item")
+    limited_stackable_item = create_item(TEST_PROTOSET, "limited_stackable_item")
+    limited_stackable_item_2 = create_item(TEST_PROTOSET, "limited_stackable_item")
 
 
 func cleanup_test() -> void:

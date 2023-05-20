@@ -4,6 +4,7 @@ var inventory_3x3: InventoryGrid
 var item_1x1: InventoryItem
 var item_2x2: InventoryItem
 
+const TEST_PROTOSET = preload("res://tests/data/item_definitions_grid.tres")
 
 func init_suite():
     tests = [
@@ -20,17 +21,10 @@ func init_suite():
 
 
 func init_test():
-    inventory_3x3 = InventoryGrid.new()
-    inventory_3x3.item_protoset = preload("res://tests/data/item_definitions_grid.tres")
-    inventory_3x3.size = Vector2i(3, 3)
-
-    item_1x1 = InventoryItem.new()
-    item_1x1.protoset = preload("res://tests/data/item_definitions_grid.tres")
-    item_1x1.prototype_id = "item_1x1"
-
-    item_2x2 = InventoryItem.new()
-    item_2x2.protoset = preload("res://tests/data/item_definitions_grid.tres")
-    item_2x2.prototype_id = "item_2x2"
+    inventory_3x3 = create_inventory_grid(TEST_PROTOSET, Vector2i(3, 3))
+    
+    item_1x1 = create_item(TEST_PROTOSET, "item_1x1")
+    item_2x2 = create_item(TEST_PROTOSET, "item_2x2")
 
 
 func cleanup_test() -> void:

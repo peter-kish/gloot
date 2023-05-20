@@ -44,6 +44,41 @@ func _run_tests():
         cleanup_test()
 
 
+func create_inventory(protoset: ItemProtoset) -> Inventory:
+    var inventory = Inventory.new()
+    inventory.item_protoset = protoset
+    return inventory
+
+
+func create_inventory_stacked(protoset: ItemProtoset, capacity: float) -> InventoryStacked:
+    var inventory = InventoryStacked.new()
+    inventory.item_protoset = protoset
+    inventory.capacity = capacity
+    return inventory
+
+
+func create_inventory_grid(protoset: ItemProtoset, size: Vector2i) -> InventoryGrid:
+    var inventory = InventoryGrid.new()
+    inventory.item_protoset = protoset
+    inventory.size = size
+    return inventory
+
+
+func create_inventory_grid_stacked(protoset: ItemProtoset, size: Vector2i) -> InventoryGridStacked:
+    var inventory = InventoryGridStacked.new()
+    inventory.item_protoset = protoset
+    inventory.size = size
+    return inventory
+
+
+# Create an item with the given prototype ID from the given protoset
+func create_item(protoset: ItemProtoset, prototype_id: String) -> InventoryItem:
+    var item = InventoryItem.new()
+    item.protoset = protoset
+    item.prototype_id = prototype_id
+    return item
+
+
 # Free the given inventory, if valid
 func free_inventory(inventory: Inventory) -> void:
     if inventory == null || !is_instance_valid(inventory):

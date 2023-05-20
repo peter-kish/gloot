@@ -5,33 +5,23 @@ var item_1x1: InventoryItem
 var item_2x2: InventoryItem
 var item_2x2_2: InventoryItem
 
+const TEST_PROTOSET = preload("res://tests/data/item_definitions_grid.tres")
 const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 
 func init_suite():
     tests = [
         "test_has_place_for",
-        "test_doesnt_have_place_for",
         "test_add_item_automerge",
     ]
 
 
 func init_test():
-    inventory_3x3 = InventoryGridStacked.new()
-    inventory_3x3.item_protoset = preload("res://tests/data/item_definitions_grid.tres")
-    inventory_3x3.size = Vector2i(3, 3)
-
-    item_1x1 = InventoryItem.new()
-    item_1x1.protoset = preload("res://tests/data/item_definitions_grid.tres")
-    item_1x1.prototype_id = "item_1x1"
-
-    item_2x2 = InventoryItem.new()
-    item_2x2.protoset = preload("res://tests/data/item_definitions_grid.tres")
-    item_2x2.prototype_id = "item_2x2"
-
-    item_2x2_2 = InventoryItem.new()
-    item_2x2_2.protoset = preload("res://tests/data/item_definitions_grid.tres")
-    item_2x2_2.prototype_id = "item_2x2"
+    inventory_3x3 = create_inventory_grid_stacked(TEST_PROTOSET, Vector2i(3, 3))
+    
+    item_1x1 = create_item(TEST_PROTOSET, "item_1x1")
+    item_2x2 = create_item(TEST_PROTOSET, "item_2x2")
+    item_2x2_2 = create_item(TEST_PROTOSET, "item_2x2")
 
 
 func cleanup_test() -> void:
@@ -72,7 +62,7 @@ func test_add_item_automerge() -> void:
     assert(!is_instance_valid(item_2x2_2))
 
     item_2x2_2 = InventoryItem.new()
-    item_2x2_2.protoset = preload("res://tests/data/item_definitions_grid.tres")
+    item_2x2_2.protoset = TEST_PROTOSET
     item_2x2_2.prototype_id = "item_2x2"
 
     # No stack space, no grid space

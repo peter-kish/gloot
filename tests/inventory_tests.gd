@@ -4,6 +4,7 @@ var inventory1: Inventory
 var inventory2: Inventory
 var item: InventoryItem
 
+const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
 
 func init_suite() -> void:
     tests = [
@@ -19,10 +20,8 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory1 = Inventory.new()
-    inventory1.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
-    inventory2 = Inventory.new()
-    inventory2.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory1 = create_inventory(TEST_PROTOSET)
+    inventory2 = create_inventory(TEST_PROTOSET)
     item = inventory1.create_and_add_item("minimal_item")
 
 
