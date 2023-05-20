@@ -51,6 +51,7 @@ func test_has_place_for() -> void:
     assert(inventory_3x3.has_place_for(item_2x2))
     
     # inventory containing 2x2 item
+    item_2x2.set_property(ItemStackManager.KEY_MAX_STACK_SIZE, 1)
     assert(inventory_3x3.add_item(item_2x2))
     assert(!inventory_3x3.has_place_for(item_2x2_2))
 

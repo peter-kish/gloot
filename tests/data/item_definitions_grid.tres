@@ -9,14 +9,12 @@ json_data = "[
         \"height\": 1,
         \"id\": \"item_1x1\",
         \"image\": \"res://images/item_book_blue.png\",
-        \"width\": 1,
-		\"max_stack_size\": 1
+        \"width\": 1
     },
     {
         \"height\": 2,
         \"id\": \"item_2x2\",
         \"image\": \"res://images/item_armour_silver.png\",
-        \"width\": 2,
-		\"max_stack_size\": 1
+        \"width\": 2
     }
 ]"
