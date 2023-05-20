@@ -6,26 +6,53 @@ const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 
 func has_place_for(item: InventoryItem) -> bool:
-    # Check if there's place on the grid
-    var free_place := find_free_place(item)
-    if Verify.vector_positive(free_place):
+    if _has_grid_space_for(item):
         return true
 
-    # Check if there's place in the existing item stacks
+    if _has_stack_space_for(item):
+        return true
+
+    return false
+
+
+func _has_grid_space_for(item: InventoryItem) -> bool:
+    return Verify.vector_positive(find_free_place(item))
+
+
+func _has_stack_space_for(item: InventoryItem) -> bool:
+    return _get_stack_space_for(item) >= ItemStackManager.get_item_stack_size(item);
+
+
+func _get_stack_space_for(item: InventoryItem) -> int:
     var mergable_items = ItemStackManager.get_mergable_items(self, item, [KEY_GRID_POSITION])
     var free_stack_space := 0
     for mergable_item in mergable_items:
         free_stack_space += ItemStackManager.get_free_stack_space(mergable_item)
-
-    if free_stack_space < ItemStackManager.get_item_stack_size(item):
-        return false
-
-    return true
+    return free_stack_space
     
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    assert(false, "Not implemented!")
-    return false
+    # TODO: Eliminate duplacted code here and in inventory_stacked.gd
+    if !has_place_for(item):
+        return false
+
+    var target_items = ItemStackManager.get_mergable_items(self, item)
+    target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
+    for target_item in target_items:
+        # TODO: Consider making _merge_stacks return bool
+        ItemStackManager.merge_stacks(item, target_item)
+        if ItemStackManager.get_item_stack_size(item) <= 0:
+            if item.get_inventory():
+                item.get_inventory().remove_item(item)
+            item.free()
+            return true
+
+    super.add_item(item)
+    return true
+
+
+func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
+    return ItemStackManager.get_item_stack_size(a) < ItemStackManager.get_item_stack_size(b)
     
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:

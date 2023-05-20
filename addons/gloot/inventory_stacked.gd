@@ -128,6 +128,7 @@ func add_item(item: InventoryItem) -> bool:
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
+    # TODO: Eliminate duplacted code here and in inventory_grid_stacked.gd
     if !has_place_for(item):
         return false
 
