@@ -61,5 +61,14 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
-    assert(false, "Not implemented!")
+    if destination.has_place_for(item):
+        return transfer_automerge(item, destination)
+
+    var count: int = destination._get_stack_space_for(item)
+    if count > 0:
+        var new_item: InventoryItem = ItemStackManager.split_stack(item, count)
+        assert(new_item != null)
+        return destination.add_item_automerge(new_item)
+
     return false
+

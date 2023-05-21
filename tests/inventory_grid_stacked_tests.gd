@@ -19,7 +19,7 @@ func init_suite():
         "test_stack_join",
         "test_stack_cant_join",
         "test_automerge",
-        "test_dummy",
+        "test_autosplitmerge",
     ]
 
 
@@ -130,4 +130,16 @@ func test_automerge() -> void:
     assert(inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
     assert(ItemStackManager.get_item_stack_size(item_2x2) == 3)
     assert(!is_instance_valid(item_2x2_2))
+
+
+func test_autosplitmerge() -> void:
+    ItemStackManager.set_item_max_stack_size(item_2x2, 3)
+    ItemStackManager.set_item_stack_size(item_2x2, 1)
+    assert(inventory_3x3.add_item(item_2x2))
+    ItemStackManager.set_item_stack_size(item_2x2_2, 3)
+    assert(inventory_3x3_2.add_item(item_2x2_2))
+
+    assert(inventory_3x3_2.transfer_autosplitmerge(item_2x2_2, inventory_3x3))
+    assert(ItemStackManager.get_item_stack_size(item_2x2) == 3)
+    assert(ItemStackManager.get_item_stack_size(item_2x2_2) == 1)
 
