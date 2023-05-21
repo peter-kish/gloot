@@ -217,7 +217,7 @@ func find_free_place(item: InventoryItem) -> Vector2i:
     for x in range(size.x - (item_size.x - 1)):
         for y in range(size.y - (item_size.y - 1)):
             var rect := Rect2i(Vector2i(x, y), item_size)
-            if rect_free(rect, item):
+            if rect_free(rect):
                 return Vector2i(x, y)
 
     return Vector2i(-1, -1)
