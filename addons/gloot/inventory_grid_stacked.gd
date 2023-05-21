@@ -52,13 +52,11 @@ func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     return ItemStackManager.join_stacks(self, item_src, item_dst, [KEY_GRID_POSITION])
 
 
-func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
-    assert(false, "Not implemented!")
-    return false
-
-
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
-    assert(false, "Not implemented!")
+    # TODO: Get rid of code duplication (inventory_stacked.gd)
+    if destination.has_place_for(item) && remove_item(item):
+        return destination.add_item_automerge(item)
+
     return false
 
 

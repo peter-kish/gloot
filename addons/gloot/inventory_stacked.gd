@@ -177,6 +177,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
+    # TODO: Get rid of code duplication (inventory_grid_stacked.gd)
     if destination.has_place_for(item) && remove_item(item):
         return destination.add_item_automerge(item)
 
