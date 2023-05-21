@@ -180,7 +180,10 @@ func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    return transfer_to(item, destination, Vector2i.ZERO)
+    var free_place: Vector2i = destination.find_free_place(item)
+    if Verify.vector_positive(free_place):
+        return transfer_to(item, destination, free_place)
+    return false
 
 
 func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool:

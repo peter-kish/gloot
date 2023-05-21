@@ -1,8 +1,10 @@
 extends TestSuite
 
 var inventory_3x3: InventoryGrid
+var inventory_3x3_2: InventoryGrid
 var item_1x1: InventoryItem
 var item_2x2: InventoryItem
+var item_2x2_2: InventoryItem
 
 const TEST_PROTOSET = preload("res://tests/data/item_definitions_grid.tres")
 
@@ -15,6 +17,8 @@ func init_suite():
         "test_create_and_add_item_at",
         "test_get_item_at",
         "test_sort",
+        "test_transfer",
+        "test_transfer_to",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -22,16 +26,20 @@ func init_suite():
 
 func init_test():
     inventory_3x3 = create_inventory_grid(TEST_PROTOSET, Vector2i(3, 3))
+    inventory_3x3_2 = create_inventory_grid(TEST_PROTOSET, Vector2i(3, 3))
     
     item_1x1 = create_item(TEST_PROTOSET, "item_1x1")
     item_2x2 = create_item(TEST_PROTOSET, "item_2x2")
+    item_2x2_2 = create_item(TEST_PROTOSET, "item_2x2")
 
 
 func cleanup_test() -> void:
     free_inventory(inventory_3x3)
+    free_inventory(inventory_3x3_2)
 
     free_item(item_1x1)
     free_item(item_2x2)
+    free_item(item_2x2_2)
 
 
 func test_add_item() -> void:
@@ -98,6 +106,33 @@ func test_sort() -> void:
     assert(inventory_3x3.sort())
     assert(inventory_3x3.get_item_at(Vector2i(0, 0)) == item_2x2)
     assert(inventory_3x3.get_item_at(Vector2i(0, 2)) == item_1x1)
+
+
+func test_transfer():
+    assert(inventory_3x3_2.add_item(item_1x1))
+    assert(inventory_3x3_2.add_item(item_2x2))
+
+    # Empty inventory
+    assert(inventory_3x3_2.transfer(item_1x1, inventory_3x3))
+    var item_pos = inventory_3x3.get_item_position(item_1x1)
+    assert(item_pos.x == 0)
+    assert(item_pos.y == 0)
+
+    # Enough free space
+    assert(inventory_3x3_2.transfer(item_2x2, inventory_3x3))
+    assert(inventory_3x3_2.get_items().size() == 0)
+    assert(inventory_3x3.get_items().size() == 2)
+
+    # Not enough free space
+    assert(!inventory_3x3_2.transfer(item_2x2_2, inventory_3x3))
+
+
+func test_transfer_to():
+    assert(inventory_3x3_2.add_item(item_1x1))
+    assert(inventory_3x3_2.add_item(item_2x2))
+
+    assert(inventory_3x3_2.transfer_to(item_1x1, inventory_3x3, Vector2i(1, 1)))
+    assert(!inventory_3x3_2.transfer_to(item_2x2, inventory_3x3, Vector2i(2, 2)))
 
 
 func test_serialize():
