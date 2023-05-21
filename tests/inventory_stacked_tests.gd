@@ -10,7 +10,6 @@ var limited_stackable_item: InventoryItem
 var limited_stackable_item_2: InventoryItem
 
 const TEST_PROTOSET = preload("res://tests/data/item_definitions_stack.tres")
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 
 func init_suite() -> void:

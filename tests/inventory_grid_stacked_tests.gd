@@ -7,7 +7,6 @@ var item_2x2: InventoryItem
 var item_2x2_2: InventoryItem
 
 const TEST_PROTOSET = preload("res://tests/data/item_definitions_grid.tres")
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 
 func init_suite():
@@ -51,12 +50,12 @@ func test_has_place_for() -> void:
     assert(inventory_3x3.has_place_for(item_2x2))
     
     # Inventory containing 2x2 item
-    ItemStackManager.set_item_max_stack_size(item_2x2, 1)
+    InventoryGridStacked.set_item_max_stack_size(item_2x2, 1)
     assert(inventory_3x3.add_item(item_2x2))
     assert(!inventory_3x3.has_place_for(item_2x2_2))
 
     # Inventory containing 2x2 item with extended max_stack_size
-    ItemStackManager.set_item_max_stack_size(item_2x2, 10)
+    InventoryGridStacked.set_item_max_stack_size(item_2x2, 10)
     assert(inventory_3x3.has_place_for(item_2x2_2))
 
 
@@ -75,8 +74,8 @@ func test_add_item_automerge() -> void:
     item_2x2_2.prototype_id = "item_2x2"
 
     # No stack space, no grid space
-    ItemStackManager.set_item_stack_size(item_2x2,
-        ItemStackManager.get_item_max_stack_size(item_2x2))
+    InventoryGridStacked.set_item_stack_size(item_2x2,
+        InventoryGridStacked.get_item_max_stack_size(item_2x2))
     assert(!inventory_3x3.add_item_automerge(item_2x2_2))
 
     # No stack space but grid space available
@@ -85,7 +84,7 @@ func test_add_item_automerge() -> void:
 
 func test_stack_split() -> void:
     assert(inventory_3x3.add_item(item_1x1))
-    ItemStackManager.set_item_stack_size(item_1x1, 2)
+    InventoryGridStacked.set_item_stack_size(item_1x1, 2)
     var new_item = inventory_3x3.split(item_1x1, 1)
     assert(new_item != null)
     assert(inventory_3x3.get_item_count() == 2)
@@ -94,7 +93,7 @@ func test_stack_split() -> void:
 
 func test_stack_cant_split() -> void:
     assert(inventory_3x3.add_item(item_2x2))
-    ItemStackManager.set_item_stack_size(item_2x2, 2)
+    InventoryGridStacked.set_item_stack_size(item_2x2, 2)
     var new_item = inventory_3x3.split(item_2x2, 1)
     assert(new_item == null)
     assert(inventory_3x3.get_item_count() == 1)
@@ -108,7 +107,7 @@ func test_stack_join() -> void:
 
 
 func test_stack_cant_join() -> void:
-    ItemStackManager.set_item_max_stack_size(item_1x1, 1)
+    InventoryGridStacked.set_item_max_stack_size(item_1x1, 1)
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))
@@ -116,30 +115,30 @@ func test_stack_cant_join() -> void:
 
 
 func test_automerge() -> void:
-    ItemStackManager.set_item_max_stack_size(item_2x2, 3)
-    ItemStackManager.set_item_stack_size(item_2x2, 1)
+    InventoryGridStacked.set_item_max_stack_size(item_2x2, 3)
+    InventoryGridStacked.set_item_stack_size(item_2x2, 1)
     assert(inventory_3x3.add_item(item_2x2))
-    ItemStackManager.set_item_stack_size(item_2x2_2, 3)
+    InventoryGridStacked.set_item_stack_size(item_2x2_2, 3)
     assert(inventory_3x3_2.add_item(item_2x2_2))
     
     # Not enough space
     assert(!inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
 
     # Enough space
-    ItemStackManager.set_item_stack_size(item_2x2_2, 2)
+    InventoryGridStacked.set_item_stack_size(item_2x2_2, 2)
     assert(inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
-    assert(ItemStackManager.get_item_stack_size(item_2x2) == 3)
+    assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
     assert(!is_instance_valid(item_2x2_2))
 
 
 func test_autosplitmerge() -> void:
-    ItemStackManager.set_item_max_stack_size(item_2x2, 3)
-    ItemStackManager.set_item_stack_size(item_2x2, 1)
+    InventoryGridStacked.set_item_max_stack_size(item_2x2, 3)
+    InventoryGridStacked.set_item_stack_size(item_2x2, 1)
     assert(inventory_3x3.add_item(item_2x2))
-    ItemStackManager.set_item_stack_size(item_2x2_2, 3)
+    InventoryGridStacked.set_item_stack_size(item_2x2_2, 3)
     assert(inventory_3x3_2.add_item(item_2x2_2))
 
     assert(inventory_3x3_2.transfer_autosplitmerge(item_2x2_2, inventory_3x3))
-    assert(ItemStackManager.get_item_stack_size(item_2x2) == 3)
-    assert(ItemStackManager.get_item_stack_size(item_2x2_2) == 1)
+    assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
+    assert(InventoryGridStacked.get_item_stack_size(item_2x2_2) == 1)
 
