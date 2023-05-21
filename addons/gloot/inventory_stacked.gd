@@ -135,9 +135,7 @@ func add_item_automerge(item: InventoryItem) -> bool:
     var target_items = ItemStackManager.get_mergable_items(self, item)
     target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
     for target_item in target_items:
-        # TODO: Consider making _merge_stacks return bool
-        ItemStackManager.merge_stacks(item, target_item)
-        if ItemStackManager.get_item_stack_size(item) <= 0:
+        if ItemStackManager.merge_stacks(item, target_item) == ItemStackManager.MergeResult.SUCCESS:
             _calculate_occupied_space()
             if item.get_inventory():
                 item.get_inventory().remove_item(item)

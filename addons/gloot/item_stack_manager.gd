@@ -5,6 +5,8 @@ const DEFAULT_STACK_SIZE: int = 1
 # TODO: Consider making the default max stack size 1
 const DEFAULT_MAX_STACK_SIZE: int = 100
 
+enum MergeResult {SUCCESS = 0, FAIL, PARTIAL}
+
 
 static func get_mergable_items(
     inventory: Inventory,
@@ -84,19 +86,23 @@ static func get_prototype_max_stack_size(protoset: ItemProtoset, prototype_id: S
     return protoset.get_item_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
 
 
-static func merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> void:
+static func merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> int:
     var src_size: int = get_item_stack_size(item_src)
-    if src_size <= 0:
-        return
+    assert(src_size > 0, "Item stack size must be greater than 0!")
 
     var dst_size: int = get_item_stack_size(item_dst)
     var dst_max_size: int = get_item_max_stack_size(item_dst)
     var free_dst_stack_space: int = dst_max_size - dst_size
     if free_dst_stack_space <= 0:
-        return
+        return MergeResult.FAIL
 
     set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
     set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
+
+    if free_dst_stack_space > src_size:
+        return MergeResult.SUCCESS
+
+    return MergeResult.PARTIAL
 
 
 static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
@@ -130,8 +136,7 @@ static func join_stacks(
     if dst_free_space < get_item_stack_size(item_src):
         return false
 
-    merge_stacks(item_src, item_dst)
-    if get_item_stack_size(item_src) <= 0:
+    if merge_stacks(item_src, item_dst) == MergeResult.SUCCESS:
         if item_src.get_inventory():
             item_src.get_inventory().remove_item(item_src)
         item_src.free()
