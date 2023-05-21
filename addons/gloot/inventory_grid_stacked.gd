@@ -76,7 +76,7 @@ func get_prototype_max_stack_size(prototype_id: String) -> int:
     return ItemStackManager.get_prototype_max_stack_size(item_protoset, prototype_id)
 
 
-func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
+func transfer_automerge(item: InventoryItem, destination: InventoryGridStacked) -> bool:
     # TODO: Get rid of code duplication (inventory_stacked.gd)
     if destination.has_place_for(item) && remove_item(item):
         return destination.add_item_automerge(item)
@@ -84,7 +84,7 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     return false
 
 
-func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
+func transfer_autosplitmerge(item: InventoryItem, destination: InventoryGridStacked) -> bool:
     if destination.has_place_for(item):
         return transfer_automerge(item, destination)
 
