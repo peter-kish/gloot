@@ -13,10 +13,10 @@ Inventory that has a limited item capacity in terms of weight.
 
 ## Methods
 
-* `get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
-* `set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
-* `get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
-* `set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
+* `static get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
+* `static set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
+* `static get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
+* `static set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
 * `get_prototype_stack_size(prototype_id: String) -> int` - Returns the stack size of the given item prototype.
 * `get_prototype_max_stack_size(prototype_id: String) -> int` - Returns the maximum stack size of the given item prototype.
 * `add_item_automerge(item: InventoryItem) -> bool` - Adds the given item stack to the inventory, automatically merging with existing item stacks with the same prototype ID.

@@ -112,17 +112,17 @@ func test_stack_split_join() -> void:
     assert(inventory.get_item_count() == 2)
     var item1 = inventory.get_items()[0]
     var item2 = inventory.get_items()[1]
-    assert(item1.get_property(ItemStackManager.KEY_STACK_SIZE) == 5)
-    assert(item2.get_property(ItemStackManager.KEY_STACK_SIZE) == 5)
+    assert(InventoryStacked.get_item_stack_size(item1) == 5)
+    assert(InventoryStacked.get_item_stack_size(item2) == 5)
     var joined = inventory.join(item1, item2)
     assert(joined)
-    assert(item1.get_property(ItemStackManager.KEY_STACK_SIZE) == 10)
+    assert(InventoryStacked.get_item_stack_size(item1) == 10)
     assert(inventory.get_item_count() == 1)
 
 
 func test_automerge() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
+    InventoryStacked.set_item_stack_size(stackable_item, 2)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(is_instance_valid(stackable_item))
@@ -131,8 +131,8 @@ func test_automerge() -> void:
     
     
 func test_automerge_custom_dst_properties() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
+    InventoryStacked.set_item_stack_size(stackable_item, 2)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     stackable_item_2.set_property("custom_property", "custom_value")
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
@@ -143,9 +143,9 @@ func test_automerge_custom_dst_properties() -> void:
 
 
 func test_automerge_custom_src_properties() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
+    InventoryStacked.set_item_stack_size(stackable_item, 2)
     stackable_item.set_property("custom_property", "custom_value")
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
@@ -155,25 +155,25 @@ func test_automerge_custom_src_properties() -> void:
 
 
 func test_max_stack_size() -> void:
-    limited_stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 3)
+    InventoryStacked.set_item_stack_size(limited_stackable_item, 3)
     assert(inventory.add_item(limited_stackable_item))
-    assert(limited_stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 3)
+    assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 3)
     assert(inventory.add_item_automerge(limited_stackable_item_2))
-    assert(limited_stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 5)
-    assert(limited_stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 3)
+    assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 5)
+    assert(InventoryStacked.get_item_stack_size(limited_stackable_item_2) == 3)
 
 
 func test_automerge_max_stack_size() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
-    stackable_item.set_property(ItemStackManager.KEY_MAX_STACK_SIZE, 3)
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
+    InventoryStacked.set_item_stack_size(stackable_item, 2)
+    InventoryStacked.set_item_max_stack_size(stackable_item, 3)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(is_instance_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
-    assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 3)
-    assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 1)
+    assert(InventoryStacked.get_item_stack_size(stackable_item) == 3)
+    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 1)
 
 
 func test_transfer() -> void:
@@ -186,13 +186,13 @@ func test_transfer() -> void:
 
 
 func test_transfer_autosplit() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 7)
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 5)
+    InventoryStacked.set_item_stack_size(stackable_item, 7)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 5)
     assert(inventory.add_item(stackable_item))
     assert(inventory_2.add_item(stackable_item_2))
     assert(inventory_2.transfer_autosplit(stackable_item_2, inventory))
-    assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 7)
-    assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 2)
+    assert(InventoryStacked.get_item_stack_size(stackable_item) == 7)
+    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
     assert(inventory.get_item_count() == 2)
     assert(inventory.occupied_space == 10)
     assert(inventory_2.get_item_count() == 1)
@@ -200,13 +200,13 @@ func test_transfer_autosplit() -> void:
 
 
 func test_transfer_autosplitmerge() -> void:
-    stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 7)
-    stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 5)
+    InventoryStacked.set_item_stack_size(stackable_item, 7)
+    InventoryStacked.set_item_stack_size(stackable_item_2, 5)
     assert(inventory.add_item(stackable_item))
     assert(inventory_2.add_item(stackable_item_2))
     assert(inventory_2.transfer_autosplitmerge(stackable_item_2, inventory))
-    assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 10)
-    assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 2)
+    assert(InventoryStacked.get_item_stack_size(stackable_item) == 10)
+    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
     assert(inventory.get_item_count() == 1)
     assert(inventory.occupied_space == 10)
     assert(inventory_2.get_item_count() == 1)

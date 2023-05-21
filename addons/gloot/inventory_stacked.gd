@@ -163,19 +163,19 @@ func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     return ItemStackManager.join_stacks(self, item_dst, item_src)
 
 
-func get_item_stack_size(item: InventoryItem) -> int:
+static func get_item_stack_size(item: InventoryItem) -> int:
     return ItemStackManager.get_item_stack_size(item)
 
 
-func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void:
+static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void:
     return ItemStackManager.set_item_stack_size(item, new_stack_size)
 
 
-func get_item_max_stack_size(item: InventoryItem) -> int:
+static func get_item_max_stack_size(item: InventoryItem) -> int:
     return ItemStackManager.get_item_max_stack_size(item)
 
 
-func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void:
+static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void:
     return ItemStackManager.set_item_max_stack_size(item, new_stack_size)
 
 

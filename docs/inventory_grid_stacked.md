@@ -8,10 +8,10 @@ Grid based inventory that supports item stacks.
 
 ## Methods
 
-* `get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
-* `set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
-* `get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
-* `set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
+* `static get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
+* `static set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
+* `static get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
+* `static set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
 * `get_prototype_stack_size(prototype_id: String) -> int` - Returns the stack size of the given item prototype.
 * `get_prototype_max_stack_size(prototype_id: String) -> int` - Returns the maximum stack size of the given item prototype.
 * `has_place_for(item: InventoryItem) -> bool` - Checks if the inventory has enough free space for the given item.
