@@ -56,13 +56,36 @@ func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
     
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    assert(false, "Not implemented!")
-    return null
+    if !_has_grid_space_for(item):
+        return null
+
+    var new_item = ItemStackManager.split_stack(item, new_stack_size)
+    assert(add_item(new_item))
+    return new_item
 
 
-func join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool:
-    assert(false, "Not implemented!")
-    return false
+func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    # TODO: Eliminate duplacted code here and in inventory_stacked.gd
+    assert(has_item(item_dst), "The inventory does not contain the given item!")
+    assert(has_item(item_src), "The inventory does not contain the given item!")
+    # TODO: Document this case:
+    assert(ItemStackManager.items_mergable(
+            item_dst,
+            item_src,
+            [KEY_GRID_POSITION]
+        ), "The two stacks are not joinable!")
+
+    var dst_free_space = ItemStackManager.get_free_stack_space(item_dst)
+    if dst_free_space < ItemStackManager.get_item_stack_size(item_src):
+        return false
+
+    ItemStackManager.merge_stacks(item_src, item_dst)
+    if ItemStackManager.get_item_stack_size(item_src) <= 0:
+        if item_src.get_inventory():
+            item_src.get_inventory().remove_item(item_src)
+        item_src.free()
+
+    return true
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:

@@ -13,6 +13,10 @@ func init_suite():
     tests = [
         "test_has_place_for",
         "test_add_item_automerge",
+        "test_stack_split",
+        "test_stack_cant_split",
+        "test_stack_join",
+        "test_stack_cant_join",
     ]
 
 
@@ -42,12 +46,12 @@ func test_has_place_for() -> void:
     assert(inventory_3x3.has_place_for(item_2x2))
     
     # Inventory containing 2x2 item
-    item_2x2.set_property(ItemStackManager.KEY_MAX_STACK_SIZE, 1)
+    ItemStackManager.set_item_max_stack_size(item_2x2, 1)
     assert(inventory_3x3.add_item(item_2x2))
     assert(!inventory_3x3.has_place_for(item_2x2_2))
 
     # Inventory containing 2x2 item with extended max_stack_size
-    item_2x2.set_property(ItemStackManager.KEY_MAX_STACK_SIZE, 10)
+    ItemStackManager.set_item_max_stack_size(item_2x2, 10)
     assert(inventory_3x3.has_place_for(item_2x2_2))
 
 
@@ -73,3 +77,34 @@ func test_add_item_automerge() -> void:
     # No stack space but grid space available
     assert(inventory_3x3.add_item_automerge(item_1x1))
 
+
+func test_stack_split() -> void:
+    assert(inventory_3x3.add_item(item_1x1))
+    ItemStackManager.set_item_stack_size(item_1x1, 2)
+    var new_item = inventory_3x3.split(item_1x1, 1)
+    assert(new_item != null)
+    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3.has_item(new_item))
+
+
+func test_stack_cant_split() -> void:
+    assert(inventory_3x3.add_item(item_2x2))
+    ItemStackManager.set_item_stack_size(item_2x2, 2)
+    var new_item = inventory_3x3.split(item_2x2, 1)
+    assert(new_item == null)
+    assert(inventory_3x3.get_items().size() == 1)
+
+
+func test_stack_join() -> void:
+    var item_1x1_2 = item_1x1.duplicate()
+    assert(inventory_3x3.add_item(item_1x1))
+    assert(inventory_3x3.add_item(item_1x1_2))
+    assert(inventory_3x3.join(item_1x1, item_1x1_2))
+
+
+func test_stack_cant_join() -> void:
+    ItemStackManager.set_item_max_stack_size(item_1x1, 1)
+    var item_1x1_2 = item_1x1.duplicate()
+    assert(inventory_3x3.add_item(item_1x1))
+    assert(inventory_3x3.add_item(item_1x1_2))
+    assert(!inventory_3x3.join(item_1x1, item_1x1_2))

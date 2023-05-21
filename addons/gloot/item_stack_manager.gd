@@ -72,6 +72,10 @@ static func set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
     item.set_property(KEY_STACK_SIZE, stack_size)
 
 
+static func set_item_max_stack_size(item: InventoryItem, max_stack_size: int) -> void:
+    item.set_property(KEY_MAX_STACK_SIZE, max_stack_size)
+
+
 static func get_prototype_stack_size(protoset: ItemProtoset, prototype_id: String) -> int:
     return protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0)
 
