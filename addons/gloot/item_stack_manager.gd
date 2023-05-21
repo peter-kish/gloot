@@ -86,6 +86,28 @@ static func get_prototype_max_stack_size(protoset: ItemProtoset, prototype_id: S
     return protoset.get_item_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
 
 
+static func add_item_automerge(
+    inventory: Inventory,
+    item: InventoryItem,
+    ignore_properies: Array[String] = []
+) -> void:
+    var target_items = get_mergable_items(inventory, item, ignore_properies)
+
+    # TODO: Check if this sort is necessary
+    var compare_stack_size = func (a: InventoryItem, b: InventoryItem) -> bool:
+        return get_item_stack_size(a) < get_item_stack_size(b)
+    target_items.sort_custom(compare_stack_size)
+
+    for target_item in target_items:
+        if merge_stacks(item, target_item) == MergeResult.SUCCESS:
+            if item.get_inventory():
+                item.get_inventory().remove_item(item)
+            item.free()
+            return
+
+    inventory.add_item(item)
+
+
 static func merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> int:
     var src_size: int = get_item_stack_size(item_src)
     assert(src_size > 0, "Item stack size must be greater than 0!")

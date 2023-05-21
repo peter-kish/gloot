@@ -128,21 +128,11 @@ func add_item(item: InventoryItem) -> bool:
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    # TODO: Eliminate duplicted code here and in inventory_grid_stacked.gd
     if !has_place_for(item):
         return false
 
-    var target_items = ItemStackManager.get_mergable_items(self, item)
-    target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
-    for target_item in target_items:
-        if ItemStackManager.merge_stacks(item, target_item) == ItemStackManager.MergeResult.SUCCESS:
-            _calculate_occupied_space()
-            if item.get_inventory():
-                item.get_inventory().remove_item(item)
-            item.free()
-            return true
-
-    super.add_item(item)
+    ItemStackManager.add_item_automerge(self, item)
+    _calculate_occupied_space()
     return true
 
 

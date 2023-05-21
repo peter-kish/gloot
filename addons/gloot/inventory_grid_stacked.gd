@@ -32,25 +32,11 @@ func _get_stack_space_for(item: InventoryItem) -> int:
     
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    # TODO: Eliminate duplicted code here and in inventory_stacked.gd
     if !has_place_for(item):
         return false
 
-    var target_items = ItemStackManager.get_mergable_items(self, item)
-    target_items.sort_custom(Callable(self, "_compare_items_by_stack_size"))
-    for target_item in target_items:
-        if ItemStackManager.merge_stacks(item, target_item) == ItemStackManager.MergeResult.SUCCESS:
-            if item.get_inventory():
-                item.get_inventory().remove_item(item)
-            item.free()
-            return true
-
-    super.add_item(item)
+    ItemStackManager.add_item_automerge(self, item, [KEY_GRID_POSITION])
     return true
-
-
-func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
-    return ItemStackManager.get_item_stack_size(a) < ItemStackManager.get_item_stack_size(b)
     
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
