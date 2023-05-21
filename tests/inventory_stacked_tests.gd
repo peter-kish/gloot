@@ -109,7 +109,7 @@ func test_contents_changed_signal() -> void:
 func test_stack_split_join() -> void:
     assert(inventory.add_item(stackable_item))
     assert(inventory.split(stackable_item, 5) != null)
-    assert(inventory.get_items().size() == 2)
+    assert(inventory.get_item_count() == 2)
     var item1 = inventory.get_items()[0]
     var item2 = inventory.get_items()[1]
     assert(item1.get_property(ItemStackManager.KEY_STACK_SIZE) == 5)
@@ -117,17 +117,17 @@ func test_stack_split_join() -> void:
     var joined = inventory.join(item1, item2)
     assert(joined)
     assert(item1.get_property(ItemStackManager.KEY_STACK_SIZE) == 10)
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
 
 
 func test_automerge() -> void:
     stackable_item.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
     stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
     assert(inventory.add_item_automerge(stackable_item))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(is_instance_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     
     
 func test_automerge_custom_dst_properties() -> void:
@@ -135,10 +135,10 @@ func test_automerge_custom_dst_properties() -> void:
     stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
     stackable_item_2.set_property("custom_property", "custom_value")
     assert(inventory.add_item_automerge(stackable_item))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
-    assert(inventory.get_items().size() == 2)
+    assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
@@ -147,10 +147,10 @@ func test_automerge_custom_src_properties() -> void:
     stackable_item.set_property("custom_property", "custom_value")
     stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
     assert(inventory.add_item_automerge(stackable_item))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
-    assert(inventory.get_items().size() == 2)
+    assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
@@ -168,10 +168,10 @@ func test_automerge_max_stack_size() -> void:
     stackable_item.set_property(ItemStackManager.KEY_MAX_STACK_SIZE, 3)
     stackable_item_2.set_property(ItemStackManager.KEY_STACK_SIZE, 2)
     assert(inventory.add_item_automerge(stackable_item))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(is_instance_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
-    assert(inventory.get_items().size() == 2)
+    assert(inventory.get_item_count() == 2)
     assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 3)
     assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 1)
 
@@ -193,9 +193,9 @@ func test_transfer_autosplit() -> void:
     assert(inventory_2.transfer_autosplit(stackable_item_2, inventory))
     assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 7)
     assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 2)
-    assert(inventory.get_items().size() == 2)
+    assert(inventory.get_item_count() == 2)
     assert(inventory.occupied_space == 10)
-    assert(inventory_2.get_items().size() == 1)
+    assert(inventory_2.get_item_count() == 1)
     assert(inventory_2.occupied_space == 2)
 
 
@@ -207,9 +207,9 @@ func test_transfer_autosplitmerge() -> void:
     assert(inventory_2.transfer_autosplitmerge(stackable_item_2, inventory))
     assert(stackable_item.get_property(ItemStackManager.KEY_STACK_SIZE) == 10)
     assert(stackable_item_2.get_property(ItemStackManager.KEY_STACK_SIZE) == 2)
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(inventory.occupied_space == 10)
-    assert(inventory_2.get_items().size() == 1)
+    assert(inventory_2.get_item_count() == 1)
 
 
 func test_serialize() -> void:
@@ -222,7 +222,7 @@ func test_serialize() -> void:
     assert(inventory.capacity == 0)
     assert(inventory.occupied_space == 0)
     assert(inventory.deserialize(inventory_data))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(inventory.capacity == capacity)
     assert(inventory.occupied_space == occupied_space)
     
@@ -244,7 +244,7 @@ func test_serialize_json() -> void:
     assert(inventory.capacity == 0)
     assert(inventory.occupied_space == 0)
     assert(inventory.deserialize(inventory_data))
-    assert(inventory.get_items().size() == 1)
+    assert(inventory.get_item_count() == 1)
     assert(inventory.capacity == capacity)
     assert(inventory.occupied_space == occupied_space)
 

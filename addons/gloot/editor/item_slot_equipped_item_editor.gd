@@ -53,7 +53,7 @@ func _populate_option_button() -> void:
         return
 
     var selected_item_index = 0
-    for inventory_item_index in range(item_slot.inventory.get_items().size()):
+    for inventory_item_index in range(item_slot.inventory.get_item_count()):
         var item = item_slot.inventory.get_items()[inventory_item_index]
         _option_button.add_icon_item(item.get_texture(), item.get_title())
         var current_item_index = _option_button.get_item_count() - 1

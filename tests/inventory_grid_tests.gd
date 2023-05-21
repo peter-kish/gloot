@@ -84,7 +84,7 @@ func test_change_size() -> void:
 func test_create_and_add_item_at() -> void:
     var new_item = inventory_3x3.create_and_add_item_at("item_1x1", Vector2i(1, 1))
     assert(new_item)
-    assert(inventory_3x3.get_items().size() == 1)
+    assert(inventory_3x3.get_item_count() == 1)
     assert(inventory_3x3.has_item(new_item))
     assert(inventory_3x3.has_item_by_id("item_1x1"))
     assert(inventory_3x3.get_item_position(new_item) == Vector2i(1, 1))
@@ -120,8 +120,8 @@ func test_transfer():
 
     # Enough free space
     assert(inventory_3x3_2.transfer(item_2x2, inventory_3x3))
-    assert(inventory_3x3_2.get_items().size() == 0)
-    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3_2.get_item_count() == 0)
+    assert(inventory_3x3.get_item_count() == 2)
 
     # Not enough free space
     assert(!inventory_3x3_2.transfer(item_2x2_2, inventory_3x3))
@@ -143,7 +143,7 @@ func test_serialize():
     assert(inventory_3x3.get_items().is_empty())
     assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
     assert(inventory_3x3.deserialize(inventory_data))
-    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.size.x == 3)
     assert(inventory_3x3.size.y == 3)
     
@@ -164,6 +164,6 @@ func test_serialize_json():
     assert(inventory_3x3.size == InventoryGrid.DEFAULT_SIZE)
 
     assert(inventory_3x3.deserialize(inventory_data))
-    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.size.x == 3)
     assert(inventory_3x3.size.y == 3)

@@ -83,7 +83,7 @@ func create_item(protoset: ItemProtoset, prototype_id: String) -> InventoryItem:
 func free_inventory(inventory: Inventory) -> void:
     if inventory == null || !is_instance_valid(inventory):
         return
-    while inventory.get_items().size() > 0:
+    while inventory.get_item_count() > 0:
         var item = inventory.get_items()[0]
         assert(inventory.remove_item(item))
         item.free()

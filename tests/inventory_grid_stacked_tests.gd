@@ -63,11 +63,11 @@ func test_has_place_for() -> void:
 func test_add_item_automerge() -> void:
     # Empty inventory
     assert(inventory_3x3.add_item_automerge(item_2x2))
-    assert(inventory_3x3.get_items().size() == 1)
+    assert(inventory_3x3.get_item_count() == 1)
     
     # Inventory containing 2x2 item
     assert(inventory_3x3.add_item_automerge(item_2x2_2))
-    assert(inventory_3x3.get_items().size() == 1)
+    assert(inventory_3x3.get_item_count() == 1)
     assert(!is_instance_valid(item_2x2_2))
 
     item_2x2_2 = InventoryItem.new()
@@ -88,7 +88,7 @@ func test_stack_split() -> void:
     ItemStackManager.set_item_stack_size(item_1x1, 2)
     var new_item = inventory_3x3.split(item_1x1, 1)
     assert(new_item != null)
-    assert(inventory_3x3.get_items().size() == 2)
+    assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.has_item(new_item))
 
 
@@ -97,7 +97,7 @@ func test_stack_cant_split() -> void:
     ItemStackManager.set_item_stack_size(item_2x2, 2)
     var new_item = inventory_3x3.split(item_2x2, 1)
     assert(new_item == null)
-    assert(inventory_3x3.get_items().size() == 1)
+    assert(inventory_3x3.get_item_count() == 1)
 
 
 func test_stack_join() -> void:
