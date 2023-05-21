@@ -98,7 +98,7 @@ func _inspect_prototype_id(prototype_id: String) -> void:
     var prototype: Dictionary = protoset.get_prototype(prototype_id).duplicate()
 
     property_editor.dictionary = prototype
-    property_editor.immutable_keys = [ItemProtoset.KEY_ID]
+    property_editor.immutable_keys = [ItemProtoset.KEY_ID] as Array[String]
     property_editor.remove_button_map = {}
 
     for property_name in prototype.keys():
