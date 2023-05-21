@@ -160,7 +160,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 
 
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return ItemStackManager.join_stacks(self, item_src, item_dst)
+    return ItemStackManager.join_stacks(self, item_dst, item_src)
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:

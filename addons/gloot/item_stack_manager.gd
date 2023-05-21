@@ -99,7 +99,7 @@ static func add_item_automerge(
     target_items.sort_custom(compare_stack_size)
 
     for target_item in target_items:
-        if merge_stacks(item, target_item) == MergeResult.SUCCESS:
+        if merge_stacks(target_item, item) == MergeResult.SUCCESS:
             if item.get_inventory():
                 item.get_inventory().remove_item(item)
             item.free()
@@ -108,7 +108,7 @@ static func add_item_automerge(
     inventory.add_item(item)
 
 
-static func merge_stacks(item_src: InventoryItem, item_dst: InventoryItem) -> int:
+static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
     var src_size: int = get_item_stack_size(item_src)
     assert(src_size > 0, "Item stack size must be greater than 0!")
 
@@ -131,7 +131,10 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
 
     var stack_size = get_item_stack_size(item)
-    assert(new_stack_size < stack_size, "New stack size must be smaller than the original stack size!")
+    assert(
+        new_stack_size < stack_size,
+        "New stack size must be smaller than the original stack size!"
+    )
 
     var new_item = item.duplicate()
     set_item_stack_size(new_item, new_stack_size)
@@ -141,8 +144,8 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
 
 static func join_stacks(
     inventory: Inventory,
-    item_src: InventoryItem,
     item_dst: InventoryItem,
+    item_src: InventoryItem,
     ignore_properies: Array[String] = []
 ) -> bool:
     assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
@@ -158,7 +161,7 @@ static func join_stacks(
     if dst_free_space < get_item_stack_size(item_src):
         return false
 
-    if merge_stacks(item_src, item_dst) == MergeResult.SUCCESS:
+    if merge_stacks(item_dst, item_src) == MergeResult.SUCCESS:
         if item_src.get_inventory():
             item_src.get_inventory().remove_item(item_src)
         item_src.free()

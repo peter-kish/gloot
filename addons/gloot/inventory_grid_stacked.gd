@@ -49,7 +49,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 
 
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return ItemStackManager.join_stacks(self, item_src, item_dst, [KEY_GRID_POSITION])
+    return ItemStackManager.join_stacks(self, item_dst, item_src, [KEY_GRID_POSITION])
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
