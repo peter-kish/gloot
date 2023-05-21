@@ -109,3 +109,31 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     set_item_stack_size(new_item, new_stack_size)
     set_item_stack_size(item, stack_size - new_stack_size)
     return new_item
+
+
+static func join_stacks(
+    inventory: Inventory,
+    item_src: InventoryItem,
+    item_dst: InventoryItem,
+    ignore_properies: Array[String] = []
+) -> bool:
+    assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
+    assert(inventory.has_item(item_src), "The inventory does not contain the given item!")
+    # TODO: Document this case:
+    assert(items_mergable(
+            item_dst,
+            item_src,
+            ignore_properies
+        ), "The two stacks are not joinable!")
+
+    var dst_free_space = get_free_stack_space(item_dst)
+    if dst_free_space < get_item_stack_size(item_src):
+        return false
+
+    merge_stacks(item_src, item_dst)
+    if get_item_stack_size(item_src) <= 0:
+        if item_src.get_inventory():
+            item_src.get_inventory().remove_item(item_src)
+        item_src.free()
+
+    return true

@@ -128,7 +128,7 @@ func add_item(item: InventoryItem) -> bool:
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    # TODO: Eliminate duplacted code here and in inventory_grid_stacked.gd
+    # TODO: Eliminate duplicted code here and in inventory_grid_stacked.gd
     if !has_place_for(item):
         return false
 
@@ -172,25 +172,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 
 
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    assert(has_item(item_dst), "The inventory does not contain the given item!")
-    assert(has_item(item_src), "The inventory does not contain the given item!")
-    # TODO: Document this case:
-    assert(ItemStackManager.items_mergable(item_dst, item_src), "The two stacks are not joinable!")
-
-    var dst_free_space = ItemStackManager.get_free_stack_space(item_dst)
-    if dst_free_space < ItemStackManager.get_item_stack_size(item_src):
-        return false
-
-    ItemStackManager.merge_stacks(item_src, item_dst)
-    if ItemStackManager.get_item_stack_size(item_src) <= 0:
-        if item_src.get_inventory():
-            item_src.get_inventory().remove_item(item_src)
-        item_src.free()
-
-    emit_signal("occupied_space_changed")
-    _calculate_occupied_space()
-
-    return true
+    return ItemStackManager.join_stacks(self, item_src, item_dst)
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
