@@ -4,6 +4,8 @@ extends Control
 
 signal inventory_item_activated(item)
 
+const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
+
 @export var inventory_path: NodePath :
     get:
         return inventory_path
@@ -127,8 +129,8 @@ func _get_item_title(item: InventoryItem) -> String:
         return ""
 
     var title = item.get_title()
-    var stack_size: int = item.get_property(InventoryStacked.KEY_STACK_SIZE, \
-            InventoryStacked.DEFAULT_STACK_SIZE)
+    var stack_size: int = item.get_property(ItemStackManager.KEY_STACK_SIZE, \
+            ItemStackManager.DEFAULT_STACK_SIZE)
     if stack_size > 1:
         title = "%s (x%d)" % [title, stack_size]
 
