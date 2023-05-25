@@ -8,13 +8,10 @@ signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 
-@export var item_protoset: Resource:
+@export var item_protoset: ItemProtoset:
     get:
         return item_protoset
     set(new_item_protoset):
-        assert((new_item_protoset is ItemProtoset) || (new_item_protoset == null), \
-        "item_protoset must be an ItemProtoset resource!")
-
         item_protoset = new_item_protoset
         emit_signal("protoset_changed")
         update_configuration_warnings()
