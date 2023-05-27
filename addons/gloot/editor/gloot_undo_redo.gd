@@ -54,11 +54,23 @@ func remove_inventory_items(inventory: Inventory, items: Array[InventoryItem]) -
 
     undo_redo_manager.create_action("Remove Inventory Items")
     undo_redo_manager.add_do_method(self, "_remove_items", inventory, item_data)
-    undo_redo_manager.add_undo_method(self, "_add_items", inventory, item_data, item_indexes, node_indexes)
+    undo_redo_manager.add_undo_method(
+        self,
+        "_add_items",
+        inventory,
+        item_data,
+        item_indexes,
+        node_indexes
+    )
     undo_redo_manager.commit_action()
 
 
-func _add_item(inventory: Inventory, item_data: Dictionary, item_index: int = -1, node_index: int = -1) -> void:
+func _add_item(
+    inventory: Inventory,
+    item_data: Dictionary,
+    item_index: int = -1,
+    node_index: int = -1
+) -> void:
     var item = InventoryItem.new()
     item.deserialize(item_data)
     inventory.add_item(item)
@@ -98,7 +110,13 @@ func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> voi
     if inventory:
         var old_inventory_data: Dictionary = inventory.serialize()
         var item_data: Dictionary = item.serialize()
-        undo_redo_manager.add_do_method(self, "_set_properties", inventory, item_data, new_properties)
+        undo_redo_manager.add_do_method(
+            self,
+            "_set_properties",
+            inventory,
+            item_data,
+            new_properties
+        )
         undo_redo_manager.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
     else:
         undo_redo_manager.add_undo_property(item, "properties", item.properties)
@@ -119,7 +137,13 @@ func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> voi
     if inventory:
         var old_inventory_data: Dictionary = inventory.serialize()
         var item_data: Dictionary = item.serialize()
-        undo_redo_manager.add_do_method(self, "_set_prototype_id", inventory, item_data, new_prototype_id)
+        undo_redo_manager.add_do_method(
+            self,
+            "_set_prototype_id",
+            inventory,
+            item_data,
+            new_prototype_id
+        )
         undo_redo_manager.add_undo_method(self, "_set_inventory", inventory, old_inventory_data)
     else:
         undo_redo_manager.add_undo_property(item, "prototype_id", item.prototype_id)
@@ -127,7 +151,11 @@ func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> voi
     undo_redo_manager.commit_action()
 
 
-func _set_prototype_id(inventory: Inventory, item_data: Dictionary, new_prototype_id: String) -> void:
+func _set_prototype_id(
+    inventory: Inventory,
+    item_data: Dictionary,
+    new_prototype_id: String
+) -> void:
     var item_data_hash = item_data.hash()
     for item in inventory.get_items():
         if item.serialize().hash() == item_data_hash:
@@ -169,16 +197,32 @@ func join_inventory_items(
     var old_stack_size := ItemStackManager.get_item_stack_size(item_dst)
     var old_src_position := inventory.get_item_position(item_src)
     undo_redo_manager.create_action("Join Inventory Items")
-    undo_redo_manager.add_undo_method(self, "_split_item_stack", inventory, item_dst, old_stack_size, old_src_position)
+    undo_redo_manager.add_undo_method(
+        self,
+        "_split_item_stack",
+        inventory,
+        item_dst,
+        old_stack_size,
+        old_src_position
+    )
     undo_redo_manager.add_do_method(self, "_join_item_stacks", inventory, item_dst, item_src)
     undo_redo_manager.commit_action()
 
 
-func _join_item_stacks(inventory: InventoryGridStacked, item_dst: InventoryItem, item_src: InventoryItem) -> void:
+func _join_item_stacks(
+    inventory: InventoryGridStacked,
+    item_dst: InventoryItem,
+    item_src: InventoryItem
+) -> void:
     inventory.join(item_dst, item_src)
 
 
-func _split_item_stack(inventory: InventoryGridStacked, item: InventoryItem, stack_size: int, position: Vector2i) -> void:
+func _split_item_stack(
+    inventory: InventoryGridStacked,
+    item: InventoryItem,
+    stack_size: int,
+    position: Vector2i
+) -> void:
     var new_item = inventory.split(item, stack_size)
     assert(new_item != null, "Item split failed!")
     inventory.move_item_to(new_item, position)
@@ -229,8 +273,20 @@ func set_prototype_properties(protoset: ItemProtoset,
     var old_properties = protoset.get_prototype(prototype_id).duplicate()
 
     undo_redo_manager.create_action("Set prototype properties")
-    undo_redo_manager.add_undo_method(self, "_set_prototype_properties", protoset, prototype_id, old_properties)
-    undo_redo_manager.add_do_method(self, "_set_prototype_properties", protoset, prototype_id, new_properties)
+    undo_redo_manager.add_undo_method(
+        self,
+        "_set_prototype_properties",
+        protoset,
+        prototype_id,
+        old_properties
+    )
+    undo_redo_manager.add_do_method(
+        self,
+        "_set_prototype_properties",
+        protoset,
+        prototype_id,
+        new_properties
+    )
     undo_redo_manager.commit_action()
 
 
