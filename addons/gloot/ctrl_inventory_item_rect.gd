@@ -4,6 +4,8 @@ extends Control
 signal grabbed(offset)
 signal activated
 
+const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
+
 var item: InventoryItem :
     get:
         return item
@@ -36,18 +38,18 @@ var selection_bg_color: Color = Color.GRAY :
 
 
 func _refresh() -> void:
-    _calculate_size()
-    _calculate_pos()
+    _refresh_size()
+    _refresh_pos()
 
 
-func _calculate_size() -> void:
+func _refresh_size() -> void:
     if ctrl_inventory.stretch_item_sprites:
         size = ctrl_inventory._get_streched_item_sprite_size(item)
     else:
         size = texture.get_size()
 
 
-func _calculate_pos() -> void:
+func _refresh_pos() -> void:
     var item_pos: Vector2 = _get_item_position()
 
     position = ctrl_inventory._get_field_position(item_pos)
@@ -80,15 +82,43 @@ func _ready() -> void:
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, size)
+    _draw_selection(rect)
+    _draw_texture(rect)
+    _draw_stack_size(rect)
 
+
+func _draw_selection(rect: Rect2):
     if selected:
         draw_rect(rect, selection_bg_color, true)
 
+
+func _draw_texture(rect: Rect2):
     if texture:
         var src_rect: Rect2 = Rect2(0, 0, texture.get_width(), texture.get_height())
         draw_texture_rect_region(texture, rect, src_rect)
     else:
         draw_rect(rect, Color.WHITE, false)
+
+
+func _draw_stack_size(rect: Rect2):
+    if item == null:
+        return
+
+    var stack_size: int = ItemStackManager.get_item_stack_size(item)
+    if stack_size <= 1:
+        return
+
+    var default_font := ThemeDB.fallback_font
+    var default_font_size := ThemeDB.fallback_font_size
+    var text = str(stack_size)
+    draw_string(
+        default_font,
+        rect.position + Vector2(0, rect.size.y),
+        text,
+        HORIZONTAL_ALIGNMENT_RIGHT,
+        rect.size.x, 
+        default_font_size
+    )
 
 
 func _gui_input(event: InputEvent) -> void:
