@@ -13,6 +13,9 @@ static func get_mergable_items(
     item: InventoryItem,
     ignore_properies: Array[String] = []
 ) -> Array[InventoryItem]:
+    assert(inventory != null, "inventory is null!")
+    assert(item != null, "item is null!")
+
     var result: Array[InventoryItem] = []
 
     for i in inventory.get_items():
@@ -31,6 +34,8 @@ static func items_mergable(item_1:
     # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
     # custom properties that the other one doesn't have (except for "stack_size", "max_stack_size"
     # or any of the ignore_properties).
+    assert(item_1 != null, "item_1 is null!")
+    assert(item_2 != null, "item_2 is null!")
 
     if item_1.prototype_id != item_2.prototype_id:
         return false
@@ -55,34 +60,42 @@ static func items_mergable(item_1:
 
 
 static func get_free_stack_space(item: InventoryItem) -> int:
+    assert(item != null, "item is null!")
     return get_item_max_stack_size(item) - get_item_stack_size(item)
 
 
 static func has_custom_property(item: InventoryItem, property: String, value) -> bool:
+    assert(item != null, "item is null!")
     return item.properties.has(property) && item.properties[property] == value;
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
+    assert(item != null, "item is null!")
     return item.get_property(KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
 
 
 static func get_item_max_stack_size(item: InventoryItem) -> int:
+    assert(item != null, "item is null!")
     return item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
 
 
 static func set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
+    assert(item != null, "item is null!")
     item.set_property(KEY_STACK_SIZE, stack_size)
 
 
 static func set_item_max_stack_size(item: InventoryItem, max_stack_size: int) -> void:
+    assert(item != null, "item is null!")
     item.set_property(KEY_MAX_STACK_SIZE, max_stack_size)
 
 
 static func get_prototype_stack_size(protoset: ItemProtoset, prototype_id: String) -> int:
+    assert(protoset != null, "protoset is null!")
     return protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0)
 
 
 static func get_prototype_max_stack_size(protoset: ItemProtoset, prototype_id: String) -> int:
+    assert(protoset != null, "protoset is null!")
     return protoset.get_item_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
 
 
@@ -91,6 +104,9 @@ static func add_item_automerge(
     item: InventoryItem,
     ignore_properies: Array[String] = []
 ) -> void:
+    assert(item != null, "item is null!")
+    assert(inventory != null, "inventory is null!")
+
     var target_items = get_mergable_items(inventory, item, ignore_properies)
 
     # TODO: Check if this sort is necessary
@@ -109,6 +125,9 @@ static func add_item_automerge(
 
 
 static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
+    assert(item_dst != null, "item_dst is null!")
+    assert(item_src != null, "item_src is null!")
+
     var src_size: int = get_item_stack_size(item_src)
     assert(src_size > 0, "Item stack size must be greater than 0!")
 
@@ -128,6 +147,7 @@ static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> in
 
 
 static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
+    assert(item != null, "item is null!")
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
 
     var stack_size = get_item_stack_size(item)
@@ -148,6 +168,9 @@ static func join_stacks(
     item_src: InventoryItem,
     ignore_properies: Array[String] = []
 ) -> bool:
+    assert(inventory != null, "inventory is null!")
+    assert(item_dst != null, "item_dst is null!")
+    assert(item_src != null, "item_src is null!")
     assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
     assert(inventory.has_item(item_src), "The inventory does not contain the given item!")
     # TODO: Document this case:
