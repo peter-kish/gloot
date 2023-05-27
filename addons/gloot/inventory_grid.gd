@@ -125,10 +125,6 @@ func _bounds_broken() -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if item.properties.has(KEY_GRID_POSITION):
-        var item_position = item.properties[KEY_GRID_POSITION]
-        return add_item_at(item, item_position)
-
     var free_place = find_free_place(item)
     if !Verify.vector_positive(free_place):
         return false

@@ -2,6 +2,8 @@ extends Object
 
 var undo_redo_manager: EditorUndoRedoManager
 
+const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
+
 func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
     assert(undo_redo_manager)
 
@@ -144,6 +146,11 @@ func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) ->
 
 
 func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2i) -> void:
+    var item_dst := inventory.get_item_at(position)
+    if item_dst && (inventory is InventoryGridStacked):
+        join_inventory_items(inventory, item_dst, item)
+        return
+        
     # TODO: Cover the case where items merge
     var old_item_position = inventory.get_item_position(item)
     if old_item_position == position:
@@ -152,6 +159,29 @@ func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position
     undo_redo_manager.add_undo_method(inventory, "move_item_to", item, old_item_position)
     undo_redo_manager.add_do_method(inventory, "move_item_to", item, position)
     undo_redo_manager.commit_action()
+
+
+func join_inventory_items(
+    inventory: InventoryGridStacked,
+    item_dst: InventoryItem,
+    item_src: InventoryItem
+) -> void:
+    var old_stack_size := ItemStackManager.get_item_stack_size(item_dst)
+    var old_src_position := inventory.get_item_position(item_src)
+    undo_redo_manager.create_action("Join Inventory Items")
+    undo_redo_manager.add_undo_method(self, "_split_item_stack", inventory, item_dst, old_stack_size, old_src_position)
+    undo_redo_manager.add_do_method(self, "_join_item_stacks", inventory, item_dst, item_src)
+    undo_redo_manager.commit_action()
+
+
+func _join_item_stacks(inventory: InventoryGridStacked, item_dst: InventoryItem, item_src: InventoryItem) -> void:
+    inventory.join(item_dst, item_src)
+
+
+func _split_item_stack(inventory: InventoryGridStacked, item: InventoryItem, stack_size: int, position: Vector2i) -> void:
+    var new_item = inventory.split(item, stack_size)
+    assert(new_item != null, "Item split failed!")
+    inventory.move_item_to(new_item, position)
 
 
 func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> void:

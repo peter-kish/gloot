@@ -373,7 +373,7 @@ func _input(event: InputEvent) -> void:
     _handle_item_release(_grabbed_ctrl_inventory_item.item)
 
 
-func _handle_item_release(item: InventoryItem):
+func _handle_item_release(item: InventoryItem) -> void:
     _grabbed_ctrl_inventory_item.show()
 
     if _gloot:
@@ -389,18 +389,18 @@ func _handle_item_release(item: InventoryItem):
     # stack.
     if is_instance_valid(item) and inventory.has_item(item):
         _select(item)
-        
+
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite.get_ref():
         _drag_sprite.get_ref().hide()
 
 
-func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2):
+func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
     var field_coords = get_field_coords(global_grabbed_item_pos)
     _move_item(inventory.get_item_index(item), field_coords)
 
 
-func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2):
+func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
     emit_signal("item_dropped", item, global_grabbed_item_pos)
     if !Engine.is_editor_hint() && _gloot:
         _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
