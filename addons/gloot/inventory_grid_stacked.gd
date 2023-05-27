@@ -96,3 +96,10 @@ func transfer_autosplitmerge(item: InventoryItem, destination: InventoryGridStac
 
     return false
 
+
+func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
+    var item_dst := get_item_at(position)
+    if item_dst == null || item_dst == item:
+        return super.move_item_to(item, position)
+    return ItemStackManager.join_stacks(self, item_dst, item, [KEY_GRID_POSITION])
+

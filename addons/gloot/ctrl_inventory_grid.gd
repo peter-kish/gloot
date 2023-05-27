@@ -370,25 +370,40 @@ func _input(event: InputEvent) -> void:
     if mb_event.is_pressed() || mb_event.button_index != MOUSE_BUTTON_LEFT:
         return
 
-    var item: InventoryItem = _grabbed_ctrl_inventory_item.item
+    _handle_item_release(_grabbed_ctrl_inventory_item.item)
+
+
+func _handle_item_release(item: InventoryItem):
     _grabbed_ctrl_inventory_item.show()
 
     if _gloot:
         _gloot._grabbed_inventory_item = null
 
-    var global_grabbed_item_pos = _get_grabbed_item_global_pos()
+    var global_grabbed_item_pos := _get_grabbed_item_global_pos()
     if _is_hovering(global_grabbed_item_pos):
-        var field_coords = get_field_coords(global_grabbed_item_pos)
-        _move_item(inventory.get_item_index(item), field_coords)
+        _handle_item_move(item, global_grabbed_item_pos)
     else:
-        emit_signal("item_dropped", item, global_grabbed_item_pos)
-        if !Engine.is_editor_hint() && _gloot:
-            _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
-    if inventory.has_item(item):
+        _handle_item_drop(item, global_grabbed_item_pos)
+
+    # The item might have been freed in case the item stack has been moved and merged with another
+    # stack.
+    if is_instance_valid(item) and inventory.has_item(item):
         _select(item)
+        
     _grabbed_ctrl_inventory_item = null
     if _drag_sprite.get_ref():
         _drag_sprite.get_ref().hide()
+
+
+func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2):
+    var field_coords = get_field_coords(global_grabbed_item_pos)
+    _move_item(inventory.get_item_index(item), field_coords)
+
+
+func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2):
+    emit_signal("item_dropped", item, global_grabbed_item_pos)
+    if !Engine.is_editor_hint() && _gloot:
+        _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
 
 
 func _get_grabbed_item_global_pos() -> Vector2:

@@ -173,12 +173,8 @@ static func join_stacks(
     assert(item_src != null, "item_src is null!")
     assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
     assert(inventory.has_item(item_src), "The inventory does not contain the given item!")
-    # TODO: Document this case:
-    assert(items_mergable(
-            item_dst,
-            item_src,
-            ignore_properies
-        ), "The two stacks are not joinable!")
+    if not items_mergable(item_dst, item_src, ignore_properies):
+        return false
 
     var dst_free_space = get_free_stack_space(item_dst)
     if dst_free_space < get_item_stack_size(item_src):

@@ -12,6 +12,7 @@ func _enter_tree() -> void:
     add_custom_type("Inventory", "Node", preload("inventory.gd"), preload("images/icon_inventory.svg"))
     add_custom_type("InventoryStacked", "Node", preload("inventory_stacked.gd"), preload("images/icon_inventory_stacked.svg"))
     add_custom_type("InventoryGrid", "Node", preload("inventory_grid.gd"), preload("images/icon_inventory_grid.svg"))
+    add_custom_type("InventoryGridStacked", "Node", preload("inventory_grid_stacked.gd"), preload("images/icon_inventory_grid.svg"))
 
     add_custom_type("ItemSlot", "Node", preload("item_slot.gd"), preload("images/icon_item_slot.svg"))
 
@@ -44,6 +45,7 @@ func _exit_tree() -> void:
     remove_custom_type("Inventory")
     remove_custom_type("InventoryStacked")
     remove_custom_type("InventoryGrid")
+    remove_custom_type("InventoryGridStacked")
 
     remove_custom_type("ItemSlot")
 
