@@ -174,12 +174,6 @@ func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) ->
 
 
 func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, position: Vector2i) -> void:
-    var item_dst := inventory.get_item_at(position)
-    if item_dst && (inventory is InventoryGridStacked):
-        join_inventory_items(inventory, item_dst, item)
-        return
-        
-    # TODO: Cover the case where items merge
     var old_item_position = inventory.get_item_position(item)
     if old_item_position == position:
         return
@@ -194,16 +188,14 @@ func join_inventory_items(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> void:
-    var old_stack_size := ItemStackManager.get_item_stack_size(item_dst)
-    var old_src_position := inventory.get_item_position(item_src)
     undo_redo_manager.create_action("Join Inventory Items")
     undo_redo_manager.add_undo_method(
         self,
         "_split_item_stack",
         inventory,
         item_dst,
-        old_stack_size,
-        old_src_position
+        ItemStackManager.get_item_stack_size(item_src),
+        inventory.get_item_position(item_src)
     )
     undo_redo_manager.add_do_method(self, "_join_item_stacks", inventory, item_dst, item_src)
     undo_redo_manager.commit_action()

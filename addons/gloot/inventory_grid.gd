@@ -158,6 +158,15 @@ func get_item_at(position: Vector2i) -> InventoryItem:
     return null
 
 
+func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+    for item in get_items():
+        var item_rect := get_item_rect(item)
+        if item_rect.intersects(rect):
+            result.append(item)
+    return result
+
+
 func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     var item_size := get_item_size(item)
     var rect := Rect2i(position, item_size)

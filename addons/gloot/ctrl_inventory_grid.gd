@@ -397,7 +397,10 @@ func _handle_item_release(item: InventoryItem) -> void:
 
 func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
     var field_coords = get_field_coords(global_grabbed_item_pos)
-    _move_item(inventory.get_item_index(item), field_coords)
+    if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
+        _move_item(item, field_coords)
+    elif inventory is InventoryGridStacked:
+        _merge_item(item, field_coords)
 
 
 func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
@@ -453,12 +456,23 @@ func get_selected_inventory_items() -> Array[InventoryItem]:
 
 
 # TODO: Find a better way for undoing/redoing item movements
-func _move_item(item_index: int, position: Vector2i) -> void:
-    var item = inventory.get_items()[item_index]
+func _move_item(item: InventoryItem, position: Vector2i) -> void:
     if _gloot_undo_redo:
         _gloot_undo_redo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)
+
+        
+# TODO: Find a better way for undoing/redoing item merges
+func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
+    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
+    if item_dst == null:
+        return
+
+    if _gloot_undo_redo:
+        _gloot_undo_redo.join_inventory_items(inventory, item_dst, item_src)
+    else:
+        (inventory as InventoryGridStacked).join(item_dst, item_src)
 
 
 func _get_field_position(field_coords: Vector2i) -> Vector2:

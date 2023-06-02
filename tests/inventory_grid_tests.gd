@@ -16,6 +16,8 @@ func init_suite():
         "test_change_size",
         "test_create_and_add_item_at",
         "test_get_item_at",
+        "test_get_items_under",
+        "test_move_item_to",
         "test_sort",
         "test_transfer",
         "test_transfer_to",
@@ -98,6 +100,35 @@ func test_get_item_at() -> void:
     assert(inventory_3x3.move_item_to(item_2x2, Vector2i(0, 0)))
     assert(inventory_3x3.get_item_at(Vector2i(2, 2)) == null)
     assert(inventory_3x3.get_item_at(Vector2i(0, 0)) == item_2x2)
+
+
+func test_get_items_under() -> void:
+    assert(inventory_3x3.add_item(item_1x1))
+    assert(inventory_3x3.add_item(item_2x2))
+    var items = inventory_3x3.get_items_under(Rect2i(0, 0, 2, 2))
+    assert(items.size() == 2)
+    assert(item_1x1 in items)
+    assert(item_2x2 in items)
+
+
+func test_move_item_to() -> void:
+    assert(inventory_3x3.add_item(item_1x1))
+
+    # Move to the same location
+    assert(inventory_3x3.move_item_to(item_1x1, Vector2i.ZERO))
+    assert(inventory_3x3.get_item_count() == 1)
+    assert(inventory_3x3.get_item_position(item_1x1) == Vector2i.ZERO)
+    
+    # Move to a new location
+    assert(inventory_3x3.move_item_to(item_1x1, Vector2i.ONE * 2))
+    assert(inventory_3x3.get_item_count() == 1)
+    assert(inventory_3x3.get_item_position(item_1x1) == Vector2i.ONE * 2)
+
+    # Move to an occupied location
+    assert(inventory_3x3.add_item(item_2x2))
+    assert(!inventory_3x3.move_item_to(item_1x1, Vector2i.ZERO))
+    assert(inventory_3x3.get_item_count() == 2)
+    assert(inventory_3x3.get_item_position(item_1x1) == Vector2i.ONE * 2)
 
 
 func test_sort() -> void:

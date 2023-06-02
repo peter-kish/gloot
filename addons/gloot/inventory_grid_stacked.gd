@@ -97,9 +97,21 @@ func transfer_autosplitmerge(item: InventoryItem, destination: InventoryGridStac
     return false
 
 
-func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
-    var item_dst := get_item_at(position)
-    if item_dst == null || item_dst == item:
-        return super.move_item_to(item, position)
-    return ItemStackManager.join_stacks(self, item_dst, item, [KEY_GRID_POSITION])
+func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
+    var rect := Rect2i(position, get_item_size(item))
+    var mergable_items := _get_mergable_items_under(item, rect)
+    for mergable_item in mergable_items:
+        if ItemStackManager.stacks_joinable(self, item, mergable_item, [KEY_GRID_POSITION]):
+            return mergable_item
+    return null
+
+
+func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+
+    for item_dst in get_items_under(rect):
+        if ItemStackManager.items_mergable(item_dst, item, [KEY_GRID_POSITION]):
+            result.append(item_dst)
+
+    return result
 

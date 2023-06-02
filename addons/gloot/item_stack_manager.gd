@@ -168,21 +168,35 @@ static func join_stacks(
     item_src: InventoryItem,
     ignore_properies: Array[String] = []
 ) -> bool:
+    if (!stacks_joinable(inventory, item_dst, item_src, ignore_properies)):
+        return false
+
+    # TODO: Check if this can be an assertion
+    if merge_stacks(item_dst, item_src) == MergeResult.SUCCESS:
+        if item_src.get_inventory():
+            item_src.get_inventory().remove_item(item_src)
+        item_src.free()
+
+    return true
+
+
+static func stacks_joinable(
+    inventory: Inventory,
+    item_dst: InventoryItem,
+    item_src: InventoryItem,
+    ignore_properies: Array[String] = []
+) -> bool:
     assert(inventory != null, "inventory is null!")
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
     assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
     assert(inventory.has_item(item_src), "The inventory does not contain the given item!")
+
     if not items_mergable(item_dst, item_src, ignore_properies):
         return false
 
     var dst_free_space = get_free_stack_space(item_dst)
     if dst_free_space < get_item_stack_size(item_src):
         return false
-
-    if merge_stacks(item_dst, item_src) == MergeResult.SUCCESS:
-        if item_src.get_inventory():
-            item_src.get_inventory().remove_item(item_src)
-        item_src.free()
 
     return true
