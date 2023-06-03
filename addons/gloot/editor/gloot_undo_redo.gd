@@ -75,7 +75,12 @@ func _add_item(
 ) -> void:
     var item = InventoryItem.new()
     item.deserialize(item_data)
-    inventory.add_item(item)
+    
+    if inventory is InventoryGrid:
+        (inventory as InventoryGrid).add_item_at(item, inventory.get_item_position(item))
+    else:
+        inventory.add_item(item)
+
 
     if item_index >= 0 && item_index < inventory.get_item_count():
         inventory.move_item(inventory.get_item_index(item), item_index)
@@ -104,6 +109,8 @@ func _remove_items(inventory: Inventory, item_hashes: Array[int]) -> void:
 
 
 func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
+    assert(undo_redo_manager)
+
     undo_redo_manager.create_action("Set item properties")
     var inventory: Inventory = item.get_inventory()
     if inventory:
@@ -130,6 +137,8 @@ func _set_properties(inventory: Inventory, item_hash: int, properties: Dictionar
 
 
 func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
+    assert(undo_redo_manager)
+
     undo_redo_manager.create_action("Set prototype_id")
     var inventory: Inventory = item.get_inventory()
     if inventory:
@@ -164,6 +173,8 @@ func _set_inventory(inventory: Inventory, inventory_data: Dictionary) -> void:
 
 
 func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
+    assert(undo_redo_manager)
+
     undo_redo_manager.create_action("Set equipped_item")
     undo_redo_manager.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
     undo_redo_manager.add_do_property(item_slot, "equipped_item", new_equipped_item)
@@ -171,6 +182,8 @@ func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) ->
 
 
 func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, to: Vector2i) -> void:
+    assert(undo_redo_manager)
+
     var from = inventory.get_item_position(item)
     if from == to:
         return
@@ -191,6 +204,8 @@ func join_inventory_items(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> void:
+    assert(undo_redo_manager)
+
     var item_dst_pos := inventory.get_item_position(item_dst)
     var item_src_pos := inventory.get_item_position(item_src)
 
@@ -231,6 +246,8 @@ func _split_item_stack(
 
 
 func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> void:
+    assert(undo_redo_manager)
+
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo_manager.create_action("Rename Prototype")
@@ -240,6 +257,8 @@ func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> voi
 
 
 func add_prototype(protoset: ItemProtoset, id: String) -> void:
+    assert(undo_redo_manager)
+
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo_manager.create_action("Add Prototype")
@@ -249,6 +268,8 @@ func add_prototype(protoset: ItemProtoset, id: String) -> void:
 
 
 func remove_prototype(protoset: ItemProtoset, id: String) -> void:
+    assert(undo_redo_manager)
+
     var old_prototypes = _prototypes_deep_copy(protoset)
 
     undo_redo_manager.create_action("Remove Prototype")
@@ -271,6 +292,7 @@ func _set_prototypes(protoset: ItemProtoset, prototypes: Dictionary) -> void:
 func set_prototype_properties(protoset: ItemProtoset,
         prototype_id: String,
         new_properties: Dictionary) -> void:
+    assert(undo_redo_manager)
     assert(protoset.has_prototype(prototype_id))
     var old_properties = protoset.get_prototype(prototype_id).duplicate()
 
