@@ -120,7 +120,7 @@ func get_items() -> Array[InventoryItem]:
 
 
 func has_item(item: InventoryItem) -> bool:
-    return item.get_parent() == self
+    return item in _items
 
 
 func add_item(item: InventoryItem) -> bool:

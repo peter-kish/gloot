@@ -43,7 +43,6 @@ func _get_prototype_size(prototype_id: String) -> Vector2i:
 
 
 func get_item_position(item: InventoryItem) -> Vector2i:
-    assert(has_item(item), "Item not found in the inventory!")
     return item.get_property(KEY_GRID_POSITION, Vector2i.ZERO)
 
 
