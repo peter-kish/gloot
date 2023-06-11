@@ -97,6 +97,21 @@ func transfer_autosplitmerge(item: InventoryItem, destination: InventoryGridStac
     return false
 
 
+func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool:
+    if super.transfer_to(item, destination, position):
+        return true
+
+    var destination_stacked = (destination as InventoryGridStacked)
+    if destination_stacked == null:
+        return false
+        
+    var item_dst := destination_stacked._get_mergable_item_at(item, position)
+    if item_dst == null:
+        return false
+
+    return ItemStackManager.merge_stacks_autodelete(item_dst, item) == ItemStackManager.MergeResult.SUCCESS
+
+
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)

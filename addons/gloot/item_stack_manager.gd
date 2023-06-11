@@ -115,13 +115,19 @@ static func add_item_automerge(
     target_items.sort_custom(compare_stack_size)
 
     for target_item in target_items:
-        if merge_stacks(target_item, item) == MergeResult.SUCCESS:
-            if item.get_inventory():
-                item.get_inventory().remove_item(item)
-            item.free()
+        if merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
             return
 
     inventory.add_item(item)
+
+
+static func merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
+    var result := merge_stacks(item_dst, item_src)
+    if result == MergeResult.SUCCESS:
+        if item_src.get_inventory():
+            item_src.get_inventory().remove_item(item_src)
+        item_src.queue_free()
+    return result
 
 
 static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
@@ -172,11 +178,7 @@ static func join_stacks(
         return false
 
     # TODO: Check if this can be an assertion
-    if merge_stacks(item_dst, item_src) == MergeResult.SUCCESS:
-        if item_src.get_inventory():
-            item_src.get_inventory().remove_item(item_src)
-        item_src.free()
-
+    merge_stacks_autodelete(item_dst, item_src)
     return true
 
 
@@ -189,8 +191,6 @@ static func stacks_joinable(
     assert(inventory != null, "inventory is null!")
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
-    assert(inventory.has_item(item_dst), "The inventory does not contain the given item!")
-    assert(inventory.has_item(item_src), "The inventory does not contain the given item!")
 
     if not items_mergable(item_dst, item_src, ignore_properies):
         return false
