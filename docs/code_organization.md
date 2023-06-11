@@ -60,6 +60,7 @@ Contains example code (and scenes) that demonstrates how to use some common feat
 * [`inventory_stacked_transfer.gd`](../examples/inventory_stacked_transfer.gd) and [`inventory_stacked_transfer.tscn`](../examples/inventory_stacked_transfer.tscn) - Implements basic item transfer between two [`InventoryStacked`](./inventory_stacked.md) nodes.
 * [`inventory_grid_transfer.gd`](../examples/inventory_grid_transfer.gd) and [`inventory_grid_transfer.tscn`](../examples/inventory_grid_transfer.tscn) - Implements basic item transfer between two [`InventoryGrid`](./inventory_grid.md) nodes.
 * [`inventory_grid_ex_transfer.gd`](../examples/inventory_grid_ex_transfer.gd) and [`inventory_grid_ex_transfer.tscn`](../examples/inventory_grid_ex_transfer.tscn) - Similar to the previous, but using [`CtrlInventoryGridEx`](ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](ctrl_item_slot_ex.md).
+* [`inventory_grid_stacked_transfer.gd`](../examples/inventory_grid_stacked_transfer.gd) and [`inventory_grid_stacked_ex_transfer.tscn`](../examples/inventory_grid_stacked_ex_transfer.tscn) - Similar to the previous, but using [`InventoryGridStacked`](inventory_grid_stacked.md).
 
 ## Tests (`tests`)
 

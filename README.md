@@ -268,4 +268,7 @@ Take a look at the `examples` directory for some example scenes:
 ![](images/screenshots/ss_example_inventory_grid_transfer.png "inventory_grid_transfer.tscn")
 * `inventory_grid_ex_transfer.tscn` - Similar to `inventory_grid_transfer.tscn`, but using [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md).
 
-![](images/screenshots/ss_example_inventory_grid_transfer_ex.png "inventory_grid_transfer.tscn")
+![](images/screenshots/ss_example_inventory_grid_transfer_ex.png "inventory_grid_ex_transfer.tscn")
+* `inventory_grid_stacked_ex_transfer.tscn` - Similar to `inventory_grid_ex_transfer.tscn`, but using [`InventoryGirdStacked`](docs/inventory_grid_stacked.md).
+
+![](images/screenshots/ss_example_inventory_grid_stacked_transfer.png "inventory_grid_stacked_ex_transfer.tscn")
