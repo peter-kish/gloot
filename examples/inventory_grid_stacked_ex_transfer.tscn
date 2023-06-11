@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=3 uid="uid://o6g61xdkjii0"]
 
-[ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="1_kuf3b"]
+[ext_resource type="Script" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
 [ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_grid_ex.gd" id="2_dos65"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="3_lwfya"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
@@ -51,14 +51,14 @@ region_rect = Rect2(0, 0, 32, 32)
 texture = ExtResource("4_8hltm")
 region_rect = Rect2(0, 0, 32, 32)
 
-[node name="InventoryGridTransfer" type="Control"]
+[node name="InventoryGridStackedTransfer" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_kuf3b")
+script = ExtResource("1_yjyyb")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -77,6 +77,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
+unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
@@ -89,9 +90,16 @@ inventory_path = NodePath("../../../../../InventoryGridStackedLeft")
 default_item_texture = ExtResource("5_igoy6")
 
 [node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sort"
+
+[node name="BtnSplitLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Split"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -100,6 +108,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2"]
+unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
@@ -112,9 +121,16 @@ inventory_path = NodePath("../../../../../InventoryGridStackedRight")
 default_item_texture = ExtResource("5_igoy6")
 
 [node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sort"
+
+[node name="BtnSplitRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Split"
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -128,6 +144,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6_ce2cs")
@@ -137,6 +154,7 @@ item_slot_path = NodePath("../../../../../ItemSlot")
 label_visible = false
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Unequip"
 
@@ -196,6 +214,7 @@ script = ExtResource("10_jccqb")
 inventory_path = NodePath("../InventoryGridStackedRight")
 
 [node name="LblInfo" type="Label" parent="."]
+unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_right = 40.0
