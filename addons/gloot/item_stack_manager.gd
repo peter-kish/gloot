@@ -126,7 +126,7 @@ static func merge_stacks_autodelete(item_dst: InventoryItem, item_src: Inventory
     if result == MergeResult.SUCCESS:
         if item_src.get_inventory():
             item_src.get_inventory().remove_item(item_src)
-        item_src.queue_free()
+        item_src.free()
     return result
 
 

@@ -404,16 +404,23 @@ func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2) ->
 
 
 func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
-    emit_signal("item_dropped", item, global_grabbed_item_pos)
+    # Using WeakRefs for the item_dropped signals, as items might be freed at some point of dropping
+    # (when merging with other items)
+    var wr_item := weakref(item)
+    emit_signal("item_dropped", wr_item, global_grabbed_item_pos)
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.emit_signal("item_dropped", item, global_grabbed_item_pos)
+        _gloot.emit_signal("item_dropped", wr_item, global_grabbed_item_pos)
 
 
 func _get_grabbed_item_global_pos() -> Vector2:
     return get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
 
 
-func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
+func _on_item_dropped(wr_item: WeakRef, global_drop_pos: Vector2) -> void:
+    var item: InventoryItem = wr_item.get_ref()
+    if item == null:
+        return
+
     if !_is_hovering(global_drop_pos):
         return
 

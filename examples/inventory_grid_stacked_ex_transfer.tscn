@@ -162,6 +162,7 @@ text = "Unequip"
 layout_mode = 2
 text = "Drag and drop items to transfer them from one inventory to the other.
 Press the 'Sort' buttons to sort the inventories.
+Press the 'Split' buttons to split the selected stack in half.
 Drag items from the right inventory onto the item slot to equip it.
 Use the 'Unequip' button to unequip it."
 

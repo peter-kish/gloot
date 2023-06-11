@@ -61,7 +61,9 @@ func _on_btn_split(ctrl_inventory: CtrlInventoryGrid) -> void:
     if stack_size < 2:
         return
 
-    inventory_stacked.split(selected_item, stack_size / 2)
+    # All this floor/float jazz just to do integer division without warnings
+    var new_stack_size: int = floor(float(stack_size) / 2)
+    inventory_stacked.split(selected_item, new_stack_size)
 
 
 func _on_btn_unequip() -> void:

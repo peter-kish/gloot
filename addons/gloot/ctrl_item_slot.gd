@@ -139,7 +139,10 @@ func _get_singleton() -> Node:
     return null
 
 
-func _on_item_dropped(item: InventoryItem, global_drop_pos: Vector2) -> void:
+func _on_item_dropped(wr_item: WeakRef, global_drop_pos: Vector2) -> void:
+    var item: InventoryItem = wr_item.get_ref()
+    if !item:
+        return
     if !item_slot:
         return
         
