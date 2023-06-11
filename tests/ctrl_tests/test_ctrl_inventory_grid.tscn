@@ -40,12 +40,3 @@ prototype_id = "item_1x1"
 properties = {
 "grid_position": Vector2(0, 2)
 }
-
-[node name="item_1x1_stack" type="Node" parent="InventoryGrid"]
-script = ExtResource("5")
-protoset = ExtResource("1")
-prototype_id = "item_1x1"
-properties = {
-"grid_position": Vector2i(0, 3),
-"stack_size": 5
-}
