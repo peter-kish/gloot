@@ -17,6 +17,7 @@ Mostly contains code that implements classes visible to the user:
 * [`inventory.gd`](../addons/gloot/inventory.gd) - Implements [`Inventory`](./inventory.md)
 * [`inventory_stacked.gd`](../addons/gloot/inventory_stacked.gd) - Implements [`InventoryStacked`](./inventory_stacked.md)
 * [`inventory_grid.gd`](../addons/gloot/inventory_grid.gd) - Implements [`InventoryGrid`](./inventory_grid.md)
+* [`inventory_grid_stacked.gd`](../addons/gloot/inventory_grid_stacked.gd) - Implements [`InventoryGridStacked`](./inventory_grid_stacked.md)
 * [`ctrl_inventory.gd`](../addons/gloot/ctrl_inventory.gd) - Implements [`CtrlInventory`](./ctrl_inventory.md)
 * [`ctrl_inventory_stacked.gd`](../addons/gloot/ctrl_inventory_stacked.gd) - Implements [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)
 * [`ctrl_inventory_grid.gd`](../addons/gloot/ctrl_inventory_grid.gd) - Implements [`CtrlInventoryGrid`](./ctrl_inventory_grid.md)
@@ -31,6 +32,7 @@ Other files in the directory:
 * [`gloot.gd`](../addons/gloot/gloot.gd) - Main plugin script (referenced in [`plugin.cfg`](../addons/gloot/plugin.cfg)).
 * [`ctrl_inventory_item_rect.gd`](../addons/gloot/ctrl_inventory_item_rect.gd) - Implements UI controls that display the inventory items inside a [`CtrlInventoryGrid`](./ctrl_inventory_grid.md).
 * [`verify.gd`](../addons/gloot/verify.gd) - Implements some helper static functions for various error checks.
+* [`item_stack_manager.gd`](../addons/gloot/item_stack_manager.gd) - Helper class for managing item stacks. Used by [`InventoryStacked`](./inventory_stacked.md) and [`InventoryGridStacked`](./inventory_grid_stacked.md).
 
 ## Inspector Plugin (`addons/gloot/editor`)
 
@@ -58,6 +60,7 @@ Contains example code (and scenes) that demonstrates how to use some common feat
 * [`inventory_stacked_transfer.gd`](../examples/inventory_stacked_transfer.gd) and [`inventory_stacked_transfer.tscn`](../examples/inventory_stacked_transfer.tscn) - Implements basic item transfer between two [`InventoryStacked`](./inventory_stacked.md) nodes.
 * [`inventory_grid_transfer.gd`](../examples/inventory_grid_transfer.gd) and [`inventory_grid_transfer.tscn`](../examples/inventory_grid_transfer.tscn) - Implements basic item transfer between two [`InventoryGrid`](./inventory_grid.md) nodes.
 * [`inventory_grid_ex_transfer.gd`](../examples/inventory_grid_ex_transfer.gd) and [`inventory_grid_ex_transfer.tscn`](../examples/inventory_grid_ex_transfer.tscn) - Similar to the previous, but using [`CtrlInventoryGridEx`](ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](ctrl_item_slot_ex.md).
+* [`inventory_grid_stacked_transfer.gd`](../examples/inventory_grid_stacked_transfer.gd) and [`inventory_grid_stacked_ex_transfer.tscn`](../examples/inventory_grid_stacked_ex_transfer.tscn) - Similar to the previous, but using [`InventoryGridStacked`](inventory_grid_stacked.md).
 
 ## Tests (`tests`)
 
@@ -71,6 +74,7 @@ The unit tests are implemented in the files with the `_test` suffix:
 * [`inventory_tests.gd`](../tests/inventory_tests.gd) - Tests [`Inventory`](./inventory.md).
 * [`inventory_stacked_tests.gd`](../tests/inventory_stacked_tests.gd) - Tests [`InventoryStacked`](./inventory_stacked.md).
 * [`inventory_grid_tests.gd`](../tests/inventory_grid_tests.gd) - Tests [`InventoryGrid`](./inventory_grid.md).
+* [`inventory_grid_tests.gd`](../tests/inventory_grid_stacked_tests.gd) - Tests [`InventoryGridStacked`](./inventory_grid_stacked.md).
 * [`item_slot_tests.gd`](../tests/item_slot_tests.gd) - Tests [`ItemSlot`](./item_slot.md).
 * [`verification_test.gd`](../tests/verification_test.gd) - Tests the helper functions from [`verify.gd`](../addons/gloot/verify.gd).
 
@@ -79,5 +83,7 @@ The UI control tests are just scenes that contain a single instance of the UI co
 * [`test_ctrl_inventory_stacked.tscn`](../tests/ctrl_tests/test_ctrl_inventory_stacked.tscn) - Tests [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md).
 * [`test_ctrl_inventory_grid.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid.tscn) - Tests [`CtrlInventoryGrid`](./ctrl_inventory_grid.md).
 * [`test_ctrl_inventory_grid_ex.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid_ex.tscn) - Tests [`CtrlInventoryGridEx`](./ctrl_inventory_grid_ex.md).
+* [`test_ctrl_inventory_grid_stacked.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid_stacked.tscn) - Tests [`CtrlInventoryGrid`](./ctrl_inventory_grid.md) with an [`InventoryGridStacked`](./inventory_grid_stacked.md) attached.
+* [`test_ctrl_inventory_grid_stacked_ex.tscn`](../tests/ctrl_tests/test_ctrl_inventory_grid_stacked_ex.tscn) - Tests [`CtrlInventoryGridEx`](./ctrl_inventory_grid_ex.md) with an [`InventoryGridStacked`](./inventory_grid_stacked.md) attached.
 * [`test_ctrl_item_slot.tscn`](../tests/ctrl_tests/test_ctrl_item_slot.tscn) - Tests [`CtrlItemSlot`](./ctrl_item_slot.md).
 * [`test_ctrl_item_slot_ex.tscn`](../tests/ctrl_tests/test_ctrl_item_slot_ex.tscn) - Tests [`CtrlItemSlotEx`](./ctrl_item_slot_ex.md).

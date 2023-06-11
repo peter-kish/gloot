@@ -13,15 +13,21 @@ Inventory that has a limited item capacity in terms of weight.
 
 ## Methods
 
+* `static get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
+* `static set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
+* `static get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
+* `static set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
+* `get_prototype_stack_size(prototype_id: String) -> int` - Returns the stack size of the given item prototype.
+* `get_prototype_max_stack_size(prototype_id: String) -> int` - Returns the maximum stack size of the given item prototype.
 * `add_item_automerge(item: InventoryItem) -> bool` - Adds the given item stack to the inventory, automatically merging with existing item stacks with the same prototype ID.
 * `has_unlimited_capacity() -> bool` - Checks if the inventory has unlimited capacity (i.e. capacity is 0.0).
 * `get_free_space() -> float` - Returns the free available space in the inventory.
 * `has_place_for(item: InventoryItem) -> bool` - Checks if the inventory has enough free space for the given item.
 * `split(item: InventoryItem, new_stack_size: int) -> InventoryItem` - Splits the given item stack into two. The newly created stack will have the size `new_stack_size`, while the old stack will contain the remainder.
-* `join(stack_1: InventoryItem, stack_2: InventoryItem) -> bool` - Joins two item stack into one.
-* `transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool` - Transfers the given item stack into the given inventory, splitting it if there is not enough space for the whole stack.
-* `transfer_automerge(item: InventoryItem, destination: Inventory) -> bool` - Transfers the given item stack into the given inventory, joining it with any available item stacks with the same prototype ID.
-* `transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool` - A combination of `transfer_autosplit()` and `transfer_automerge`. Transfers the given item stack into the given inventory, splitting it up and joining it with available item stacks, as needed.
+* `join(item_dst: InventoryItem, item_src: InventoryItem) -> bool` - Joins the `item_src` item stack with the `item_dst` stack.
+* `transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, splitting it if there is not enough space for the whole stack.
+* `transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, joining it with any available item stacks with the same prototype ID.
+* `transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool` - A combination of `transfer_autosplit()` and `transfer_automerge`. Transfers the given item stack into the given inventory, splitting it up and joining it with available item stacks, as needed.
 
 ## Signals
 

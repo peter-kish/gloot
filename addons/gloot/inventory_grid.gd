@@ -125,10 +125,6 @@ func _bounds_broken() -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if item.properties.has(KEY_GRID_POSITION):
-        var item_position = item.properties[KEY_GRID_POSITION]
-        return add_item_at(item, item_position)
-
     var free_place = find_free_place(item)
     if !Verify.vector_positive(free_place):
         return false
@@ -162,6 +158,15 @@ func get_item_at(position: Vector2i) -> InventoryItem:
     return null
 
 
+func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+    for item in get_items():
+        var item_rect := get_item_rect(item)
+        if item_rect.intersects(rect):
+            result.append(item)
+    return result
+
+
 func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     var item_size := get_item_size(item)
     var rect := Rect2i(position, item_size)
@@ -180,7 +185,10 @@ func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    return transfer_to(item, destination, Vector2i.ZERO)
+    var free_place: Vector2i = destination.find_free_place(item)
+    if Verify.vector_positive(free_place):
+        return transfer_to(item, destination, free_place)
+    return false
 
 
 func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool:
@@ -217,7 +225,7 @@ func find_free_place(item: InventoryItem) -> Vector2i:
     for x in range(size.x - (item_size.x - 1)):
         for y in range(size.y - (item_size.y - 1)):
             var rect := Rect2i(Vector2i(x, y), item_size)
-            if rect_free(rect, item):
+            if rect_free(rect):
                 return Vector2i(x, y)
 
     return Vector2i(-1, -1)

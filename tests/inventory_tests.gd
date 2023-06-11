@@ -4,6 +4,7 @@ var inventory1: Inventory
 var inventory2: Inventory
 var item: InventoryItem
 
+const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
 
 func init_suite() -> void:
     tests = [
@@ -19,10 +20,8 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory1 = Inventory.new()
-    inventory1.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
-    inventory2 = Inventory.new()
-    inventory2.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory1 = create_inventory(TEST_PROTOSET)
+    inventory2 = create_inventory(TEST_PROTOSET)
     item = inventory1.create_and_add_item("minimal_item")
 
 
@@ -33,18 +32,18 @@ func cleanup_test() -> void:
 
 
 func test_size() -> void:
-    assert(inventory1.get_items().size() == 1)
+    assert(inventory1.get_item_count() == 1)
     assert(inventory1.remove_item(item))
-    assert(inventory1.get_items().size() == 0)
+    assert(inventory1.get_item_count() == 0)
 
 
 func test_add_remove() -> void:
     assert(inventory1.remove_item(item))
-    assert(inventory1.get_items().size() == 0)
+    assert(inventory1.get_item_count() == 0)
     assert(!inventory1.remove_item(item))
 
     assert(inventory1.add_item(item))
-    assert(inventory1.get_items().size() == 1)
+    assert(inventory1.get_item_count() == 1)
     assert(!inventory1.add_item(item))
 
 
@@ -59,7 +58,7 @@ func test_has_item() -> void:
 func test_create_and_add() -> void:
     var new_item = inventory2.create_and_add_item("minimal_item_2")
     assert(new_item)
-    assert(inventory2.get_items().size() == 1)
+    assert(inventory2.get_item_count() == 1)
     assert(inventory2.has_item(new_item))
     assert(inventory2.has_item_by_id("minimal_item_2"))
 
@@ -82,7 +81,7 @@ func test_serialize() -> void:
     assert(inventory1.get_items().is_empty())
     assert(item.is_queued_for_deletion())
     assert(inventory1.deserialize(inventory_data))
-    assert(inventory1.get_items().size() == 1)
+    assert(inventory1.get_item_count() == 1)
 
 
 func test_serialize_json() -> void:
@@ -98,4 +97,4 @@ func test_serialize_json() -> void:
     assert(inventory1.get_items().is_empty())
     assert(item.is_queued_for_deletion())
     assert(inventory1.deserialize(inventory_data))
-    assert(inventory1.get_items().size() == 1)
+    assert(inventory1.get_item_count() == 1)

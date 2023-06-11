@@ -49,22 +49,22 @@ A barebones item for a [`CtrlInventory`](./ctrl_inventory.md):
 A 1x1 item with an image for a [`CtrlInventoryGrid`](./ctrl_inventory_grid.md):
 
 ```json
-	{
-		"id": "item_with_image",
-		"image": "res://assets/image.png",
-		"width": 1,
-		"height": 1
-	}
+    {
+        "id": "item_with_image",
+        "image": "res://assets/image.png",
+        "width": 1,
+        "height": 1
+    }
 ```
 
 A heavy stackable item with an image for a [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md):
 
 ```json
-	{
-		"id": "heavy_stackable_item",
-		"name": "Fresh-Cut Timber",
-		"image": "res://assets/image.png",
-		"stack_size": 10,
-		"weight": 500.0
-	}
+    {
+        "id": "heavy_stackable_item",
+        "name": "Fresh-Cut Timber",
+        "image": "res://assets/image.png",
+        "stack_size": 10,
+        "weight": 500.0
+    }
 ```

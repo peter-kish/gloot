@@ -25,7 +25,7 @@ default_item_texture = ExtResource("4")
 
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource("3")
-size = Vector2(5, 5)
+size = Vector2i(5, 5)
 item_protoset = ExtResource("1")
 
 [node name="item_2x2" type="Node" parent="InventoryGrid"]
