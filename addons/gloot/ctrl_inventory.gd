@@ -120,7 +120,10 @@ func _populate_list() -> void:
         return
 
     for item in inventory.get_items():
-        _item_list.add_item(_get_item_title(item), item.get_texture())
+        var texture := item.get_texture()
+        if !texture:
+            texture = default_item_icon
+        _item_list.add_item(_get_item_title(item), texture)
         _item_list.set_item_metadata(_item_list.get_item_count() - 1, item)
 
 
