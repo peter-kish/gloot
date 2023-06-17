@@ -39,7 +39,6 @@ func _ready() -> void:
 
 
 func _on_close_requested() -> void:
-    protoset._update_json_data()
     protoset.notify_property_list_changed()
 
 

@@ -11,16 +11,15 @@ const KEY_ID: String = "id"
         json_data = new_json_data
         if !json_data.is_empty():
             parse(json_data)
-        emit_changed()
+        _save()
 
 var _prototypes: Dictionary = {} :
     get:
         return _prototypes
     set(new_prototypes):
-        print(new_prototypes)
         _prototypes = new_prototypes
         _update_json_data()
-        emit_changed()
+        _save()
 
 
 func parse(json: String) -> void:
@@ -72,7 +71,12 @@ func _unstringify_prototype(prototype: Dictionary) -> void:
 
 func _update_json_data() -> void:
     json_data = _to_json()
+
+
+func _save() -> void:
     emit_changed()
+    if !resource_path.is_empty():
+        ResourceSaver.save(self)
 
 
 func get_prototype(id: StringName) -> Variant:
@@ -83,13 +87,15 @@ func get_prototype(id: StringName) -> Variant:
 func add_prototype(id: String) -> void:
     assert(!has_prototype(id), "Prototype with ID already exists")
     _prototypes[id] = {KEY_ID: id}
-    emit_changed()
+    _update_json_data()
+    _save()
 
 
 func remove_prototype(id: String) -> void:
     assert(has_prototype(id), "No prototype for ID")
     _prototypes.erase(id)
-    emit_changed()
+    _update_json_data()
+    _save()
 
 
 func rename_prototype(id: String, new_id: String) -> void:
@@ -99,7 +105,14 @@ func rename_prototype(id: String, new_id: String) -> void:
     _prototypes[new_id] = _prototypes[id].duplicate()
     _prototypes[new_id][KEY_ID] = new_id
     remove_prototype(id)
-    emit_changed()
+    _update_json_data()
+    _save()
+
+
+func set_prototype_properties(id: String, new_properties: Dictionary) -> void:
+    _prototypes[id] = new_properties
+    _update_json_data()
+    _save()
 
 
 func has_prototype(id: String) -> bool:

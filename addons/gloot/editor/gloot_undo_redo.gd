@@ -298,27 +298,18 @@ func set_prototype_properties(protoset: ItemProtoset,
 
     undo_redo_manager.create_action("Set prototype properties")
     undo_redo_manager.add_undo_method(
-        self,
-        "_set_prototype_properties",
         protoset,
+        "set_prototype_properties",
         prototype_id,
         old_properties
     )
     undo_redo_manager.add_do_method(
-        self,
-        "_set_prototype_properties",
         protoset,
+        "set_prototype_properties",
         prototype_id,
         new_properties
     )
     undo_redo_manager.commit_action()
-
-
-func _set_prototype_properties(protoset: ItemProtoset,
-        prototype_id: String,
-        new_properties: Dictionary) -> void:
-    protoset._prototypes[prototype_id] = new_properties
-    protoset.emit_changed()
 
 
 func _get_item_by_hash(inventory: InventoryGrid, item_hash: int) -> InventoryItem:
