@@ -65,8 +65,8 @@ func _create_line_edit() -> LineEdit:
     line_edit.text = var_to_str(value)
     line_edit.editable = enabled
     _expand_control(line_edit)
-    line_edit.connect("text_submitted", Callable(self, "_on_line_edit_value_entered").bind(line_edit))
-    line_edit.connect("focus_exited", Callable(self, "_on_line_edit_focus_exited").bind(line_edit))
+    line_edit.text_submitted.connect(Callable(self, "_on_line_edit_value_entered").bind(line_edit))
+    line_edit.focus_exited.connect(Callable(self, "_on_line_edit_focus_exited").bind(line_edit))
     return line_edit
 
 
@@ -88,7 +88,7 @@ func _create_color_picker() -> ColorPickerButton:
     picker.color = value
     picker.disabled = !enabled
     _expand_control(picker)
-    picker.connect("popup_closed", Callable(self, "_on_color_picked").bind(picker))
+    picker.popup_closed.connect(Callable(self, "_on_color_picked").bind(picker))
     return picker
 
 
@@ -102,7 +102,7 @@ func _create_checkbox() -> CheckButton:
     checkbox.button_pressed = value
     checkbox.disabled = !enabled
     _expand_control(checkbox)
-    checkbox.connect("pressed", Callable(self, "_on_checkbox").bind(checkbox))
+    checkbox.pressed.connect(Callable(self, "_on_checkbox").bind(checkbox))
     return checkbox
 
 
@@ -254,7 +254,7 @@ func _create_multivalue_editor(
     multivalue_editor.values = values
     multivalue_editor.titles = titles
     _expand_control(multivalue_editor)
-    multivalue_editor.connect("value_changed", Callable(self, value_changed_handler).bind(multivalue_editor))
+    multivalue_editor.value_changed.connect(Callable(self, value_changed_handler).bind(multivalue_editor))
     return multivalue_editor
 
 

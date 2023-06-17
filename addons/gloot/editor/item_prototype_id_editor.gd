@@ -19,7 +19,7 @@ func _init():
     _choice_filter = ChoiceFilter.instantiate()
     _choice_filter.pick_text = "Select"
     _choice_filter.filter_text = "Filter Prototypes:"
-    _choice_filter.connect("choice_picked", Callable(self, "_on_choice_picked"))
+    _choice_filter.choice_picked.connect(Callable(self, "_on_choice_picked"))
 
     _window_dialog = Window.new()
     _window_dialog.title = "Select Prototype ID"
@@ -45,16 +45,16 @@ func _init():
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Prototype ID"
-    _btn_prototype_id.connect("pressed", Callable(self, "_on_btn_prototype_id"))
+    _btn_prototype_id.pressed.connect(Callable(self, "_on_btn_prototype_id"))
     add_child(_btn_prototype_id)
 
 
 func _ready() -> void:
     _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
     var item: InventoryItem = get_edited_object()
-    item.connect("prototype_id_changed", Callable(self, "_on_prototype_id_changed"))
+    item.prototype_id_changed.connect(Callable(self, "_on_prototype_id_changed"))
     if item.protoset:
-        item.protoset.connect("changed", Callable(self, "_on_protoset_changed"))
+        item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
     _refresh_button()
     _refresh_choice_filter()
 

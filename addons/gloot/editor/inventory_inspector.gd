@@ -68,7 +68,7 @@ func _ready() -> void:
         inventory_editor.gloot_undo_redo = gloot_undo_redo
     _apply_editor_settings()
     btn_expand.icon = EditorIcons.get_icon(editor_interface, "DistractionFree")
-    btn_expand.connect("pressed", Callable(self, "on_btn_expand"))
+    btn_expand.pressed.connect(Callable(self, "on_btn_expand"))
 
 
 func on_btn_expand() -> void:

@@ -46,10 +46,10 @@ func _connect_inventory_signals() -> void:
 
     super._connect_inventory_signals()
 
-    if !inventory.is_connected("capacity_changed", Callable(self, "_refresh")):
-        inventory.connect("capacity_changed", Callable(self, "_refresh"))
-    if !inventory.is_connected("occupied_space_changed", Callable(self, "_refresh")):
-        inventory.connect("occupied_space_changed", Callable(self, "_refresh"))
+    if !inventory.capacity_changed.is_connected(Callable(self, "_refresh")):
+        inventory.capacity_changed.connect(Callable(self, "_refresh"))
+    if !inventory.occupied_space_changed.is_connected(Callable(self, "_refresh")):
+        inventory.occupied_space_changed.connect(Callable(self, "_refresh"))
 
 
 func _disconnect_inventory_signals() -> void:
@@ -58,10 +58,10 @@ func _disconnect_inventory_signals() -> void:
 
     super._disconnect_inventory_signals()
 
-    if !inventory.is_connected("capacity_changed", Callable(self, "_refresh")):
-        inventory.disconnect("capacity_changed", Callable(self, "_refresh"))
-    if !inventory.is_connected("occupied_space_changed", Callable(self, "_refresh")):
-        inventory.disconnect("occupied_space_changed", Callable(self, "_refresh"))
+    if !inventory.capacity_changed.is_connected(Callable(self, "_refresh")):
+        inventory.capacity_changed.disconnect(Callable(self, "_refresh"))
+    if !inventory.occupied_space_changed.is_connected(Callable(self, "_refresh")):
+        inventory.occupied_space_changed.disconnect(Callable(self, "_refresh"))
 
 
 func _refresh():

@@ -52,7 +52,7 @@ func has_unlimited_capacity() -> bool:
 func _ready():
     super._ready()
     _calculate_occupied_space()
-    connect("item_modified", Callable(self, "_on_item_modified"))
+    item_modified.connect(Callable(self, "_on_item_modified"))
 
 
 func _calculate_occupied_space() -> void:

@@ -16,7 +16,7 @@ var protoset: ItemProtoset :
     set(new_protoset):
         protoset = new_protoset
         if protoset:
-            protoset.connect("changed", Callable(self, "_on_protoset_changed"))
+            protoset.changed.connect(Callable(self, "_on_protoset_changed"))
         _refresh()
 var gloot_undo_redo = null
 var editor_interface: EditorInterface :
@@ -32,14 +32,14 @@ var selected_prototype_id: String = ""
 
 
 func _ready() -> void:
-    prototype_filter.connect("choice_selected", Callable(self, "_on_prototype_selected"))
-    property_editor.connect("value_changed", Callable(self, "_on_property_changed"))
-    property_editor.connect("value_removed", Callable(self, "_on_property_removed"))
-    txt_prototype_id.connect("text_changed", Callable(self, "_on_prototype_id_changed"))
-    txt_prototype_id.connect("text_submitted", Callable(self, "_on_prototype_id_entered"))
-    btn_add_prototype.connect("pressed", Callable(self, "_on_btn_add_prototype"))
-    btn_rename_prototype.connect("pressed", Callable(self, "_on_btn_rename_prototype"))
-    btn_remove_prototype.connect("pressed", Callable(self, "_on_btn_remove_prototype"))
+    prototype_filter.choice_selected.connect(Callable(self, "_on_prototype_selected"))
+    property_editor.value_changed.connect(Callable(self, "_on_property_changed"))
+    property_editor.value_removed.connect(Callable(self, "_on_property_removed"))
+    txt_prototype_id.text_changed.connect(Callable(self, "_on_prototype_id_changed"))
+    txt_prototype_id.text_submitted.connect(Callable(self, "_on_prototype_id_entered"))
+    btn_add_prototype.pressed.connect(Callable(self, "_on_btn_add_prototype"))
+    btn_rename_prototype.pressed.connect(Callable(self, "_on_btn_rename_prototype"))
+    btn_remove_prototype.pressed.connect(Callable(self, "_on_btn_remove_prototype"))
     _refresh()
 
 

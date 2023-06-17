@@ -12,13 +12,13 @@ const info_offset: Vector2 = Vector2(20, 0)
 
 
 func _ready() -> void:
-    ctrl_inventory_left.connect("item_mouse_entered", Callable(self, "_on_item_mouse_entered"))
-    ctrl_inventory_left.connect("item_mouse_exited", Callable(self, "_on_item_mouse_exited"))
-    ctrl_inventory_right.connect("item_mouse_entered", Callable(self, "_on_item_mouse_entered"))
-    ctrl_inventory_right.connect("item_mouse_exited", Callable(self, "_on_item_mouse_exited"))
-    btn_sort_left.connect("pressed", Callable(self, "_on_btn_sort").bind(ctrl_inventory_left))
-    btn_sort_right.connect("pressed", Callable(self, "_on_btn_sort").bind(ctrl_inventory_right))
-    btn_unequip.connect("pressed", Callable(self, "_on_btn_unequip"))
+    ctrl_inventory_left.item_mouse_entered.connect(Callable(self, "_on_item_mouse_entered"))
+    ctrl_inventory_left.item_mouse_exited.connect(Callable(self, "_on_item_mouse_exited"))
+    ctrl_inventory_right.item_mouse_entered.connect(Callable(self, "_on_item_mouse_entered"))
+    ctrl_inventory_right.item_mouse_exited.connect(Callable(self, "_on_item_mouse_exited"))
+    btn_sort_left.pressed.connect(Callable(self, "_on_btn_sort").bind(ctrl_inventory_left))
+    btn_sort_right.pressed.connect(Callable(self, "_on_btn_sort").bind(ctrl_inventory_right))
+    btn_unequip.pressed.connect(Callable(self, "_on_btn_unequip"))
 
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:

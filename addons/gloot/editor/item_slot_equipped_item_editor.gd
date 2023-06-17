@@ -9,14 +9,14 @@ func _init():
     _option_button = OptionButton.new()
     add_child(_option_button)
     add_focusable(_option_button)
-    _option_button.connect("item_selected", Callable(self, "_on_item_selected"))
+    _option_button.item_selected.connect(Callable(self, "_on_item_selected"))
 
 
 func _ready() -> void:
     var item_slot: ItemSlot = get_edited_object()
-    item_slot.connect("inventory_changed", Callable(self, "_on_inventory_changed"))
-    item_slot.connect("item_set", Callable(self, "_on_item_set"))
-    item_slot.connect("item_cleared", Callable(self, "_on_item_cleared"))
+    item_slot.inventory_changed.connect(Callable(self, "_on_inventory_changed"))
+    item_slot.item_set.connect(Callable(self, "_on_item_set"))
+    item_slot.item_cleared.connect(Callable(self, "_on_item_cleared"))
     _refresh_option_button()
 
 

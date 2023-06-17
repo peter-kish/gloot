@@ -20,8 +20,8 @@ var _btn_prototype_id: Button
 
 func _init():
     _dict_editor = DictEditor.instantiate()
-    _dict_editor.connect("value_changed", Callable(self, "_on_value_changed"))
-    _dict_editor.connect("value_removed", Callable(self, "_on_value_removed"))
+    _dict_editor.value_changed.connect(Callable(self, "_on_value_changed"))
+    _dict_editor.value_removed.connect(Callable(self, "_on_value_removed"))
 
     _window_dialog = Window.new()
     _window_dialog.title = "Edit Item Properties"
@@ -47,7 +47,7 @@ func _init():
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Edit Properties"
-    _btn_prototype_id.connect("pressed", Callable(self, "_on_btn_edit"))
+    _btn_prototype_id.pressed.connect(Callable(self, "_on_btn_edit"))
     add_child(_btn_prototype_id)
 
 
@@ -57,11 +57,11 @@ func _ready() -> void:
     var item: InventoryItem = get_edited_object()
     if !item:
         return
-    item.connect("properties_changed", Callable(self, "update_property"))
+    item.properties_changed.connect(Callable(self, "update_property"))
 
     if !item.protoset:
         return
-    item.protoset.connect("changed", Callable(self, "_on_protoset_changed"))
+    item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
 
     _refresh_button()
     _refresh_dict_editor()

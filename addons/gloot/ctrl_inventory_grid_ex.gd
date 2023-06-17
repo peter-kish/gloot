@@ -101,8 +101,8 @@ func _create_selection_panel() -> void:
     _set_panel_style(_selection_panel, selection_style)
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
     _selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    _selection_panel.connect("mouse_entered", Callable(self, "_on_selection_mouse_entered"))
-    _selection_panel.connect("mouse_exited", Callable(self, "_on_selection_mouse_exited"))
+    _selection_panel.mouse_entered.connect(Callable(self, "_on_selection_mouse_entered"))
+    _selection_panel.mouse_exited.connect(Callable(self, "_on_selection_mouse_exited"))
 
 
 func _on_selection_mouse_entered() -> void:
@@ -123,8 +123,8 @@ func _ready() -> void:
     
     _create_selection_panel()
     _create_field_background_grid()
-    connect("item_selected", Callable(self, "_on_item_selected"))
-    connect("item_deselected", Callable(self, "_on_item_deselected"))
+    item_selected.connect(Callable(self, "_on_item_selected"))
+    item_deselected.connect(Callable(self, "_on_item_deselected"))
 
 
 func _on_item_selected(item: InventoryItem) -> void:

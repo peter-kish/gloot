@@ -34,14 +34,14 @@ func connect_inventory_signals():
         return
 
     if inventory is InventoryStacked:
-        inventory.connect("capacity_changed", Callable(self, "_refresh"))
+        inventory.capacity_changed.connect(Callable(self, "_refresh"))
     if inventory is InventoryGrid:
-        inventory.connect("size_changed", Callable(self, "_refresh"))
-    inventory.connect("protoset_changed", Callable(self, "_refresh"))
+        inventory.size_changed.connect(Callable(self, "_refresh"))
+    inventory.protoset_changed.connect(Callable(self, "_refresh"))
 
     if !inventory.item_protoset:
         return
-    inventory.item_protoset.connect("changed", Callable(self, "_refresh"))
+    inventory.item_protoset.changed.connect(Callable(self, "_refresh"))
 
 
 func disconnect_inventory_signals():
@@ -49,14 +49,14 @@ func disconnect_inventory_signals():
         return
         
     if inventory is InventoryStacked:
-        inventory.disconnect("capacity_changed", Callable(self, "_refresh"))
+        inventory.capacity_changed.disconnect(Callable(self, "_refresh"))
     if inventory is InventoryGrid:
-        inventory.disconnect("size_changed", Callable(self, "_refresh"))
-    inventory.disconnect("protoset_changed", Callable(self, "_refresh"))
+        inventory.size_changed.disconnect(Callable(self, "_refresh"))
+    inventory.protoset_changed.disconnect(Callable(self, "_refresh"))
 
     if !inventory.item_protoset:
         return
-    inventory.item_protoset.disconnect("changed", Callable(self, "_refresh"))
+    inventory.item_protoset.changed.disconnect(Callable(self, "_refresh"))
 
 
 func _refresh() -> void:
@@ -83,7 +83,7 @@ func _refresh() -> void:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
-    _inventory_control.connect("inventory_item_activated", Callable(self, "_on_inventory_item_activated"))
+    _inventory_control.inventory_item_activated.connect(Callable(self, "_on_inventory_item_activated"))
 
     scroll_container.add_child(_inventory_control)
 
@@ -102,9 +102,9 @@ func _ready() -> void:
     btn_edit.icon = EditorIcons.get_icon(editor_interface, "Edit")
     btn_remove.icon = EditorIcons.get_icon(editor_interface, "Remove")
 
-    prototype_id_filter.connect("choice_picked", Callable(self, "_on_prototype_id_picked"))
-    btn_edit.connect("pressed", Callable(self, "_on_btn_edit"))
-    btn_remove.connect("pressed", Callable(self, "_on_btn_remove"))
+    prototype_id_filter.choice_picked.connect(Callable(self, "_on_prototype_id_picked"))
+    btn_edit.pressed.connect(Callable(self, "_on_btn_edit"))
+    btn_remove.pressed.connect(Callable(self, "_on_btn_remove"))
     _refresh()
 
 

@@ -49,8 +49,8 @@ func _exit_tree():
 
 
 func _init() -> void:
-    connect("item_added", Callable(self, "_on_item_added"))
-    connect("item_removed", Callable(self, "_on_item_removed"))
+    item_added.connect(Callable(self, "_on_item_added"))
+    item_removed.connect(Callable(self, "_on_item_removed"))
 
 
 func _ready() -> void:
@@ -94,21 +94,21 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.is_connected("protoset_changed", Callable(self, "_emit_item_modified")):
-        item.connect("protoset_changed", Callable(self, "_emit_item_modified").bind(item))
-    if !item.is_connected("prototype_id_changed", Callable(self, "_emit_item_modified")):
-        item.connect("prototype_id_changed", Callable(self, "_emit_item_modified").bind(item))
-    if !item.is_connected("properties_changed", Callable(self, "_emit_item_modified")):
-        item.connect("properties_changed", Callable(self, "_emit_item_modified").bind(item))
+    if !item.protoset_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.protoset_changed.connect(Callable(self, "_emit_item_modified").bind(item))
+    if !item.prototype_id_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.prototype_id_changed.connect(Callable(self, "_emit_item_modified").bind(item))
+    if !item.properties_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.properties_changed.connect(Callable(self, "_emit_item_modified").bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.is_connected("protoset_changed", Callable(self, "_emit_item_modified")):
-        item.disconnect("protoset_changed", Callable(self, "_emit_item_modified"))
-    if item.is_connected("prototype_id_changed", Callable(self, "_emit_item_modified")):
-        item.disconnect("prototype_id_changed", Callable(self, "_emit_item_modified"))
-    if item.is_connected("properties_changed", Callable(self, "_emit_item_modified")):
-        item.disconnect("properties_changed", Callable(self, "_emit_item_modified"))
+    if item.protoset_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.protoset_changed.disconnect(Callable(self, "_emit_item_modified"))
+    if item.prototype_id_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.prototype_id_changed.disconnect(Callable(self, "_emit_item_modified"))
+    if item.properties_changed.is_connected(Callable(self, "_emit_item_modified")):
+        item.properties_changed.disconnect(Callable(self, "_emit_item_modified"))
 
 
 func _emit_item_modified(item: InventoryItem) -> void:

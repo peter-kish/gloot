@@ -130,7 +130,7 @@ func _ready() -> void:
 
     _refresh()
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.connect("item_dropped", Callable(self, "_on_item_dropped"))
+        _gloot.item_dropped.connect(Callable(self, "_on_item_dropped"))
 
 
 func _get_gloot() -> Node:
@@ -145,28 +145,28 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.is_connected("contents_changed", Callable(self, "_refresh")):
-        inventory.connect("contents_changed", Callable(self, "_refresh"))
-    if !inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
-        inventory.connect("item_modified", Callable(self, "_on_item_modified"))
-    if !inventory.is_connected("size_changed", Callable(self, "_on_inventory_resized")):
-        inventory.connect("size_changed", Callable(self, "_on_inventory_resized"))
-    if !inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
-        inventory.connect("item_removed", Callable(self, "_on_item_removed"))
+    if !inventory.contents_changed.is_connected(Callable(self, "_refresh")):
+        inventory.contents_changed.connect(Callable(self, "_refresh"))
+    if !inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
+        inventory.item_modified.connect(Callable(self, "_on_item_modified"))
+    if !inventory.size_changed.is_connected(Callable(self, "_on_inventory_resized")):
+        inventory.size_changed.connect(Callable(self, "_on_inventory_resized"))
+    if !inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
+        inventory.item_removed.connect(Callable(self, "_on_item_removed"))
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.is_connected("contents_changed", Callable(self, "_refresh")):
-        inventory.disconnect("contents_changed", Callable(self, "_refresh"))
-    if inventory.is_connected("item_modified", Callable(self, "_on_item_modified")):
-        inventory.disconnect("item_modified", Callable(self, "_on_item_modified"))
-    if inventory.is_connected("size_changed", Callable(self, "_on_inventory_resized")):
-        inventory.disconnect("size_changed", Callable(self, "_on_inventory_resized"))
-    if inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
-        inventory.disconnect("item_removed", Callable(self, "_on_item_removed"))
+    if inventory.contents_changed.is_connected(Callable(self, "_refresh")):
+        inventory.contents_changed.disconnect(Callable(self, "_refresh"))
+    if inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
+        inventory.item_modified.disconnect(Callable(self, "_on_item_modified"))
+    if inventory.size_changed.is_connected(Callable(self, "_on_inventory_resized")):
+        inventory.size_changed.disconnect(Callable(self, "_on_inventory_resized"))
+    if inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
+        inventory.item_removed.disconnect(Callable(self, "_on_item_removed"))
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
@@ -269,10 +269,10 @@ func _populate_list() -> void:
         ctrl_inventory_item.ctrl_inventory = self
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        ctrl_inventory_item.connect("grabbed", Callable(self, "_on_item_grab"))
-        ctrl_inventory_item.connect("activated", Callable(self, "_on_item_activated"))
-        ctrl_inventory_item.connect("mouse_entered", Callable(self, "_on_item_mouse_entered").bind(ctrl_inventory_item))
-        ctrl_inventory_item.connect("mouse_exited", Callable(self, "_on_item_mouse_exited").bind(ctrl_inventory_item))
+        ctrl_inventory_item.grabbed.connect(Callable(self, "_on_item_grab"))
+        ctrl_inventory_item.activated.connect(Callable(self, "_on_item_activated"))
+        ctrl_inventory_item.mouse_entered.connect(Callable(self, "_on_item_mouse_entered").bind(ctrl_inventory_item))
+        ctrl_inventory_item.mouse_exited.connect(Callable(self, "_on_item_mouse_exited").bind(ctrl_inventory_item))
         ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()

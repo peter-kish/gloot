@@ -31,11 +31,11 @@ var editor_interface: EditorInterface :
 
 func _ready() -> void:
     icon = EditorIcons.get_icon(editor_interface, "Edit")
-    window_dialog.connect("close_requested", Callable(self, "_on_close_requested"))
+    window_dialog.close_requested.connect(Callable(self, "_on_close_requested"))
     protoset_editor.protoset = protoset
     protoset_editor.gloot_undo_redo = gloot_undo_redo
     protoset_editor.editor_interface = editor_interface
-    connect("pressed", Callable(self, "_on_pressed"))
+    pressed.connect(Callable(self, "_on_pressed"))
 
 
 func _on_close_requested() -> void:

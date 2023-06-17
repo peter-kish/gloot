@@ -13,10 +13,10 @@ extends Control
 
 
 func _ready() -> void:
-    btn_left_to_right.connect("pressed", Callable(self, "_on_ltor_pressed"))
-    btn_right_to_left.connect("pressed", Callable(self, "_on_rtol_pressed"))
-    btn_equip.connect("pressed", Callable(self, "_on_equip_pressed"))
-    btn_unequip.connect("pressed", Callable(self, "_on_unequip_pressed"))
+    btn_left_to_right.pressed.connect(Callable(self, "_on_ltor_pressed"))
+    btn_right_to_left.pressed.connect(Callable(self, "_on_rtol_pressed"))
+    btn_equip.pressed.connect(Callable(self, "_on_equip_pressed"))
+    btn_unequip.pressed.connect(Callable(self, "_on_unequip_pressed"))
 
 
 func _on_ltor_pressed() -> void:

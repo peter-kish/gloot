@@ -76,10 +76,10 @@ func _populate() -> void:
 
 
 func _ready() -> void:
-    btn_pick.connect("pressed", Callable(self, "_on_btn_pick"))
-    line_edit.connect("text_changed", Callable(self, "_on_filter_text_changed"))
-    item_list.connect("item_activated", Callable(self, "_on_item_activated"))
-    item_list.connect("item_selected", Callable(self, "_on_item_selected"))
+    btn_pick.pressed.connect(Callable(self, "_on_btn_pick"))
+    line_edit.text_changed.connect(Callable(self, "_on_filter_text_changed"))
+    item_list.item_activated.connect(Callable(self, "_on_item_activated"))
+    item_list.item_selected.connect(Callable(self, "_on_item_selected"))
     refresh()
     if btn_pick:
         btn_pick.text = pick_text

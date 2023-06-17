@@ -18,7 +18,7 @@ signal properties_changed
             if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
                 self.prototype_id = protoset._prototypes.keys()[0]
 
-            protoset.connect("changed", Callable(self, "_on_protoset_modified"))
+            protoset.changed.connect(Callable(self, "_on_protoset_modified"))
 
             emit_signal("protoset_changed")
             update_configuration_warnings()

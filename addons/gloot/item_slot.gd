@@ -66,11 +66,11 @@ var item: InventoryItem :
             return
 
         if item != null:
-            item.disconnect("tree_exiting", Callable(self, "_on_item_tree_exiting"))
+            item.tree_exiting.disconnect(Callable(self, "_on_item_tree_exiting"))
 
         item = new_item
         if item != null:
-            item.connect("tree_exiting", Callable(self, "_on_item_tree_exiting"))
+            item.tree_exiting.connect(Callable(self, "_on_item_tree_exiting"))
             emit_signal("item_set", item)
         else:
             emit_signal("item_cleared")
@@ -92,20 +92,20 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.is_connected("tree_exiting", Callable(self, "_on_inventory_tree_exiting")):
-        inventory.connect("tree_exiting", Callable(self, "_on_inventory_tree_exiting"))
-    if !inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
-        inventory.connect("item_removed", Callable(self, "_on_item_removed"))
+    if !inventory.tree_exiting.is_connected(Callable(self, "_on_inventory_tree_exiting")):
+        inventory.tree_exiting.connect(Callable(self, "_on_inventory_tree_exiting"))
+    if !inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
+        inventory.item_removed.connect(Callable(self, "_on_item_removed"))
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.is_connected("tree_exiting", Callable(self, "_on_inventory_tree_exiting")):
-        inventory.disconnect("tree_exiting", Callable(self, "_on_inventory_tree_exiting"))
-    if inventory.is_connected("item_removed", Callable(self, "_on_item_removed")):
-        inventory.disconnect("item_removed", Callable(self, "_on_item_removed"))
+    if inventory.tree_exiting.is_connected(Callable(self, "_on_inventory_tree_exiting")):
+        inventory.tree_exiting.disconnect(Callable(self, "_on_inventory_tree_exiting"))
+    if inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
+        inventory.item_removed.disconnect(Callable(self, "_on_item_removed"))
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:

@@ -74,7 +74,7 @@ func _ready():
     assert(size.x > 0, "Inventory width must be positive!")
     assert(size.y > 0, "Inventory height must be positive!")
     _sort_if_needed()
-    connect("item_modified", Callable(self, "_on_item_modified"))
+    item_modified.connect(Callable(self, "_on_item_modified"))
     update_configuration_warnings()
 
 
