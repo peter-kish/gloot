@@ -27,12 +27,12 @@ signal properties_changed
     get:
         return prototype_id
     set(new_prototype_id):
-        var old_prototype_id = prototype_id
-        if old_prototype_id != prototype_id:
-            reset_properties()
-            emit_signal("prototype_id_changed")
-            update_configuration_warnings()
+        if new_prototype_id == prototype_id:
+            return
+        reset_properties()
         prototype_id = new_prototype_id
+        update_configuration_warnings()
+        emit_signal("prototype_id_changed")
 
 @export var properties: Dictionary :
     get:
@@ -72,13 +72,13 @@ func _on_protoset_modified() -> void:
 
 
 func reset_properties() -> void:
-    if !protoset:
+    if !protoset || prototype_id.is_empty():
         properties = {}
         return
 
     # Reset (erase) all properties from the current prototype but preserve the rest
-    var prototype: Dictionary = protoset.get(prototype_id)
-    var keys: Array[String] = properties.keys().duplicate()
+    var prototype: Dictionary = protoset.get_prototype(prototype_id)
+    var keys: Array = properties.keys().duplicate()
     for property in keys:
         if prototype.has(property):
             properties.erase(property)

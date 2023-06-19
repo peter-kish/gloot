@@ -130,7 +130,7 @@ func _on_property_removed(property_name: String) -> void:
     gloot_undo_redo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
 
 
-func _on_prototype_id_changed(new_prototype_id_: String) -> void:
+func _on_prototype_id_changed() -> void:
     _refresh_btn_add_prototype()
     _refresh_btn_rename_prototype()
 
