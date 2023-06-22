@@ -125,6 +125,8 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     var result: Array[InventoryItem]
 
     for item_dst in get_items_under(rect):
+        if item_dst == item:
+            continue
         if ItemStackManager.items_mergable(item_dst, item, [KEY_GRID_POSITION]):
             result.append(item_dst)
 
