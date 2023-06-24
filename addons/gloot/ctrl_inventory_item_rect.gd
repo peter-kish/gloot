@@ -131,8 +131,8 @@ func _gui_input(event: InputEvent) -> void:
 
     if mb_event.double_click:
         if get_global_rect().has_point(get_global_mouse_position()):
-            emit_signal("activated", self)
+            activated.emit(self)
     elif mb_event.is_pressed():
         if get_global_rect().has_point(get_global_mouse_position()):
             var offset: Vector2 = get_global_mouse_position() - get_global_rect().position
-            emit_signal("grabbed", self, offset)
+            grabbed.emit(self, offset)

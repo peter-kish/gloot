@@ -53,4 +53,4 @@ func _on_line_edit_focus_exited(line_edit: LineEdit, idx: int) -> void:
         line_edit.text = var_to_str(values[idx])
         return
     values[idx] = value
-    emit_signal("value_changed", idx)
+    value_changed.emit(idx)

@@ -13,7 +13,7 @@ signal protoset_changed
         return item_protoset
     set(new_item_protoset):
         item_protoset = new_item_protoset
-        emit_signal("protoset_changed")
+        protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
 
@@ -60,13 +60,13 @@ func _ready() -> void:
 
 func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
-    emit_signal("contents_changed")
+    contents_changed.emit()
     _connect_item_signals(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
-    emit_signal("contents_changed")
+    contents_changed.emit()
     _disconnect_item_signals(item)
 
 
@@ -82,7 +82,7 @@ func move_item(from: int, to: int) -> void:
     _items.remove_at(from)
     _items.insert(to, item)
 
-    emit_signal("contents_changed")
+    contents_changed.emit()
 
 
 func get_item_index(item: InventoryItem) -> int:
@@ -112,7 +112,7 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
-    emit_signal("item_modified", item)
+    item_modified.emit(item)
 
 
 func get_items() -> Array[InventoryItem]:

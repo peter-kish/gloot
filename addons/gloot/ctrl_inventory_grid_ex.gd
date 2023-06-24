@@ -106,11 +106,11 @@ func _create_selection_panel() -> void:
 
 
 func _on_selection_mouse_entered() -> void:
-    emit_signal("item_mouse_entered", _selected_item)
+    item_mouse_entered.emit(_selected_item)
 
 
 func _on_selection_mouse_exited() -> void:
-    emit_signal("item_mouse_exited", _selected_item)
+    item_mouse_exited.emit(_selected_item)
 
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:

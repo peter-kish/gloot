@@ -20,7 +20,7 @@ signal properties_changed
 
             protoset.changed.connect(Callable(self, "_on_protoset_modified"))
 
-            emit_signal("protoset_changed")
+            protoset_changed.emit()
             update_configuration_warnings()
 
 @export var prototype_id: String :
@@ -32,14 +32,14 @@ signal properties_changed
         reset_properties()
         prototype_id = new_prototype_id
         update_configuration_warnings()
-        emit_signal("prototype_id_changed")
+        prototype_id_changed.emit()
 
 @export var properties: Dictionary :
     get:
         return properties
     set(new_properties):
         properties = new_properties
-        emit_signal("properties_changed")
+        properties_changed.emit()
         update_configuration_warnings()
 
 var _inventory: Node
@@ -101,12 +101,12 @@ func _notification(what):
 
 func _emit_removed(obj: Object):
     if obj && obj.has_signal("item_removed"):
-        obj.emit_signal("item_removed", self)
+        obj.item_removed.emit(self)
 
 
 func _emit_added(obj: Object):
     if obj && obj.has_signal("item_added"):
-        obj.emit_signal("item_added", self)
+        obj.item_added.emit(self)
 
 
 func get_inventory() -> Node:
@@ -127,7 +127,7 @@ func set_property(property_name: String, value) -> void:
         old_property = properties[property_name]
     properties[property_name] = value
     if old_property != properties[property_name]:
-        emit_signal("properties_changed")
+        properties_changed.emit()
 
 
 func clear_property(property_name: String) -> void:

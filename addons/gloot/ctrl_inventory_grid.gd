@@ -329,15 +329,15 @@ func _on_item_activated(ctrl_inventory_item) -> void:
     if _drag_sprite.get_ref():
         _drag_sprite.get_ref().hide()
 
-    emit_signal("inventory_item_activated", item)
+    inventory_item_activated.emit(item)
 
 
 func _on_item_mouse_entered(ctrl_inventory_item) -> void:
-    emit_signal("item_mouse_entered", ctrl_inventory_item.item)
+    item_mouse_entered.emit(ctrl_inventory_item.item)
 
 
 func _on_item_mouse_exited(ctrl_inventory_item) -> void:
-    emit_signal("item_mouse_exited", ctrl_inventory_item.item)
+    item_mouse_exited.emit(ctrl_inventory_item.item)
 
 
 func _select(item: InventoryItem) -> void:
@@ -349,9 +349,9 @@ func _select(item: InventoryItem) -> void:
     _refresh_selection()
 
     if _selected_item:
-        emit_signal("item_selected", _selected_item)
+        item_selected.emit(_selected_item)
     else:
-        emit_signal("item_deselected", prev_selected_item)
+        item_deselected.emit(prev_selected_item)
 
 
 # Using _input instead of _gui_input because _gui_input is only called for "mouse released"
@@ -407,9 +407,9 @@ func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) ->
     # Using WeakRefs for the item_dropped signals, as items might be freed at some point of dropping
     # (when merging with other items)
     var wr_item := weakref(item)
-    emit_signal("item_dropped", wr_item, global_grabbed_item_pos)
+    item_dropped.emit(wr_item, global_grabbed_item_pos)
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.emit_signal("item_dropped", wr_item, global_grabbed_item_pos)
+        _gloot.item_dropped.emit(wr_item, global_grabbed_item_pos)
 
 
 func _get_grabbed_item_global_pos() -> Vector2:

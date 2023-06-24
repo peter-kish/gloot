@@ -52,7 +52,7 @@ var inventory :
         _inventory = new_inv
         _connect_inventory_signals()
 
-        emit_signal("inventory_changed", inventory)
+        inventory_changed.emit(inventory)
         
 var item: InventoryItem :
     get:
@@ -71,9 +71,9 @@ var item: InventoryItem :
         item = new_item
         if item != null:
             item.tree_exiting.connect(Callable(self, "_on_item_tree_exiting"))
-            emit_signal("item_set", item)
+            item_set.emit(item)
         else:
-            emit_signal("item_cleared")
+            item_cleared.emit()
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"

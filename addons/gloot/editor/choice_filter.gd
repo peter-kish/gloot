@@ -98,7 +98,7 @@ func _on_btn_pick() -> void:
 
     var selected_item = selected_items[0]
     var selected_value_index = item_list.get_item_metadata(selected_item)
-    emit_signal("choice_picked", selected_value_index)
+    choice_picked.emit(selected_value_index)
 
 
 func _on_filter_text_changed(_new_text: String) -> void:
@@ -107,12 +107,12 @@ func _on_filter_text_changed(_new_text: String) -> void:
 
 func _on_item_activated(index: int) -> void:
     var selected_value_index = item_list.get_item_metadata(index)
-    emit_signal("choice_picked", selected_value_index)
+    choice_picked.emit(selected_value_index)
 
 
 func _on_item_selected(index: int) -> void:
     var selected_value_index = item_list.get_item_metadata(index)
-    emit_signal("choice_selected", selected_value_index)
+    choice_selected.emit(selected_value_index)
 
 
 func get_selected_item() -> int:

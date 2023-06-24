@@ -23,7 +23,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
             if _bounds_broken():
                 size = old_size
         if size != old_size:
-            emit_signal("size_changed")
+            size_changed.emit()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -172,7 +172,7 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     var rect := Rect2i(position, item_size)
     if rect_free(rect, item):
         _move_item_to_unsafe(item, position)
-        emit_signal("contents_changed")
+        contents_changed.emit()
         return true
 
     return false

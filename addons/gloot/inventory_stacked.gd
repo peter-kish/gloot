@@ -17,7 +17,7 @@ const KEY_WEIGHT: String = "weight"
                 return
         capacity = new_capacity
         update_configuration_warnings()
-        emit_signal("capacity_changed")
+        capacity_changed.emit()
 var _occupied_space: float
 var occupied_space: float :
     get:
@@ -62,7 +62,7 @@ func _calculate_occupied_space() -> void:
         _occupied_space += _get_item_weight(item)
 
     if _occupied_space != old_occupied_space:
-        emit_signal("occupied_space_changed")
+        occupied_space_changed.emit()
 
     update_configuration_warnings()
     if !Engine.is_editor_hint():
@@ -153,7 +153,7 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 
     var new_item = ItemStackManager.split_stack(item, new_stack_size)
     if new_item:
-        emit_signal("occupied_space_changed")
+        occupied_space_changed.emit()
         _calculate_occupied_space()
         assert(super.add_item(new_item))
     return new_item

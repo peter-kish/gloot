@@ -97,7 +97,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_list_item_activated(index: int) -> void:
-    emit_signal("inventory_item_activated", _get_inventory_item(index))
+    inventory_item_activated.emit(_get_inventory_item(index))
 
 
 func _on_item_modified(_item: InventoryItem) -> void:

@@ -80,7 +80,7 @@ func _on_line_edit_focus_exited(line_edit: LineEdit) -> void:
         line_edit.text = var_to_str(value)
         return
     value = new_value
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_color_picker() -> ColorPickerButton:
@@ -94,7 +94,7 @@ func _create_color_picker() -> ColorPickerButton:
 
 func _on_color_picked(picker: ColorPickerButton) -> void:
     value = picker.color
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_checkbox() -> CheckButton:
@@ -108,7 +108,7 @@ func _create_checkbox() -> CheckButton:
 
 func _on_checkbox(checkbox: CheckButton) -> void:
     value = checkbox.button_pressed
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_v2_editor() -> Control:
@@ -128,7 +128,7 @@ func _create_v2i_editor() -> Control:
 func _on_v2_value_changed(_idx: int, v2_editor: Control) -> void:
     value.x = v2_editor.values[0]
     value.y = v2_editor.values[1]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_v3_editor() -> Control:
@@ -149,7 +149,7 @@ func _on_v3_value_changed(_idx: int, v3_editor: Control) -> void:
     value.x = v3_editor.values[0]
     value.y = v3_editor.values[1]
     value.z = v3_editor.values[2]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_r2_editor() -> Control:
@@ -171,7 +171,7 @@ func _on_r2_value_changed(_idx: int, r2_editor: Control) -> void:
     value.position.y = r2_editor.values[1]
     value.size.x = r2_editor.values[2]
     value.size.y = r2_editor.values[3]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_plane_editor() -> Control:
@@ -186,7 +186,7 @@ func _on_plane_value_changed(_idx: int, plane_editor: Control) -> void:
     value.y = plane_editor.values[1]
     value.z = plane_editor.values[2]
     value.d = plane_editor.values[3]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_quat_editor() -> Control:
@@ -201,7 +201,7 @@ func _on_quat_value_changed(_idx: int, quat_editor: Control) -> void:
     value.y = quat_editor.values[1]
     value.z = quat_editor.values[2]
     value.d = quat_editor.values[3]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_aabb_editor() -> Control:
@@ -219,7 +219,7 @@ func _on_aabb_value_changed(_idx: int, aabb_editor: Control) -> void:
     value.size.x = aabb_editor.values[3]
     value.size.y = aabb_editor.values[4]
     value.size.z = aabb_editor.values[5]
-    emit_signal("value_changed")
+    value_changed.emit()
 
 
 func _create_multifloat_editor(

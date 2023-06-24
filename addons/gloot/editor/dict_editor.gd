@@ -74,7 +74,7 @@ func _on_btn_add() -> void:
     var name: String = edt_property_name.text
     var type: int = opt_type.get_selected_id()
     if _add_dict_field(name, type):
-        emit_signal("value_changed", name, dictionary[name])
+        value_changed.emit(name, dictionary[name])
     refresh()
 
 
@@ -156,7 +156,7 @@ func _add_value_editor(key: String) -> void:
 
 func _on_value_changed(key: String, value_editor: Control) -> void:
     dictionary[key] = value_editor.value
-    emit_signal("value_changed", key, value_editor.value)
+    value_changed.emit(key, value_editor.value)
 
 
 func _add_remove_button(key: String) -> void:
@@ -172,7 +172,7 @@ func _add_remove_button(key: String) -> void:
 
 func _on_remove_button(key: String) -> void:
     dictionary.erase(key)
-    emit_signal("value_removed", key)
+    value_removed.emit(key)
     refresh()
 
 
