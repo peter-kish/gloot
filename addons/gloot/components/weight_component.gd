@@ -6,9 +6,6 @@ signal occupied_space_changed
 
 const KEY_WEIGHT: String = "weight"
 
-# TODO: Remove this
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
-
 
 var capacity: float :
     get:
@@ -77,8 +74,7 @@ func _get_item_unit_weight(item: InventoryItem) -> float:
 func _get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
-    # TODO: Use the StackComponent
-    return ItemStackManager.get_item_stack_size(item) * _get_item_unit_weight(item)
+    return StacksComponent.get_item_stack_size(item) * _get_item_unit_weight(item)
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:
