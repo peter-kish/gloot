@@ -34,22 +34,8 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
-func _get_prototype_size(prototype_id: String) -> Vector2i:
-    if item_protoset:
-        var width: int = item_protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
-        var height: int = item_protoset.get_item_property(prototype_id, KEY_HEIGHT, 1)
-        return Vector2i(width, height)
-    return Vector2i(1, 1)
-
-
 func get_item_position(item: InventoryItem) -> Vector2i:
     return item.get_property(KEY_GRID_POSITION, Vector2i.ZERO)
-
-
-func _get_item_index(item: InventoryItem) -> int:
-    var item_index: int = get_items().find(item)
-    assert(item_index >= 0, "The inventory does not contain this item!")
-    return item_index
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:
