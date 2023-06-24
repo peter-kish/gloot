@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://6ij3qlnr0qr3"]
+[gd_scene load_steps=10 format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
+[ext_resource type="Script" path="res://tests/inventory_space_test.gd" id="2_7derb"]
 [ext_resource type="Script" path="res://tests/inventory_stacked_tests.gd" id="3"]
 [ext_resource type="Script" path="res://tests/item_slot_tests.gd" id="4"]
 [ext_resource type="Script" path="res://tests/inventory_grid_tests.gd" id="5"]
@@ -11,6 +12,9 @@
 
 [node name="InventorySystemTests" type="Node"]
 script = ExtResource("15")
+
+[node name="InventorySpaceTest" type="Node" parent="."]
+script = ExtResource("2_7derb")
 
 [node name="VerificationTest" type="Node" parent="."]
 script = ExtResource("14")
