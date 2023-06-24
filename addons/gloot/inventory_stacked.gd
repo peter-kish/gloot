@@ -37,14 +37,6 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
-func _get_default_item_weight(prototype_id: String) -> float:
-    if item_protoset && item_protoset.has(prototype_id):
-        var weight = item_protoset.get_item_property(prototype_id, KEY_WEIGHT, 1.0)
-        var stack_size = ItemStackManager.get_prototype_stack_size(item_protoset, prototype_id)
-        return weight * stack_size
-    return 1.0
-
-
 func has_unlimited_capacity() -> bool:
     return capacity == 0.0
 
