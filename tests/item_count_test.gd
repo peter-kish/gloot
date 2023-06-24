@@ -54,7 +54,7 @@ func test_eq() -> void:
 
 
 func test_less() -> void:
-    var test_data =[
+    var test_data = [
         {input = {left = 10, right = 20}, expected = true},
         {input = {left = 20, right = 10}, expected = false},
         {input = {left = 10, right = 10}, expected = false},
