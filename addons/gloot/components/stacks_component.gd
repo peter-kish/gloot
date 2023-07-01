@@ -13,12 +13,12 @@ enum MergeResult {SUCCESS = 0, FAIL, PARTIAL}
 
 # TODO: Check which util functions can be made private
 # TODO: Consider making these util methods work with ItemCount
-static func get_free_stack_space(item: InventoryItem) -> int:
+static func _get_free_stack_space(item: InventoryItem) -> int:
     assert(item != null, "item is null!")
     return get_item_max_stack_size(item) - get_item_stack_size(item)
 
 
-static func has_custom_property(item: InventoryItem, property: String, value) -> bool:
+static func _has_custom_property(item: InventoryItem, property: String, value) -> bool:
     assert(item != null, "item is null!")
     return item.properties.has(property) && item.properties[property] == value;
 
@@ -77,8 +77,11 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
     assert(item_1 != null, "item_1 is null!")
     assert(item_2 != null, "item_2 is null!")
 
-    # TODO: Add GridComponent.KEY_GRID_POSITION to the list once implemented
-    var ignore_properies: Array[String] = [KEY_STACK_SIZE, KEY_MAX_STACK_SIZE]
+    var ignore_properies: Array[String] = [
+        KEY_STACK_SIZE,
+        KEY_MAX_STACK_SIZE,
+        GridComponent.KEY_GRID_POSITION
+    ]
 
     if item_1.prototype_id != item_2.prototype_id:
         return false
@@ -86,13 +89,13 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
     for property in item_1.properties.keys():
         if property in ignore_properies:
             continue
-        if !has_custom_property(item_2, property, item_1.properties[property]):
+        if !_has_custom_property(item_2, property, item_1.properties[property]):
             return false
 
     for property in item_2.properties.keys():
         if property in ignore_properies:
             continue
-        if !has_custom_property(item_1, property, item_2.properties[property]):
+        if !_has_custom_property(item_1, property, item_2.properties[property]):
             return false
 
     return true
@@ -107,14 +110,14 @@ func add_item_automerge(
 
     var target_items = get_mergable_items(item)
     for target_item in target_items:
-        if merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
+        if _merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
             return
 
     inventory.add_item(item)
 
 
-static func merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
-    var result := merge_stacks(item_dst, item_src)
+static func _merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
+    var result := _merge_stacks(item_dst, item_src)
     if result == MergeResult.SUCCESS:
         if item_src.get_inventory():
             item_src.get_inventory().remove_item(item_src)
@@ -122,7 +125,7 @@ static func merge_stacks_autodelete(item_dst: InventoryItem, item_src: Inventory
     return result
 
 
-static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
+static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
 
@@ -160,21 +163,19 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     return new_item
 
 
-static func join_stacks(
-    inventory: Inventory,
+func join_stacks(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> bool:
-    if (!stacks_joinable(inventory, item_dst, item_src)):
+    if (!stacks_joinable(item_dst, item_src)):
         return false
 
     # TODO: Check if this can be an assertion
-    merge_stacks_autodelete(item_dst, item_src)
+    _merge_stacks_autodelete(item_dst, item_src)
     return true
 
 
-static func stacks_joinable(
-    inventory: Inventory,
+func stacks_joinable(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> bool:
@@ -185,7 +186,7 @@ static func stacks_joinable(
     if not items_mergable(item_dst, item_src):
         return false
 
-    var dst_free_space = get_free_stack_space(item_dst)
+    var dst_free_space = _get_free_stack_space(item_dst)
     if dst_free_space < get_item_stack_size(item_src):
         return false
 
@@ -202,6 +203,6 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     var item_count = ItemCount.new(0)
     for i in inventory.get_items():
         if items_mergable(i, item):
-            var free_stack_space := get_free_stack_space(i)
+            var free_stack_space := _get_free_stack_space(i)
             item_count.expand(ItemCount.new(free_stack_space))
     return item_count
