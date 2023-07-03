@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://6ij3qlnr0qr3"]
+[gd_scene load_steps=13 format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
 [ext_resource type="Script" path="res://tests/item_count_test.gd" id="2_e28iq"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://tests/item_slot_tests.gd" id="4"]
 [ext_resource type="Script" path="res://tests/component_tests/stacks_component_tests.gd" id="4_fj0u6"]
 [ext_resource type="Script" path="res://tests/inventory_grid_tests.gd" id="5"]
+[ext_resource type="Script" path="res://tests/component_tests/grid_component_tests.gd" id="5_vn73t"]
 [ext_resource type="Script" path="res://tests/inventory_tests.gd" id="6"]
 [ext_resource type="Script" path="res://tests/inventory_grid_stacked_tests.gd" id="8_btq38"]
 [ext_resource type="Script" path="res://tests/verification_test.gd" id="14"]
@@ -23,6 +24,9 @@ script = ExtResource("3_2p3c4")
 
 [node name="StacksComponentTest" type="Node" parent="."]
 script = ExtResource("4_fj0u6")
+
+[node name="GridComponentTest" type="Node" parent="."]
+script = ExtResource("5_vn73t")
 
 [node name="VerificationTest" type="Node" parent="."]
 script = ExtResource("14")

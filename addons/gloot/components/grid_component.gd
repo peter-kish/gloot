@@ -5,6 +5,7 @@ signal size_changed
 
 const Verify = preload("res://addons/gloot/verify.gd")
 
+# TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
 const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
@@ -38,6 +39,16 @@ func get_item_position(item: InventoryItem) -> Vector2i:
     return item.get_property(KEY_GRID_POSITION, Vector2i.ZERO)
 
 
+func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
+    var new_rect := Rect2i(new_position, get_item_size(item))
+    var inv_rect := Rect2i(Vector2i.ZERO, size)
+    if !rect_free(new_rect, item):
+        return false
+
+    item.set_property(KEY_GRID_POSITION, new_position)
+    return true
+
+
 func get_item_size(item: InventoryItem) -> Vector2i:
     var item_width: int = item.get_property(KEY_WIDTH, 1)
     var item_height: int = item.get_property(KEY_HEIGHT, 1)
@@ -48,10 +59,33 @@ func get_item_size(item: InventoryItem) -> Vector2i:
     return Vector2i(item_width, item_height)
 
 
+func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
+    if new_size.x < 1 || new_size.y < 1:
+        return false
+
+    var new_rect := Rect2i(get_item_position(item), new_size)
+    if !rect_free(new_rect, item):
+        return false
+
+    item.set_property(KEY_WIDTH, new_size.x)
+    item.set_property(KEY_HEIGHT, new_size.y)
+    return true
+
+
 func get_item_rect(item: InventoryItem) -> Rect2i:
     var item_pos := get_item_position(item)
     var item_size := get_item_size(item)
     return Rect2i(item_pos, item_size)
+
+
+func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
+    if !rect_free(new_rect, item):
+        return false
+    if !set_item_position(item, new_rect.position):
+        return false
+    if !set_item_size(item, new_rect.size):
+        return false
+    return true
 
 
 func _is_sorted() -> bool:
@@ -142,6 +176,8 @@ func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vect
 func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     assert(inventory != null, "Inventory not set!")
 
+    if rect.position.x < 0 || rect.position.y < 0 || rect.size.x < 1 || rect.size.y < 1:
+        return false
     if rect.position.x + rect.size.x > size.x:
         return false
     if rect.position.y + rect.size.y > size.y:
