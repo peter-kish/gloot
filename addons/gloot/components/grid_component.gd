@@ -88,6 +88,14 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
     return true
 
 
+func _get_prototype_size(prototype_id: String) -> Vector2i:
+    assert(inventory != null, "Inventory not set!")
+    assert(inventory.item_protoset != null, "Inventory protoset is null!")
+    var width: int = inventory.item_protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
+    var height: int = inventory.item_protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
+    return Vector2i(width, height)
+
+
 func _is_sorted() -> bool:
     assert(inventory != null, "Inventory not set!")
     for item1 in inventory.get_items():
@@ -119,9 +127,18 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
 
 func create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
+    var item_rect := Rect2i(position, _get_prototype_size(prototype_id))
+    if !rect_free(item_rect):
+        return null
+
     var item = inventory.create_and_add_item(prototype_id)
-    if item:
-        move_item_to(item, position)
+    if item == null:
+        return null
+
+    if not move_item_to(item, position):
+        inventory.remove_item(item)
+        return null
+
     return item
 
 
