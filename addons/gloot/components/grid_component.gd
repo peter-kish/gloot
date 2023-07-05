@@ -258,11 +258,11 @@ func _sort_if_needed() -> void:
 
 func get_space_for(item: InventoryItem) -> ItemCount:
     var occupied_rects: Array[Rect2i]
-    var item_size = item.get_size()
-    var free_space = find_free_space(item_size, occupied_rects)
-    while free_space.ok():
-        occupied_rects.append(free_space.get())
-        free_space = find_free_space(size, occupied_rects)
+    var item_size = get_item_size(item)
+    var free_space := find_free_space(item_size, occupied_rects)
+    while Verify.vector_positive(free_space):
+        occupied_rects.append(Rect2i(free_space, item_size))
+        free_space = find_free_space(item_size, occupied_rects)
     return ItemCount.new(occupied_rects.size())
 
 

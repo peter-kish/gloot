@@ -20,6 +20,8 @@ func init_suite():
         "test_move_item_to",
         "test_transfer_to",
         "test_rect_free",
+        "test_sort",
+        "test_get_space_for",
     ]
 
 
@@ -203,3 +205,35 @@ func test_rect_free() -> void:
     
     for data in test_data:
         assert(grid_component.rect_free(data.input.rect, data.input.exception) == data.expected)
+
+
+func test_sort() -> void:
+    var item1 = grid_component.create_and_add_item_at("item_1x1", Vector2i.ZERO)
+    var item2 = grid_component.create_and_add_item_at("item_1x1", Vector2i(1, 0))
+    var item3 = grid_component.create_and_add_item_at("item_2x2", Vector2i(0, 1))
+
+    grid_component.sort()
+    assert(grid_component.get_item_position(item3) == Vector2i.ZERO)
+    assert(grid_component.get_item_position(item1) == Vector2i(0, 2))
+    assert(grid_component.get_item_position(item2) == Vector2i(0, 3))
+
+    inventory.remove_item(item1)
+    inventory.remove_item(item2)
+    inventory.remove_item(item3)
+    item1.free()
+    item2.free()
+    item3.free()
+
+
+func test_get_space_for() -> void:
+    var test_data = [
+        {input = Vector2i.ONE, expected = ItemCount.new(0)},
+        {input = Vector2i(2, 2), expected = ItemCount.new(1)},
+        {input = Vector2i(3, 3), expected = ItemCount.new(1)},
+        {input = Vector2i(4, 4), expected = ItemCount.new(4)},
+    ]
+
+    for data in test_data:
+        grid_component.size = data.input
+        assert(grid_component.get_space_for(item).eq(data.expected))
+
