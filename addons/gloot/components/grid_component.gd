@@ -178,12 +178,13 @@ func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
         item.properties.erase(KEY_GRID_POSITION)
 
 
-func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool:
+func transfer_to(item: InventoryItem, destination: GridComponent, position: Vector2i) -> bool:
     assert(inventory != null, "Inventory not set!")
+    assert(destination.inventory != null, "Destination inventory not set!")
     var item_size = get_item_size(item)
     var rect := Rect2i(position, item_size)
     if destination.rect_free(rect):
-        if inventory.transfer(item, destination):
+        if inventory.transfer(item, destination.inventory):
             destination.move_item_to(item, position)
             return true
 
