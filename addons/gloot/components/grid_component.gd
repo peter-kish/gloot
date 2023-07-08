@@ -16,6 +16,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
     get:
         return size
     set(new_size):
+        assert(inventory, "Inventory not set!")
         assert(new_size.x > 0, "Inventory width must be positive!")
         assert(new_size.y > 0, "Inventory height must be positive!")
         var old_size = size
@@ -39,10 +40,11 @@ func get_item_position(item: InventoryItem) -> Vector2i:
     return item.get_property(KEY_GRID_POSITION, Vector2i.ZERO)
 
 
+# TODO: Consider making a static "unsafe" version of this
 func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
     var new_rect := Rect2i(new_position, get_item_size(item))
     var inv_rect := Rect2i(Vector2i.ZERO, size)
-    if !rect_free(new_rect, item):
+    if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
     item.set_property(KEY_GRID_POSITION, new_position)
@@ -59,12 +61,13 @@ func get_item_size(item: InventoryItem) -> Vector2i:
     return Vector2i(item_width, item_height)
 
 
+# TODO: Consider making a static "unsafe" version of this
 func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if new_size.x < 1 || new_size.y < 1:
         return false
 
     var new_rect := Rect2i(get_item_position(item), new_size)
-    if !rect_free(new_rect, item):
+    if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
     item.set_property(KEY_WIDTH, new_size.x)

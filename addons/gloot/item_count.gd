@@ -21,11 +21,29 @@ func is_inf() -> bool:
     return count < 0
 
 
-func expand(item_count_: ItemCount) -> void:
+func add(item_count_: ItemCount) -> ItemCount:
     if item_count_.is_inf():
         count = Inf
     elif !self.is_inf():
         count += item_count_.count
+
+    return self
+
+
+func mul(item_count_: ItemCount) -> ItemCount:
+    if (count == 0):
+        return self
+    if item_count_.is_inf():
+        count = Inf
+        return self
+    if item_count_.count == 0:
+        count = 0
+        return self
+    if self.is_inf():
+        return self
+
+    count *= item_count_.count
+    return self
 
 
 func eq(item_count_: ItemCount) -> bool:
@@ -42,4 +60,10 @@ func less(item_count_: ItemCount) -> bool:
         return false
 
     return count < item_count_.count
+
+
+static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
+    if item_count_l.less(item_count_r):
+        return item_count_l
+    return item_count_r
     

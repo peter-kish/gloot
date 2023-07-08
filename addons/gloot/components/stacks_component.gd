@@ -204,5 +204,5 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     for i in inventory.get_items():
         if items_mergable(i, item):
             var free_stack_space := _get_free_stack_space(i)
-            item_count.expand(ItemCount.new(free_stack_space))
+            item_count.add(ItemCount.new(free_stack_space))
     return item_count

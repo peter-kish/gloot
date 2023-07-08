@@ -46,6 +46,7 @@ func test_set_size() -> void:
 
 func test_item_position() -> void:
     assert(grid_component.get_item_position(item) == Vector2i.ZERO)
+    assert(inventory.add_item(item))
 
     var test_data = [
         {input = Vector2i(9, 9), expected = {return_value = false, position = Vector2i.ZERO}},
@@ -60,6 +61,7 @@ func test_item_position() -> void:
 
 func test_item_size() -> void:
     assert(grid_component.get_item_size(item) == Vector2i(2, 2))
+    assert(inventory.add_item(item))
 
     var test_data = [
         {input = Vector2i(-1, -1), expected = {return_value = false, size = Vector2i(2, 2)}},
@@ -74,6 +76,7 @@ func test_item_size() -> void:
 
 func test_item_rect() -> void:
     assert(grid_component.get_item_rect(item) == Rect2i(0, 0, 2, 2))
+    assert(inventory.add_item(item))
 
     var test_data = [
         {input = Rect2i(0, 0, -1, -1), expected = {return_value = false, rect = Rect2i(0, 0, 2, 2)}},

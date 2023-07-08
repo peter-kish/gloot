@@ -4,7 +4,7 @@ const Inf = ItemCount.Inf
 
 
 func init_suite():
-    tests = ["test_init", "test_expand", "test_eq", "test_less"]
+    tests = ["test_init", "test_add", "test_eq", "test_less"]
 
 
 func test_init() -> void:
@@ -20,7 +20,7 @@ func test_init() -> void:
         assert(count.is_inf() == data.expected.inf)
 
 
-func test_expand() -> void:
+func test_add() -> void:
     var test_data = [
         {input = {left = 10, right = 10}, expected = {count = 20, inf = false}},
         {input = {left = 10, right = Inf}, expected = {count = -1, inf = true}},
@@ -31,7 +31,7 @@ func test_expand() -> void:
     for data in test_data:
         var count = ItemCount.new(data.input.left)
         var count2 = ItemCount.new(data.input.right)
-        count.expand(count2)
+        count.add(count2)
         assert(count.count == data.expected.count)
         assert(count.is_inf() == data.expected.inf)
 
