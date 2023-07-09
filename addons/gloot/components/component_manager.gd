@@ -51,36 +51,40 @@ func get_configuration() -> int:
 
 func get_space_for(item: InventoryItem) -> ItemCount:
     match get_configuration():
-        Configuration.WSG:
-            var grid_space := grid_component_.get_space_for(item)
-            var max_stack_size := ItemCount.new(stacks_component_.get_item_max_stack_size(item))
-            var free_stacks_space := stacks_component_.get_free_stack_space_for(item)
-            var weight_space := weight_component_.get_space_for(item)
-            return ItemCount.min(grid_space.mul(max_stack_size).add(free_stacks_space), weight_space)
-        Configuration.WS:
-            return weight_component_.get_space_for(item)
-        Configuration.WG:
-            return ItemCount.min(grid_component_.get_space_for(item), weight_component_.get_space_for(item))
-        Configuration.SG:
-            var grid_space := grid_component_.get_space_for(item)
-            var max_stack_size := ItemCount.new(stacks_component_.get_item_max_stack_size(item))
-            var free_stacks_space := stacks_component_.get_free_stack_space_for(item)
-            return grid_space.mul(max_stack_size).add(free_stacks_space)
         Configuration.W:
             return weight_component_.get_space_for(item)
         Configuration.S:
             return stacks_component_.get_space_for(item)
         Configuration.G:
             return grid_component_.get_space_for(item)
+        Configuration.WS:
+            return _ws_get_space_for(item)
+        Configuration.WG:
+            return ItemCount.min(grid_component_.get_space_for(item), weight_component_.get_space_for(item))
+        Configuration.SG:
+            return _sg_get_space_for(item)
+        Configuration.WSG:
+            return ItemCount.min(_sg_get_space_for(item), _ws_get_space_for(item))
 
     return ItemCount.new(ItemCount.Inf)
 
 
+func _ws_get_space_for(item: InventoryItem) -> ItemCount:
+    var stack_size := ItemCount.new(stacks_component_.get_item_stack_size(item))
+    var space := weight_component_.get_space_for(item).div(stack_size)
+    return space
+
+
+func _sg_get_space_for(item: InventoryItem) -> ItemCount:
+    var grid_space := grid_component_.get_space_for(item)
+    var max_stack_size := ItemCount.new(stacks_component_.get_item_max_stack_size(item))
+    var stack_size := ItemCount.new(stacks_component_.get_item_stack_size(item))
+    var free_stacks_space := stacks_component_.get_free_stack_space_for(item)
+    return grid_space.mul(max_stack_size).add(free_stacks_space).div(stack_size)
+
+
 func has_space_for(item: InventoryItem) -> bool:
-    var count := ItemCount.new(1)
-    if stacks_component_:
-        count = ItemCount.new(StacksComponent.get_item_stack_size(item))
-    return not get_space_for(item).less(count)
+    return not get_space_for(item).less(ItemCount.new(1))
 
 
 func enable_weight_component_(capacity: float = 0.0) -> void:

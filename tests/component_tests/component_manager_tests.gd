@@ -64,8 +64,8 @@ func test_w_has_space_for() -> void:
 
     for data in test_data:
         WeightComponent.set_item_weight(item, data.input)
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)
 
 
 func test_s_has_space_for() -> void:
@@ -85,8 +85,8 @@ func test_s_has_space_for() -> void:
     for data in test_data:
         StacksComponent.set_item_max_stack_size(item, data.input)
         StacksComponent.set_item_stack_size(item, data.input)
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)
 
 
 func test_g_has_space_for() -> void:
@@ -106,8 +106,8 @@ func test_g_has_space_for() -> void:
 
     for data in test_data:
         assert(grid_component.set_item_size(item, data.input))
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)
 
 
 func test_ws_has_space_for() -> void:
@@ -122,19 +122,20 @@ func test_ws_has_space_for() -> void:
 
     var test_data = [
         {input = {weight = 1.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(10)}},
-        {input = {weight = 10.0, stack_size = 10}, expected = {has_space = false, space = ItemCount.new(1)}},
+        {input = {weight = 10.0, stack_size = 10}, expected = {has_space = false, space = ItemCount.new(0)}},
         {input = {weight = 10.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = {weight = 1.0, stack_size = 10}, expected = {has_space = true, space = ItemCount.new(10)}},
+        {input = {weight = 1.0, stack_size = 10}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {weight = 11.0, stack_size = 1}, expected = {has_space = false, space = ItemCount.new(0)}},
-        {input = {weight = 1.0, stack_size = 11}, expected = {has_space = false, space = ItemCount.new(10)}},
+        {input = {weight = 1.0, stack_size = 11}, expected = {has_space = false, space = ItemCount.new(0)}},
     ]
 
     for data in test_data:
         WeightComponent.set_item_weight(item, data.input.weight)
         StacksComponent.set_item_max_stack_size(item, data.input.stack_size)
         StacksComponent.set_item_stack_size(item, data.input.stack_size)
+        var space : = component_manager.get_space_for(item)
+        assert(space.eq(data.expected.space))
         assert(component_manager.has_space_for(item) == data.expected.has_space)
-        assert(component_manager.get_space_for(item).eq(data.expected.space))
 
 
 func test_wg_has_space_for() -> void:
@@ -158,8 +159,8 @@ func test_wg_has_space_for() -> void:
     for data in test_data:
         WeightComponent.set_item_weight(item, data.input.weight)
         assert(grid_component.set_item_size(item, data.input.size))
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)
 
 
 func test_sg_has_space_for() -> void:
@@ -177,8 +178,8 @@ func test_sg_has_space_for() -> void:
         {input = {stack_size = 1, max_stack_size = 1, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(18)}},
         {input = {stack_size = 1, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(2)}},
-        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(2)}},
-        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(18)}},
+        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(1)}},
+        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.new(0)}},
     ]
 
@@ -186,8 +187,8 @@ func test_sg_has_space_for() -> void:
         assert(grid_component.set_item_size(item, data.input.size))
         StacksComponent.set_item_max_stack_size(item, data.input.max_stack_size)
         StacksComponent.set_item_stack_size(item, data.input.stack_size)
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)
 
 
 func test_wsg_has_space_for() -> void:
@@ -209,7 +210,7 @@ func test_wsg_has_space_for() -> void:
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = {weight = 10.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 1, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.new(0)}},
-        {input = {weight = 10.0, stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.new(1)}},
+        {input = {weight = 10.0, stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.new(0)}},
     ]
 
     for data in test_data:
@@ -217,5 +218,5 @@ func test_wsg_has_space_for() -> void:
         assert(grid_component.set_item_size(item, data.input.size))
         StacksComponent.set_item_max_stack_size(item, data.input.max_stack_size)
         StacksComponent.set_item_stack_size(item, data.input.stack_size)
-        assert(component_manager.has_space_for(item) == data.expected.has_space)
         assert(component_manager.get_space_for(item).eq(data.expected.space))
+        assert(component_manager.has_space_for(item) == data.expected.has_space)

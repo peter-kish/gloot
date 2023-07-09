@@ -46,6 +46,23 @@ func mul(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+func div(item_count_: ItemCount) -> ItemCount:
+    assert(item_count_.count > 0, "Can't devide by zero!")
+    if (count == 0):
+        return self
+    if item_count_.is_inf() && self.is_inf():
+        count = 1
+        return self
+    if self.is_inf():
+        return self
+    if item_count_.is_inf():
+        count = 0
+        return self
+
+    count /= item_count_.count
+    return self
+
+
 func eq(item_count_: ItemCount) -> bool:
     return item_count_.count == count
 
@@ -60,6 +77,18 @@ func less(item_count_: ItemCount) -> bool:
         return false
 
     return count < item_count_.count
+
+
+func gt(item_count_: ItemCount) -> bool:
+    if item_count_.is_inf():
+        if self.is_inf():
+            return false
+        return false 
+
+    if self.is_inf():
+        return true
+
+    return count > item_count_.count
 
 
 static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
