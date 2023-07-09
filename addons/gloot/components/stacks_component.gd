@@ -206,3 +206,18 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
             var free_stack_space := _get_free_stack_space(i)
             item_count.add(ItemCount.new(free_stack_space))
     return item_count
+
+
+func pack_item(item: InventoryItem) -> bool:
+    var free_stack_space := get_free_stack_space_for(item)
+    var stacks_size := ItemCount.new(get_item_stack_size(item))
+    if stacks_size.gt(free_stack_space):
+        return false
+
+    var mergable_items = get_mergable_items(item)
+    for mergable_item in mergable_items:
+        if _merge_stacks_autodelete(mergable_item, item) == MergeResult.SUCCESS:
+            return true
+
+    # TODO: Make sure the inventory is unchanged when returning false
+    return false

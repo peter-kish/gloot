@@ -95,4 +95,8 @@ static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
     if item_count_l.less(item_count_r):
         return item_count_l
     return item_count_r
-    
+
+
+# TODO: Implement le()
+# TODO: Implement ge()
+# TODO: Implement max()

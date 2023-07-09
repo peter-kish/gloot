@@ -28,20 +28,6 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
             size_changed.emit()
 
 
-func _init() -> void:
-    inventory_set.connect(Callable(self, "_on_inventory_set"))
-
-
-func _on_inventory_set() -> void:
-    inventory.item_added.connect(Callable(self, "_on_item_added"))
-
-
-func _on_item_added(item: InventoryItem) -> void:
-    var free_place := find_free_place(item, item)
-    if free_place.success:
-        assert(move_item_to(item, free_place.position), "Can't move the item to the given place")
-    
-
 func _bounds_broken() -> bool:
     for item in inventory.get_items():
         if !rect_free(get_item_rect(item), item):
@@ -187,6 +173,14 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
         return true
 
     return false
+
+
+func move_item_to_free_spot(item: InventoryItem) -> bool:
+    var free_place := find_free_place(item, item)
+    if not free_place.success:
+        return false
+
+    return move_item_to(item, free_place.position)
 
 
 func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:

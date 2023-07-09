@@ -18,10 +18,33 @@ var inventory: Inventory = null :
             stacks_component_.inventory = inventory
         if grid_component_ != null:
             grid_component_.inventory = inventory
+        inventory.item_added.connect(Callable(self, "_on_item_added"))
         inventory_set.emit()
 
 
 enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
+
+
+func _on_item_added(item: InventoryItem) -> void:
+    assert(_enforce_constraints(item))
+
+
+func _enforce_constraints(item: InventoryItem) -> bool:
+    match get_configuration():
+        Configuration.G:
+            return grid_component_.move_item_to_free_spot(item)
+        Configuration.WG:
+            return grid_component_.move_item_to_free_spot(item)
+        Configuration.SG:
+            if not grid_component_.move_item_to_free_spot(item):
+                return stacks_component_.pack_item(item)
+            return false
+        Configuration.WSG:
+            if not grid_component_.move_item_to_free_spot(item):
+                return stacks_component_.pack_item(item)
+            return false
+
+    return true
 
 
 func get_configuration() -> int:
