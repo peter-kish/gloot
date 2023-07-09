@@ -46,27 +46,27 @@ func _parse_begin(object: Object) -> void:
 
 func _parse_property(object: Object,
         type: Variant.Type,
-        path: String,
+        name: String,
         hint: PropertyHint,
         hint_string: String,
-        usage: PropertyUsageFlags,
+        usage: int,
         wide: bool) -> bool:
-    if (object is InventoryItem) && path == "properties":
+    if (object is InventoryItem) && name == "properties":
         var item_property_editor =ItemPropertyEditor.new()
         item_property_editor.gloot_undo_redo = gloot_undo_redo
         item_property_editor.editor_interface = editor_interface
-        add_property_editor(path, item_property_editor)
+        add_property_editor(name, item_property_editor)
         return true
-    if (object is InventoryItem) && path == "prototype_id":
+    if (object is InventoryItem) && name == "prototype_id":
         var item_prototype_id_editor =ItemPrototypeIdEditor.new()
         item_prototype_id_editor.gloot_undo_redo = gloot_undo_redo
         item_prototype_id_editor.editor_interface = editor_interface
-        add_property_editor(path, item_prototype_id_editor)
+        add_property_editor(name, item_prototype_id_editor)
         return true
-    if (object is ItemSlot) && path == "equipped_item":
+    if (object is ItemSlot) && name == "equipped_item":
         var item_slot_equipped_item_editor =ItemSlotEquippedItemEditor.new()
         item_slot_equipped_item_editor.gloot_undo_redo = gloot_undo_redo
-        add_property_editor(path, item_slot_equipped_item_editor)
+        add_property_editor(name, item_slot_equipped_item_editor)
         return true
     return false
 
