@@ -28,6 +28,20 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
             size_changed.emit()
 
 
+func _init() -> void:
+    inventory_set.connect(Callable(self, "_on_inventory_set"))
+
+
+func _on_inventory_set() -> void:
+    inventory.item_added.connect(Callable(self, "_on_item_added"))
+
+
+func _on_item_added(item: InventoryItem) -> void:
+    var free_place := find_free_place(item, item)
+    if free_place.success:
+        assert(move_item_to(item, free_place.position), "Can't move the item to the given place")
+    
+
 func _bounds_broken() -> bool:
     for item in inventory.get_items():
         if !rect_free(get_item_rect(item), item):
@@ -120,10 +134,10 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     var item_size := get_item_size(item)
     var rect := Rect2i(position, item_size)
     if rect_free(rect):
-        item.properties[KEY_GRID_POSITION] = position
-        if item.properties[KEY_GRID_POSITION] == Vector2i.ZERO:
-            item.properties.erase(KEY_GRID_POSITION)
-        return inventory.add_item(item)
+        if not inventory.add_item(item):
+            return false
+        assert(move_item_to(item, position), "Can't move the item to the given place!")
+        return true
 
     return false
 
@@ -217,15 +231,18 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
 
 
 # TODO: Check if this is needed after adding find_free_space
-func find_free_place(item: InventoryItem) -> Vector2i:
+func find_free_place(item: InventoryItem, exception: InventoryItem = null) -> Dictionary:
+    var result := {success = false, position = Vector2i(-1, -1)}
     var item_size = get_item_size(item)
     for x in range(size.x - (item_size.x - 1)):
         for y in range(size.y - (item_size.y - 1)):
             var rect := Rect2i(Vector2i(x, y), item_size)
-            if rect_free(rect):
-                return Vector2i(x, y)
+            if rect_free(rect, exception):
+                result.success = true
+                result.position = Vector2i(x, y)
+                return result
 
-    return Vector2i(-1, -1)
+    return result
 
 
 func _compare_items(item1: InventoryItem, item2: InventoryItem) -> bool:
@@ -247,9 +264,9 @@ func sort() -> bool:
 
     for item in item_array:
         var free_place := find_free_place(item)
-        if !Verify.vector_positive(free_place):
+        if !free_place.success:
             return false
-        move_item_to(item, free_place)
+        move_item_to(item, free_place.position)
 
     return true
 
@@ -263,21 +280,24 @@ func get_space_for(item: InventoryItem) -> ItemCount:
     var occupied_rects: Array[Rect2i]
     var item_size = get_item_size(item)
     var free_space := find_free_space(item_size, occupied_rects)
-    while Verify.vector_positive(free_space):
-        occupied_rects.append(Rect2i(free_space, item_size))
+    while free_space.success:
+        occupied_rects.append(Rect2i(free_space.position, item_size))
         free_space = find_free_space(item_size, occupied_rects)
     return ItemCount.new(occupied_rects.size())
 
 
 # TODO: Check if find_free_place is needed
-func find_free_space(item_size: Vector2i, occupied_rects: Array[Rect2i] = []) -> Vector2i:
+func find_free_space(item_size: Vector2i, occupied_rects: Array[Rect2i] = []) -> Dictionary:
+    var result := {success = false, position = Vector2i(-1, -1)}
     for x in range(size.x - (item_size.x - 1)):
         for y in range(size.y - (item_size.y - 1)):
             var rect := Rect2i(Vector2i(x, y), item_size)
             if rect_free(rect) and not _rect_intersects_rect_array(rect, occupied_rects):
-                return Vector2i(x, y)
+                result.success = true
+                result.position = Vector2i(x, y)
+                return result
 
-    return Vector2i(-1, -1)
+    return result
 
 
 static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect2i] = []) -> bool:
