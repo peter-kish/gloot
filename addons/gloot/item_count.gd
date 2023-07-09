@@ -47,7 +47,7 @@ func mul(item_count_: ItemCount) -> ItemCount:
 
 
 func div(item_count_: ItemCount) -> ItemCount:
-    assert(item_count_.count > 0, "Can't devide by zero!")
+    assert(item_count_.count > 0 || item_count_.is_inf(), "Can't devide by zero!")
     if (count == 0):
         return self
     if item_count_.is_inf() && self.is_inf():
