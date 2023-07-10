@@ -26,7 +26,7 @@ enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
 
 
 func _on_item_added(item: InventoryItem) -> void:
-    assert(_enforce_constraints(item))
+    assert(_enforce_constraints(item), "Failed to enforce component constraints!")
 
 
 func _enforce_constraints(item: InventoryItem) -> bool:
@@ -36,13 +36,13 @@ func _enforce_constraints(item: InventoryItem) -> bool:
         Configuration.WG:
             return grid_component_.move_item_to_free_spot(item)
         Configuration.SG:
-            if not grid_component_.move_item_to_free_spot(item):
-                return stacks_component_.pack_item(item)
-            return false
+            if grid_component_.move_item_to_free_spot(item):
+                return true
+            return stacks_component_.pack_item(item)
         Configuration.WSG:
-            if not grid_component_.move_item_to_free_spot(item):
-                return stacks_component_.pack_item(item)
-            return false
+            if grid_component_.move_item_to_free_spot(item):
+                return true
+            return stacks_component_.pack_item(item)
 
     return true
 
