@@ -362,7 +362,10 @@ func test_wsg_enforce_constraints() -> void:
     # 2. No grid space available, stack space available, capacity available
     # 3. Grid space available, no stack space available, capacity available
     # 4. Grid space available, stack space available, no capacity available
-    # etc.
+    # 5. No grid space available, no stack space available, capacity available
+    # 6. Grid space available, no stack space available, no capacity available
+    # 7. No grid space available, stack space available, no capacity available
+    # 8. No grid space available, no stack space available, no capacity available
     var test_data := [
         {
             input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 1.0},
@@ -378,6 +381,22 @@ func test_wsg_enforce_constraints() -> void:
         },
         {
             input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 11.0},
+            expected = false,
+        },
+        {
+            input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 1, item_weight = 1.0},
+            expected = false,
+        },
+        {
+            input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 1, item_weight = 11.0},
+            expected = false,
+        },
+        {
+            input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 11.0},
+            expected = false,
+        },
+        {
+            input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 1, item_weight = 11.0},
             expected = false,
         },
     ]
