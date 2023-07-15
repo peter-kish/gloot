@@ -6,7 +6,9 @@ func _ready():
     for test_suite in get_children():
         if test_suite is TestSuite:
             test_suite.run()
-    
+
+
+func _process(_delta: float) -> void:
     test_orphan_nodes()
     print("All passed")
     get_tree().quit()

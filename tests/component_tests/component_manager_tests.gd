@@ -33,8 +33,7 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    component_manager = ComponentManager.new()
-    component_manager.inventory = inventory
+    component_manager = inventory._component_manager
 
 
 func cleanup_test() -> void:
@@ -55,6 +54,7 @@ func test_has_space_for() -> void:
 
 func test_w_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_weight_component_(10.0)
@@ -74,6 +74,7 @@ func test_w_has_space_for() -> void:
 
 func test_s_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_stacks_component_()
@@ -95,6 +96,7 @@ func test_s_has_space_for() -> void:
 
 func test_g_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
+    item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_grid_component_(Vector2i(3, 3))
@@ -115,6 +117,8 @@ func test_g_has_space_for() -> void:
 
 
 func test_ws_has_space_for() -> void:
+    inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_weight_component_(10.0)
@@ -144,6 +148,7 @@ func test_ws_has_space_for() -> void:
 
 func test_wg_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_grid_component_(Vector2i(3, 3))
@@ -169,6 +174,7 @@ func test_wg_has_space_for() -> void:
 
 func test_sg_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_stacks_component_()
@@ -197,6 +203,7 @@ func test_sg_has_space_for() -> void:
 
 func test_wsg_has_space_for() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_weight_component_(10.0)
@@ -228,20 +235,27 @@ func test_wsg_has_space_for() -> void:
 
 func test_g_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
+    item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_grid_component_(Vector2i(3, 3))
     var grid_component = component_manager.get_grid_component()
     assert(grid_component != null)
 
-    var new_item = inventory.create_and_add_item("item_1x1")
+    var new_item = inventory.create_and_add_item("item_2x2")
     assert(grid_component.get_item_position(new_item) == Vector2i.ZERO)
 
-    # TODO: Test if item is rejected when there's no space for it
-    
-    inventory.add_item(item)
-    assert(grid_component.get_item_position(item) != Vector2i.ZERO)
-    assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
+    var test_data := [
+        {input = Rect2i(0, 0, 2, 2), expected = false},
+        {input = Rect2i(0, 0, 1, 1), expected = true},
+    ]
+
+    for data in test_data:
+        grid_component.set_item_rect(new_item, data.input)
+        var add_item_result := inventory.add_item(item)
+        assert(add_item_result == data.expected)
+        if add_item_result:
+            assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
 
     inventory.remove_item(new_item)
     new_item.free()
@@ -249,6 +263,7 @@ func test_g_enforce_constraints() -> void:
 
 func test_wg_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
+    item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_weight_component_(10.0)
@@ -261,36 +276,64 @@ func test_wg_enforce_constraints() -> void:
     var new_item = inventory.create_and_add_item("item_1x1")
     assert(grid_component.get_item_position(new_item) == Vector2i.ZERO)
 
-    # TODO: Test if item is rejected when there's no space for it
-    # TODO: Test if item is rejected when there's no capacity for it
-    
-    inventory.add_item(item)
-    assert(grid_component.get_item_position(item) != Vector2i.ZERO)
-    assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
+    var test_data := [
+        {input = {new_item_rect = Rect2i(0, 0, 2, 2), item_weight = 1.0}, expected = false},
+        {input = {new_item_rect = Rect2i(0, 0, 1, 1), item_weight = 11.0}, expected = false},
+        {input = {new_item_rect = Rect2i(0, 0, 1, 1), item_weight = 1.0}, expected = true},
+    ]
 
+    for data in test_data:
+        grid_component.set_item_rect(new_item, data.input.new_item_rect)
+        WeightComponent.set_item_weight(item, data.input.item_weight)
+        var add_item_result := inventory.add_item(item)
+        assert(add_item_result == data.expected)
+        if add_item_result:
+            assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
+        
     inventory.remove_item(new_item)
     new_item.free()
 
 
 func test_sg_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
-    item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_stacks_component_()
     component_manager.enable_grid_component_(Vector2i(3, 3))
-    var stacks_component = component_manager.get_stacks_component()
-    var grid_component = component_manager.get_grid_component()
+    var stacks_component := component_manager.get_stacks_component()
+    var grid_component := component_manager.get_grid_component()
     assert(stacks_component != null)
     assert(grid_component != null)
 
-    var new_item = inventory.create_and_add_item("item_1x1")
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
     assert(grid_component.get_item_position(new_item) == Vector2i.ZERO)
 
-    # TODO: Test if item is rejected when there's no space or free stacks for it
-    
-    assert(inventory.add_item(item))
-    assert(grid_component.get_item_position(item) != Vector2i.ZERO)
-    assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
+    # Test cases:
+    # 1. Grid space available and stack space available
+    # 2. No grid space available, but stack space available
+    # 3. Grid space available, but no stack space available
+    # 4. No grid space available and no stack space available
+    var test_data := [
+        {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
+        {input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
+        {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 1}, expected = true},
+        {input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 1}, expected = false},
+    ]
+
+    for data in test_data:
+        var test_item := InventoryItem.new()
+        test_item.protoset = TEST_PROTOSET_G
+        test_item.prototype_id = TEST_PROTOTYPE_G
+
+        grid_component.size = data.input.inv_size
+        StacksComponent.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
+        StacksComponent.set_item_stack_size(new_item, data.input.new_item_stack_size)
+        var add_item_result := inventory.add_item(test_item)
+        assert(add_item_result == data.expected)
+        if add_item_result && is_node_valid(test_item):
+            assert(grid_component.rect_free(grid_component.get_item_rect(test_item), test_item))
+
+        inventory.remove_item(test_item)
+        test_item.free()
 
     inventory.remove_item(new_item)
     new_item.free()
@@ -298,6 +341,7 @@ func test_sg_enforce_constraints() -> void:
 
 func test_wsg_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
+    item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_stacks_component_()
@@ -310,15 +354,50 @@ func test_wsg_enforce_constraints() -> void:
     assert(weight_component != null)
     assert(grid_component != null)
 
-    var new_item = inventory.create_and_add_item("item_1x1")
+    var new_item = inventory.create_and_add_item(TEST_PROTOTYPE_G)
     assert(grid_component.get_item_position(new_item) == Vector2i.ZERO)
 
-    # TODO: Test if item is rejected when there's no space or free stacks for it
-    # TODO: Test if item is rejected when there's no capacity for it
-    
-    assert(inventory.add_item(item))
-    assert(grid_component.get_item_position(item) != Vector2i.ZERO)
-    assert(grid_component.rect_free(grid_component.get_item_rect(item), item))
+    # Test cases:
+    # 1. Grid space available, stack space available, capacity available
+    # 2. No grid space available, stack space available, capacity available
+    # 3. Grid space available, no stack space available, capacity available
+    # 4. Grid space available, stack space available, no capacity available
+    # etc.
+    var test_data := [
+        {
+            input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 1.0},
+            expected = true,
+        },
+        {
+            input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 1.0},
+            expected = true,
+        },
+        {
+            input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 1, item_weight = 1.0},
+            expected = true,
+        },
+        {
+            input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2, item_weight = 11.0},
+            expected = false,
+        },
+    ]
+
+    for data in test_data:
+        var test_item := InventoryItem.new()
+        test_item.protoset = TEST_PROTOSET_G
+        test_item.prototype_id = TEST_PROTOTYPE_G
+
+        grid_component.size = data.input.inv_size
+        StacksComponent.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
+        StacksComponent.set_item_stack_size(new_item, data.input.new_item_stack_size)
+        WeightComponent.set_item_weight(test_item, data.input.item_weight)
+        var add_item_result := inventory.add_item(test_item)
+        assert(add_item_result == data.expected)
+        if add_item_result && is_node_valid(test_item):
+            assert(grid_component.rect_free(grid_component.get_item_rect(test_item), test_item))
+
+        inventory.remove_item(test_item)
+        test_item.free()
 
     inventory.remove_item(new_item)
     new_item.free()

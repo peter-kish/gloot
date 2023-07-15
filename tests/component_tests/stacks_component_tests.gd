@@ -104,7 +104,7 @@ func test_add_item_automerge_full() -> void:
     stacks_component.add_item_automerge(item_2)
     assert(inventory.get_item_count() == 1)
     assert(StacksComponent.get_item_stack_size(item) == 2)
-    assert(!is_instance_valid(item_2))
+    assert(!is_node_valid(item_2))
 
 
 func test_add_item_automerge_fail() -> void:
@@ -113,7 +113,7 @@ func test_add_item_automerge_fail() -> void:
     assert(inventory.get_item_count() == 2)
     assert(StacksComponent.get_item_stack_size(item) == 5)
     assert(StacksComponent.get_item_stack_size(item_2) == 5)
-    assert(is_instance_valid(item_2))
+    assert(is_node_valid(item_2))
 
 
 func test_add_item_automerge_partial() -> void:
@@ -123,7 +123,7 @@ func test_add_item_automerge_partial() -> void:
     assert(inventory.get_item_count() == 2)
     assert(StacksComponent.get_item_stack_size(item) == 5)
     assert(StacksComponent.get_item_stack_size(item_2) == 3)
-    assert(is_instance_valid(item_2))
+    assert(is_node_valid(item_2))
 
 
 func test_split_stack() -> void:
@@ -156,7 +156,7 @@ func test_join_stacks() -> void:
     StacksComponent.set_item_stack_size(item_2, 1)
     assert(stacks_component.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 1)
-    assert(!is_instance_valid(item_2))
+    assert(!is_node_valid(item_2))
 
 
 func test_get_space_for() -> void:

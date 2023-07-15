@@ -81,7 +81,7 @@ func create_item(protoset: ItemProtoset, prototype_id: String) -> InventoryItem:
 
 # Free the given inventory, if valid
 func free_inventory(inventory: Inventory) -> void:
-    if inventory == null || !is_instance_valid(inventory):
+    if !is_node_valid(inventory):
         return
     while inventory.get_item_count() > 0:
         var item = inventory.get_items()[0]
@@ -101,6 +101,11 @@ func free_slot(slot) -> void:
 
 
 func _free_if_valid(node) -> void:
-    if node == null || !is_instance_valid(node):
+    if !is_node_valid(node):
         return
     node.free()
+
+
+func is_node_valid(node) -> bool:
+    return node != null && !node.is_queued_for_deletion() && is_instance_valid(node)
+

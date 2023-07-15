@@ -94,7 +94,8 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 func _ws_get_space_for(item: InventoryItem) -> ItemCount:
     var stack_size := ItemCount.new(stacks_component_.get_item_stack_size(item))
-    return weight_component_.get_space_for(item).div(stack_size)
+    var result := weight_component_.get_space_for(item).div(stack_size)
+    return result
 
 
 func _sg_get_space_for(item: InventoryItem) -> ItemCount:

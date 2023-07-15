@@ -12,10 +12,15 @@ signal protoset_changed
     get:
         return item_protoset
     set(new_item_protoset):
+        if new_item_protoset == item_protoset:
+            return
+        if not _items.is_empty():
+            return
         item_protoset = new_item_protoset
         protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
+var _component_manager: ComponentManager = null
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
@@ -49,8 +54,8 @@ func _exit_tree():
 
 
 func _init() -> void:
-    item_added.connect(Callable(self, "_on_item_added"))
-    item_removed.connect(Callable(self, "_on_item_removed"))
+    _component_manager = ComponentManager.new()
+    _component_manager.inventory = self
 
 
 func _ready() -> void:
@@ -62,12 +67,14 @@ func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
     contents_changed.emit()
     _connect_item_signals(item)
+    item_added.emit(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     contents_changed.emit()
     _disconnect_item_signals(item)
+    item_removed.emit(item)
 
 
 func move_item(from: int, to: int) -> void:
@@ -125,6 +132,9 @@ func has_item(item: InventoryItem) -> bool:
 
 func add_item(item: InventoryItem) -> bool:
     if item == null || has_item(item):
+        return false
+
+    if not _component_manager.has_space_for(item):
         return false
 
     if item.get_parent():

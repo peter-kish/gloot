@@ -10,18 +10,19 @@ signal properties_changed
     get:
         return protoset
     set(new_protoset):
-        var old_protoset = protoset
+        if new_protoset == protoset:
+            return
+
+        # Reset the prototype ID (pick the first prototype from the protoset)
+        prototype_id = ""
+        if new_protoset && new_protoset._prototypes && new_protoset._prototypes.keys().size() > 0:
+            self.prototype_id = new_protoset._prototypes.keys()[0]
+
+        new_protoset.changed.connect(Callable(self, "_on_protoset_modified"))
+
         protoset = new_protoset
-        if old_protoset != protoset:
-            # Reset the prototype ID (pick the first prototype from the protoset)
-            prototype_id = ""
-            if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
-                self.prototype_id = protoset._prototypes.keys()[0]
-
-            protoset.changed.connect(Callable(self, "_on_protoset_modified"))
-
-            protoset_changed.emit()
-            update_configuration_warnings()
+        protoset_changed.emit()
+        update_configuration_warnings()
 
 @export var prototype_id: String :
     get:
@@ -93,20 +94,20 @@ func _notification(what):
         var inv_item_protoset = get_parent().get("item_protoset")
         if inv_item_protoset:
             protoset = inv_item_protoset
-        _emit_added(get_parent())
+        _on_item_added(get_parent())
     elif what == NOTIFICATION_UNPARENTED:
-        _emit_removed(_inventory)
+        _on_item_removed(_inventory)
         _inventory = null
 
 
-func _emit_removed(obj: Object):
-    if obj && obj.has_signal("item_removed"):
-        obj.item_removed.emit(self)
+func _on_item_removed(obj: Object):
+    if obj && obj.has_method("_on_item_removed"):
+        obj._on_item_removed(self)
 
 
-func _emit_added(obj: Object):
-    if obj && obj.has_signal("item_added"):
-        obj.item_added.emit(self)
+func _on_item_added(obj: Object):
+    if obj && obj.has_method("_on_item_added"):
+        obj._on_item_added(self)
 
 
 func get_inventory() -> Node:

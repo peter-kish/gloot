@@ -72,15 +72,16 @@ func get_mergable_items(
 
 static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool:
     # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
-    # custom properties that the other one doesn't have (except for "stack_size", "max_stack_size"
-    # or "grid_position").
+    # custom properties that the other one doesn't have (except for "stack_size", "max_stack_size",
+    # "grid_position", or "weight").
     assert(item_1 != null, "item_1 is null!")
     assert(item_2 != null, "item_2 is null!")
 
     var ignore_properies: Array[String] = [
         KEY_STACK_SIZE,
         KEY_MAX_STACK_SIZE,
-        GridComponent.KEY_GRID_POSITION
+        GridComponent.KEY_GRID_POSITION,
+        WeightComponent.KEY_WEIGHT
     ]
 
     if item_1.prototype_id != item_2.prototype_id:
@@ -121,7 +122,7 @@ static func _merge_stacks_autodelete(item_dst: InventoryItem, item_src: Inventor
     if result == MergeResult.SUCCESS:
         if item_src.get_inventory():
             item_src.get_inventory().remove_item(item_src)
-        item_src.free()
+        item_src.queue_free()
     return result
 
 
@@ -201,10 +202,10 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     assert(inventory != null, "Inventory not set!")
 
     var item_count = ItemCount.new(0)
-    for i in inventory.get_items():
-        if items_mergable(i, item):
-            var free_stack_space := _get_free_stack_space(i)
-            item_count.add(ItemCount.new(free_stack_space))
+    var mergable_items = get_mergable_items(item)
+    for mergable_item in mergable_items:
+        var free_stack_space := _get_free_stack_space(mergable_item)
+        item_count.add(ItemCount.new(free_stack_space))
     return item_count
 
 

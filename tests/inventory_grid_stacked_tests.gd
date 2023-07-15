@@ -67,7 +67,7 @@ func test_add_item_automerge() -> void:
     # Inventory containing 2x2 item
     assert(inventory_3x3.add_item_automerge(item_2x2_2))
     assert(inventory_3x3.get_item_count() == 1)
-    assert(!is_instance_valid(item_2x2_2))
+    assert(!is_node_valid(item_2x2_2))
 
     item_2x2_2 = InventoryItem.new()
     item_2x2_2.protoset = TEST_PROTOSET
@@ -128,7 +128,7 @@ func test_automerge() -> void:
     InventoryGridStacked.set_item_stack_size(item_2x2_2, 2)
     assert(inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
     assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
-    assert(!is_instance_valid(item_2x2_2))
+    assert(!is_node_valid(item_2x2_2))
 
 
 func test_autosplitmerge() -> void:
