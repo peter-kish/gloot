@@ -198,13 +198,13 @@ func stacks_joinable(
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:
-    return ItemCount.new(ItemCount.Inf)
+    return ItemCount.inf()
 
 
 func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     assert(inventory != null, "Inventory not set!")
 
-    var item_count = ItemCount.new(0)
+    var item_count = ItemCount.zero()
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:
         var free_stack_space := _get_free_stack_space(mergable_item)
@@ -237,7 +237,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
         return false
 
     var item_count := _get_space_for_single_item(destination, item)
-    assert(!item_count.eq(ItemCount.new(ItemCount.Inf)), "Item count shouldn't be infinite!")
+    assert(!item_count.eq(ItemCount.inf()), "Item count shouldn't be infinite!")
     var count = item_count.count
 
     if count <= 0:

@@ -68,7 +68,7 @@ func test_w_has_space_for() -> void:
     var test_data = [
         {input = 1.0, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = 10.0, expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = 11.0, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = 11.0, expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:
@@ -86,10 +86,10 @@ func test_s_has_space_for() -> void:
     assert(component_manager.get_stacks_component() != null)
 
     var test_data = [
-        {input = 1, expected = {has_space = true, space = ItemCount.new(ItemCount.Inf)}},
-        {input = 11, expected = {has_space = true, space = ItemCount.new(ItemCount.Inf)}},
-        {input = 111, expected = {has_space = true, space = ItemCount.new(ItemCount.Inf)}},
-        {input = 1111, expected = {has_space = true, space = ItemCount.new(ItemCount.Inf)}},
+        {input = 1, expected = {has_space = true, space = ItemCount.inf()}},
+        {input = 11, expected = {has_space = true, space = ItemCount.inf()}},
+        {input = 111, expected = {has_space = true, space = ItemCount.inf()}},
+        {input = 1111, expected = {has_space = true, space = ItemCount.inf()}},
     ]
 
     for data in test_data:
@@ -112,7 +112,7 @@ func test_g_has_space_for() -> void:
         {input = Vector2i(1, 1), expected = {has_space = true, space = ItemCount.new(9)}},
         {input = Vector2i(2, 2), expected = {has_space = true, space = ItemCount.new(1)}},
         {input = Vector2i(3, 3), expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = Vector2i(4, 4), expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = Vector2i(4, 4), expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:
@@ -135,11 +135,11 @@ func test_ws_has_space_for() -> void:
 
     var test_data = [
         {input = {weight = 1.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(10)}},
-        {input = {weight = 10.0, stack_size = 10}, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = {weight = 10.0, stack_size = 10}, expected = {has_space = false, space = ItemCount.zero()}},
         {input = {weight = 10.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {weight = 1.0, stack_size = 10}, expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = {weight = 11.0, stack_size = 1}, expected = {has_space = false, space = ItemCount.new(0)}},
-        {input = {weight = 1.0, stack_size = 11}, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = {weight = 11.0, stack_size = 1}, expected = {has_space = false, space = ItemCount.zero()}},
+        {input = {weight = 1.0, stack_size = 11}, expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:
@@ -166,8 +166,8 @@ func test_wg_has_space_for() -> void:
     var test_data = [
         {input = {weight = 1.0, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {weight = 10.0, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = {weight = 11.0, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.new(0)}},
-        {input = {weight = 1.0, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = {weight = 11.0, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.zero()}},
+        {input = {weight = 1.0, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:
@@ -195,7 +195,7 @@ func test_sg_has_space_for() -> void:
         {input = {stack_size = 1, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(2)}},
         {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
-        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = {stack_size = 2, max_stack_size = 2, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:
@@ -225,8 +225,8 @@ func test_wsg_has_space_for() -> void:
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 1, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = {weight = 10.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(1)}},
-        {input = {weight = 1.0, stack_size = 1, max_stack_size = 1, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.new(0)}},
-        {input = {weight = 10.0, stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.new(0)}},
+        {input = {weight = 1.0, stack_size = 1, max_stack_size = 1, size = Vector2i(4, 4)}, expected = {has_space = false, space = ItemCount.zero()}},
+        {input = {weight = 10.0, stack_size = 2, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.zero()}},
     ]
 
     for data in test_data:

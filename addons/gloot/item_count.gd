@@ -97,6 +97,14 @@ static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
     return item_count_r
 
 
+static func inf() -> ItemCount:
+    return ItemCount.new(Inf)
+
+
+static func zero() -> ItemCount:
+    return ItemCount.new(0)
+
+
 # TODO: Implement le()
 # TODO: Implement ge()
 # TODO: Implement max()

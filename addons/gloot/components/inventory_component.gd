@@ -14,4 +14,4 @@ var inventory: Inventory = null :
 
 # Override this
 func get_space_for(item: InventoryItem) -> ItemCount:
-    return ItemCount.new(0)
+    return ItemCount.zero()

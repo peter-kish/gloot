@@ -90,6 +90,6 @@ static func set_item_weight(item: InventoryItem, weight: float) -> void:
 
 func get_space_for(item: InventoryItem) -> ItemCount:
     if has_unlimited_capacity():
-        return ItemCount.new(ItemCount.Inf)
+        return ItemCount.inf()
     var unit_weight := _get_item_unit_weight(item)
     return ItemCount.new(floor(get_free_space() / unit_weight))

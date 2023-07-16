@@ -160,6 +160,6 @@ func test_join_stacks() -> void:
 
 
 func test_get_space_for() -> void:
-    var inf = ItemCount.new(ItemCount.Inf)
+    var inf = ItemCount.inf()
     stacks_component.get_space_for(item).eq(inf)
     stacks_component.get_space_for(item_2).eq(inf)

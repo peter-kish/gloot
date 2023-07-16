@@ -231,7 +231,7 @@ func test_sort() -> void:
 func test_get_space_for() -> void:
     # Empty inventory
     var test_data = [
-        {input = Vector2i.ONE, expected = ItemCount.new(0)},
+        {input = Vector2i.ONE, expected = ItemCount.zero()},
         {input = Vector2i(2, 2), expected = ItemCount.new(1)},
         {input = Vector2i(3, 3), expected = ItemCount.new(1)},
         {input = Vector2i(4, 4), expected = ItemCount.new(4)},
@@ -245,8 +245,8 @@ func test_get_space_for() -> void:
     grid_component.size = Vector2i(2, 2)
     var item2 = inventory.create_and_add_item(TEST_PROTOTYPE)
     test_data = [
-        {input = Vector2i(2, 2), expected = ItemCount.new(0)},
-        {input = Vector2i(3, 3), expected = ItemCount.new(0)},
+        {input = Vector2i(2, 2), expected = ItemCount.zero()},
+        {input = Vector2i(3, 3), expected = ItemCount.zero()},
         {input = Vector2i(4, 4), expected = ItemCount.new(3)},
     ]
 

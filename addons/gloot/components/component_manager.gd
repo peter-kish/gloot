@@ -89,7 +89,7 @@ func get_space_for(item: InventoryItem) -> ItemCount:
         Configuration.WSG:
             return ItemCount.min(_sg_get_space_for(item), _ws_get_space_for(item))
 
-    return ItemCount.new(ItemCount.Inf)
+    return ItemCount.inf()
 
 
 func _ws_get_space_for(item: InventoryItem) -> ItemCount:
