@@ -25,6 +25,10 @@ var inventory: Inventory = null :
 enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
 
 
+func _init(inventory_: Inventory) -> void:
+    inventory = inventory_
+
+
 func _on_item_added(item: InventoryItem) -> void:
     assert(_enforce_constraints(item), "Failed to enforce component constraints!")
 

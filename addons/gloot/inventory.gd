@@ -54,8 +54,7 @@ func _exit_tree():
 
 
 func _init() -> void:
-    _component_manager = ComponentManager.new()
-    _component_manager.inventory = self
+    _component_manager = ComponentManager.new(self)
 
 
 func _ready() -> void:
