@@ -20,8 +20,7 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, "big_item")
     inventory = create_inventory(TEST_PROTOSET)
-    weight_component = WeightComponent.new()
-    weight_component.inventory = inventory
+    weight_component = WeightComponent.new(inventory)
 
 
 func cleanup_test() -> void:

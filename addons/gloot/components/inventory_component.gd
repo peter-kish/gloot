@@ -12,6 +12,10 @@ var inventory: Inventory = null :
         inventory_set.emit()
 
 
+func _init(inventory_: Inventory) -> void:
+    inventory = inventory_
+
+
 # Override this
 func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.zero()

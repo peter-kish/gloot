@@ -116,21 +116,18 @@ func has_space_for(item: InventoryItem) -> bool:
 
 func enable_weight_component_(capacity: float = 0.0) -> void:
     assert(weight_component_ == null, "Weight component is already enabled")
-    weight_component_ = WeightComponent.new()
+    weight_component_ = WeightComponent.new(inventory)
     weight_component_.capacity = capacity
-    weight_component_.inventory = inventory
 
 
 func enable_stacks_component_() -> void:
     assert(stacks_component_ == null, "Stacks component is already enabled")
-    stacks_component_ = StacksComponent.new()
-    stacks_component_.inventory = inventory
+    stacks_component_ = StacksComponent.new(inventory)
 
 
 func enable_grid_component_(size: Vector2i = GridComponent.DEFAULT_SIZE) -> void:
     assert(grid_component_ == null, "Grid component is already enabled")
-    grid_component_ = GridComponent.new()
-    grid_component_.inventory = inventory
+    grid_component_ = GridComponent.new(inventory)
     grid_component_.size = size
 
 

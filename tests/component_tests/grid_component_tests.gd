@@ -28,8 +28,7 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    grid_component = GridComponent.new()
-    grid_component.inventory = inventory
+    grid_component = GridComponent.new(inventory)
 
 
 func cleanup_test() -> void:
@@ -169,8 +168,7 @@ func test_move_item_to() -> void:
 
 func test_transfer_to() -> void:
     var inventory2 := create_inventory(TEST_PROTOSET)
-    var grid_component2 := GridComponent.new()
-    grid_component2.inventory = inventory2
+    var grid_component2 := GridComponent.new(inventory2)
     grid_component2.create_and_add_item_at(TEST_PROTOTYPE, Vector2i(2, 2))
 
     inventory.add_item(item)

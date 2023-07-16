@@ -26,8 +26,9 @@ var occupied_space: float :
         assert(false, "occupied_space is read-only!")
 
 
-func _init() -> void:
+func _init(inventory: Inventory) -> void:
     inventory_set.connect(Callable(self, "_on_inventory_set"))
+    super._init(inventory)
     
     
 func _on_inventory_set() -> void:

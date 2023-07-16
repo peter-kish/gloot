@@ -33,8 +33,7 @@ func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     item_2 = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    stacks_component = StacksComponent.new()
-    stacks_component.inventory = inventory
+    stacks_component = StacksComponent.new(inventory)
 
 
 func cleanup_test() -> void:
