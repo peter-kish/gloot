@@ -159,6 +159,9 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     )
 
     var new_item = item.duplicate()
+    if new_item.get_parent():
+        new_item.get_parent().remove_child(new_item)
+
     set_item_stack_size(new_item, new_stack_size)
     set_item_stack_size(item, stack_size - new_stack_size)
     return new_item
@@ -222,3 +225,33 @@ func pack_item(item: InventoryItem) -> bool:
 
     # TODO: Make sure the inventory is unchanged when returning false
     return false
+
+
+func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
+    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    if inventory.transfer(item, destination):
+        return true
+
+    var stack_size := get_item_stack_size(item)
+    if stack_size <= 1:
+        return false
+
+    var item_count := _get_space_for_single_item(destination, item)
+    assert(!item_count.eq(ItemCount.new(ItemCount.Inf)), "Item count shouldn't be infinite!")
+    var count = item_count.count
+
+    if count <= 0:
+        return false
+
+    var new_item: InventoryItem = split_stack(item, count)
+    assert(new_item != null)
+    assert(destination.add_item(new_item))
+    return true
+
+
+func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
+    var single_item := item.duplicate()
+    set_item_stack_size(single_item, 1)
+    var count := inventory._component_manager.get_space_for(single_item)
+    single_item.free()
+    return count

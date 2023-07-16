@@ -1,6 +1,7 @@
 extends TestSuite
 
 var inventory: Inventory
+var inventory2: Inventory
 var item: InventoryItem
 var component_manager: ComponentManager
 
@@ -27,18 +28,22 @@ func init_suite():
         "test_wg_enforce_constraints",
         "test_sg_enforce_constraints",
         "test_wsg_enforce_constraints",
+        "test_ws_transfer_autosplit",
+        "test_sg_transfer_autosplit",
     ]
 
 
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
+    inventory2 = create_inventory(TEST_PROTOSET)
     component_manager = inventory._component_manager
 
 
 func cleanup_test() -> void:
     free_item(item)
     free_inventory(inventory)
+    free_inventory(inventory2)
 
 
 func test_init() -> void:
@@ -420,3 +425,47 @@ func test_wsg_enforce_constraints() -> void:
 
     inventory.remove_item(new_item)
     new_item.free()
+
+
+func test_ws_transfer_autosplit() -> void:
+    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory2.item_protoset = TEST_PROTOSET_WS
+    item.protoset = TEST_PROTOSET_WS
+    item.prototype_id = TEST_PROTOTYPE_WS
+
+    component_manager.enable_weight_component_(10.0)
+    component_manager.enable_stacks_component_()
+    var weight_component = component_manager.get_weight_component()
+    var stacks_component = component_manager.get_stacks_component()
+    assert(weight_component != null)
+    assert(stacks_component != null)
+
+    inventory2._component_manager.enable_weight_component_(3.0)
+    inventory2._component_manager.enable_stacks_component_()
+    assert(inventory2._component_manager.get_weight_component() != null)
+    assert(inventory2._component_manager.get_stacks_component() != null)
+
+    # Test cases:
+    # 1. Target has place for the full stack
+    # 2. Target has place for part of the stack
+    # 3. Target has no place for a single item from the stack
+    var test_data = [
+        {input = {src_stack_size = 2, dst_stack_size = 1}, expected = true},
+        {input = {src_stack_size = 3, dst_stack_size = 1}, expected = true},
+        {input = {src_stack_size = 3, dst_stack_size = 3}, expected = false},
+    ]
+
+    for data in test_data:
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_WS)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_WS)
+
+        StacksComponent.set_item_stack_size(src_item, data.input.src_stack_size)
+        StacksComponent.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        var result := stacks_component.transfer_autosplit(src_item, inventory2)
+        assert(result == data.expected)
+
+        clear_inventory(inventory)
+        clear_inventory(inventory2)
+        free_item(dst_item)
+        free_item(src_item)
+

@@ -131,10 +131,7 @@ func has_item(item: InventoryItem) -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if item == null || has_item(item):
-        return false
-
-    if not _component_manager.has_space_for(item):
+    if !_can_add_item(item):
         return false
 
     if item.get_parent():
@@ -143,6 +140,16 @@ func add_item(item: InventoryItem) -> bool:
     add_child(item)
     if Engine.is_editor_hint():
         item.owner = get_tree().edited_scene_root
+    return true
+
+
+func _can_add_item(item: InventoryItem) -> bool:
+    if item == null || has_item(item):
+        return false
+
+    if !_component_manager.has_space_for(item):
+        return false
+
     return true
 
 
@@ -158,11 +165,15 @@ func create_and_add_item(prototype_id: String) -> InventoryItem:
 
 
 func remove_item(item: InventoryItem) -> bool:
-    if item == null || !has_item(item):
+    if !_can_remove_item(item):
         return false
 
     remove_child(item)
     return true
+
+
+func _can_remove_item(item: InventoryItem) -> bool:
+    return item != null && has_item(item)
 
 
 func remove_all_items() -> void:
@@ -194,10 +205,12 @@ func has_item_by_id(prototype_id: String) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    if remove_item(item):
-        return destination.add_item(item)
+    if !_can_remove_item(item) || !destination._can_add_item(item):
+        return false
 
-    return false
+    remove_item(item)
+    destination.add_item(item)
+    return true
 
 
 func reset() -> void:

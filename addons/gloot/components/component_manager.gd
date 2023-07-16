@@ -118,7 +118,7 @@ func enable_weight_component_(capacity: float = 0.0) -> void:
 
 
 func enable_stacks_component_() -> void:
-    assert(grid_component_ == null, "Stacks component is already enabled")
+    assert(stacks_component_ == null, "Stacks component is already enabled")
     stacks_component_ = StacksComponent.new()
     stacks_component_.inventory = inventory
 

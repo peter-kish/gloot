@@ -83,11 +83,16 @@ func create_item(protoset: ItemProtoset, prototype_id: String) -> InventoryItem:
 func free_inventory(inventory: Inventory) -> void:
     if !is_node_valid(inventory):
         return
+    clear_inventory(inventory)
+    inventory.free()
+
+
+# Clear all inventory items
+func clear_inventory(inventory: Inventory) -> void:
     while inventory.get_item_count() > 0:
         var item = inventory.get_items()[0]
         assert(inventory.remove_item(item))
         item.free()
-    inventory.free()
 
 
 # Free the given inventory item, if valid

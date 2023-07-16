@@ -60,7 +60,7 @@ func get_free_space() -> float:
 
 
 func _calculate_occupied_space() -> void:
-    var old_occupied_space = occupied_space
+    var old_occupied_space = _occupied_space
     _occupied_space = 0.0
     for item in inventory.get_items():
         _occupied_space += get_item_weight(item)
