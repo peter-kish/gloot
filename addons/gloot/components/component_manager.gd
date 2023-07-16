@@ -2,9 +2,9 @@ class_name ComponentManager
 
 signal inventory_set
 
-var weight_component_: WeightComponent = null
-var stacks_component_: StacksComponent = null
-var grid_component_: GridComponent = null
+var _weight_component: WeightComponent = null
+var _stacks_component: StacksComponent = null
+var _grid_component: GridComponent = null
 var inventory: Inventory = null :
     get:
         return inventory
@@ -12,12 +12,12 @@ var inventory: Inventory = null :
         assert(new_inventory != null, "Can't set inventory to null!")
         assert(inventory == null, "Inventory already set!")
         inventory = new_inventory
-        if weight_component_ != null:
-            weight_component_.inventory = inventory
-        if stacks_component_ != null:
-            stacks_component_.inventory = inventory
-        if grid_component_ != null:
-            grid_component_.inventory = inventory
+        if _weight_component != null:
+            _weight_component.inventory = inventory
+        if _stacks_component != null:
+            _stacks_component.inventory = inventory
+        if _grid_component != null:
+            _grid_component.inventory = inventory
         inventory.item_added.connect(Callable(self, "_on_item_added"))
         inventory_set.emit()
 
@@ -36,41 +36,41 @@ func _on_item_added(item: InventoryItem) -> void:
 func _enforce_constraints(item: InventoryItem) -> bool:
     match get_configuration():
         Configuration.G:
-            return grid_component_.move_item_to_free_spot(item)
+            return _grid_component.move_item_to_free_spot(item)
         Configuration.WG:
-            return grid_component_.move_item_to_free_spot(item)
+            return _grid_component.move_item_to_free_spot(item)
         Configuration.SG:
-            if grid_component_.move_item_to_free_spot(item):
+            if _grid_component.move_item_to_free_spot(item):
                 return true
-            return stacks_component_.pack_item(item)
+            return _stacks_component.pack_item(item)
         Configuration.WSG:
-            if grid_component_.move_item_to_free_spot(item):
+            if _grid_component.move_item_to_free_spot(item):
                 return true
-            return stacks_component_.pack_item(item)
+            return _stacks_component.pack_item(item)
 
     return true
 
 
 func get_configuration() -> int:
-    if weight_component_ && stacks_component_ && grid_component_:
+    if _weight_component && _stacks_component && _grid_component:
         return Configuration.WSG
 
-    if weight_component_ && stacks_component_:
+    if _weight_component && _stacks_component:
         return Configuration.WS
 
-    if weight_component_ && grid_component_:
+    if _weight_component && _grid_component:
         return Configuration.WG
 
-    if stacks_component_ && grid_component_:
+    if _stacks_component && _grid_component:
         return Configuration.SG
 
-    if weight_component_:
+    if _weight_component:
         return Configuration.W
 
-    if stacks_component_:
+    if _stacks_component:
         return Configuration.S
 
-    if grid_component_:
+    if _grid_component:
         return Configuration.G
 
     return Configuration.VANILLA
@@ -79,15 +79,15 @@ func get_configuration() -> int:
 func get_space_for(item: InventoryItem) -> ItemCount:
     match get_configuration():
         Configuration.W:
-            return weight_component_.get_space_for(item)
+            return _weight_component.get_space_for(item)
         Configuration.S:
-            return stacks_component_.get_space_for(item)
+            return _stacks_component.get_space_for(item)
         Configuration.G:
-            return grid_component_.get_space_for(item)
+            return _grid_component.get_space_for(item)
         Configuration.WS:
             return _ws_get_space_for(item)
         Configuration.WG:
-            return ItemCount.min(grid_component_.get_space_for(item), weight_component_.get_space_for(item))
+            return ItemCount.min(_grid_component.get_space_for(item), _weight_component.get_space_for(item))
         Configuration.SG:
             return _sg_get_space_for(item)
         Configuration.WSG:
@@ -97,16 +97,16 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 func _ws_get_space_for(item: InventoryItem) -> ItemCount:
-    var stack_size := ItemCount.new(stacks_component_.get_item_stack_size(item))
-    var result := weight_component_.get_space_for(item).div(stack_size)
+    var stack_size := ItemCount.new(_stacks_component.get_item_stack_size(item))
+    var result := _weight_component.get_space_for(item).div(stack_size)
     return result
 
 
 func _sg_get_space_for(item: InventoryItem) -> ItemCount:
-    var grid_space := grid_component_.get_space_for(item)
-    var max_stack_size := ItemCount.new(stacks_component_.get_item_max_stack_size(item))
-    var stack_size := ItemCount.new(stacks_component_.get_item_stack_size(item))
-    var free_stacks_space := stacks_component_.get_free_stack_space_for(item)
+    var grid_space := _grid_component.get_space_for(item)
+    var max_stack_size := ItemCount.new(_stacks_component.get_item_max_stack_size(item))
+    var stack_size := ItemCount.new(_stacks_component.get_item_stack_size(item))
+    var free_stacks_space := _stacks_component.get_free_stack_space_for(item)
     return grid_space.mul(max_stack_size).add(free_stacks_space).div(stack_size)
 
 
@@ -115,29 +115,29 @@ func has_space_for(item: InventoryItem) -> bool:
 
 
 func enable_weight_component_(capacity: float = 0.0) -> void:
-    assert(weight_component_ == null, "Weight component is already enabled")
-    weight_component_ = WeightComponent.new(inventory)
-    weight_component_.capacity = capacity
+    assert(_weight_component == null, "Weight component is already enabled")
+    _weight_component = WeightComponent.new(inventory)
+    _weight_component.capacity = capacity
 
 
 func enable_stacks_component_() -> void:
-    assert(stacks_component_ == null, "Stacks component is already enabled")
-    stacks_component_ = StacksComponent.new(inventory)
+    assert(_stacks_component == null, "Stacks component is already enabled")
+    _stacks_component = StacksComponent.new(inventory)
 
 
 func enable_grid_component_(size: Vector2i = GridComponent.DEFAULT_SIZE) -> void:
-    assert(grid_component_ == null, "Grid component is already enabled")
-    grid_component_ = GridComponent.new(inventory)
-    grid_component_.size = size
+    assert(_grid_component == null, "Grid component is already enabled")
+    _grid_component = GridComponent.new(inventory)
+    _grid_component.size = size
 
 
 func get_weight_component() -> WeightComponent:
-    return weight_component_
+    return _weight_component
 
 
 func get_stacks_component() -> StacksComponent:
-    return stacks_component_
+    return _stacks_component
 
 
 func get_grid_component() -> GridComponent:
-    return grid_component_
+    return _grid_component
