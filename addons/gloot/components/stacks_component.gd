@@ -153,6 +153,7 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
 
     var stack_size = get_item_stack_size(item)
+    assert(stack_size > 1, "Size of the item stack must be greater than 1!")
     assert(
         new_stack_size < stack_size,
         "New stack size must be smaller than the original stack size!"
