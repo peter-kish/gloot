@@ -218,13 +218,16 @@ func pack_item(item: InventoryItem) -> bool:
     if stacks_size.gt(free_stack_space):
         return false
 
+    var result = false
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:
-        if _merge_stacks_autodelete(mergable_item, item) == MergeResult.SUCCESS:
+        var merge_result := _merge_stacks_autodelete(mergable_item, item)
+        if merge_result == MergeResult.SUCCESS:
             return true
+        if merge_result == MergeResult.PARTIAL:
+            result = true
 
-    # TODO: Make sure the inventory is unchanged when returning false
-    return false
+    return result
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
