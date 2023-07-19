@@ -445,27 +445,56 @@ func test_ws_transfer_autosplit() -> void:
     assert(inventory2._component_manager.get_weight_component() != null)
     assert(inventory2._component_manager.get_stacks_component() != null)
 
-    # Test cases:
-    # 1. Target has place for the full stack
-    # 2. Target has place for part of the stack
-    # 3. Target has no place for a single item from the stack
     var test_data = [
-        {input = {src_stack_size = 2, dst_stack_size = 1}, expected = true},
-        {input = {src_stack_size = 3, dst_stack_size = 1}, expected = true},
-        {input = {src_stack_size = 3, dst_stack_size = 3}, expected = false},
+        {
+            input = {src_stack_size = 2, dst_stack_size = 1, dst_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 2, dst_stack_size = 1, src_inv_size = 0, dst_inv_size = 2},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 1, dst_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 1, src_inv_size = 0, dst_inv_size = 2},
+        },
+        {
+            input = {src_stack_size = 2, dst_stack_size = 1, dst_capacity = 2.0},
+            expected = {return_val = true, src_stack_size = 1, dst_stack_size = 1, src_inv_size = 1, dst_inv_size = 2},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_size = 0, dst_inv_size = 2},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 1, dst_capacity = 1.0},
+            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 1, src_inv_size = 1, dst_inv_size = 1},
+        },
     ]
 
     for data in test_data:
         var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_WS)
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_WS)
 
+        inventory2._component_manager.get_weight_component().capacity = data.input.dst_capacity
         StacksComponent.set_item_stack_size(src_item, data.input.src_stack_size)
         StacksComponent.set_item_stack_size(dst_item, data.input.dst_stack_size)
         var result := stacks_component.transfer_autosplit(src_item, inventory2)
-        assert(result == data.expected)
+        assert(result == data.expected.return_val)
+        assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
+        assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        assert(inventory.get_item_count() == data.expected.src_inv_size)
+        assert(inventory2.get_item_count() == data.expected.dst_inv_size)
 
         clear_inventory(inventory)
         clear_inventory(inventory2)
         free_item(dst_item)
         free_item(src_item)
+
+
+func test_sg_transfer_autosplit() -> void:
+    # TODO: Test cases:
+    # 1. Destination has place for the full stack without merging
+    # 2. Destination has place for the full stack when merged
+    # 3. Destination has place for part of the stack without merging
+    # 4. Destination has place for part of the stack when merged
+    # 5. Destination has no place for the stack
+
+    pass
 

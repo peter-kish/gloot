@@ -70,7 +70,7 @@ func _calculate_occupied_space() -> void:
         emit_signal("occupied_space_changed")
 
     if !Engine.is_editor_hint():
-        assert(has_unlimited_capacity() || occupied_space <= capacity, "Inventory overflow!")
+        assert(has_unlimited_capacity() || _occupied_space <= capacity, "Inventory overflow!")
 
 
 static func _get_item_unit_weight(item: InventoryItem) -> float:
