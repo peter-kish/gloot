@@ -550,5 +550,74 @@ func test_sg_transfer_autosplit() -> void:
 
     
 func test_wsg_transfer_autosplit() -> void:
-    pass
+    inventory.item_protoset = TEST_PROTOSET_G
+    inventory2.item_protoset = TEST_PROTOSET_G
+
+    component_manager.enable_weight_component_(10.0)
+    component_manager.enable_stacks_component_()
+    component_manager.enable_grid_component_(Vector2i(3, 3))
+    var weight_component = component_manager.get_weight_component()
+    var stacks_component = component_manager.get_stacks_component()
+    var grid_component = component_manager.get_grid_component()
+    assert(weight_component != null)
+    assert(grid_component != null)
+    assert(stacks_component != null)
+
+    inventory2._component_manager.enable_weight_component_(10.0)
+    inventory2._component_manager.enable_stacks_component_()
+    inventory2._component_manager.enable_grid_component_(Vector2i(3, 3))
+    assert(inventory2._component_manager.get_weight_component() != null)
+    assert(inventory2._component_manager.get_stacks_component() != null)
+    assert(inventory2._component_manager.get_grid_component() != null)
+
+    # Test cases
+    # 1. Destination has place (capacity and space) for the full stack
+    # 1. Destination has place (capacity and space) for the full stack when merged
+    # 1. Destination only has space for part of the stack when merged
+    # 1. Destination has capacity, but no space for part of the stack when merged
+    # 1. Destination has no place for part of the stack
+    var test_data := [
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(4, 4), dst_inv_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 2},
+        },
+        {
+            input = {src_stack_size = 2, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3), dst_inv_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 0, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 1},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3), dst_inv_capacity = 10.0},
+            expected = {return_val = true, src_stack_size = 1, dst_stack_size = 3, src_inv_count = 1, dst_inv_count = 1},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(3, 3), dst_inv_capacity = 10.0},
+            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 1, dst_inv_count = 1},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3), dst_inv_capacity = 1.0},
+            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 1, src_inv_count = 1, dst_inv_count = 1},
+        },
+    ]
+
+    for data in test_data:
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
+
+        inventory2._component_manager.get_grid_component().size = data.input.dst_inv_size
+        inventory2._component_manager.get_weight_component().capacity = data.input.dst_inv_capacity
+        StacksComponent.set_item_stack_size(src_item, data.input.src_stack_size)
+        StacksComponent.set_item_max_stack_size(src_item, 3)
+        StacksComponent.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        StacksComponent.set_item_max_stack_size(dst_item, 3)
+        var result := stacks_component.transfer_autosplit(src_item, inventory2)
+        assert(result == data.expected.return_val)
+        assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
+        assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        assert(inventory.get_item_count() == data.expected.src_inv_count)
+        assert(inventory2.get_item_count() == data.expected.dst_inv_count)
+
+        clear_inventory(inventory)
+        clear_inventory(inventory2)
+        free_item(dst_item)
+        free_item(src_item)
 
