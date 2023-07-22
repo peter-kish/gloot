@@ -539,7 +539,11 @@ func test_sg_transfer_autosplit() -> void:
         var result := stacks_component.transfer_autosplit(src_item, inventory2)
         assert(result == data.expected.return_val)
         assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
+        if data.expected.src_stack_size == 0:
+            assert(src_item.is_queued_for_deletion())
         assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        if data.expected.dst_stack_size == 0:
+            assert(dst_item.is_queued_for_deletion())
         assert(inventory.get_item_count() == data.expected.src_inv_count)
         assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
@@ -612,7 +616,11 @@ func test_wsg_transfer_autosplit() -> void:
         var result := stacks_component.transfer_autosplit(src_item, inventory2)
         assert(result == data.expected.return_val)
         assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
+        if data.expected.src_stack_size == 0:
+            assert(src_item.is_queued_for_deletion())
         assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        if data.expected.dst_stack_size == 0:
+            assert(dst_item.is_queued_for_deletion())
         assert(inventory.get_item_count() == data.expected.src_inv_count)
         assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
