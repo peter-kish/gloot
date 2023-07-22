@@ -30,6 +30,7 @@ func init_suite():
         "test_wsg_enforce_constraints",
         "test_ws_transfer_autosplit",
         "test_sg_transfer_autosplit",
+        "test_wsg_transfer_autosplit",
     ]
 
 
@@ -65,7 +66,7 @@ func test_w_has_space_for() -> void:
     component_manager.enable_weight_component_(10.0)
     assert(component_manager.get_weight_component() != null)
 
-    var test_data = [
+    var test_data := [
         {input = 1.0, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = 10.0, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = 11.0, expected = {has_space = false, space = ItemCount.zero()}},
@@ -85,7 +86,7 @@ func test_s_has_space_for() -> void:
     component_manager.enable_stacks_component_()
     assert(component_manager.get_stacks_component() != null)
 
-    var test_data = [
+    var test_data := [
         {input = 1, expected = {has_space = true, space = ItemCount.inf()}},
         {input = 11, expected = {has_space = true, space = ItemCount.inf()}},
         {input = 111, expected = {has_space = true, space = ItemCount.inf()}},
@@ -108,7 +109,7 @@ func test_g_has_space_for() -> void:
     var grid_component = component_manager.get_grid_component()
     assert(grid_component != null)
 
-    var test_data = [
+    var test_data := [
         {input = Vector2i(1, 1), expected = {has_space = true, space = ItemCount.new(9)}},
         {input = Vector2i(2, 2), expected = {has_space = true, space = ItemCount.new(1)}},
         {input = Vector2i(3, 3), expected = {has_space = true, space = ItemCount.new(1)}},
@@ -133,7 +134,7 @@ func test_ws_has_space_for() -> void:
     assert(weight_component != null)
     assert(stacks_component != null)
 
-    var test_data = [
+    var test_data := [
         {input = {weight = 1.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = {weight = 10.0, stack_size = 10}, expected = {has_space = false, space = ItemCount.zero()}},
         {input = {weight = 10.0, stack_size = 1}, expected = {has_space = true, space = ItemCount.new(1)}},
@@ -163,7 +164,7 @@ func test_wg_has_space_for() -> void:
     assert(grid_component != null)
     assert(weight_component != null)
 
-    var test_data = [
+    var test_data := [
         {input = {weight = 1.0, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {weight = 10.0, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {weight = 11.0, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.zero()}},
@@ -189,7 +190,7 @@ func test_sg_has_space_for() -> void:
     assert(stacks_component != null)
     assert(grid_component != null)
 
-    var test_data = [
+    var test_data := [
         {input = {stack_size = 1, max_stack_size = 1, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(18)}},
         {input = {stack_size = 1, max_stack_size = 2, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(2)}},
@@ -221,7 +222,7 @@ func test_wsg_has_space_for() -> void:
     assert(stacks_component != null)
     assert(grid_component != null)
 
-    var test_data = [
+    var test_data := [
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 1, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {weight = 1.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = {weight = 10.0, stack_size = 1, max_stack_size = 2, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(1)}},
@@ -430,8 +431,6 @@ func test_wsg_enforce_constraints() -> void:
 func test_ws_transfer_autosplit() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
     inventory2.item_protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_weight_component_(10.0)
     component_manager.enable_stacks_component_()
@@ -445,26 +444,26 @@ func test_ws_transfer_autosplit() -> void:
     assert(inventory2._component_manager.get_weight_component() != null)
     assert(inventory2._component_manager.get_stacks_component() != null)
 
-    var test_data = [
+    var test_data := [
         {
             input = {src_stack_size = 2, dst_stack_size = 1, dst_capacity = 10.0},
-            expected = {return_val = true, src_stack_size = 2, dst_stack_size = 1, src_inv_size = 0, dst_inv_size = 2},
+            expected = {return_val = true, src_stack_size = 2, dst_stack_size = 1, src_inv_count = 0, dst_inv_count = 2},
         },
         {
             input = {src_stack_size = 3, dst_stack_size = 1, dst_capacity = 10.0},
-            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 1, src_inv_size = 0, dst_inv_size = 2},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 1, src_inv_count = 0, dst_inv_count = 2},
         },
         {
             input = {src_stack_size = 2, dst_stack_size = 1, dst_capacity = 2.0},
-            expected = {return_val = true, src_stack_size = 1, dst_stack_size = 1, src_inv_size = 1, dst_inv_size = 2},
+            expected = {return_val = true, src_stack_size = 1, dst_stack_size = 1, src_inv_count = 1, dst_inv_count = 2},
         },
         {
             input = {src_stack_size = 3, dst_stack_size = 3, dst_capacity = 10.0},
-            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_size = 0, dst_inv_size = 2},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 2},
         },
         {
             input = {src_stack_size = 3, dst_stack_size = 1, dst_capacity = 1.0},
-            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 1, src_inv_size = 1, dst_inv_size = 1},
+            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 1, src_inv_count = 1, dst_inv_count = 1},
         },
     ]
 
@@ -479,8 +478,8 @@ func test_ws_transfer_autosplit() -> void:
         assert(result == data.expected.return_val)
         assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
         assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
-        assert(inventory.get_item_count() == data.expected.src_inv_size)
-        assert(inventory2.get_item_count() == data.expected.dst_inv_size)
+        assert(inventory.get_item_count() == data.expected.src_inv_count)
+        assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
         clear_inventory(inventory)
         clear_inventory(inventory2)
@@ -489,12 +488,67 @@ func test_ws_transfer_autosplit() -> void:
 
 
 func test_sg_transfer_autosplit() -> void:
-    # TODO: Test cases:
+    inventory.item_protoset = TEST_PROTOSET_G
+    inventory2.item_protoset = TEST_PROTOSET_G
+
+    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_stacks_component_()
+    var grid_component = component_manager.get_grid_component()
+    var stacks_component = component_manager.get_stacks_component()
+    assert(grid_component != null)
+    assert(stacks_component != null)
+
+    inventory2._component_manager.enable_grid_component_(Vector2i(3, 3))
+    inventory2._component_manager.enable_stacks_component_()
+    assert(inventory2._component_manager.get_grid_component() != null)
+    assert(inventory2._component_manager.get_stacks_component() != null)
+
+    # Test cases:
     # 1. Destination has place for the full stack without merging
     # 2. Destination has place for the full stack when merged
-    # 3. Destination has place for part of the stack without merging
-    # 4. Destination has place for part of the stack when merged
-    # 5. Destination has no place for the stack
+    # 3. Destination has place for part of the stack when merged
+    # 4. Destination has no place for the stack
+    var test_data := [
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(4, 4)},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 2},
+        },
+        {
+            input = {src_stack_size = 2, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3)},
+            expected = {return_val = true, src_stack_size = 0, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 1},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3)},
+            expected = {return_val = true, src_stack_size = 1, dst_stack_size = 3, src_inv_count = 1, dst_inv_count = 1},
+        },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(3, 3)},
+            expected = {return_val = false, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 1, dst_inv_count = 1},
+        },
+    ]
 
+    for data in test_data:
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
+
+        inventory2._component_manager.get_grid_component().size = data.input.dst_inv_size
+        StacksComponent.set_item_stack_size(src_item, data.input.src_stack_size)
+        StacksComponent.set_item_max_stack_size(src_item, 3)
+        StacksComponent.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        StacksComponent.set_item_max_stack_size(dst_item, 3)
+        var result := stacks_component.transfer_autosplit(src_item, inventory2)
+        assert(result == data.expected.return_val)
+        assert(StacksComponent.get_item_stack_size(src_item) == data.expected.src_stack_size)
+        assert(StacksComponent.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        assert(inventory.get_item_count() == data.expected.src_inv_count)
+        assert(inventory2.get_item_count() == data.expected.dst_inv_count)
+
+        clear_inventory(inventory)
+        clear_inventory(inventory2)
+        free_item(dst_item)
+        free_item(src_item)
+
+    
+func test_wsg_transfer_autosplit() -> void:
     pass
 

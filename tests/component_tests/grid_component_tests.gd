@@ -47,7 +47,7 @@ func test_item_position() -> void:
     assert(grid_component.get_item_position(item) == Vector2i.ZERO)
     assert(inventory.add_item(item))
 
-    var test_data = [
+    var test_data := [
         {input = Vector2i(9, 9), expected = {return_value = false, position = Vector2i.ZERO}},
         {input = Vector2i(-1, -1), expected = {return_value = false, position = Vector2i.ZERO}},
         {input = Vector2i(8, 8), expected = {return_value = true, position = Vector2i(8, 8)}},
@@ -62,7 +62,7 @@ func test_item_size() -> void:
     assert(grid_component.get_item_size(item) == Vector2i(2, 2))
     assert(inventory.add_item(item))
 
-    var test_data = [
+    var test_data := [
         {input = Vector2i(-1, -1), expected = {return_value = false, size = Vector2i(2, 2)}},
         {input = Vector2i(4, 4), expected = {return_value = true, size = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, size = Vector2i(4, 4)}},
@@ -77,7 +77,7 @@ func test_item_rect() -> void:
     assert(grid_component.get_item_rect(item) == Rect2i(0, 0, 2, 2))
     assert(inventory.add_item(item))
 
-    var test_data = [
+    var test_data := [
         {input = Rect2i(0, 0, -1, -1), expected = {return_value = false, rect = Rect2i(0, 0, 2, 2)}},
         {input = Rect2i(4, 4, 4, 4), expected = {return_value = true, rect = Rect2i(4, 4, 4, 4)}},
         {input = Rect2i(9, 9, 4, 4), expected = {return_value = false, rect = Rect2i(4, 4, 4, 4)}},
@@ -89,7 +89,7 @@ func test_item_rect() -> void:
 
 
 func test_add_item_at() -> void:
-    var test_data = [
+    var test_data := [
         {input = Vector2i.ZERO, expected = {return_value = true, has_item = true, position = Vector2i.ZERO}},
         {input = Vector2i(4, 4), expected = {return_value = true, has_item = true, position = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i(4, 4)}},
@@ -105,7 +105,7 @@ func test_add_item_at() -> void:
 
 
 func test_create_and_add_item_at() -> void:
-    var test_data = [
+    var test_data := [
         {input = Vector2i.ZERO, expected = {return_value = true, has_item = true, position = Vector2i.ZERO}},
         {input = Vector2i(4, 4), expected = {return_value = true, has_item = true, position = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i.ZERO}},
@@ -125,7 +125,7 @@ func test_create_and_add_item_at() -> void:
 
 
 func test_get_items_under() -> void:
-    var test_data = [
+    var test_data := [
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(0, 0, 1, 1)}, expected = 1},
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(1, 1, 1, 1)}, expected = 1},
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(2, 2, 1, 1)}, expected = 0},
@@ -149,7 +149,7 @@ func test_get_items_under() -> void:
 func test_move_item_to() -> void:
     grid_component.add_item_at(item, Vector2i(2, 2))
 
-    var test_data = [
+    var test_data := [
         {input = Vector2i(1, 0), expected = true},
         {input = Vector2i(1, 1), expected = false},
         {input = Vector2i(4, 4), expected = true},
@@ -173,7 +173,7 @@ func test_transfer_to() -> void:
 
     inventory.add_item(item)
 
-    var test_data = [
+    var test_data := [
         {input = Vector2i.ZERO, expected = true},
         {input = Vector2i.ONE, expected = false},
         {input = Vector2i(4, 4), expected = true},
@@ -195,7 +195,7 @@ func test_transfer_to() -> void:
 func test_rect_free() -> void:
     grid_component.add_item_at(item, Vector2i(2, 2))
 
-    var test_data = [
+    var test_data := [
         {input = {rect = Rect2i(-1, -1, 1, 1), exception = null}, expected = false},
         {input = {rect = Rect2i(0, 0, 1, 1), exception = null}, expected = true},
         {input = {rect = Rect2i(0, 0, 3, 3), exception = null}, expected = false},
@@ -228,7 +228,7 @@ func test_sort() -> void:
 
 func test_get_space_for() -> void:
     # Empty inventory
-    var test_data = [
+    var test_data := [
         {input = Vector2i.ONE, expected = ItemCount.zero()},
         {input = Vector2i(2, 2), expected = ItemCount.new(1)},
         {input = Vector2i(3, 3), expected = ItemCount.new(1)},
