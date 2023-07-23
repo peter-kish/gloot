@@ -259,3 +259,20 @@ func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> It
     var count := inventory._component_manager.get_space_for(single_item)
     single_item.free()
     return count
+
+
+func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
+    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    if transfer_autosplit(item, destination):
+        destination._component_manager.get_stacks_component().pack_item(item)
+        return true
+    return false
+
+
+func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
+    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    if inventory.transfer(item, destination):
+        destination._component_manager.get_stacks_component().pack_item(item)
+        return true
+    return false
+
