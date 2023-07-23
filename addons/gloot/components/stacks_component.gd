@@ -105,16 +105,19 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
 func add_item_automerge(
     item: InventoryItem,
     ignore_properies: Array[String] = []
-) -> void:
+) -> bool:
     assert(item != null, "Item is null!")
     assert(inventory != null, "Inventory not set!")
+    if !inventory._component_manager.has_space_for(item):
+        return false
 
     var target_items = get_mergable_items(item)
     for target_item in target_items:
         if _merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
-            return
+            return true
 
-    inventory.add_item(item)
+    assert(inventory.add_item(item))
+    return true
 
 
 static func _merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
@@ -139,8 +142,8 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> i
     if free_dst_stack_space <= 0:
         return MergeResult.FAIL
 
-    set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
     set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
+    set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
 
     if free_dst_stack_space >= src_size:
         return MergeResult.SUCCESS
@@ -165,6 +168,17 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
 
     set_item_stack_size(new_item, new_stack_size)
     set_item_stack_size(item, stack_size - new_stack_size)
+    return new_item
+
+
+# TODO: Rename this
+func split_stack_safe(item: InventoryItem, new_stack_size: int) -> InventoryItem:
+    assert(inventory != null, "inventory is null!")
+    assert(inventory.has_item(item), "The inventory does not contain the given item!")
+
+    var new_item = split_stack(item, new_stack_size)
+    if new_item:
+        assert(inventory.add_item(new_item))
     return new_item
 
 
@@ -231,26 +245,26 @@ func pack_item(item: InventoryItem) -> bool:
     return result
 
 
-func transfer_autosplit(item: InventoryItem, destination: Inventory) -> bool:
+func transfer_autosplit(item: InventoryItem, destination: Inventory) -> InventoryItem:
     assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
     if inventory.transfer(item, destination):
-        return true
+        return item
 
     var stack_size := get_item_stack_size(item)
     if stack_size <= 1:
-        return false
+        return null
 
     var item_count := _get_space_for_single_item(destination, item)
     assert(!item_count.eq(ItemCount.inf()), "Item count shouldn't be infinite!")
     var count = item_count.count
 
     if count <= 0:
-        return false
+        return null
 
     var new_item: InventoryItem = split_stack(item, count)
     assert(new_item != null)
     assert(destination.add_item(new_item))
-    return true
+    return new_item
 
 
 func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
@@ -263,8 +277,9 @@ func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> It
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
     assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
-    if transfer_autosplit(item, destination):
-        destination._component_manager.get_stacks_component().pack_item(item)
+    var new_item := transfer_autosplit(item, destination)
+    if new_item:
+        destination._component_manager.get_stacks_component().pack_item(new_item)
         return true
     return false
 

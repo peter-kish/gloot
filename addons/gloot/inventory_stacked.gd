@@ -5,238 +5,89 @@ class_name InventoryStacked
 signal capacity_changed
 signal occupied_space_changed
 
-const KEY_WEIGHT: String = "weight"
-
 @export var capacity: float :
     get:
-        return capacity
+        return _component_manager.get_weight_component().capacity
     set(new_capacity):
-        assert(new_capacity >= 0, "Capacity must be greater or equal to 0!")
-        if !Engine.is_editor_hint():
-            if new_capacity > 0.0 && occupied_space > new_capacity:
-                return
-        capacity = new_capacity
-        update_configuration_warnings()
-        capacity_changed.emit()
-var _occupied_space: float
+        _component_manager.get_weight_component().capacity = new_capacity
 var occupied_space: float :
     get:
-        return _occupied_space
+        return _component_manager.get_weight_component().occupied_space
     set(new_occupied_space):
         assert(false, "occupied_space is read-only!")
 
-const KEY_CAPACITY: String = "capacity"
-const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
+func _init() -> void:
+    super._init()
+    _component_manager.enable_weight_component_()
+    _component_manager.enable_stacks_component_()
+    _component_manager.get_weight_component().capacity_changed.connect(Callable(self, "_on_capacity_changed"))
+    _component_manager.get_weight_component().occupied_space_changed.connect(Callable(self, "_on_occupied_space_changed"))
 
 
-func _get_configuration_warnings() -> PackedStringArray:
-    if _occupied_space > capacity:
-        return PackedStringArray(["Inventory capacity exceeded! %f/%f" % [_occupied_space, capacity]])
-    return PackedStringArray()
+func _on_capacity_changed() -> void:
+    capacity_changed.emit()
+
+
+func _on_occupied_space_changed() -> void:
+    occupied_space_changed.emit()
 
 
 func has_unlimited_capacity() -> bool:
-    return capacity == 0.0
-
-
-func _ready():
-    super._ready()
-    _calculate_occupied_space()
-    item_modified.connect(Callable(self, "_on_item_modified"))
-
-
-func _calculate_occupied_space() -> void:
-    var old_occupied_space = occupied_space
-    _occupied_space = 0.0
-    for item in get_items():
-        _occupied_space += _get_item_weight(item)
-
-    if _occupied_space != old_occupied_space:
-        occupied_space_changed.emit()
-
-    update_configuration_warnings()
-    if !Engine.is_editor_hint():
-        assert(has_unlimited_capacity() || occupied_space <= capacity, "Inventory overflow!")
-
-
-func _on_item_added(item: InventoryItem) -> void:
-    super._on_item_added(item)
-    _calculate_occupied_space()
-    update_configuration_warnings()
-
-
-func _on_item_removed(item: InventoryItem) -> void:
-    super._on_item_removed(item)
-    _calculate_occupied_space()
-    update_configuration_warnings()
-
-
-func remove_item(item: InventoryItem) -> bool:
-    var result = super.remove_item(item)
-    _calculate_occupied_space()
-    return result
-
-
-func _on_item_modified(item: InventoryItem) -> void:
-    _calculate_occupied_space()
-    update_configuration_warnings()
+    return _component_manager.get_weight_component().has_unlimited_capacity()
 
 
 func get_free_space() -> float:
-    if has_unlimited_capacity():
-        return capacity
-
-    var free_space: float = capacity - _occupied_space
-    if free_space < 0.0:
-        free_space = 0.0
-    return free_space
+    return _component_manager.get_weight_component().get_free_space()
 
 
 func has_place_for(item: InventoryItem) -> bool:
-    if has_unlimited_capacity():
-        return true
-
-    return get_free_space() >= _get_item_weight(item)
-
-
-func _get_item_unit_weight(item: InventoryItem) -> float:
-    var weight = item.get_property(KEY_WEIGHT, 1.0)
-    return weight
-
-
-func _get_item_weight(item: InventoryItem) -> float:
-    if item == null:
-        return -1.0
-    return ItemStackManager.get_item_stack_size(item) * _get_item_unit_weight(item)
-
-
-func add_item(item: InventoryItem) -> bool:
-    if has_place_for(item):
-        return super.add_item(item)
-
-    return false
+    return _component_manager.has_space_for(item)
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    if !has_place_for(item):
-        return false
-
-    ItemStackManager.add_item_automerge(self, item)
-    _calculate_occupied_space()
-    return true
+    return _component_manager.get_stacks_component().add_item_automerge(item)
 
 
-func _compare_items_by_stack_size(a: InventoryItem, b: InventoryItem) -> bool:
-    return ItemStackManager.get_item_stack_size(a) < ItemStackManager.get_item_stack_size(b)
-
-
-func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    assert(destination.get_class() == get_class())
-    if !destination.has_place_for(item):
-        return false
-    
-    return super.transfer(item, destination)
-
-    
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    assert(has_item(item), "The inventory does not contain the given item!")
-
-    var new_item = ItemStackManager.split_stack(item, new_stack_size)
-    if new_item:
-        occupied_space_changed.emit()
-        _calculate_occupied_space()
-        assert(super.add_item(new_item))
-    return new_item
+    return _component_manager.get_stacks_component().split_stack_safe(item, new_stack_size)
 
 
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return ItemStackManager.join_stacks(self, item_dst, item_src)
+    return _component_manager.get_stacks_component().join_stacks(item_dst, item_src)
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
-    return ItemStackManager.get_item_stack_size(item)
+    return StacksComponent.get_item_stack_size(item)
 
 
 static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void:
-    return ItemStackManager.set_item_stack_size(item, new_stack_size)
+    return StacksComponent.set_item_stack_size(item, new_stack_size)
 
 
 static func get_item_max_stack_size(item: InventoryItem) -> int:
-    return ItemStackManager.get_item_max_stack_size(item)
+    return StacksComponent.get_item_max_stack_size(item)
 
 
 static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void:
-    return ItemStackManager.set_item_max_stack_size(item, new_stack_size)
+    return StacksComponent.set_item_max_stack_size(item, new_stack_size)
 
 
 func get_prototype_stack_size(prototype_id: String) -> int:
-    return ItemStackManager.get_prototype_stack_size(item_protoset, prototype_id)
+    return StacksComponent.get_prototype_stack_size(item_protoset, prototype_id)
 
 
 func get_prototype_max_stack_size(prototype_id: String) -> int:
-    return ItemStackManager.get_prototype_max_stack_size(item_protoset, prototype_id)
+    return StacksComponent.get_prototype_max_stack_size(item_protoset, prototype_id)
 
 
 func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
-    if destination.has_place_for(item):
-        return transfer(item, destination)
-
-    var count: int = int(destination.get_free_space()) / int(_get_item_unit_weight(item))
-    if count > 0:
-        var new_item: InventoryItem = split(item, count)
-        assert(new_item != null)
-        return transfer(new_item, destination)
-
-    return false
+    return _component_manager.get_stacks_component().transfer_autosplit(item, destination) != null
 
 
 func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    # TODO: Get rid of code duplication (inventory_grid_stacked.gd)
-    if destination.has_place_for(item) && remove_item(item):
-        return destination.add_item_automerge(item)
-
-    return false
+    return _component_manager.get_stacks_component().transfer_automerge(item, destination)
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    if destination.has_place_for(item):
-        return transfer_automerge(item, destination)
-
-    var count: int = int(destination.get_free_space() / _get_item_unit_weight(item))
-    if count > 0:
-        var new_item: InventoryItem = split(item, count)
-        assert(new_item != null)
-        return transfer_automerge(new_item, destination)
-
-    return false
-
-
-func reset() -> void:
-    super.reset()
-    capacity = 0
-    _occupied_space = 0
-
-
-func serialize() -> Dictionary:
-    var result: Dictionary = super.serialize()
-
-    result[KEY_CAPACITY] = capacity
-    result[KEY_OCCUPIED_SPACE] = _occupied_space
-
-    return result
-
-
-func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) ||\
-        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
-        return false
-
-    capacity = source[KEY_CAPACITY]
-    _occupied_space = source[KEY_OCCUPIED_SPACE]
-
-    if !super.deserialize(source):
-        return false
-        
-    return true
+    return _component_manager.get_stacks_component().transfer_autosplitmerge(item, destination)

@@ -242,7 +242,8 @@ func serialize() -> Dictionary:
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
-        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
+        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
+        !Verify.dict(source, false, KEY_COMPONENTS, TYPE_DICTIONARY):
         return false
 
     clear()
@@ -252,7 +253,8 @@ func deserialize(source: Dictionary) -> bool:
         name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
     # TODO: Check return value:
-    _component_manager.deserialize(source)
+    if source.has(KEY_COMPONENTS):
+        _component_manager.deserialize(source[KEY_COMPONENTS])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:

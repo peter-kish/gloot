@@ -19,6 +19,8 @@ var capacity: float :
             new_capacity = 0.0
         if new_capacity == capacity:
             return
+        if new_capacity > 0.0 && occupied_space > new_capacity:
+            return
         capacity = new_capacity
         capacity_changed.emit()
 
