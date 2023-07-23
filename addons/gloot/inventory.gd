@@ -24,6 +24,7 @@ var _component_manager: ComponentManager = null
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
+const KEY_COMPONENTS: String = "components"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/verify.gd")
 
@@ -215,6 +216,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 func reset() -> void:
     clear()
     item_protoset = null
+    _component_manager.reset()
 
 
 func clear() -> void:
@@ -228,6 +230,7 @@ func serialize() -> Dictionary:
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
+    result[KEY_COMPONENTS] = _component_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -248,10 +251,13 @@ func deserialize(source: Dictionary) -> bool:
     if !source[KEY_NODE_NAME].is_empty():
         name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
+    # TODO: Check return value:
+    _component_manager.deserialize(source)
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
             var item = _get_item_script().new()
+            # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 

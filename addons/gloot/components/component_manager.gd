@@ -2,6 +2,12 @@ class_name ComponentManager
 
 signal inventory_set
 
+const KEY_WEIGHT_COMPONENT = "weight_component"
+const KEY_STACKS_COMPONENT = "stacks_component"
+const KEY_GRID_COMPONENT = "grid_component"
+
+const Verify = preload("res://addons/gloot/verify.gd")
+
 var _weight_component: WeightComponent = null
 var _stacks_component: StacksComponent = null
 var _grid_component: GridComponent = null
@@ -141,3 +147,48 @@ func get_stacks_component() -> StacksComponent:
 
 func get_grid_component() -> GridComponent:
     return _grid_component
+
+
+func reset() -> void:
+    if get_weight_component():
+        get_weight_component().reset()
+    if get_stacks_component():
+        get_stacks_component().reset()
+    if get_grid_component():
+        get_grid_component().reset()
+
+
+func serialize() -> Dictionary:
+    var result := {}
+
+    if get_weight_component():
+        result[KEY_WEIGHT_COMPONENT] = get_weight_component().serialize()
+    if get_stacks_component():
+        result[KEY_STACKS_COMPONENT] = get_stacks_component().serialize()
+    if get_grid_component():
+        result[KEY_GRID_COMPONENT] = get_grid_component().serialize()
+
+    return result
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !Verify.dict(source, false, KEY_WEIGHT_COMPONENT, TYPE_DICTIONARY):
+        return false
+    if !Verify.dict(source, false, KEY_STACKS_COMPONENT, TYPE_DICTIONARY):
+        return false
+    if !Verify.dict(source, false, KEY_GRID_COMPONENT, TYPE_DICTIONARY):
+        return false
+
+    reset()
+
+    if source.has(KEY_WEIGHT_COMPONENT):
+        if !get_weight_component().deserialize(source[KEY_WEIGHT_COMPONENT]):
+            return false
+    if source.has(KEY_STACKS_COMPONENT):
+        if !get_stacks_component().deserialize(source[KEY_STACKS_COMPONENT]):
+            return false
+    if source.has(KEY_GRID_COMPONENT):
+        if !get_grid_component().deserialize(source[KEY_GRID_COMPONENT]):
+            return false
+
+    return true
