@@ -299,3 +299,29 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
         if rect.intersects(occupied_rect):
             return true
     return false
+
+
+func reset() -> void:
+    size = DEFAULT_SIZE
+
+
+func serialize() -> Dictionary:
+    var result := {}
+
+    # Store Vector2i as string to make JSON conversion easier later
+    result[KEY_SIZE] = var_to_str(size)
+
+    return result
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
+        return false
+
+    reset()
+
+    var s: Vector2i = str_to_var(source[KEY_SIZE])
+    self.size = s
+
+    return true
+

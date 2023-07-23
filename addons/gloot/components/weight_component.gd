@@ -5,6 +5,10 @@ signal capacity_changed
 signal occupied_space_changed
 
 const KEY_WEIGHT: String = "weight"
+const KEY_CAPACITY: String = "capacity"
+const KEY_OCCUPIED_SPACE: String = "occupied_space"
+
+const Verify = preload("res://addons/gloot/verify.gd")
 
 
 var capacity: float :
@@ -94,3 +98,32 @@ func get_space_for(item: InventoryItem) -> ItemCount:
         return ItemCount.inf()
     var unit_weight := _get_item_unit_weight(item)
     return ItemCount.new(floor(get_free_space() / unit_weight))
+
+
+func reset() -> void:
+    capacity = 0.0
+
+
+func serialize() -> Dictionary:
+    var result := {}
+
+    result[KEY_CAPACITY] = capacity
+    # TODO: Check if this is needed
+    result[KEY_OCCUPIED_SPACE] = _occupied_space
+
+    return result
+
+
+func deserialize(source: Dictionary) -> bool:
+    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) ||\
+        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
+        return false
+
+    reset()
+    capacity = source[KEY_CAPACITY]
+    # TODO: Check if this is needed
+    _occupied_space = source[KEY_OCCUPIED_SPACE]
+
+    return true
+
+

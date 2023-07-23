@@ -14,6 +14,8 @@ func init_suite():
         "test_occupied_space",
         "test_get_free_space",
         "test_get_space_for",
+        "test_serialize",
+        "test_serialize_json",
     ]
 
 
@@ -86,3 +88,33 @@ func test_get_space_for() -> void:
     inventory.add_item(item)
     assert(!weight_component.get_space_for(item).is_inf())
     assert(weight_component.get_space_for(item).count == 1)
+
+
+func test_serialize() -> void:
+    weight_component.capacity = 42.42
+    var component_data = weight_component.serialize()
+    var capacity = weight_component.capacity
+
+    weight_component.reset()
+    assert(weight_component.capacity == 0)
+
+    assert(weight_component.deserialize(component_data))
+    assert(weight_component.capacity == capacity)
+    
+
+func test_serialize_json() -> void:
+    weight_component.capacity = 42.42
+    var component_data = weight_component.serialize()
+    var capacity = weight_component.capacity
+
+    # To and from JSON serialization
+    var json_string: String = JSON.stringify(component_data)
+    var test_json_conv: JSON = JSON.new()
+    assert(test_json_conv.parse(json_string) == OK)
+    component_data = test_json_conv.data
+
+    weight_component.reset()
+    assert(weight_component.capacity == 0)
+    
+    assert(weight_component.deserialize(component_data))
+    assert(weight_component.capacity == capacity)

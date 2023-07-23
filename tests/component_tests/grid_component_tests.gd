@@ -22,6 +22,8 @@ func init_suite():
         "test_rect_free",
         "test_sort",
         "test_get_space_for",
+        "test_serialize",
+        "test_serialize_json",
     ]
 
 
@@ -254,4 +256,34 @@ func test_get_space_for() -> void:
 
     inventory.remove_item(item2)
     free_item(item2)
+
+
+func test_serialize() -> void:
+    grid_component.size = Vector2i(4, 2)
+    var component_data = grid_component.serialize()
+    var size = grid_component.size
+
+    grid_component.reset()
+    assert(grid_component.size == GridComponent.DEFAULT_SIZE)
+
+    assert(grid_component.deserialize(component_data))
+    assert(grid_component.size == size)
+    
+
+func test_serialize_json() -> void:
+    grid_component.size = Vector2i(4, 2)
+    var component_data = grid_component.serialize()
+    var size = grid_component.size
+
+    # To and from JSON serialization
+    var json_string: String = JSON.stringify(component_data)
+    var test_json_conv: JSON = JSON.new()
+    assert(test_json_conv.parse(json_string) == OK)
+    component_data = test_json_conv.data
+
+    grid_component.reset()
+    assert(grid_component.size == GridComponent.DEFAULT_SIZE)
+    
+    assert(grid_component.deserialize(component_data))
+    assert(grid_component.size == size)
 

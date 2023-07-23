@@ -19,3 +19,18 @@ func _init(inventory_: Inventory) -> void:
 # Override this
 func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.zero()
+
+
+# Override this
+func reset() -> void:
+    pass
+
+
+# Override this
+func serialize() -> Dictionary:
+    return {}
+
+
+# Override this
+func deserialize(source: Dictionary) -> bool:
+    return true
