@@ -279,6 +279,10 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
     assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
     var new_item := transfer_autosplit(item, destination)
     if new_item:
+        # Item could have been packed already
+        # TODO: Find a more elegant way of handling this
+        if new_item.is_queued_for_deletion():
+            return true
         destination._component_manager.get_stacks_component().pack_item(new_item)
         return true
     return false
@@ -287,6 +291,10 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
     if inventory.transfer(item, destination):
+        # Item could have been packed already
+        # TODO: Find a more elegant way of handling this
+        if item.is_queued_for_deletion():
+            return true
         destination._component_manager.get_stacks_component().pack_item(item)
         return true
     return false

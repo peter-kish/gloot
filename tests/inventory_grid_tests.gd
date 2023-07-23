@@ -62,14 +62,16 @@ func test_add_item_at() -> void:
 func test_find_free_place() -> void:
     assert(inventory_3x3.add_item_at(item_1x1, Vector2i(0, 0)))
     # Find place for an item that's already in the inventory
-    var free_place: Vector2i = inventory_3x3.find_free_place(item_1x1)
-    assert(free_place.x == 0)
-    assert(free_place.y == 1)
+    var free_place := inventory_3x3.find_free_place(item_1x1)
+    assert(free_place.success)
+    assert(free_place.position.x == 0)
+    assert(free_place.position.y == 1)
 
     # Find place for an item that's not in the inventory
     free_place = inventory_3x3.find_free_place(item_2x2)
-    assert(free_place.x == 0)
-    assert(free_place.y == 1)
+    assert(free_place.success)
+    assert(free_place.position.x == 0)
+    assert(free_place.position.y == 1)
 
 
 func test_change_size() -> void:
