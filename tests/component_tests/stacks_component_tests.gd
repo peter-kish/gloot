@@ -91,8 +91,8 @@ func test_get_mergable_items() -> void:
     assert(inventory.add_item(item))
     assert(inventory.add_item(item_2))
     var mergable_items = stacks_component.get_mergable_items(item)
-    assert(mergable_items.size() == 2)
-    assert(item in mergable_items)
+    assert(mergable_items.size() == 1)
+    assert(not item in mergable_items)
     assert(item_2 in mergable_items)
 
 

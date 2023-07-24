@@ -53,15 +53,15 @@ static func get_prototype_max_stack_size(protoset: ItemProtoset, prototype_id: S
     return protoset.get_item_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
 
 
-func get_mergable_items(
-    item: InventoryItem
-) -> Array[InventoryItem]:
+func get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:
     assert(inventory != null, "Inventory not set!")
     assert(item != null, "item is null!")
 
     var result: Array[InventoryItem] = []
 
     for i in inventory.get_items():
+        if i == item:
+            continue
         if !items_mergable(i, item):
             continue
 
