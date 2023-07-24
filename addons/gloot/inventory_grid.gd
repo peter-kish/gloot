@@ -55,7 +55,7 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     return _component_manager.get_grid_component().move_item_to(item, position)
 
 
-func transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool:
+func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
     return _component_manager.get_grid_component().transfer_to(item, destination._component_manager.get_grid_component(), position)
 
 

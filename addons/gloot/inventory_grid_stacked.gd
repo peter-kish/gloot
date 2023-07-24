@@ -1,27 +1,11 @@
 @tool
-extends Inventory
+extends InventoryGrid
 class_name InventoryGridStacked
-
-signal size_changed
-
-const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
-
-@export var size: Vector2i = DEFAULT_SIZE :
-    get:
-        return _component_manager.get_grid_component().size
-    set(new_size):
-        _component_manager.get_grid_component().size = new_size
 
 
 func _init() -> void:
     super._init()
-    _component_manager.enable_grid_component_()
     _component_manager.enable_stacks_component_()
-    _component_manager.get_grid_component().size_changed.connect(Callable(self, "_on_size_changed"))
-
-
-func _on_size_changed() -> void:
-    size_changed.emit()
 
 
 func has_place_for(item: InventoryItem) -> bool:
