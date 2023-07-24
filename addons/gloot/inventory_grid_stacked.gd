@@ -58,3 +58,24 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
     return _component_manager.get_grid_component().transfer_to(item, destination._component_manager.get_grid_component(), position)
+
+
+func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
+    var rect := Rect2i(position, get_item_size(item))
+    var mergable_items := _get_mergable_items_under(item, rect)
+    for mergable_item in mergable_items:
+        if _component_manager.get_stacks_component().stacks_joinable(item, mergable_item):
+            return mergable_item
+    return null
+
+
+func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+
+    for item_dst in get_items_under(rect):
+        if item_dst == item:
+            continue
+        if StacksComponent.items_mergable(item_dst, item):
+            result.append(item_dst)
+
+    return result
