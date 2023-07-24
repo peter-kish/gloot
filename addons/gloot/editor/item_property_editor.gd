@@ -7,7 +7,7 @@ const COLOR_INVALID = Color.RED
 const POPUP_SIZE = Vector2i(800, 300)
 const POPUP_MIN_SIZE = Vector2i(400, 200)
 const POPUP_MARGIN = 10
-var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, InventoryGrid.KEY_GRID_POSITION]
+var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridComponent.KEY_GRID_POSITION]
 
 var _dict_editor: Control
 var current_value: Dictionary
