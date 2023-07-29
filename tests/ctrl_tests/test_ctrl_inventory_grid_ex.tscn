@@ -68,5 +68,5 @@ script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item_1x1"
 properties = {
-"grid_position": Vector2(0, 2)
+"grid_position": Vector2i(0, 2)
 }

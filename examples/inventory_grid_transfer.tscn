@@ -103,14 +103,14 @@ item_protoset = ExtResource("1")
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
-properties = {
-"grid_position": Vector2(0, 2)
-}
 
 [node name="L_item_2x2_2" type="Node" parent="InventoryGridLeft"]
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
+properties = {
+"grid_position": Vector2i(0, 2)
+}
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
@@ -121,14 +121,14 @@ item_protoset = ExtResource("1")
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_2x2"
-properties = {
-"grid_position": Vector2(0, 1)
-}
 
 [node name="R_item_1x1" type="Node" parent="InventoryGridRight"]
 script = ExtResource("8")
 protoset = ExtResource("1")
 prototype_id = "item_1x1"
+properties = {
+"grid_position": Vector2i(0, 2)
+}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("7")
