@@ -15,7 +15,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 func _init() -> void:
     super._init()
-    _component_manager.enable_grid_component_()
+    _component_manager.enable_grid_component()
     _component_manager.get_grid_component().size_changed.connect(Callable(self, "_on_size_changed"))
 
 

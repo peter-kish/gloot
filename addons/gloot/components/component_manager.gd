@@ -131,7 +131,7 @@ func enable_stacks_component_() -> void:
     _stacks_component = StacksComponent.new(inventory)
 
 
-func enable_grid_component_(size: Vector2i = GridComponent.DEFAULT_SIZE) -> void:
+func enable_grid_component(size: Vector2i = GridComponent.DEFAULT_SIZE) -> void:
     assert(_grid_component == null, "Grid component is already enabled")
     _grid_component = GridComponent.new(inventory)
     _grid_component.size = size

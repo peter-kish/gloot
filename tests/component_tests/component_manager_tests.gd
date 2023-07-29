@@ -105,7 +105,7 @@ func test_g_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var grid_component = component_manager.get_grid_component()
     assert(grid_component != null)
 
@@ -157,7 +157,7 @@ func test_wg_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     component_manager.enable_weight_component_(10.0)
     var grid_component = component_manager.get_grid_component()
     var weight_component = component_manager.get_weight_component()
@@ -184,7 +184,7 @@ func test_sg_has_space_for() -> void:
     item.prototype_id = TEST_PROTOTYPE_WS
 
     component_manager.enable_stacks_component_()
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var stacks_component = component_manager.get_stacks_component()
     var grid_component = component_manager.get_grid_component()
     assert(stacks_component != null)
@@ -214,7 +214,7 @@ func test_wsg_has_space_for() -> void:
 
     component_manager.enable_weight_component_(10.0)
     component_manager.enable_stacks_component_()
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var weight_component = component_manager.get_weight_component()
     var stacks_component = component_manager.get_stacks_component()
     var grid_component = component_manager.get_grid_component()
@@ -244,7 +244,7 @@ func test_g_enforce_constraints() -> void:
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var grid_component = component_manager.get_grid_component()
     assert(grid_component != null)
 
@@ -273,7 +273,7 @@ func test_wg_enforce_constraints() -> void:
     item.prototype_id = TEST_PROTOTYPE_G
 
     component_manager.enable_weight_component_(10.0)
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var weight_component = component_manager.get_weight_component()
     var grid_component = component_manager.get_grid_component()
     assert(weight_component != null)
@@ -304,7 +304,7 @@ func test_sg_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
 
     component_manager.enable_stacks_component_()
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var stacks_component := component_manager.get_stacks_component()
     var grid_component := component_manager.get_grid_component()
     assert(stacks_component != null)
@@ -352,7 +352,7 @@ func test_wsg_enforce_constraints() -> void:
 
     component_manager.enable_stacks_component_()
     component_manager.enable_weight_component_(10.0)
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var stacks_component = component_manager.get_stacks_component()
     var weight_component = component_manager.get_weight_component()
     var grid_component = component_manager.get_grid_component()
@@ -491,14 +491,14 @@ func test_sg_transfer_autosplit() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
     inventory2.item_protoset = TEST_PROTOSET_G
 
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     component_manager.enable_stacks_component_()
     var grid_component = component_manager.get_grid_component()
     var stacks_component = component_manager.get_stacks_component()
     assert(grid_component != null)
     assert(stacks_component != null)
 
-    inventory2._component_manager.enable_grid_component_(Vector2i(3, 3))
+    inventory2._component_manager.enable_grid_component(Vector2i(3, 3))
     inventory2._component_manager.enable_stacks_component_()
     assert(inventory2._component_manager.get_grid_component() != null)
     assert(inventory2._component_manager.get_stacks_component() != null)
@@ -559,7 +559,7 @@ func test_wsg_transfer_autosplit() -> void:
 
     component_manager.enable_weight_component_(10.0)
     component_manager.enable_stacks_component_()
-    component_manager.enable_grid_component_(Vector2i(3, 3))
+    component_manager.enable_grid_component(Vector2i(3, 3))
     var weight_component = component_manager.get_weight_component()
     var stacks_component = component_manager.get_stacks_component()
     var grid_component = component_manager.get_grid_component()
@@ -569,7 +569,7 @@ func test_wsg_transfer_autosplit() -> void:
 
     inventory2._component_manager.enable_weight_component_(10.0)
     inventory2._component_manager.enable_stacks_component_()
-    inventory2._component_manager.enable_grid_component_(Vector2i(3, 3))
+    inventory2._component_manager.enable_grid_component(Vector2i(3, 3))
     assert(inventory2._component_manager.get_weight_component() != null)
     assert(inventory2._component_manager.get_stacks_component() != null)
     assert(inventory2._component_manager.get_grid_component() != null)
