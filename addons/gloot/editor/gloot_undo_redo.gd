@@ -312,7 +312,7 @@ func set_prototype_properties(protoset: ItemProtoset,
     undo_redo_manager.commit_action()
 
 
-func _get_item_by_hash(inventory: InventoryGrid, item_hash: int) -> InventoryItem:
+func _get_item_by_hash(inventory: Inventory, item_hash: int) -> InventoryItem:
     for item in inventory.get_items():
         if _get_item_hash(item) == item_hash:
             return item
