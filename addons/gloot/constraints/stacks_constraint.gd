@@ -1,5 +1,5 @@
-class_name StacksComponent
-extends InventoryComponent
+class_name StacksConstraint
+extends InventoryConstraint
 
 const KEY_STACK_SIZE: String = "stack_size"
 const KEY_MAX_STACK_SIZE: String = "max_stack_size"
@@ -80,8 +80,8 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
     var ignore_properies: Array[String] = [
         KEY_STACK_SIZE,
         KEY_MAX_STACK_SIZE,
-        GridComponent.KEY_GRID_POSITION,
-        WeightComponent.KEY_WEIGHT
+        GridConstraint.KEY_GRID_POSITION,
+        WeightConstraint.KEY_WEIGHT
     ]
 
     if item_1.prototype_id != item_2.prototype_id:
@@ -108,7 +108,7 @@ func add_item_automerge(
 ) -> bool:
     assert(item != null, "Item is null!")
     assert(inventory != null, "Inventory not set!")
-    if !inventory._component_manager.has_space_for(item):
+    if !inventory._constraint_manager.has_space_for(item):
         return false
 
     var target_items = get_mergable_items(item)
@@ -246,7 +246,7 @@ func pack_item(item: InventoryItem) -> bool:
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> InventoryItem:
-    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
     if inventory.transfer(item, destination):
         return item
 
@@ -270,32 +270,32 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
 func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
     var single_item := item.duplicate()
     set_item_stack_size(single_item, 1)
-    var count := inventory._component_manager.get_space_for(single_item)
+    var count := inventory._constraint_manager.get_space_for(single_item)
     single_item.free()
     return count
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
-    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
     var new_item := transfer_autosplit(item, destination)
     if new_item:
         # Item could have been packed already
         # TODO: Find a more elegant way of handling this
         if new_item.is_queued_for_deletion():
             return true
-        destination._component_manager.get_stacks_component().pack_item(new_item)
+        destination._constraint_manager.get_stacks_constraint().pack_item(new_item)
         return true
     return false
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
-    assert(inventory._component_manager.get_configuration() == destination._component_manager.get_configuration())
+    assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
     if inventory.transfer(item, destination):
         # Item could have been packed already
         # TODO: Find a more elegant way of handling this
         if item.is_queued_for_deletion():
             return true
-        destination._component_manager.get_stacks_component().pack_item(item)
+        destination._constraint_manager.get_stacks_constraint().pack_item(item)
         return true
     return false
 

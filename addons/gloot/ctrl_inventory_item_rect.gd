@@ -102,7 +102,7 @@ func _draw_stack_size(rect: Rect2):
     if item == null:
         return
 
-    var stack_size: int = StacksComponent.get_item_stack_size(item)
+    var stack_size: int = StacksConstraint.get_item_stack_size(item)
     if stack_size <= 1:
         return
 

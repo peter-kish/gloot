@@ -1,5 +1,5 @@
-class_name WeightComponent
-extends InventoryComponent
+class_name WeightConstraint
+extends InventoryConstraint
 
 signal capacity_changed
 signal occupied_space_changed
@@ -87,7 +87,7 @@ static func _get_item_unit_weight(item: InventoryItem) -> float:
 static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
-    return StacksComponent.get_item_stack_size(item) * _get_item_unit_weight(item)
+    return StacksConstraint.get_item_stack_size(item) * _get_item_unit_weight(item)
 
 
 static func set_item_weight(item: InventoryItem, weight: float) -> void:

@@ -1,5 +1,5 @@
-class_name GridComponent
-extends InventoryComponent
+class_name GridConstraint
+extends InventoryConstraint
 
 signal size_changed
 
@@ -189,7 +189,7 @@ func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
         item.properties.erase(KEY_GRID_POSITION)
 
 
-func transfer_to(item: InventoryItem, destination: GridComponent, position: Vector2i) -> bool:
+func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
     assert(inventory != null, "Inventory not set!")
     assert(destination.inventory != null, "Destination inventory not set!")
     var item_size = get_item_size(item)
@@ -202,23 +202,23 @@ func transfer_to(item: InventoryItem, destination: GridComponent, position: Vect
     return _merge_to(item, destination, position)
 
 
-func _merge_to(item: InventoryItem, destination: GridComponent, position: Vector2i) -> bool:
+func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
     var item_dst := destination._get_mergable_item_at(item, position)
     if item_dst == null:
         return false
 
-    return inventory._component_manager.get_stacks_component().join_stacks(item_dst, item)
+    return inventory._constraint_manager.get_stacks_constraint().join_stacks(item_dst, item)
     
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    if inventory._component_manager.get_stacks_component() == null:
+    if inventory._constraint_manager.get_stacks_constraint() == null:
         return null
 
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if inventory._component_manager.get_stacks_component().stacks_joinable(item, mergable_item):
+        if inventory._constraint_manager.get_stacks_constraint().stacks_joinable(item, mergable_item):
             return mergable_item
     return null
 
@@ -229,7 +229,7 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     for item_dst in get_items_under(rect):
         if item_dst == item:
             continue
-        if StacksComponent.items_mergable(item_dst, item):
+        if StacksConstraint.items_mergable(item_dst, item):
             result.append(item_dst)
 
     return result

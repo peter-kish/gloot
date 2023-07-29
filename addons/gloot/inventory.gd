@@ -20,11 +20,11 @@ signal protoset_changed
         protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
-var _component_manager: ComponentManager = null
+var _constraint_manager: ConstraintManager = null
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
-const KEY_COMPONENTS: String = "components"
+const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/verify.gd")
 
@@ -55,7 +55,7 @@ func _exit_tree():
 
 
 func _init() -> void:
-    _component_manager = ComponentManager.new(self)
+    _constraint_manager = ConstraintManager.new(self)
 
 
 func _ready() -> void:
@@ -147,7 +147,7 @@ func _can_add_item(item: InventoryItem) -> bool:
     if item == null || has_item(item):
         return false
 
-    if !_component_manager.has_space_for(item):
+    if !_constraint_manager.has_space_for(item):
         return false
 
     return true
@@ -216,7 +216,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 func reset() -> void:
     clear()
     item_protoset = null
-    _component_manager.reset()
+    _constraint_manager.reset()
 
 
 func clear() -> void:
@@ -230,7 +230,7 @@ func serialize() -> Dictionary:
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
-    result[KEY_COMPONENTS] = _component_manager.serialize()
+    result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -243,7 +243,7 @@ func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
-        !Verify.dict(source, false, KEY_COMPONENTS, TYPE_DICTIONARY):
+        !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
@@ -253,8 +253,8 @@ func deserialize(source: Dictionary) -> bool:
         name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
     # TODO: Check return value:
-    if source.has(KEY_COMPONENTS):
-        _component_manager.deserialize(source[KEY_COMPONENTS])
+    if source.has(KEY_CONSTRAINTS):
+        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
