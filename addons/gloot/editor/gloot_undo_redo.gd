@@ -2,8 +2,6 @@ extends Object
 
 var undo_redo_manager: EditorUndoRedoManager
 
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
-
 func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
     assert(undo_redo_manager)
 
