@@ -59,3 +59,7 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
     return _component_manager.get_grid_component().transfer_to(item, destination._component_manager.get_grid_component(), position)
 
+
+func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
+    return _component_manager.get_grid_component()._get_mergable_item_at(item, position)
+
