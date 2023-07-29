@@ -472,7 +472,7 @@ func _move_item(item: InventoryItem, position: Vector2i) -> void:
         
 # TODO: Find a better way for undoing/redoing item merges
 func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
-    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
+    var item_dst = inventory._component_manager.get_grid_component()._get_mergable_item_at(item_src, position)
     if item_dst == null:
         return
 
