@@ -111,6 +111,10 @@ func _bounds_broken() -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
+    if item.properties.has(KEY_GRID_POSITION):
+        var item_position = item.properties[KEY_GRID_POSITION]
+        return add_item_at(item, item_position)
+        
     var free_place = find_free_place(item)
     if !Verify.vector_positive(free_place):
         return false
@@ -263,12 +267,10 @@ func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
         return false
 
-    reset()
+    var s: Vector2i = str_to_var(source[KEY_SIZE])
+    self.size = s
 
     if !super.deserialize(source):
         return false
-
-    var s: Vector2i = str_to_var(source[KEY_SIZE])
-    self.size = s
 
     return true

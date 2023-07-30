@@ -168,7 +168,7 @@ func test_transfer_to():
 
 func test_serialize():
     assert(inventory_3x3.add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(inventory_3x3.add_item_at(item_2x2, Vector2i(1, 0)))
+    assert(inventory_3x3.add_item_at(item_2x2, Vector2i(1, 1)))
     var inventory_data = inventory_3x3.serialize()
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().is_empty())
@@ -177,11 +177,13 @@ func test_serialize():
     assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.size.x == 3)
     assert(inventory_3x3.size.y == 3)
+    assert(inventory_3x3.get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
+    assert(inventory_3x3.get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)
     
 
 func test_serialize_json():
     assert(inventory_3x3.add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(inventory_3x3.add_item_at(item_2x2, Vector2i(1, 0)))
+    assert(inventory_3x3.add_item_at(item_2x2, Vector2i(1, 1)))
     var inventory_data = inventory_3x3.serialize()
 
     # To and from JSON serialization
@@ -198,3 +200,5 @@ func test_serialize_json():
     assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.size.x == 3)
     assert(inventory_3x3.size.y == 3)
+    assert(inventory_3x3.get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
+    assert(inventory_3x3.get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)

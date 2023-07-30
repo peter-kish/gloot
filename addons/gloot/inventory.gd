@@ -220,7 +220,8 @@ func deserialize(source: Dictionary) -> bool:
         !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
         return false
 
-    reset()
+    clear()
+    item_protoset = null
 
     if !source[KEY_NODE_NAME].is_empty():
         name = source[KEY_NODE_NAME]

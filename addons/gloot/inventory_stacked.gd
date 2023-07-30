@@ -233,12 +233,10 @@ func deserialize(source: Dictionary) -> bool:
         !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
         return false
 
-    reset()
-
-    if !super.deserialize(source):
-        return false
-
     capacity = source[KEY_CAPACITY]
     _occupied_space = source[KEY_OCCUPIED_SPACE]
 
+    if !super.deserialize(source):
+        return false
+        
     return true
