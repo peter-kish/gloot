@@ -66,7 +66,7 @@ func _refresh() -> void:
     # Remove the inventory control, if present
     if _inventory_control:
         scroll_container.remove_child(_inventory_control)
-        _inventory_control.free()
+        _inventory_control.queue_free()
         _inventory_control = null
 
     # Create the appropriate inventory control and populate it
