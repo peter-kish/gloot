@@ -30,7 +30,8 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    grid_constraint = GridConstraint.new(inventory)
+    inventory._constraint_manager.enable_grid_constraint()
+    grid_constraint = inventory._constraint_manager.get_grid_constraint()
 
 
 func cleanup_test() -> void:

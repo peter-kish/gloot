@@ -1,7 +1,5 @@
 class_name InventoryConstraint
 
-signal inventory_set
-
 var inventory: Inventory = null :
     get:
         return inventory
@@ -9,7 +7,7 @@ var inventory: Inventory = null :
         assert(new_inventory != null, "Can't set inventory to null!")
         assert(inventory == null, "Inventory already set!")
         inventory = new_inventory
-        inventory_set.emit()
+        _on_inventory_set()
 
 
 func _init(inventory_: Inventory) -> void:
@@ -34,3 +32,23 @@ func serialize() -> Dictionary:
 # Override this
 func deserialize(source: Dictionary) -> bool:
     return true
+    
+    
+# Override this
+func _on_inventory_set() -> void:
+    pass
+
+
+# Override this
+func _on_item_added(item: InventoryItem) -> void:
+    pass
+
+
+# Override this
+func _on_item_removed(item: InventoryItem) -> void:
+    pass
+
+    
+# Override this
+func _on_item_modified(item: InventoryItem) -> void:
+    pass

@@ -33,22 +33,22 @@ var occupied_space: float :
 
 
 func _init(inventory: Inventory) -> void:
-    inventory_set.connect(Callable(self, "_on_inventory_set"))
     super._init(inventory)
     
     
 func _on_inventory_set() -> void:
-    _connect_inventory_signals()
     _calculate_occupied_space()
 
 
-func _connect_inventory_signals() -> void:
-    inventory.item_added.connect(Callable(self, "_calculate_occupied_space_proxy"))
-    inventory.item_removed.connect(Callable(self, "_calculate_occupied_space_proxy"))
-    inventory.item_modified.connect(Callable(self, "_calculate_occupied_space_proxy"))
+func _on_item_added(item: InventoryItem) -> void:
+    _calculate_occupied_space()
 
 
-func _calculate_occupied_space_proxy(_item: InventoryItem) -> void:
+func _on_item_removed(item: InventoryItem) -> void:
+    _calculate_occupied_space()
+
+    
+func _on_item_modified(item: InventoryItem) -> void:
     _calculate_occupied_space()
 
 

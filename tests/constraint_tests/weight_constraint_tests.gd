@@ -22,7 +22,8 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, "big_item")
     inventory = create_inventory(TEST_PROTOSET)
-    weight_constraint = WeightConstraint.new(inventory)
+    inventory._constraint_manager.enable_weight_constraint_()
+    weight_constraint = inventory._constraint_manager.get_weight_constraint()
 
 
 func cleanup_test() -> void:

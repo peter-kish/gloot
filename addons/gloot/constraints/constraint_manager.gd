@@ -1,7 +1,5 @@
 class_name ConstraintManager
 
-signal inventory_set
-
 const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"
 const KEY_GRID_CONSTRAINT = "grid_constraint"
@@ -24,8 +22,6 @@ var inventory: Inventory = null :
             _stacks_constraint.inventory = inventory
         if _grid_constraint != null:
             _grid_constraint.inventory = inventory
-        inventory.item_added.connect(Callable(self, "_on_item_added"))
-        inventory_set.emit()
 
 
 enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
@@ -37,6 +33,31 @@ func _init(inventory_: Inventory) -> void:
 
 func _on_item_added(item: InventoryItem) -> void:
     assert(_enforce_constraints(item), "Failed to enforce constraints!")
+    
+    if _weight_constraint != null:
+        _weight_constraint._on_item_added(item)
+    if _stacks_constraint != null:
+        _stacks_constraint._on_item_added(item)
+    if _grid_constraint != null:
+        _grid_constraint._on_item_added(item)
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    if _weight_constraint != null:
+        _weight_constraint._on_item_removed(item)
+    if _stacks_constraint != null:
+        _stacks_constraint._on_item_removed(item)
+    if _grid_constraint != null:
+        _grid_constraint._on_item_removed(item)
+
+
+func _on_item_modified(item: InventoryItem) -> void:
+    if _weight_constraint != null:
+        _weight_constraint._on_item_modified(item)
+    if _stacks_constraint != null:
+        _stacks_constraint._on_item_modified(item)
+    if _grid_constraint != null:
+        _grid_constraint._on_item_modified(item)
 
 
 func _enforce_constraints(item: InventoryItem) -> bool:

@@ -67,6 +67,7 @@ func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
     contents_changed.emit()
     _connect_item_signals(item)
+    _constraint_manager._on_item_added(item)
     item_added.emit(item)
 
 
@@ -74,6 +75,7 @@ func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     contents_changed.emit()
     _disconnect_item_signals(item)
+    _constraint_manager._on_item_removed(item)
     item_removed.emit(item)
 
 
@@ -119,6 +121,7 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
+    _constraint_manager._on_item_modified(item)
     item_modified.emit(item)
 
 
