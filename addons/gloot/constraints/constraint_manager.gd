@@ -36,7 +36,7 @@ func _init(inventory_: Inventory) -> void:
 
 
 func _on_item_added(item: InventoryItem) -> void:
-    assert(_enforce_constraints(item), "Failed to enforce constraint constraints!")
+    assert(_enforce_constraints(item), "Failed to enforce constraints!")
 
 
 func _enforce_constraints(item: InventoryItem) -> bool:

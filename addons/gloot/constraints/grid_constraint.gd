@@ -176,6 +176,9 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
 
 
 func move_item_to_free_spot(item: InventoryItem) -> bool:
+    if rect_free(get_item_rect(item), item):
+        return true
+
     var free_place := find_free_place(item, item)
     if not free_place.success:
         return false
