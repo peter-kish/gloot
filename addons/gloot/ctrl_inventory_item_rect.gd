@@ -12,7 +12,7 @@ var item: InventoryItem :
     set(new_item):
         item = new_item
         if item && ctrl_inventory:
-            var texture_path: String = item.get_property(CtrlInventory.KEY_IMAGE)
+            var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
             if texture_path:
                 texture = load(texture_path)
             _refresh()
