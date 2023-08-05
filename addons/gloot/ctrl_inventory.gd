@@ -4,8 +4,6 @@ extends Control
 
 signal inventory_item_activated(item)
 
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
-
 @export var inventory_path: NodePath :
     get:
         return inventory_path

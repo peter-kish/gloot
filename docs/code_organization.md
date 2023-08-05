@@ -3,6 +3,7 @@
 The plugin source code is organized into the following directories:
 
 * `addons/gloot/` - Core functionality
+* `addons/gloot/constraints` - Inventory constraints
 * `addons/gloot/editor` - Inspector Plugin
 * `examples` - Examples
 * `tests` - Tests
@@ -32,7 +33,14 @@ Other files in the directory:
 * [`gloot.gd`](../addons/gloot/gloot.gd) - Main plugin script (referenced in [`plugin.cfg`](../addons/gloot/plugin.cfg)).
 * [`ctrl_inventory_item_rect.gd`](../addons/gloot/ctrl_inventory_item_rect.gd) - Implements UI controls that display the inventory items inside a [`CtrlInventoryGrid`](./ctrl_inventory_grid.md).
 * [`verify.gd`](../addons/gloot/verify.gd) - Implements some helper static functions for various error checks.
-* [`item_stack_manager.gd`](../addons/gloot/item_stack_manager.gd) - Helper class for managing item stacks. Used by [`InventoryStacked`](./inventory_stacked.md) and [`InventoryGridStacked`](./inventory_grid_stacked.md).
+
+## Inventory Constraints (`addons/gloot/constraints`)
+
+The [`InventoryStacked`](./inventory_stacked.md), [`InventoryGrid`](./inventory_grid.md) and [`InventoryGridStacked`](./inventory_grid_stacked.md) classes derive from the [`Inventory`](./inventory.md) class and apply different constraints on the basic inventory functionality. Combining these constraints gives us the functionality of the derived classes. The constraints are implemented in separate classes and can be found in the `addons/gloot/constraints` directory:
+* [constraint_manager.gd](../addons/gloot/constraints/constraint_manager.gd) - Implements a constraint manager class
+* [grid_constraint.gd](../addons/gloot/constraints/grid_constraint.gd) - Implements the grid constraint, which limits the inventory to a 2D grid of a given size.
+* [stacks_constraint.gd](../addons/gloot/constraints/stacks_constraint.gd) - Implements the stacks constraint, which organizes the items in item stacks.
+* [weight_constraint.gd](../addons/gloot/constraints/weight_constraint.gd) - Implements the weight constraint, which limits the inventory to a given weight-based capacity.
 
 ## Inspector Plugin (`addons/gloot/editor`)
 
@@ -77,6 +85,12 @@ The unit tests are implemented in the files with the `_test` suffix:
 * [`inventory_grid_tests.gd`](../tests/inventory_grid_stacked_tests.gd) - Tests [`InventoryGridStacked`](./inventory_grid_stacked.md).
 * [`item_slot_tests.gd`](../tests/item_slot_tests.gd) - Tests [`ItemSlot`](./item_slot.md).
 * [`verification_test.gd`](../tests/verification_test.gd) - Tests the helper functions from [`verify.gd`](../addons/gloot/verify.gd).
+
+The tests for inventory constraints are located in the `tests/constraint_tests` directory
+* [constraint_manager_tests.gd](../tests/constraint_tests/constraint_manager_tests.gd) - Tests the constraint manager
+* [grid_constraint_tests.gd](../tests/constraint_tests/grid_constraint_tests.gd) - Tests the grid constraint
+* [stacks_constraint_tests.gd](../tests/constraint_tests/stacks_constraint_tests.gd) - Tests the stacks constraint
+* [weight_constraint_tests.gd](../tests/constraint_tests/weight_constraint_tests.gd) - Tests the weight constraint
 
 The UI control tests are just scenes that contain a single instance of the UI control they are supposed to test:
 * [`test_ctrl_inventory.tscn`](../tests/ctrl_tests/test_ctrl_inventory.tscn) - Tests [`CtrlInventory`](./ctrl_inventory.md).

@@ -1,10 +1,10 @@
 class_name CtrlInventoryItemRect
 extends Control
 
+const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+
 signal grabbed(offset)
 signal activated
-
-const ItemStackManager = preload("res://addons/gloot/item_stack_manager.gd")
 
 var item: InventoryItem :
     get:
@@ -104,7 +104,7 @@ func _draw_stack_size(rect: Rect2):
     if item == null:
         return
 
-    var stack_size: int = ItemStackManager.get_item_stack_size(item)
+    var stack_size: int = StacksConstraint.get_item_stack_size(item)
     if stack_size <= 1:
         return
 

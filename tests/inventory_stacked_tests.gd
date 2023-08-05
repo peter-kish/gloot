@@ -124,7 +124,7 @@ func test_automerge() -> void:
     InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
-    assert(is_instance_valid(stackable_item))
+    assert(is_node_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 1)
     
@@ -168,7 +168,7 @@ func test_automerge_max_stack_size() -> void:
     InventoryStacked.set_item_stack_size(stackable_item_2, 2)
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
-    assert(is_instance_valid(stackable_item))
+    assert(is_node_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
     assert(InventoryStacked.get_item_stack_size(stackable_item) == 3)

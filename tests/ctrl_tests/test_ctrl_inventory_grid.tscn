@@ -20,6 +20,7 @@ layout_mode = 0
 offset_right = 160.0
 offset_bottom = 160.0
 script = ExtResource("2")
+selection_color = Color(0.745098, 0.745098, 0.745098, 1)
 inventory_path = NodePath("../InventoryGrid")
 default_item_texture = ExtResource("4")
 
@@ -38,5 +39,5 @@ script = ExtResource("5")
 protoset = ExtResource("1")
 prototype_id = "item_1x1"
 properties = {
-"grid_position": Vector2(0, 2)
+"grid_position": Vector2i(0, 2)
 }

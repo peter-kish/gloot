@@ -8,17 +8,25 @@ signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 
+const ConstraintManager = preload("res://addons/gloot/constraints/constraint_manager.gd")
+
 @export var item_protoset: ItemProtoset:
     get:
         return item_protoset
     set(new_item_protoset):
+        if new_item_protoset == item_protoset:
+            return
+        if not _items.is_empty():
+            return
         item_protoset = new_item_protoset
         protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
+var _constraint_manager: ConstraintManager = null
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
+const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/verify.gd")
 
@@ -49,8 +57,7 @@ func _exit_tree():
 
 
 func _init() -> void:
-    item_added.connect(Callable(self, "_on_item_added"))
-    item_removed.connect(Callable(self, "_on_item_removed"))
+    _constraint_manager = ConstraintManager.new(self)
 
 
 func _ready() -> void:
@@ -62,12 +69,16 @@ func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
     contents_changed.emit()
     _connect_item_signals(item)
+    _constraint_manager._on_item_added(item)
+    item_added.emit(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     contents_changed.emit()
     _disconnect_item_signals(item)
+    _constraint_manager._on_item_removed(item)
+    item_removed.emit(item)
 
 
 func move_item(from: int, to: int) -> void:
@@ -112,6 +123,7 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
+    _constraint_manager._on_item_modified(item)
     item_modified.emit(item)
 
 
@@ -124,7 +136,7 @@ func has_item(item: InventoryItem) -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if item == null || has_item(item):
+    if !_can_add_item(item):
         return false
 
     if item.get_parent():
@@ -133,6 +145,16 @@ func add_item(item: InventoryItem) -> bool:
     add_child(item)
     if Engine.is_editor_hint():
         item.owner = get_tree().edited_scene_root
+    return true
+
+
+func _can_add_item(item: InventoryItem) -> bool:
+    if item == null || has_item(item):
+        return false
+
+    if !_constraint_manager.has_space_for(item):
+        return false
+
     return true
 
 
@@ -148,11 +170,15 @@ func create_and_add_item(prototype_id: String) -> InventoryItem:
 
 
 func remove_item(item: InventoryItem) -> bool:
-    if item == null || !has_item(item):
+    if !_can_remove_item(item):
         return false
 
     remove_child(item)
     return true
+
+
+func _can_remove_item(item: InventoryItem) -> bool:
+    return item != null && has_item(item)
 
 
 func remove_all_items() -> void:
@@ -184,15 +210,18 @@ func has_item_by_id(prototype_id: String) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    if remove_item(item):
-        return destination.add_item(item)
+    if !_can_remove_item(item) || !destination._can_add_item(item):
+        return false
 
-    return false
+    remove_item(item)
+    destination.add_item(item)
+    return true
 
 
 func reset() -> void:
     clear()
     item_protoset = null
+    _constraint_manager.reset()
 
 
 func clear() -> void:
@@ -206,6 +235,7 @@ func serialize() -> Dictionary:
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
+    result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -217,7 +247,8 @@ func serialize() -> Dictionary:
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
-        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY):
+        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
+        !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
@@ -226,10 +257,14 @@ func deserialize(source: Dictionary) -> bool:
     if !source[KEY_NODE_NAME].is_empty():
         name = source[KEY_NODE_NAME]
     item_protoset = load(source[KEY_ITEM_PROTOSET])
+    # TODO: Check return value:
+    if source.has(KEY_CONSTRAINTS):
+        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
             var item = _get_item_script().new()
+            # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 
