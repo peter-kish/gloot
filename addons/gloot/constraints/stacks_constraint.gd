@@ -227,22 +227,19 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     return item_count
 
 
-func pack_item(item: InventoryItem) -> bool:
+func pack_item(item: InventoryItem) -> void:
     var free_stack_space := get_free_stack_space_for(item)
+    if free_stack_space.eq(ItemCount.zero()):
+        return
     var stacks_size := ItemCount.new(get_item_stack_size(item))
     if stacks_size.gt(free_stack_space):
-        return false
+        item = StacksConstraint.split_stack(item, free_stack_space.count)
 
-    var result = false
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:
         var merge_result := _merge_stacks_autodelete(mergable_item, item)
         if merge_result == MergeResult.SUCCESS:
-            return true
-        if merge_result == MergeResult.PARTIAL:
-            result = true
-
-    return result
+            return
 
 
 func transfer_autosplit(item: InventoryItem, destination: Inventory) -> InventoryItem:

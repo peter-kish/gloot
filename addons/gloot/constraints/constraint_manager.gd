@@ -69,11 +69,11 @@ func _enforce_constraints(item: InventoryItem) -> bool:
         Configuration.SG:
             if _grid_constraint.move_item_to_free_spot(item):
                 return true
-            return _stacks_constraint.pack_item(item)
+            _stacks_constraint.pack_item(item)
         Configuration.WSG:
             if _grid_constraint.move_item_to_free_spot(item):
                 return true
-            return _stacks_constraint.pack_item(item)
+            _stacks_constraint.pack_item(item)
 
     return true
 
