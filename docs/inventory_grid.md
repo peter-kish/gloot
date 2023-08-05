@@ -21,7 +21,7 @@ Inventory that has a limited capacity in terms of space. The inventory capacity 
 * `move_item_to(item: InventoryItem, position: Vector2i) -> bool` - Moves the given item in the inventory to the new given position.
 * `transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool` - Transfers the given item to the given inventory to the given position.
 * `rect_free(rect: Rect2, exception: InventoryItem = null) -> bool` - Checks if the given rectangle is not occupied by any items (with a given optional exception).
-* `find_free_place(item: InventoryItem) -> Vector2i` - Finds a free place for the given item. Returns Vector(-1, -1) if no place is found.
+* `find_free_place(item: InventoryItem) -> Dictionary` - Finds a free place for the given item. Returns a dictionary with two fields: `success` and `position`. If `success` is `true` a free place has been found and is stored in the `position` field. Otherwise `success` is set to false.
 * `sort() -> bool` - Sorts the inventory items by size.
 
 ## Signals
