@@ -1,5 +1,7 @@
-class_name StacksConstraint
-extends InventoryConstraint
+extends "res://addons/gloot/constraints/inventory_constraint.gd"
+
+const WeightConstraint = preload("res://addons/gloot/constraints/weight_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
 
 const KEY_STACK_SIZE: String = "stack_size"
 const KEY_MAX_STACK_SIZE: String = "max_stack_size"
@@ -233,7 +235,7 @@ func pack_item(item: InventoryItem) -> void:
         return
     var stacks_size := ItemCount.new(get_item_stack_size(item))
     if stacks_size.gt(free_stack_space):
-        item = StacksConstraint.split_stack(item, free_stack_space.count)
+        item = split_stack(item, free_stack_space.count)
 
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:

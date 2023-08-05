@@ -1,5 +1,7 @@
 extends TestSuite
 
+const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
+
 var inventory: Inventory
 var item: InventoryItem
 var grid_constraint: GridConstraint

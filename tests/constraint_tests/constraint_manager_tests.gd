@@ -1,5 +1,10 @@
 extends TestSuite
 
+const ConstraintManager = preload("res://addons/gloot/constraints/constraint_manager.gd")
+const WeightConstraint = preload("res://addons/gloot/constraints/weight_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
+
 var inventory: Inventory
 var inventory2: Inventory
 var item: InventoryItem

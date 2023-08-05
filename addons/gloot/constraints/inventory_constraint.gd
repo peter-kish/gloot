@@ -1,5 +1,3 @@
-class_name InventoryConstraint
-
 var inventory: Inventory = null :
     get:
         return inventory

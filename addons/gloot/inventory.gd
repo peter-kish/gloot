@@ -8,6 +8,8 @@ signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 
+const ConstraintManager = preload("res://addons/gloot/constraints/constraint_manager.gd")
+
 @export var item_protoset: ItemProtoset:
     get:
         return item_protoset

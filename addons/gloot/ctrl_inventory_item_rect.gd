@@ -1,6 +1,8 @@
 class_name CtrlInventoryItemRect
 extends Control
 
+const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+
 signal grabbed(offset)
 signal activated
 

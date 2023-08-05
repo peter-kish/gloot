@@ -1,5 +1,6 @@
 extends EditorProperty
 
+const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
 const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
