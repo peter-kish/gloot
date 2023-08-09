@@ -49,13 +49,9 @@ func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> voi
 
     var inventory: Inventory = item.get_inventory()
     if inventory:
-        var old_inv_state := inventory.serialize()
-        item.properties = new_properties.duplicate()
-        var new_inv_state := inventory.serialize()
-
         undo_redo_manager.create_action("Set item properties")
-        undo_redo_manager.add_do_method(self, "_set_inventory", inventory, new_inv_state)
-        undo_redo_manager.add_undo_method(self, "_set_inventory", inventory, old_inv_state)
+        undo_redo_manager.add_do_method(self, "_set_item_properties", inventory, inventory.get_item_index(item), new_properties)
+        undo_redo_manager.add_undo_method(self, "_set_item_properties", inventory, inventory.get_item_index(item), item.properties)
         undo_redo_manager.commit_action()
     else:
         undo_redo_manager.create_action("Set item properties")
@@ -69,13 +65,9 @@ func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> voi
 
     var inventory: Inventory = item.get_inventory()
     if inventory:
-        var old_inv_state := inventory.serialize()
-        item.prototype_id = new_prototype_id
-        var new_inv_state := inventory.serialize()
-
         undo_redo_manager.create_action("Set prototype_id")
-        undo_redo_manager.add_do_method(self, "_set_inventory", inventory, new_inv_state)
-        undo_redo_manager.add_undo_method(self, "_set_inventory", inventory, old_inv_state)
+        undo_redo_manager.add_do_method(self, "_set_item_prototype_id", inventory, inventory.get_item_index(item), new_prototype_id)
+        undo_redo_manager.add_undo_method(self, "_set_item_prototype_id", inventory, inventory.get_item_index(item), item.prototype_id)
         undo_redo_manager.commit_action()
     else:
         undo_redo_manager.create_action("Set prototype_id")
@@ -86,6 +78,16 @@ func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> voi
 
 func _set_inventory(inventory: Inventory, inventory_data: Dictionary) -> void:
     inventory.deserialize(inventory_data)
+
+
+func _set_item_prototype_id(inventory: Inventory, item_index: int, new_prototype_id: String):
+    assert(item_index < inventory.get_item_count())
+    inventory.get_items()[item_index].prototype_id = new_prototype_id
+
+
+func _set_item_properties(inventory: Inventory, item_index: int, new_properties: Dictionary):
+    assert(item_index < inventory.get_item_count())
+    inventory.get_items()[item_index].properties = new_properties.duplicate()
 
 
 func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
