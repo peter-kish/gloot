@@ -1,47 +1,18 @@
 extends EditorProperty
 
 
-const ChoiceFilter = preload("res://addons/gloot/editor/common/choice_filter.tscn")
-const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
+const PrototypeIdEditor = preload("res://addons/gloot/editor/item_editor/prototype_id_editor.gd")
 const POPUP_SIZE = Vector2i(300, 300)
-const POPUP_MARGIN = 10
 const COLOR_INVALID = Color.RED
 var current_value: String
 var updating: bool = false
-var _choice_filter: Control
-var _window_dialog: Window
+var _prototype_id_editor: PrototypeIdEditor
 var _btn_prototype_id: Button
-var gloot_undo_redo = null
-var editor_interface: EditorInterface
 
 
-func _init():
-    _choice_filter = ChoiceFilter.instantiate()
-    _choice_filter.pick_text = "Select"
-    _choice_filter.filter_text = "Filter Prototypes:"
-    _choice_filter.choice_picked.connect(Callable(self, "_on_choice_picked"))
-
-    _window_dialog = Window.new()
-    _window_dialog.title = "Select Prototype ID"
-    _window_dialog.unresizable = false
-    _window_dialog.size = POPUP_SIZE
-    _window_dialog.visible = false
-    _window_dialog.borderless = true
-    _window_dialog.popup_window = true
-    _window_dialog.close_requested.connect(func(): _window_dialog.hide())
-    add_child(_window_dialog)
-    
-    var _margin_container = MarginContainer.new()
-    _margin_container.offset_bottom = -POPUP_MARGIN
-    _margin_container.offset_left = POPUP_MARGIN
-    _margin_container.offset_right = -POPUP_MARGIN
-    _margin_container.offset_top = POPUP_MARGIN
-    _margin_container.size_flags_horizontal = SIZE_EXPAND_FILL
-    _margin_container.size_flags_vertical = SIZE_EXPAND_FILL
-    _margin_container.anchor_bottom = 1.0
-    _margin_container.anchor_right = 1.0
-    _margin_container.add_child(_choice_filter)
-    _window_dialog.add_child(_margin_container)
+func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
+    _prototype_id_editor = PrototypeIdEditor.new(gloot_undo_redo_, editor_interface_)
+    add_child(_prototype_id_editor)
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Prototype ID"
@@ -50,19 +21,19 @@ func _init():
 
 
 func _ready() -> void:
-    _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
     var item: InventoryItem = get_edited_object()
+    _prototype_id_editor.item = item
     item.prototype_id_changed.connect(Callable(self, "_on_prototype_id_changed"))
     if item.protoset:
         item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
     _refresh_button()
-    _refresh_choice_filter()
 
 
 func _on_btn_prototype_id() -> void:
     # TODO: Figure out how to show a popup at mouse position
     # _window_dialog.popup(Rect2i(_get_popup_at_mouse_position(POPUP_SIZE), POPUP_SIZE))
-    _window_dialog.popup_centered(POPUP_SIZE)
+    _prototype_id_editor.popup_centered(POPUP_SIZE)
+
 
 func _get_popup_at_mouse_position(size: Vector2i) -> Vector2i:
     var global_mouse_pos: Vector2i = Vector2i(get_global_mouse_position())
@@ -78,23 +49,12 @@ func _get_popup_at_mouse_position(size: Vector2i) -> Vector2i:
     return popup_pos
 
 
-func _on_choice_picked(value_index: int) -> void:
-    var item: InventoryItem = get_edited_object()
-    var new_prototype_id = _choice_filter.values[value_index]
-    if new_prototype_id != item.prototype_id:
-        gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
-
-    _window_dialog.hide()
-    _refresh_button()
-
-
 func _on_prototype_id_changed() -> void:
     _refresh_button()
 
 
 func _on_protoset_changed() -> void:
     _refresh_button()
-    _refresh_choice_filter()
 
 
 func update_property() -> void:
@@ -104,15 +64,8 @@ func update_property() -> void:
 
     updating = true
     current_value = new_value
-    _refresh_choice_filter()
     _refresh_button()
     updating = false
-
-
-func _refresh_choice_filter() -> void:
-    _choice_filter.values.clear()
-    _choice_filter.values.append_array(_get_prototype_ids())
-    _choice_filter.refresh()
 
 
 func _refresh_button() -> void:
@@ -127,10 +80,3 @@ func _refresh_button() -> void:
         _btn_prototype_id.remove_theme_color_override("font_color_hover")
         _btn_prototype_id.tooltip_text = ""
 
-
-func _get_prototype_ids() -> Array:
-    var item: InventoryItem = get_edited_object()
-    if !item.protoset:
-        return []
-
-    return item.protoset._prototypes.keys()

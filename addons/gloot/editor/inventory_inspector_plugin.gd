@@ -58,9 +58,7 @@ func _parse_property(object: Object,
         add_property_editor(name, item_property_editor)
         return true
     if (object is InventoryItem) && name == "prototype_id":
-        var item_prototype_id_editor =EditPrototypeIdButton.new()
-        item_prototype_id_editor.gloot_undo_redo = gloot_undo_redo
-        item_prototype_id_editor.editor_interface = editor_interface
+        var item_prototype_id_editor =EditPrototypeIdButton.new(gloot_undo_redo, editor_interface)
         add_property_editor(name, item_prototype_id_editor)
         return true
     if (object is ItemSlot) && name == "equipped_item":
