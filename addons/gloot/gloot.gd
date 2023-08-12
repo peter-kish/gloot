@@ -5,23 +5,23 @@ var inspector_plugin: EditorInspectorPlugin
 
 
 func _enter_tree() -> void:
-    add_custom_type("ItemProtoSet", "Resource", preload("item_protoset.gd"), preload("images/icon_item_protoset.svg"))
+    add_custom_type("ItemProtoSet", "Resource", preload("core/item_protoset.gd"), preload("images/icon_item_protoset.svg"))
 
-    add_custom_type("InventoryItem", "Node", preload("inventory_item.gd"), preload("images/icon_item.svg"))
+    add_custom_type("InventoryItem", "Node", preload("core/inventory_item.gd"), preload("images/icon_item.svg"))
 
-    add_custom_type("Inventory", "Node", preload("inventory.gd"), preload("images/icon_inventory.svg"))
-    add_custom_type("InventoryStacked", "Node", preload("inventory_stacked.gd"), preload("images/icon_inventory_stacked.svg"))
-    add_custom_type("InventoryGrid", "Node", preload("inventory_grid.gd"), preload("images/icon_inventory_grid.svg"))
-    add_custom_type("InventoryGridStacked", "Node", preload("inventory_grid_stacked.gd"), preload("images/icon_inventory_grid_stacked.svg"))
+    add_custom_type("Inventory", "Node", preload("core/inventory.gd"), preload("images/icon_inventory.svg"))
+    add_custom_type("InventoryStacked", "Node", preload("core/inventory_stacked.gd"), preload("images/icon_inventory_stacked.svg"))
+    add_custom_type("InventoryGrid", "Node", preload("core/inventory_grid.gd"), preload("images/icon_inventory_grid.svg"))
+    add_custom_type("InventoryGridStacked", "Node", preload("core/inventory_grid_stacked.gd"), preload("images/icon_inventory_grid_stacked.svg"))
 
-    add_custom_type("ItemSlot", "Node", preload("item_slot.gd"), preload("images/icon_item_slot.svg"))
+    add_custom_type("ItemSlot", "Node", preload("core/item_slot.gd"), preload("images/icon_item_slot.svg"))
 
-    add_custom_type("CtrlInventory", "Control", preload("ctrl_inventory.gd"), preload("images/icon_ctrl_inventory.svg"))
-    add_custom_type("CtrlInventoryStacked", "Control", preload("ctrl_inventory_stacked.gd"), preload("images/icon_ctrl_inventory_stacked.svg"))
-    add_custom_type("CtrlInventoryGrid", "Control", preload("ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
-    add_custom_type("CtrlInventoryGridEx", "Control", preload("ctrl_inventory_grid_ex.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
-    add_custom_type("CtrlItemSlot", "Control", preload("ctrl_item_slot.gd"), preload("images/icon_ctrl_item_slot.svg"))
-    add_custom_type("CtrlItemSlotEx", "Control", preload("ctrl_item_slot_ex.gd"), preload("images/icon_ctrl_item_slot.svg"))
+    add_custom_type("CtrlInventory", "Control", preload("ui/ctrl_inventory.gd"), preload("images/icon_ctrl_inventory.svg"))
+    add_custom_type("CtrlInventoryStacked", "Control", preload("ui/ctrl_inventory_stacked.gd"), preload("images/icon_ctrl_inventory_stacked.svg"))
+    add_custom_type("CtrlInventoryGrid", "Control", preload("ui/ctrl_inventory_grid.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
+    add_custom_type("CtrlInventoryGridEx", "Control", preload("ui/ctrl_inventory_grid_ex.gd"), preload("images/icon_ctrl_inventory_grid.svg"))
+    add_custom_type("CtrlItemSlot", "Control", preload("ui/ctrl_item_slot.gd"), preload("images/icon_ctrl_item_slot.svg"))
+    add_custom_type("CtrlItemSlotEx", "Control", preload("ui/ctrl_item_slot_ex.gd"), preload("images/icon_ctrl_item_slot.svg"))
 
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
     inspector_plugin.editor_interface = get_editor_interface()

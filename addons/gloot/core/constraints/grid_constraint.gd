@@ -1,10 +1,10 @@
-extends "res://addons/gloot/constraints/inventory_constraint.gd"
+extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
 
 signal size_changed
 
-const Verify = preload("res://addons/gloot/verify.gd")
-const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
-const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 # TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
 const KEY_WIDTH: String = "width"

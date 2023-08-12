@@ -8,7 +8,7 @@ signal item_modified(item)
 signal contents_changed
 signal protoset_changed
 
-const ConstraintManager = preload("res://addons/gloot/constraints/constraint_manager.gd")
+const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
 @export var item_protoset: ItemProtoset:
     get:
@@ -28,7 +28,7 @@ const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
-const Verify = preload("res://addons/gloot/verify.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func _get_configuration_warnings() -> PackedStringArray:

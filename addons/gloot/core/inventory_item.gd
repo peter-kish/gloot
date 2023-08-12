@@ -55,7 +55,7 @@ const KEY_VALUE: String = "value"
 const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
-const Verify = preload("res://addons/gloot/verify.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func _get_configuration_warnings() -> PackedStringArray:

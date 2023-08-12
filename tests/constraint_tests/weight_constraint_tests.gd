@@ -1,6 +1,6 @@
 extends TestSuite
 
-const WeightConstraint = preload("res://addons/gloot/constraints/weight_constraint.gd")
+const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
 
 var inventory: Inventory
 var item: InventoryItem

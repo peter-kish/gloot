@@ -1,7 +1,7 @@
-extends "res://addons/gloot/constraints/inventory_constraint.gd"
+extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
 
-const WeightConstraint = preload("res://addons/gloot/constraints/weight_constraint.gd")
-const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
+const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 const KEY_STACK_SIZE: String = "stack_size"
 const KEY_MAX_STACK_SIZE: String = "max_stack_size"

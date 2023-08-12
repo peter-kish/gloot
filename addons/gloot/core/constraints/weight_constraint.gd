@@ -1,4 +1,4 @@
-extends "res://addons/gloot/constraints/inventory_constraint.gd"
+extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
 
 signal capacity_changed
 signal occupied_space_changed
@@ -7,8 +7,8 @@ const KEY_WEIGHT: String = "weight"
 const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
-const Verify = preload("res://addons/gloot/verify.gd")
-const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 
 var capacity: float :

@@ -2,7 +2,7 @@
 extends InventoryGrid
 class_name InventoryGridStacked
 
-const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 
 func _init() -> void:

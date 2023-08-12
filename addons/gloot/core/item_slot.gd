@@ -77,7 +77,7 @@ var item: InventoryItem :
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"
-const Verify = preload("res://addons/gloot/verify.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -2,10 +2,10 @@ const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"
 const KEY_GRID_CONSTRAINT = "grid_constraint"
 
-const Verify = preload("res://addons/gloot/verify.gd")
-const WeightConstraint = preload("res://addons/gloot/constraints/weight_constraint.gd")
-const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
-const GridConstraint = preload("res://addons/gloot/constraints/grid_constraint.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
+const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 var _weight_constraint: WeightConstraint = null
 var _stacks_constraint: StacksConstraint = null

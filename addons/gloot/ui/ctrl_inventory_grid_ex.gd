@@ -2,7 +2,7 @@
 class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
 
-const Verify = preload("res://addons/gloot/verify.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
 
 @export var field_style: StyleBox :
     get:
