@@ -1,11 +1,12 @@
+@tool
 extends Window
 
 const ChoiceFilter = preload("res://addons/gloot/editor/common/choice_filter.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const POPUP_MARGIN = 10
 
-var _choice_filter: Control
-var _margin_container: MarginContainer
+@onready var _margin_container: MarginContainer = $"MarginContainer"
+@onready var _choice_filter: Control = $"MarginContainer/ChoiceFilter"
 var gloot_undo_redo = null
 var editor_interface: EditorInterface
 var item: InventoryItem = null :
@@ -21,37 +22,19 @@ var item: InventoryItem = null :
         _refresh()
 
 
-
-func _init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
+func init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
     assert(gloot_undo_redo_, "gloot_undo_redo_ is null!")
     assert(editor_interface_, "editor_interface_ is null!")
     gloot_undo_redo = gloot_undo_redo_
     editor_interface = editor_interface_
 
-    title = "Select Prototype ID"
-    unresizable = false
-    visible = false
-    borderless = true
-    popup_window = true
+
+func _ready() -> void:
+    _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
+    about_to_popup.connect(func(): _refresh())
     close_requested.connect(func(): hide())
-
-    _choice_filter = ChoiceFilter.instantiate()
-    _choice_filter.pick_text = "Select"
-    _choice_filter.filter_text = "Filter Prototypes:"
-    _choice_filter.choice_picked.connect(Callable(self, "_on_choice_picked"))
-
-    _margin_container = MarginContainer.new()
-    _margin_container.offset_bottom = -POPUP_MARGIN
-    _margin_container.offset_left = POPUP_MARGIN
-    _margin_container.offset_right = -POPUP_MARGIN
-    _margin_container.offset_top = POPUP_MARGIN
-    _margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    _margin_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    _margin_container.anchor_bottom = 1.0
-    _margin_container.anchor_right = 1.0
-    _margin_container.add_child(_choice_filter)
-
-    add_child(_margin_container)
+    _choice_filter.choice_picked.connect(func(value_index: int): _on_choice_picked(value_index))
+    hide()
 
 
 func _on_choice_picked(value_index: int) -> void:
@@ -60,11 +43,6 @@ func _on_choice_picked(value_index: int) -> void:
     if new_prototype_id != item.prototype_id:
         gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
     hide()
-
-
-func _ready() -> void:
-    _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
-    about_to_popup.connect(func(): _refresh())
 
 
 func _refresh() -> void:

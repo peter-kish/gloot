@@ -129,4 +129,3 @@ func _get_remove_button_map() -> Dictionary:
         result[key]["disabled"] = (not key in item.properties) or (key in IMMUTABLE_KEYS)
     return result
 
-    

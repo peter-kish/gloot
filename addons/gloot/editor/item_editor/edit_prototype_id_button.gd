@@ -1,17 +1,18 @@
 extends EditorProperty
 
 
-const PrototypeIdEditor = preload("res://addons/gloot/editor/item_editor/prototype_id_editor.gd")
+const PrototypeIdEditor = preload("res://addons/gloot/editor/item_editor/prototype_id_editor.tscn")
 const POPUP_SIZE = Vector2i(300, 300)
 const COLOR_INVALID = Color.RED
 var current_value: String
 var updating: bool = false
-var _prototype_id_editor: PrototypeIdEditor
+var _prototype_id_editor: Window
 var _btn_prototype_id: Button
 
 
 func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
-    _prototype_id_editor = PrototypeIdEditor.new(gloot_undo_redo_, editor_interface_)
+    _prototype_id_editor = PrototypeIdEditor.instantiate()
+    _prototype_id_editor.init(gloot_undo_redo_, editor_interface_)
     add_child(_prototype_id_editor)
 
     _btn_prototype_id = Button.new()
