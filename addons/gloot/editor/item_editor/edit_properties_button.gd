@@ -1,15 +1,8 @@
 extends EditorProperty
 
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
-const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.gd")
-const COLOR_OVERRIDDEN = Color.GREEN
-const COLOR_INVALID = Color.RED
 const POPUP_SIZE = Vector2i(800, 300)
-const POPUP_MIN_SIZE = Vector2i(400, 200)
-const POPUP_MARGIN = 10
-var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRID_POSITION]
 
 var current_value: Dictionary
 var updating: bool = false
