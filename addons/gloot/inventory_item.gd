@@ -176,7 +176,7 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
     
-    if !source[KEY_NODE_NAME].is_empty():
+    if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
     protoset = load(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
