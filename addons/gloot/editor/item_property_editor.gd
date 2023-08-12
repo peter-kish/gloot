@@ -1,8 +1,8 @@
 extends EditorProperty
 
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
-const DictEditor = preload("res://addons/gloot/editor/dict_editor.tscn")
-const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
+const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
 const COLOR_INVALID = Color.RED
 const POPUP_SIZE = Vector2i(800, 300)

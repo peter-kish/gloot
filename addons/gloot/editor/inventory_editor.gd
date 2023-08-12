@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 
 @onready var hsplit_container = $HSplitContainer
 @onready var prototype_id_filter = $HSplitContainer/ChoiceFilter

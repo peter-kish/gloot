@@ -1,7 +1,7 @@
 @tool
 extends Button
 
-const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 
 @onready var window_dialog: Window = $"%Window"
 @onready var protoset_editor: Control = $"%ProtosetEditor"

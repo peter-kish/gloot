@@ -2,7 +2,7 @@
 extends Control
 
 const InventoryEditor = preload("res://addons/gloot/editor/inventory_editor.tscn")
-const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const POPUP_SIZE = Vector2i(800, 600)
 const POPUP_MIN_SIZE = Vector2i(400, 300)
 const POPUP_MARGIN = 10

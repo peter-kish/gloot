@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cewbvw0n01ea2"]
 
-[ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/dict_editor.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/common/dict_editor.tscn" id="1"]
 
 [node name="Control" type="Control"]
 layout_mode = 3

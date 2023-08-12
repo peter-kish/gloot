@@ -1,8 +1,8 @@
 extends EditorProperty
 
 
-const ChoiceFilter = preload("res://addons/gloot/editor/choice_filter.tscn")
-const EditorIcons = preload("res://addons/gloot/editor/editor_icons.gd")
+const ChoiceFilter = preload("res://addons/gloot/editor/common/choice_filter.tscn")
+const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const POPUP_SIZE = Vector2i(300, 300)
 const POPUP_MARGIN = 10
 const COLOR_INVALID = Color.RED

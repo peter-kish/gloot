@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://rfjw5a8ppj1b"]
 
-[ext_resource type="PackedScene" uid="uid://dj577duf8yjeb" path="res://addons/gloot/editor/choice_filter.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://dj577duf8yjeb" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1"]
 
 [node name="Control" type="Control"]
 layout_mode = 3

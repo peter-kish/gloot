@@ -5,7 +5,7 @@ signal value_changed(key, value)
 signal value_removed(key)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-const ValueEditor = preload("res://addons/gloot/editor/value_editor.gd")
+const ValueEditor = preload("res://addons/gloot/editor/common/value_editor.gd")
 const supported_types: Array[int] = [
     TYPE_BOOL,
     TYPE_INT,
