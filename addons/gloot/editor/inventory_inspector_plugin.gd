@@ -2,9 +2,9 @@ extends EditorInspectorPlugin
 
 var EditProtosetButton = preload("res://addons/gloot/editor/protoset_editor/edit_protoset_button.tscn")
 var InventoryInspector = preload("res://addons/gloot/editor/inventory_editor/inventory_inspector.tscn")
-var ItemPropertyEditor = preload("res://addons/gloot/editor/item_editor/item_property_editor.gd")
-var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_editor/item_prototype_id_editor.gd")
-var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_editor/item_slot_equipped_item_editor.gd")
+var EditPropertiesButton = preload("res://addons/gloot/editor/item_editor/edit_properties_button.gd")
+var EditPrototypeIdButton = preload("res://addons/gloot/editor/item_editor/edit_prototype_id_button.gd")
+var EditEquippedItemButton = preload("res://addons/gloot/editor/item_slot_editor/edit_equipped_item_button.gd")
 var GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 var editor_interface: EditorInterface = null
 var undo_redo_manager: EditorUndoRedoManager = null :
@@ -52,19 +52,19 @@ func _parse_property(object: Object,
         usage: int,
         wide: bool) -> bool:
     if (object is InventoryItem) && name == "properties":
-        var item_property_editor =ItemPropertyEditor.new()
+        var item_property_editor =EditPropertiesButton.new()
         item_property_editor.gloot_undo_redo = gloot_undo_redo
         item_property_editor.editor_interface = editor_interface
         add_property_editor(name, item_property_editor)
         return true
     if (object is InventoryItem) && name == "prototype_id":
-        var item_prototype_id_editor =ItemPrototypeIdEditor.new()
+        var item_prototype_id_editor =EditPrototypeIdButton.new()
         item_prototype_id_editor.gloot_undo_redo = gloot_undo_redo
         item_prototype_id_editor.editor_interface = editor_interface
         add_property_editor(name, item_prototype_id_editor)
         return true
     if (object is ItemSlot) && name == "equipped_item":
-        var item_slot_equipped_item_editor =ItemSlotEquippedItemEditor.new()
+        var item_slot_equipped_item_editor =EditEquippedItemButton.new()
         item_slot_equipped_item_editor.gloot_undo_redo = gloot_undo_redo
         add_property_editor(name, item_slot_equipped_item_editor)
         return true
