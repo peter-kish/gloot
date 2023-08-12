@@ -64,6 +64,7 @@ func _on_choice_picked(value_index: int) -> void:
 
 func _ready() -> void:
     _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
+    about_to_popup.connect(func(): _refresh())
 
 
 func _refresh() -> void:
