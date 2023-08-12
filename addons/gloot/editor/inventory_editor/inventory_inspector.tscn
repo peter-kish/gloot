@@ -29,3 +29,26 @@ size_flags_vertical = 3
 
 [node name="BtnExpand" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+
+[node name="Window" type="Window" parent="."]
+title = "Edit Inventory"
+size = Vector2i(800, 600)
+visible = false
+exclusive = true
+min_size = Vector2i(400, 300)
+
+[node name="MarginContainer" type="MarginContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="InventoryEditor" parent="Window/MarginContainer" instance=ExtResource("1")]
+layout_mode = 2

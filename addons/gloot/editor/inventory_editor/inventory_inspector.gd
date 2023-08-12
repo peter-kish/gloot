@@ -1,14 +1,12 @@
 @tool
 extends Control
 
-const InventoryEditor = preload("res://addons/gloot/editor/inventory_editor/inventory_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
-const POPUP_SIZE = Vector2i(800, 600)
-const POPUP_MIN_SIZE = Vector2i(400, 300)
-const POPUP_MARGIN = 10
 
 @onready var inventory_editor: Control = $HBoxContainer/InventoryEditor
 @onready var btn_expand: Button = $HBoxContainer/BtnExpand
+@onready var _window_dialog: Window = $Window
+@onready var _inventory_editor: Control = $Window/MarginContainer/InventoryEditor
 
 var inventory: Inventory :
     get:
@@ -31,34 +29,6 @@ var gloot_undo_redo :
         gloot_undo_redo = new_gloot_undo_redo
         if inventory_editor:
             inventory_editor.gloot_undo_redo = gloot_undo_redo
-var _window_dialog: Window
-var _popup_inventory_editor: Control
-
-
-func _init():
-    _window_dialog = Window.new()
-    _window_dialog.title = "Edit Inventory"
-    _window_dialog.unresizable = false
-    _window_dialog.size = POPUP_SIZE
-    _window_dialog.min_size = POPUP_MIN_SIZE
-    _window_dialog.visible = false
-    _window_dialog.exclusive = true
-    _window_dialog.close_requested.connect(func(): _window_dialog.hide())
-    add_child(_window_dialog)
-
-    _popup_inventory_editor = InventoryEditor.instantiate()
-
-    var _margin_container = MarginContainer.new()
-    _margin_container.offset_bottom = -POPUP_MARGIN
-    _margin_container.offset_left = POPUP_MARGIN
-    _margin_container.offset_right = -POPUP_MARGIN
-    _margin_container.offset_top = POPUP_MARGIN
-    _margin_container.size_flags_horizontal = SIZE_EXPAND_FILL
-    _margin_container.size_flags_vertical = SIZE_EXPAND_FILL
-    _margin_container.anchor_bottom = 1.0
-    _margin_container.anchor_right = 1.0
-    _margin_container.add_child(_popup_inventory_editor)
-    _window_dialog.add_child(_margin_container)
 
 
 func init(inventory_: Inventory, gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
@@ -75,13 +45,14 @@ func _ready() -> void:
     _apply_editor_settings()
     btn_expand.icon = EditorIcons.get_icon(editor_interface, "DistractionFree")
     btn_expand.pressed.connect(Callable(self, "on_btn_expand"))
+    _window_dialog.close_requested.connect(func(): _window_dialog.hide())
 
 
 func on_btn_expand() -> void:
-    _popup_inventory_editor.inventory = inventory
-    _popup_inventory_editor.gloot_undo_redo = gloot_undo_redo
-    _popup_inventory_editor.editor_interface = editor_interface
-    _window_dialog.popup_centered(POPUP_SIZE)
+    _inventory_editor.inventory = inventory
+    _inventory_editor.gloot_undo_redo = gloot_undo_redo
+    _inventory_editor.editor_interface = editor_interface
+    _window_dialog.popup_centered()
 
 
 func _apply_editor_settings() -> void:
