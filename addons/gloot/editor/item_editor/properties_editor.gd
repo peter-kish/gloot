@@ -1,3 +1,4 @@
+@tool
 extends Window
 
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
@@ -5,13 +6,10 @@ const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
 const COLOR_INVALID = Color.RED
-const POPUP_SIZE = Vector2i(800, 300)
-const POPUP_MIN_SIZE = Vector2i(400, 200)
-const POPUP_MARGIN = 10
 var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRID_POSITION]
 
-var _dict_editor: Control
-var _margin_container: MarginContainer
+@onready var _margin_container: MarginContainer = $"MarginContainer"
+@onready var _dict_editor: Control = $"MarginContainer/DictEditor"
 var gloot_undo_redo = null
 var editor_interface: EditorInterface
 var item: InventoryItem = null :
@@ -27,40 +25,17 @@ var item: InventoryItem = null :
         _refresh()
 
 
-func _init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
+func init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
     assert(gloot_undo_redo_, "gloot_undo_redo_ is null!")
     assert(editor_interface_, "editor_interface_ is null!")
     gloot_undo_redo = gloot_undo_redo_
     editor_interface = editor_interface_
 
-    title = "Edit Item Properties"
-    unresizable = false
-    size = POPUP_SIZE
-    min_size = POPUP_MIN_SIZE
-    close_requested.connect(func(): hide())
-    visible = false
-    exclusive = true
-
-    _dict_editor = DictEditor.instantiate()
-    _dict_editor.value_changed.connect(Callable(self, "_on_value_changed"))
-    _dict_editor.value_removed.connect(Callable(self, "_on_value_removed"))
-
-    _margin_container = MarginContainer.new()
-    _margin_container.offset_bottom = -POPUP_MARGIN
-    _margin_container.offset_left = POPUP_MARGIN
-    _margin_container.offset_right = -POPUP_MARGIN
-    _margin_container.offset_top = POPUP_MARGIN
-    _margin_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    _margin_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    _margin_container.anchor_bottom = 1.0
-    _margin_container.anchor_right = 1.0
-    _margin_container.add_child(_dict_editor)
-
-    add_child(_margin_container)
-
 
 func _ready() -> void:
     about_to_popup.connect(func(): _refresh())
+    close_requested.connect(func(): hide())
+    hide()
 
 
 func _on_value_changed(key: String, new_value) -> void:

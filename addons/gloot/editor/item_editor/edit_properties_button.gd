@@ -1,18 +1,19 @@
 extends EditorProperty
 
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
-const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.gd")
+const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
 const POPUP_SIZE = Vector2i(800, 300)
 
 var current_value: Dictionary
 var updating: bool = false
 var editor_interface: EditorInterface
 var _btn_prototype_id: Button
-var _properties_editor: PropertiesEditor
+var _properties_editor: Window
 
 
 func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
-    _properties_editor = PropertiesEditor.new(gloot_undo_redo_, editor_interface_)
+    _properties_editor = PropertiesEditor.instantiate()
+    _properties_editor.init(gloot_undo_redo_, editor_interface_)
     add_child(_properties_editor)
 
     _btn_prototype_id = Button.new()
