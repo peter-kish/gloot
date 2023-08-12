@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bef418tvtf7h6"]
 
-[ext_resource type="PackedScene" uid="uid://c6e4cxvjdxhdo" path="res://addons/gloot/editor/inventory_editor.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/gloot/editor/inventory_inspector.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://c6e4cxvjdxhdo" path="res://addons/gloot/editor/inventory_editor/inventory_editor.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/editor/inventory_editor/inventory_inspector.gd" id="2"]
 
 [node name="InventoryInspector" type="Control"]
 custom_minimum_size = Vector2(0, 200)

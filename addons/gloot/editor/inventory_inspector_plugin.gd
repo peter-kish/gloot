@@ -1,10 +1,10 @@
 extends EditorInspectorPlugin
 
-var EditProtosetButton = preload("res://addons/gloot/editor/edit_protoset_button.tscn")
-var InventoryInspector = preload("res://addons/gloot/editor/inventory_inspector.tscn")
-var ItemPropertyEditor = preload("res://addons/gloot/editor/item_property_editor.gd")
-var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_prototype_id_editor.gd")
-var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_equipped_item_editor.gd")
+var EditProtosetButton = preload("res://addons/gloot/editor/protoset_editor/edit_protoset_button.tscn")
+var InventoryInspector = preload("res://addons/gloot/editor/inventory_editor/inventory_inspector.tscn")
+var ItemPropertyEditor = preload("res://addons/gloot/editor/item_editor/item_property_editor.gd")
+var ItemPrototypeIdEditor = preload("res://addons/gloot/editor/item_editor/item_prototype_id_editor.gd")
+var ItemSlotEquippedItemEditor = preload("res://addons/gloot/editor/item_slot_editor/item_slot_equipped_item_editor.gd")
 var GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 var editor_interface: EditorInterface = null
 var undo_redo_manager: EditorUndoRedoManager = null :

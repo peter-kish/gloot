@@ -2,7 +2,7 @@ extends MarginContainer
 
 signal value_changed
 
-const MultivalueEditor = preload("res://addons/gloot/editor/multivalue_editor.gd")
+const MultivalueEditor = preload("res://addons/gloot/editor/common/multivalue_editor.gd")
 
 var value :
     get:

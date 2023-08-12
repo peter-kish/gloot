@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c6e4cxvjdxhdo"]
 
-[ext_resource type="PackedScene" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/gloot/editor/inventory_editor.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://dj577duf8yjeb" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/editor/inventory_editor/inventory_editor.gd" id="2"]
 
 [node name="InventoryEditor" type="Control"]
 layout_mode = 3
