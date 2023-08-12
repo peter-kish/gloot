@@ -29,6 +29,12 @@ var editor_interface: EditorInterface :
             protoset_editor.editor_interface = editor_interface
 
 
+func init(protoset_: ItemProtoset, gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
+    protoset = protoset_
+    gloot_undo_redo = gloot_undo_redo_
+    editor_interface = editor_interface_
+
+
 func _ready() -> void:
     icon = EditorIcons.get_icon(editor_interface, "Edit")
     window_dialog.close_requested.connect(Callable(self, "_on_close_requested"))

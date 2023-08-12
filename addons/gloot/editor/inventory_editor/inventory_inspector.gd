@@ -61,6 +61,12 @@ func _init():
     _window_dialog.add_child(_margin_container)
 
 
+func init(inventory_: Inventory, gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
+    inventory = inventory_
+    gloot_undo_redo = gloot_undo_redo_
+    editor_interface = editor_interface_
+
+
 func _ready() -> void:
     if inventory_editor:
         inventory_editor.inventory = inventory

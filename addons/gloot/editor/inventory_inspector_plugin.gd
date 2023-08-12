@@ -31,16 +31,12 @@ func _can_handle(object: Object) -> bool:
 
 func _parse_begin(object: Object) -> void:
     if object is Inventory:
-        var inventory_inspector = InventoryInspector.instantiate()
-        inventory_inspector.inventory = object
-        inventory_inspector.editor_interface = editor_interface
-        inventory_inspector.gloot_undo_redo = gloot_undo_redo
+        var inventory_inspector := InventoryInspector.instantiate()
+        inventory_inspector.init(object as Inventory, gloot_undo_redo, editor_interface)
         add_custom_control(inventory_inspector)
     if object is ItemProtoset:
-        var edit_protoset_button = EditProtosetButton.instantiate()
-        edit_protoset_button.protoset = object
-        edit_protoset_button.editor_interface = editor_interface
-        edit_protoset_button.gloot_undo_redo = gloot_undo_redo
+        var edit_protoset_button := EditProtosetButton.instantiate()
+        edit_protoset_button.init(object as ItemProtoset, gloot_undo_redo, editor_interface)
         add_custom_control(edit_protoset_button)
 
 
