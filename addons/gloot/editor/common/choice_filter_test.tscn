@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://rfjw5a8ppj1b"]
+
+[ext_resource type="PackedScene" uid="uid://dj577duf8yjeb" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ChoiceFilter" parent="." instance=ExtResource("1")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 217.0
+offset_bottom = 267.0
+pick_text = "Pick"
+values = Array[String](["foo", "bar", "baz"])

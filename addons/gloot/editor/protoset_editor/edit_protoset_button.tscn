@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bjme7iuv3j6yb"]
+
+[ext_resource type="PackedScene" uid="uid://cyj0avrwjowl" path="res://addons/gloot/editor/protoset_editor/protoset_editor.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/editor/protoset_editor/edit_protoset_button.gd" id="2"]
+
+[node name="EditProtosetButton" type="Button"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Edit Protoset"
+script = ExtResource("2")
+
+[node name="Window" type="Window" parent="."]
+unique_name_in_owner = true
+title = "Edit Protoset"
+size = Vector2i(800, 600)
+visible = false
+exclusive = true
+min_size = Vector2i(600, 200)
+
+[node name="ProtosetEditor" parent="Window" instance=ExtResource("1")]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2

@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://cewbvw0n01ea2"]
+
+[ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/common/dict_editor.tscn" id="1"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DictEditor" parent="." instance=ExtResource("1")]
+layout_mode = 1
+dictionary = {
+"id": 0,
+"name": "Bob",
+"position": Vector2(0, 0)
+}
+color_map = {
+"name": Color(0, 0.654902, 0.0392157, 1)
+}

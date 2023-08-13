@@ -1,6 +1,6 @@
 extends TestSuite
 
-const StacksConstraint = preload("res://addons/gloot/constraints/stacks_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 var inventory: Inventory
 var item: InventoryItem

@@ -1,13 +1,13 @@
 [gd_scene load_steps=9 format=3 uid="uid://b2owv7hirds6s"]
 
-[ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_stacked.gd" id="1"]
-[ext_resource type="Script" path="res://addons/gloot/inventory_stacked.gd" id="2"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_stacked.gd" id="1"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="2"]
 [ext_resource type="Resource" uid="uid://c1fip2r65xx12" path="res://tests/data/item_definitions_stack.tres" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
-[ext_resource type="Script" path="res://addons/gloot/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/item_slot.gd" id="7"]
-[ext_resource type="Script" path="res://addons/gloot/inventory_item.gd" id="8"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="7"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 
 [node name="InventoryStackedTransfer" type="Control"]
 layout_mode = 3

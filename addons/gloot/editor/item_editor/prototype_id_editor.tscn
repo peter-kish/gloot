@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://bb341bh2pdb6u"]
+
+[ext_resource type="Script" path="res://addons/gloot/editor/item_editor/prototype_id_editor.gd" id="1_a8scy"]
+[ext_resource type="PackedScene" uid="uid://dj577duf8yjeb" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1_prwl8"]
+
+[node name="PrototypeIdEditor" type="Window"]
+title = "Select Prototype ID"
+size = Vector2i(300, 300)
+visible = false
+exclusive = true
+script = ExtResource("1_a8scy")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ChoiceFilter" parent="MarginContainer" instance=ExtResource("1_prwl8")]
+layout_mode = 2
+pick_text = "Select"
+filter_text = "Filter Prototypes:"

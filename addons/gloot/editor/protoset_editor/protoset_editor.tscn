@@ -1,0 +1,81 @@
+[gd_scene load_steps=4 format=3 uid="uid://cyj0avrwjowl"]
+
+[ext_resource type="PackedScene" path="res://addons/gloot/editor/common/choice_filter.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/common/dict_editor.tscn" id="2"]
+[ext_resource type="Script" path="res://addons/gloot/editor/protoset_editor/protoset_editor.gd" id="3"]
+
+[node name="ProtosetEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("3")
+
+[node name="Gui" type="HSplitContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Gui"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Gui/VBoxContainer"]
+layout_mode = 2
+text = "Prototypes"
+
+[node name="PrototypeFilter" parent="Gui/VBoxContainer" instance=ExtResource("1")]
+unique_name_in_owner = true
+layout_mode = 2
+pick_button_visible = false
+filter_text = "Prototype Filter:"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Gui/VBoxContainer"]
+layout_mode = 2
+
+[node name="TxtPrototypeName" type="LineEdit" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Prototype ID"
+
+[node name="BtnAddPrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Add a new prototype with  the entered ID"
+disabled = true
+text = "Add"
+
+[node name="BtnRenamePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Rename the selected prototype"
+disabled = true
+text = "Rename"
+
+[node name="BtnRemovePrototype" type="Button" parent="Gui/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Remove the selected prototype"
+disabled = true
+text = "Remove"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Gui"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="Gui/VBoxContainer2"]
+layout_mode = 2
+text = "Properties"
+
+[node name="PropertyEditor" parent="Gui/VBoxContainer2" instance=ExtResource("2")]
+unique_name_in_owner = true
+layout_mode = 2
+dictionary = {}

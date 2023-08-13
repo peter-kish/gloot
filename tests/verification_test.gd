@@ -1,6 +1,6 @@
 extends TestSuite
 
-const Verify = preload("res://addons/gloot/verify.gd")
+const Verify = preload("res://addons/gloot/core/verify.gd")
 
 var d: Dictionary = {
     "f": 3.14,

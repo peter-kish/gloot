@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3 uid="uid://digtudobrw3xb"]
+
+[ext_resource type="Script" path="res://addons/gloot/editor/common/dict_editor.gd" id="1"]
+
+[node name="DictEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1")
+dictionary = {
+"name": "John Doe"
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+
+[node name="LblTitleName" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Name"
+
+[node name="LblTitleType" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Type"
+
+[node name="LblTitleValue" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Value"
+
+[node name="CtrlDummy" type="Control" parent="VBoxContainer/ScrollContainer/GridContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+item_count = 14
+selected = 3
+popup/item_0/text = "bool"
+popup/item_0/id = 1
+popup/item_1/text = "int"
+popup/item_1/id = 2
+popup/item_2/text = "float"
+popup/item_2/id = 3
+popup/item_3/text = "String"
+popup/item_3/id = 4
+popup/item_4/text = "Vector2"
+popup/item_4/id = 5
+popup/item_5/text = "Vector2i"
+popup/item_5/id = 6
+popup/item_6/text = "Rect2"
+popup/item_6/id = 7
+popup/item_7/text = "Rect2i"
+popup/item_7/id = 8
+popup/item_8/text = "Vector3"
+popup/item_8/id = 9
+popup/item_9/text = "Vector3i"
+popup/item_9/id = 10
+popup/item_10/text = "Plane"
+popup/item_10/id = 14
+popup/item_11/text = "Quaternion"
+popup/item_11/id = 15
+popup/item_12/text = "AABB"
+popup/item_12/id = 16
+popup/item_13/text = "Color"
+popup/item_13/id = 20
+
+[node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Add Property"
