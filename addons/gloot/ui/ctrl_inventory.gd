@@ -149,3 +149,36 @@ func _get_inventory_item(index: int) -> InventoryItem:
     assert(index < _item_list.get_item_count())
 
     return _item_list.get_item_metadata(index)
+
+
+func deselect_all() -> void:
+    _item_list.deselect_all()
+
+
+func deselect_item(item: InventoryItem) -> void:
+    for index in _item_list.get_selected_items():
+        if _item_list.get_item_metadata(index) != item:
+            continue
+        _item_list.deselect(index)
+        return
+
+        
+func deselect_items(items: Array[InventoryItem]) -> void:
+    for index in _item_list.get_selected_items():
+        if _item_list.get_item_metadata(index) in items:
+            _item_list.deselect(index)
+
+
+func select_inventory_item(item: InventoryItem) -> void:
+    for index in _item_list.item_count:
+        if _item_list.get_item_metadata(index) != item:
+            continue
+        _item_list.select(index)
+        return
+
+
+func select_inventory_items(items: Array[InventoryItem]) -> void:
+    for index in _item_list.item_count:
+        if _item_list.get_item_metadata(index) in items:
+            _item_list.select(index)
+
