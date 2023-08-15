@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://c6qdqm1i436gg"]
 
 [ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
-[ext_resource type="Script" path="res://addons/gloot/ctrl_inventory_grid_ex.gd" id="2"]
-[ext_resource type="Script" path="res://addons/gloot/inventory_grid.gd" id="3"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid_ex.gd" id="2"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="4"]
-[ext_resource type="Script" path="res://addons/gloot/inventory_item.gd" id="5"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="5"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="6"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://d2hy7wl46ki5j" path="res://images/field_selected_background.png" id="8"]
