@@ -494,24 +494,10 @@ func get_grabbed_item() -> InventoryItem:
     return null
 
 
-func deselect_all() -> void:
+func deselect_inventory_item() -> void:
     _select(null)
-
-
-func deselect_item(item: InventoryItem) -> void:
-    _select(null)
-
-        
-func deselect_items(items: Array[InventoryItem]) -> void:
-    if _selected_item in items:
-        _select(null)
 
 
 func select_inventory_item(item: InventoryItem) -> void:
     _select(item)
 
-
-func select_inventory_items(items: Array[InventoryItem]) -> void:
-    if items.is_empty():
-        return
-    _select(items[0])
