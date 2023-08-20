@@ -24,6 +24,8 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 
 * `get_field_coords(global_pos: Vector2) -> Vector2i` - Converts the given global coordinates to local inventory field coordinates.
 * `get_selected_inventory_items() -> Array` - Returns the currently selected items.
+* `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
+* `deselect_inventory_item() -> void` - Deselects the selected item.
 
 ## Signals
 

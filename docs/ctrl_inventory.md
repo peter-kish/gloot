@@ -17,3 +17,5 @@ A UI control representing a basic `Inventory`. Displays a list of items in the i
 ## Methods
 
 * `get_selected_inventory_items() -> Array` - Returns an array of selected items.
+* `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
+* `deselect_inventory_item() -> void` - Deselects the selected item.
