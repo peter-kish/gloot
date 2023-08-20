@@ -115,7 +115,8 @@ func _on_selection_mouse_exited() -> void:
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
     panel.remove_theme_stylebox_override("panel")
-    panel.add_theme_stylebox_override("panel", style)
+    if style != null:
+        panel.add_theme_stylebox_override("panel", style)
 
 
 func _ready() -> void:
