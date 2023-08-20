@@ -449,11 +449,8 @@ func get_field_coords(global_pos: Vector2) -> Vector2i:
     return Vector2i(x, y)
 
 
-func get_selected_inventory_items() -> Array[InventoryItem]:
-    if _selected_item:
-        return [_selected_item]
-    else:
-        return []
+func get_selected_inventory_item() -> InventoryItem:
+    return _selected_item
 
 
 # TODO: Find a better way for undoing/redoing item movements

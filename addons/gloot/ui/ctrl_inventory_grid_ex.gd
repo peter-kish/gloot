@@ -133,7 +133,7 @@ func _on_selection_changed() -> void:
     if !field_selected_style:
         return
     for item in inventory.get_items():
-        if item in get_selected_inventory_items():
+        if item == get_selected_inventory_item():
             _queue_highlight(inventory.get_item_rect(item), field_selected_style)
         else:
             _queue_highlight(inventory.get_item_rect(item), field_style)

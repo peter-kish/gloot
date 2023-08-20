@@ -20,29 +20,27 @@ func _ready() -> void:
 
 
 func _on_ltor_pressed() -> void:
-    var items: Array = ctrl_inventory_left.get_selected_inventory_items()
-    if items.is_empty():
+    var item: InventoryItem = ctrl_inventory_left.get_selected_inventory_item()
+    if item == null:
         return
 
-    for item in items:
-        inventory_left.transfer_autosplitmerge(item, inventory_right)
+    inventory_left.transfer_autosplitmerge(item, inventory_right)
 
 
 func _on_rtol_pressed() -> void:
-    var items: Array = ctrl_inventory_right.get_selected_inventory_items()
-    if items.is_empty():
+    var item: InventoryItem = ctrl_inventory_right.get_selected_inventory_item()
+    if item == null:
         return
 
-    for item in items:
-        inventory_right.transfer_autosplitmerge(item, inventory_left)
+    inventory_right.transfer_autosplitmerge(item, inventory_left)
 
 
 func _on_equip_pressed() -> void:
-    var items: Array = ctrl_inventory_left.get_selected_inventory_items()
-    if items.is_empty():
+    var item: InventoryItem = ctrl_inventory_left.get_selected_inventory_item()
+    if item == null:
         return
 
-    slot.item = items[0]
+    slot.item = item
 
 
 func _on_unequip_pressed() -> void:
