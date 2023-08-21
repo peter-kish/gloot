@@ -3,8 +3,7 @@ class_name CtrlInventoryGrid
 extends Control
 
 signal item_dropped(item, offset)
-signal item_selected(item)
-signal item_deselected(item)
+signal selection_changed
 signal inventory_item_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
@@ -344,14 +343,9 @@ func _select(item: InventoryItem) -> void:
     if item == _selected_item:
         return
 
-    var prev_selected_item = _selected_item
     _selected_item = item
     _refresh_selection()
-
-    if _selected_item:
-        item_selected.emit(_selected_item)
-    else:
-        item_deselected.emit(prev_selected_item)
+    selection_changed.emit()
 
 
 # Using _input instead of _gui_input because _gui_input is only called for "mouse released"
@@ -455,11 +449,8 @@ func get_field_coords(global_pos: Vector2) -> Vector2i:
     return Vector2i(x, y)
 
 
-func get_selected_inventory_items() -> Array[InventoryItem]:
-    if _selected_item:
-        return [_selected_item]
-    else:
-        return []
+func get_selected_inventory_item() -> InventoryItem:
+    return _selected_item
 
 
 # TODO: Find a better way for undoing/redoing item movements
@@ -498,3 +489,12 @@ func get_grabbed_item() -> InventoryItem:
         return _grabbed_ctrl_inventory_item.item
 
     return null
+
+
+func deselect_inventory_item() -> void:
+    _select(null)
+
+
+func select_inventory_item(item: InventoryItem) -> void:
+    _select(item)
+

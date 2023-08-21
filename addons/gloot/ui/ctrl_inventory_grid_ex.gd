@@ -115,7 +115,8 @@ func _on_selection_mouse_exited() -> void:
 
 func _set_panel_style(panel: Panel, style: StyleBox) -> void:
     panel.remove_theme_stylebox_override("panel")
-    panel.add_theme_stylebox_override("panel", style)
+    if style != null:
+        panel.add_theme_stylebox_override("panel", style)
 
 
 func _ready() -> void:
@@ -123,22 +124,19 @@ func _ready() -> void:
     
     _create_selection_panel()
     _create_field_background_grid()
-    item_selected.connect(Callable(self, "_on_item_selected"))
-    item_deselected.connect(Callable(self, "_on_item_deselected"))
+    selection_changed.connect(Callable(self, "_on_selection_changed"))
 
 
-func _on_item_selected(item: InventoryItem) -> void:
+func _on_selection_changed() -> void:
     if !inventory:
         return
-    if field_selected_style:
-        _queue_highlight(inventory.get_item_rect(item), field_selected_style)
-
-
-func _on_item_deselected(item: InventoryItem) -> void:
-    if !inventory:
+    if !field_selected_style:
         return
-    if field_style:
-        _queue_highlight(inventory.get_item_rect(item), field_style)
+    for item in inventory.get_items():
+        if item == get_selected_inventory_item():
+            _queue_highlight(inventory.get_item_rect(item), field_selected_style)
+        else:
+            _queue_highlight(inventory.get_item_rect(item), field_style)
 
 
 func _on_inventory_resized() -> void:
@@ -204,7 +202,7 @@ func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
     if !item || !style:
         return false
     if item == _selected_item:
-        # Don't highlight the selected item (done in _on_item_selected())
+        # Don't highlight the selected item (done in _on_selection_changed())
         return false
 
     _highlight_rect(inventory.get_item_rect(item), style, true)
@@ -213,7 +211,7 @@ func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
 
 func _highlight_field(field_coords: Vector2i, style: StyleBox) -> void:
     if _selected_item && inventory.get_item_rect(_selected_item).has_point(field_coords):
-        # Don't highlight selected fields (done in _on_item_selected())
+        # Don't highlight selected fields (done in _on_selection_changed())
         return
 
     _highlight_rect(Rect2i(field_coords, Vector2i.ONE), style, true)

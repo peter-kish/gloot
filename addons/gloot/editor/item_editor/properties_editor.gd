@@ -35,6 +35,8 @@ func init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
 func _ready() -> void:
     about_to_popup.connect(func(): _refresh())
     close_requested.connect(func(): hide())
+    _dict_editor.value_changed.connect(func(key: String, new_value): _on_value_changed(key, new_value))
+    _dict_editor.value_removed.connect(func(key: String): _on_value_removed(key))
     hide()
 
 

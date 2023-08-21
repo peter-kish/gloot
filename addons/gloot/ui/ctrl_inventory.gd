@@ -137,11 +137,11 @@ func _get_item_title(item: InventoryItem) -> String:
     return title
 
 
-func get_selected_inventory_items() -> Array[InventoryItem]:
-    var result: Array[InventoryItem] = []
-    for index in _item_list.get_selected_items():
-        result.push_back(_get_inventory_item(index))
-    return result
+func get_selected_inventory_item() -> InventoryItem:
+    if _item_list.get_selected_items().is_empty():
+        return null
+
+    return _get_inventory_item(_item_list.get_selected_items()[0])
 
 
 func _get_inventory_item(index: int) -> InventoryItem:
@@ -149,3 +149,16 @@ func _get_inventory_item(index: int) -> InventoryItem:
     assert(index < _item_list.get_item_count())
 
     return _item_list.get_item_metadata(index)
+
+
+func deselect_inventory_item() -> void:
+    _item_list.deselect_all()
+
+
+func select_inventory_item(item: InventoryItem) -> void:
+    for index in _item_list.item_count:
+        if _item_list.get_item_metadata(index) != item:
+            continue
+        _item_list.select(index)
+        return
+

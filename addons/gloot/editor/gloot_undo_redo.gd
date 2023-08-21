@@ -102,15 +102,21 @@ func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) ->
 func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, to: Vector2i) -> void:
     assert(undo_redo_manager)
 
-    var old_inv_state := inventory.serialize()
-    if !inventory.move_item_to(item, to):
+    var old_position := inventory.get_item_position(item)
+    if old_position == to:
         return
-    var new_inv_state := inventory.serialize()
+    var item_index := inventory.get_item_index(item)
 
     undo_redo_manager.create_action("Move Inventory Item")
-    undo_redo_manager.add_do_method(self, "_set_inventory", inventory, new_inv_state)
-    undo_redo_manager.add_undo_method(self, "_set_inventory", inventory, old_inv_state)
+    undo_redo_manager.add_do_method(self, "_move_item", inventory, item_index, to)
+    undo_redo_manager.add_undo_method(self, "_move_item", inventory, item_index, old_position)
     undo_redo_manager.commit_action()
+
+
+func _move_item(inventory: InventoryGrid, item_index: int, to: Vector2i) -> void:
+    assert(item_index >= 0 && item_index < inventory.get_item_count())
+    var item = inventory.get_items()[item_index]
+    inventory.move_item_to(item, to)
 
 
 func join_inventory_items(

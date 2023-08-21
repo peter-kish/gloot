@@ -5,7 +5,7 @@ var inspector_plugin: EditorInspectorPlugin
 
 
 func _enter_tree() -> void:
-    add_custom_type("ItemProtoSet", "Resource", preload("core/item_protoset.gd"), preload("images/icon_item_protoset.svg"))
+    add_custom_type("ItemProtoset", "Resource", preload("core/item_protoset.gd"), preload("images/icon_item_protoset.svg"))
 
     add_custom_type("InventoryItem", "Node", preload("core/inventory_item.gd"), preload("images/icon_item.svg"))
 
@@ -38,7 +38,7 @@ func _exit_tree() -> void:
 
     remove_inspector_plugin(inspector_plugin)
 
-    remove_custom_type("ItemProtoSet")
+    remove_custom_type("ItemProtoset")
 
     remove_custom_type("InventoryItem")
 
