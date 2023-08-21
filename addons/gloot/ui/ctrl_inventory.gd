@@ -156,6 +156,7 @@ func deselect_inventory_item() -> void:
 
 
 func select_inventory_item(item: InventoryItem) -> void:
+    _item_list.deselect_all()
     for index in _item_list.item_count:
         if _item_list.get_item_metadata(index) != item:
             continue
