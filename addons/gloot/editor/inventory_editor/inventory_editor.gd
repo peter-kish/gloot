@@ -125,7 +125,7 @@ func _on_btn_remove() -> void:
     assert(gloot_undo_redo)
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
     if selected_item != null:
-        gloot_undo_redo.remove_inventory_items(inventory, selected_item)
+        gloot_undo_redo.remove_inventory_item(inventory, selected_item)
 
 
 static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
