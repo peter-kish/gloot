@@ -136,7 +136,7 @@ func has_item(item: InventoryItem) -> bool:
 
 
 func add_item(item: InventoryItem) -> bool:
-    if !_can_add_item(item):
+    if !can_add_item(item):
         return false
 
     if item.get_parent():
@@ -148,13 +148,20 @@ func add_item(item: InventoryItem) -> bool:
     return true
 
 
-func _can_add_item(item: InventoryItem) -> bool:
+func can_add_item(item: InventoryItem) -> bool:
     if item == null || has_item(item):
         return false
-
+        
+    if !can_hold_item(item):
+        return false
+        
     if !_constraint_manager.has_space_for(item):
         return false
 
+    return true
+
+
+func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 
@@ -210,7 +217,7 @@ func has_item_by_id(prototype_id: String) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    if !_can_remove_item(item) || !destination._can_add_item(item):
+    if !_can_remove_item(item) || !destination.can_add_item(item):
         return false
 
     remove_item(item)

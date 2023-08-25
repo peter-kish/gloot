@@ -19,6 +19,8 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 * `get_item_index(item: InventoryItem) -> int:` - Returns the internal item index of the given item. Returns `-1` if the item is not inside the inventory.
 * `get_item_count() -> int` - Returns the number of items in the inventory.
 * `has_item(item: InventoryItem) -> bool` - Checks if the inventory contains the given item.
+* `can_hold_item(item: InventoryItem) -> bool` - Checks if the inventory can hold the given item. Always returns `true` and can be overridden to make the inventory only accept items with specific properties. Does not check inventory constraints such as capacity or grid space. Those checks are done by `can_add_item(item)`.
+* `can_add_item(item: InventoryItem) -> bool` - Checks if the given item can be added to the inventory taking inventory constraints (capacity, grid space etc.) and the result of `can_hold_item(item)` into account.
 * `add_item(item: InventoryItem) -> bool` - Adds the given item to the inventory.
 * `create_and_add_item(prototype_id: String) -> InventoryItem` - Creates an `InventoryItem` based on the given prototype ID and adds it to the inventory. Returns `null` if the item cannot be added.
 * `remove_item(item: InventoryItem) -> bool` - Removes the given item from the inventory.
