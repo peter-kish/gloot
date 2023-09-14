@@ -13,6 +13,8 @@ const KEY_SIZE: String = "size"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
+var _inv_matrix: Array
+
 @export var size: Vector2i = DEFAULT_SIZE :
     get:
         return size
@@ -27,6 +29,60 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
                 size = old_size
         if size != old_size:
             size_changed.emit()
+            _refresh_inv_matrix()
+
+
+func _refresh_inv_matrix() -> void:
+    if inventory == null:
+        return
+    _create_inv_matrix()
+    _fill_inv_matrix()
+    # _print_inv_matrix()
+
+
+func _create_inv_matrix() -> void:
+    _inv_matrix = []
+    _inv_matrix.resize(size.x)
+    for i in _inv_matrix.size():
+        _inv_matrix[i] = []
+        _inv_matrix[i].resize(size.y)
+
+
+func _fill_inv_matrix() -> void:
+    for item in inventory.get_items():
+        var item_rect := get_item_rect(item)
+        if item_rect.position.x >= size.x || item_rect.position.y >= size.y:
+            continue
+        
+        for x in range(item_rect.size.x):
+            for y in range(item_rect.size.y):
+                var matrix_coords := Vector2i(item_rect.position.x + x, item_rect.position.y + y)
+                if matrix_coords.x >= _inv_matrix.size() || matrix_coords.y >= _inv_matrix[0].size():
+                    continue
+                if matrix_coords.x < 0 || matrix_coords.y < 0:
+                    continue
+                _inv_matrix[matrix_coords.x][matrix_coords.y] = item
+
+
+func _print_inv_matrix() -> void:
+    if _inv_matrix.is_empty():
+        return
+    var output: String
+    for j in range(_inv_matrix[0].size()):
+        for i in range(_inv_matrix.size()):
+            if _inv_matrix[i][j]:
+                output = output + "x"
+            else:
+                output = output + "."
+        output = output + "\n"
+    print(output + "\n\n")
+
+
+func _on_inventory_set() -> void:
+    _refresh_inv_matrix()
+    inventory.item_added.connect(func(_item: InventoryItem): _refresh_inv_matrix())
+    inventory.item_removed.connect(func(_item: InventoryItem): _refresh_inv_matrix())
+    inventory.item_modified.connect(func(_item: InventoryItem): _refresh_inv_matrix())
 
 
 func _bounds_broken() -> bool:
@@ -44,7 +100,6 @@ func get_item_position(item: InventoryItem) -> Vector2i:
 # TODO: Consider making a static "unsafe" version of this
 func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
     var new_rect := Rect2i(new_position, get_item_size(item))
-    var inv_rect := Rect2i(Vector2i.ZERO, size)
     if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
@@ -188,9 +243,9 @@ func move_item_to_free_spot(item: InventoryItem) -> bool:
 
 
 func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
-    item.properties[KEY_GRID_POSITION] = position
-    if item.properties[KEY_GRID_POSITION] == Vector2i.ZERO:
-        item.properties.erase(KEY_GRID_POSITION)
+    item.set_property(KEY_GRID_POSITION, position)
+    if item.get_property(KEY_GRID_POSITION) == Vector2i.ZERO:
+        item.clear_property(KEY_GRID_POSITION)
 
 
 func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
@@ -249,15 +304,10 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     if rect.position.y + rect.size.y > size.y:
         return false
 
-    for item in inventory.get_items():
-        if item == exception:
-            continue
-        var item_pos := get_item_position(item)
-        var item_size := get_item_size(item)
-        var rect2 := Rect2i(item_pos, item_size)
-        if rect.intersects(rect2):
-            return false
-
+    for i in range(rect.position.x, rect.position.x + rect.size.x):
+        for j in range(rect.position.y, rect.position.y + rect.size.y):
+            if (_inv_matrix[i][j] != null) && (_inv_matrix[i][j] != exception):
+                return false
     return true
 
 
