@@ -5,6 +5,7 @@ signal size_changed
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const ItemMap = preload("res://addons/gloot/core/constraints/item_map.gd")
 
 # TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
 const KEY_WIDTH: String = "width"
@@ -13,7 +14,7 @@ const KEY_SIZE: String = "size"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
-var _inv_matrix: Array
+var _item_map := ItemMap.new(Vector2i.ZERO)
 
 @export var size: Vector2i = DEFAULT_SIZE :
     get:
@@ -28,61 +29,25 @@ var _inv_matrix: Array
             if _bounds_broken():
                 size = old_size
         if size != old_size:
+            _refresh_item_map()
             size_changed.emit()
-            _refresh_inv_matrix()
 
 
-func _refresh_inv_matrix() -> void:
-    if inventory == null:
-        return
-    _create_inv_matrix()
-    _fill_inv_matrix()
-    # _print_inv_matrix()
+func _refresh_item_map() -> void:
+    _item_map.resize(size)
+    _fill_item_map()
 
 
-func _create_inv_matrix() -> void:
-    _inv_matrix = []
-    _inv_matrix.resize(size.x)
-    for i in _inv_matrix.size():
-        _inv_matrix[i] = []
-        _inv_matrix[i].resize(size.y)
-
-
-func _fill_inv_matrix() -> void:
+func _fill_item_map() -> void:
     for item in inventory.get_items():
-        var item_rect := get_item_rect(item)
-        if item_rect.position.x >= size.x || item_rect.position.y >= size.y:
-            continue
-        
-        for x in range(item_rect.size.x):
-            for y in range(item_rect.size.y):
-                var matrix_coords := Vector2i(item_rect.position.x + x, item_rect.position.y + y)
-                if matrix_coords.x >= _inv_matrix.size() || matrix_coords.y >= _inv_matrix[0].size():
-                    continue
-                if matrix_coords.x < 0 || matrix_coords.y < 0:
-                    continue
-                _inv_matrix[matrix_coords.x][matrix_coords.y] = item
-
-
-func _print_inv_matrix() -> void:
-    if _inv_matrix.is_empty():
-        return
-    var output: String
-    for j in range(_inv_matrix[0].size()):
-        for i in range(_inv_matrix.size()):
-            if _inv_matrix[i][j]:
-                output = output + "x"
-            else:
-                output = output + "."
-        output = output + "\n"
-    print(output + "\n\n")
+        _item_map.fill_rect(get_item_rect(item), item)
 
 
 func _on_inventory_set() -> void:
-    _refresh_inv_matrix()
-    inventory.item_added.connect(func(_item: InventoryItem): _refresh_inv_matrix())
-    inventory.item_removed.connect(func(_item: InventoryItem): _refresh_inv_matrix())
-    inventory.item_modified.connect(func(_item: InventoryItem): _refresh_inv_matrix())
+    _refresh_item_map()
+    inventory.item_added.connect(func(item: InventoryItem): _item_map.fill_rect(get_item_rect(item), item))
+    inventory.item_removed.connect(func(item: InventoryItem): _item_map.clear_rect(get_item_rect(item)))
+    inventory.item_modified.connect(func(_item: InventoryItem): _refresh_item_map())
 
 
 func _bounds_broken() -> bool:
@@ -203,10 +168,10 @@ func create_and_add_item_at(prototype_id: String, position: Vector2i) -> Invento
 
 func get_item_at(position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
-    for item in inventory.get_items():
-        if get_item_rect(item).has_point(position):
-            return item
-    return null
+    
+    if !_item_map.contains(position):
+        return null
+    return _item_map.get_field(position)
 
 
 func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
@@ -306,7 +271,8 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
 
     for i in range(rect.position.x, rect.position.x + rect.size.x):
         for j in range(rect.position.y, rect.position.y + rect.size.y):
-            if (_inv_matrix[i][j] != null) && (_inv_matrix[i][j] != exception):
+            var field = _item_map.get_field(Vector2i(i, j))
+            if field != null && field != exception:
                 return false
     return true
 
