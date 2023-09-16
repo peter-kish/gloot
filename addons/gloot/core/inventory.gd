@@ -23,6 +23,11 @@ const ConstraintManager = preload("res://addons/gloot/core/constraints/constrain
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
 var _constraint_manager: ConstraintManager = null
+var _serialized_format: Dictionary:
+    get:
+        return _serialized_format
+    set(new_serialized_format):
+        _serialized_format = new_serialized_format
 
 const KEY_NODE_NAME: String = "node_name"
 const KEY_ITEM_PROTOSET: String = "item_protoset"
@@ -46,6 +51,21 @@ func _connect_protoset_signals() -> void:
 func _on_protoset_changed() -> void:
     protoset_changed.emit()
 
+    
+func _get_property_list():
+    return [
+        {
+            "name": "_serialized_format",
+            "type": TYPE_DICTIONARY,
+            "usage": PROPERTY_USAGE_STORAGE
+        },
+    ]
+
+
+func _update_serialized_format() -> void:
+    if Engine.is_editor_hint():
+        _serialized_format = serialize()
+
 
 func _get_configuration_warnings() -> PackedStringArray:
     if item_protoset == null:
@@ -60,7 +80,10 @@ static func _get_item_script() -> Script:
 
 
 func _exit_tree():
-    _items.clear()  
+    _items.clear()
+    if _constraint_manager != null:
+        _constraint_manager.free()
+    _update_serialized_format()
 
 
 func _init() -> void:
@@ -68,6 +91,8 @@ func _init() -> void:
 
 
 func _ready() -> void:
+    if !_serialized_format.is_empty() && Engine.is_editor_hint():
+        deserialize(_serialized_format)
     for item in get_items():
         _connect_item_signals(item)
 
@@ -83,6 +108,7 @@ func move_item(from: int, to: int) -> void:
     var item = _items[from]
     _items.remove_at(from)
     _items.insert(to, item)
+    _update_serialized_format()
 
     contents_changed.emit()
 
@@ -134,6 +160,7 @@ func add_item(item: InventoryItem) -> bool:
         item.get_inventory().remove_item(item)
 
     _items.append(item)
+    _update_serialized_format()
     item._inventory = self
     contents_changed.emit()
     _connect_item_signals(item)
@@ -178,6 +205,7 @@ func remove_item(item: InventoryItem) -> bool:
         return false
 
     _items.erase(item)
+    _update_serialized_format()
     item._inventory = null
     contents_changed.emit()
     _disconnect_item_signals(item)
@@ -193,6 +221,7 @@ func _can_remove_item(item: InventoryItem) -> bool:
 func remove_all_items() -> void:
     while _items.size() > 0:
         remove_item(_items[0])
+    _update_serialized_format()
 
 
 func get_item_by_id(prototype_id: String) -> InventoryItem:
@@ -232,6 +261,7 @@ func clear() -> void:
         var item = _items[0]
         remove_item(item)
         item.free()
+    _update_serialized_format()
 
 
 func serialize() -> Dictionary:
