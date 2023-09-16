@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://djc5682b7rg2f"]
+[gd_scene load_steps=12 format=3 uid="uid://djc5682b7rg2f"]
 
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid_ex.gd" id="1_4tfdv"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="2_whmtd"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5_8hsr1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="6_bevw1"]
 [ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="7_aav1h"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8_sq7ln"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
 texture = ExtResource("2_whmtd")
@@ -57,40 +56,44 @@ default_item_texture = ExtResource("5_8hsr1")
 script = ExtResource("6_bevw1")
 size = Vector2i(5, 5)
 item_protoset = ExtResource("7_aav1h")
-
-[node name="item_2x2" type="Node" parent="InventoryGridStacked"]
-script = ExtResource("8_sq7ln")
-protoset = ExtResource("7_aav1h")
-prototype_id = "item_2x2"
-
-[node name="item_1x1" type="Node" parent="InventoryGridStacked"]
-script = ExtResource("8_sq7ln")
-protoset = ExtResource("7_aav1h")
-prototype_id = "item_1x1"
-properties = {
-"grid_position": Vector2i(0, 2)
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"size": "Vector2i(5, 5)"
+},
+"stacks_constraint": {}
+},
+"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}, {
+"properties": {
+"grid_position": {
+"type": 6,
+"value": "Vector2i(0, 1)"
 }
-
-[node name="item_2x224897" type="Node" parent="InventoryGridStacked"]
-script = ExtResource("8_sq7ln")
-protoset = ExtResource("7_aav1h")
-prototype_id = "item_2x2"
-properties = {
-"grid_position": Vector2i(2, 0)
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_2x2"
+}, {
+"properties": {
+"grid_position": {
+"type": 6,
+"value": "Vector2i(0, 3)"
 }
-
-[node name="item_1x124980" type="Node" parent="InventoryGridStacked"]
-script = ExtResource("8_sq7ln")
-protoset = ExtResource("7_aav1h")
-prototype_id = "item_1x1"
-properties = {
-"grid_position": Vector2i(0, 3)
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}, {
+"properties": {
+"grid_position": {
+"type": 6,
+"value": "Vector2i(0, 4)"
 }
-
-[node name="item_1x125003" type="Node" parent="InventoryGridStacked"]
-script = ExtResource("8_sq7ln")
-protoset = ExtResource("7_aav1h")
-prototype_id = "item_1x1"
-properties = {
-"grid_position": Vector2i(1, 3)
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}],
+"node_name": "InventoryGridStacked"
 }
