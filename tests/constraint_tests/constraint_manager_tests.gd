@@ -298,7 +298,7 @@ func test_wg_enforce_constraints() -> void:
         WeightConstraint.set_item_weight(item, data.input.item_weight)
         var add_item_result := inventory.add_item(item)
         assert(add_item_result == data.expected)
-        if add_item_result:
+        if add_item_result && is_node_valid(item):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(item), item))
         
     inventory.remove_item(new_item)
@@ -343,8 +343,9 @@ func test_sg_enforce_constraints() -> void:
         if add_item_result && is_node_valid(test_item):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
 
-        inventory.remove_item(test_item)
-        test_item.free()
+        if is_node_valid(test_item):
+            inventory.remove_item(test_item)
+            test_item.free()
 
     inventory.remove_item(new_item)
     new_item.free()
@@ -426,8 +427,9 @@ func test_wsg_enforce_constraints() -> void:
         if add_item_result && is_node_valid(test_item):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
 
-        inventory.remove_item(test_item)
-        test_item.free()
+        if is_node_valid(test_item):
+            inventory.remove_item(test_item)
+            test_item.free()
 
     inventory.remove_item(new_item)
     new_item.free()
@@ -479,8 +481,7 @@ func test_ws_transfer_autosplit() -> void:
         inventory2._constraint_manager.get_weight_constraint().capacity = data.input.dst_capacity
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
-        var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
-        assert(result == data.expected.return_val)
+        assert(stacks_constraint.transfer_autosplit(src_item, inventory2).success == data.expected.return_val)
         assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
         assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
         assert(inventory.get_item_count() == data.expected.src_inv_count)
@@ -541,21 +542,22 @@ func test_sg_transfer_autosplit() -> void:
         StacksConstraint.set_item_max_stack_size(src_item, 3)
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
-        var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
-        assert(result == data.expected.return_val)
+        assert(stacks_constraint.transfer_autosplit(src_item, inventory2).success == data.expected.return_val)
 
         if data.expected.src_stack_size == 0:
+            assert(!is_node_valid(src_item))
             assert(!inventory.has_item(src_item))
-            assert(src_item.is_queued_for_deletion())
         else:
+            assert(is_node_valid(src_item))
             assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
 
         if data.expected.dst_stack_size == 0:
+            assert(!is_node_valid(dst_item))
             assert(!inventory2.has_item(dst_item))
-            assert(dst_item.is_queued_for_deletion())
         else:
+            assert(is_node_valid(dst_item))
             assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
-
+            
         assert(inventory.get_item_count() == data.expected.src_inv_count)
         assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
@@ -625,19 +627,20 @@ func test_wsg_transfer_autosplit() -> void:
         StacksConstraint.set_item_max_stack_size(src_item, 3)
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
-        var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
-        assert(result == data.expected.return_val)
-
+        assert(stacks_constraint.transfer_autosplit(src_item, inventory2).success == data.expected.return_val)
+        
         if data.expected.src_stack_size == 0:
+            assert(!is_node_valid(src_item))
             assert(!inventory.has_item(src_item))
-            assert(src_item.is_queued_for_deletion())
         else:
+            assert(is_node_valid(src_item))
             assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
 
         if data.expected.dst_stack_size == 0:
+            assert(!is_node_valid(dst_item))
             assert(!inventory2.has_item(dst_item))
-            assert(dst_item.is_queued_for_deletion())
         else:
+            assert(is_node_valid(dst_item))
             assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
 
         assert(inventory.get_item_count() == data.expected.src_inv_count)

@@ -79,7 +79,7 @@ func test_serialize() -> void:
     var inventory_data = inventory1.serialize()
     inventory1.reset()
     assert(inventory1.get_items().is_empty())
-    assert(item.is_queued_for_deletion())
+    assert(!is_instance_valid(item))
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_item_count() == 1)
 
@@ -95,6 +95,6 @@ func test_serialize_json() -> void:
 
     inventory1.reset()
     assert(inventory1.get_items().is_empty())
-    assert(item.is_queued_for_deletion())
+    assert(!is_instance_valid(item))
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_item_count() == 1)
