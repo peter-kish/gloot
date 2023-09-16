@@ -1,6 +1,6 @@
 @tool
 @icon("res://addons/gloot/images/icon_item.svg")
-extends Node
+extends Object
 class_name InventoryItem
 
 signal protoset_changed
@@ -30,7 +30,7 @@ signal removed_from_slot(item_slot)
             prototype_id = ""
 
         protoset_changed.emit()
-        update_configuration_warnings()
+        # update_configuration_warnings()
 
 @export var prototype_id: String :
     set(new_prototype_id):
@@ -42,14 +42,14 @@ signal removed_from_slot(item_slot)
             return
         prototype_id = new_prototype_id
         _reset_properties()
-        update_configuration_warnings()
+        # update_configuration_warnings()
         prototype_id_changed.emit()
 
 @export var properties: Dictionary :
     set(new_properties):
         properties = new_properties
         properties_changed.emit()
-        update_configuration_warnings()
+        # update_configuration_warnings()
 
 var _inventory: Inventory :
     set(new_inventory):
@@ -63,7 +63,6 @@ var _item_slot: ItemSlot
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
 const KEY_PROPERTIES: String = "properties"
-const KEY_NODE_NAME: String = "node_name"
 const KEY_TYPE: String = "type"
 const KEY_VALUE: String = "value"
 
@@ -88,14 +87,18 @@ func _on_protoset_changed() -> void:
     update_configuration_warnings()
 
 
-func _get_configuration_warnings() -> PackedStringArray:
-    if !protoset:
-        return PackedStringArray()
+# func _get_configuration_warnings() -> PackedStringArray:
+#     if !protoset:
+#         return PackedStringArray()
 
-    if !protoset.has_prototype(prototype_id):
-        return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
+#     if !protoset.has_prototype(prototype_id):
+#         return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
 
-    return PackedStringArray()
+#     return PackedStringArray()
+
+
+# func _on_protoset_modified() -> void:
+#     update_configuration_warnings()
 
 
 func _reset_properties() -> void:
@@ -111,31 +114,18 @@ func _reset_properties() -> void:
             properties.erase(property)
 
 
+func duplicate() -> InventoryItem:
+    var result := InventoryItem.new()
+    result.protoset = protoset
+    result.prototype_id = prototype_id
+    result.properties = properties.duplicate()
+    return result
+
+
 func _notification(what):
-    if what == NOTIFICATION_PARENTED:
-        _on_parented(get_parent())
-    elif what == NOTIFICATION_UNPARENTED:
-        _on_unparented()
-
-
-func _on_parented(parent: Node) -> void:
-    if parent is Inventory:
-        _on_added_to_inventory(parent as Inventory)
-    else:
-        _inventory = null
-
-    if parent is ItemSlot:
-        _link_to_slot(parent as ItemSlot)
-    else:
-        _unlink_from_slot()
-
-
-func _on_added_to_inventory(inventory: Inventory) -> void:
-    assert(inventory != null)
-    _inventory = inventory
-    
-    added_to_inventory.emit(_inventory)
-    _inventory._on_item_added(self)
+    if what == NOTIFICATION_PREDELETE:
+        if _inventory != null:
+            _inventory.remove_item(self)
 
 
 func _on_unparented() -> void:
@@ -282,7 +272,6 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.is_empty():
@@ -306,16 +295,13 @@ func _serialize_property(property_name: String) -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
+    if !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()
     
-    if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
-        name = source[KEY_NODE_NAME]
     protoset = Inventory._deserialize_item_protoset(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):

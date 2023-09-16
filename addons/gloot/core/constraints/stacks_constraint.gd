@@ -167,8 +167,6 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     )
 
     var new_item = item.duplicate()
-    if new_item.get_parent():
-        new_item.get_parent().remove_child(new_item)
 
     assert(set_item_stack_size(new_item, new_stack_size))
     assert(set_item_stack_size(item, stack_size - new_stack_size))
@@ -252,30 +250,46 @@ func pack_item(item: InventoryItem) -> void:
             return
 
 
-func transfer_autosplit(item: InventoryItem, destination: Inventory) -> InventoryItem:
+class TransferAutosplitResult:
+    var success: bool = false
+    var new_item: InventoryItem = null
+
+    func _init(success_: bool, new_item_: InventoryItem):
+        success = success_
+        new_item = new_item_
+
+
+func transfer_autosplit(item: InventoryItem, destination: Inventory) -> TransferAutosplitResult:
     assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
     if inventory.transfer(item, destination):
-        return item
+        if is_instance_valid(item):
+            return TransferAutosplitResult.new(true, item)
+        else:
+            return TransferAutosplitResult.new(true, null)
+
 
     var stack_size := get_item_stack_size(item)
     if stack_size <= 1:
-        return null
+        return TransferAutosplitResult.new(false, null)
 
     var item_count := _get_space_for_single_item(destination, item)
     assert(!item_count.eq(ItemCount.inf()), "Item count shouldn't be infinite!")
     var count = item_count.count
 
     if count <= 0:
-        return null
+        return TransferAutosplitResult.new(false, null)
 
     var new_item: InventoryItem = split_stack(item, count)
     assert(new_item != null)
     assert(destination.add_item(new_item))
-    return new_item
+    if is_instance_valid(new_item):
+        return TransferAutosplitResult.new(true, new_item)
+    else:
+        return TransferAutosplitResult.new(true, null)
 
 
 func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
-    var single_item := item.duplicate()
+    var single_item: InventoryItem = item.duplicate()
     assert(set_item_stack_size(single_item, 1))
     var count := inventory._constraint_manager.get_space_for(single_item)
     single_item.free()
@@ -284,23 +298,19 @@ func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> It
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
     assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
-    var new_item := transfer_autosplit(item, destination)
-    if new_item:
-        # Item could have been packed already
-        # TODO: Find a more elegant way of handling this
-        if new_item.is_queued_for_deletion():
-            return true
-        destination._constraint_manager.get_stacks_constraint().pack_item(new_item)
-        return true
-    return false
+    var transfer_autosplit_result := transfer_autosplit(item, destination)
+    if !transfer_autosplit_result.success:
+        return false
+    if transfer_autosplit_result.new_item:
+        destination._constraint_manager.get_stacks_constraint().pack_item(transfer_autosplit_result.new_item)
+    return true
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
     if inventory.transfer(item, destination):
         # Item could have been packed already
-        # TODO: Find a more elegant way of handling this
-        if item.is_queued_for_deletion():
+        if item == null:
             return true
         destination._constraint_manager.get_stacks_constraint().pack_item(item)
         return true

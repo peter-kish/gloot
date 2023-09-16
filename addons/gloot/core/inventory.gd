@@ -59,15 +59,6 @@ static func _get_item_script() -> Script:
     return preload("inventory_item.gd")
 
 
-func _enter_tree():
-    for child in get_children():
-        if not child is InventoryItem:
-            continue
-        if has_item(child):
-            continue
-        _items.append(child)
-
-
 func _exit_tree():
     _items.clear()  
 
@@ -79,24 +70,6 @@ func _init() -> void:
 func _ready() -> void:
     for item in get_items():
         _connect_item_signals(item)
-
-
-func _on_item_added(item: InventoryItem) -> void:
-    _items.append(item)
-    contents_changed.emit()
-    _connect_item_signals(item)
-    if _constraint_manager:
-        _constraint_manager._on_item_added(item)
-    item_added.emit(item)
-
-
-func _on_item_removed(item: InventoryItem) -> void:
-    _items.erase(item)
-    contents_changed.emit()
-    _disconnect_item_signals(item)
-    if _constraint_manager:
-        _constraint_manager._on_item_removed(item)
-    item_removed.emit(item)
 
 
 func move_item(from: int, to: int) -> void:
@@ -157,12 +130,18 @@ func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
 
-    if item.get_parent():
-        item.get_parent().remove_child(item)
+    if item.get_inventory() != null:
+        item.get_inventory().remove_item(item)
 
-    add_child(item)
-    if Engine.is_editor_hint():
-        item.owner = get_tree().edited_scene_root
+    _items.append(item)
+    item._inventory = self
+    contents_changed.emit()
+    _connect_item_signals(item)
+    _constraint_manager._on_item_added(item)
+    # Adding an item can result in the item being freed (e.g. when it's merged with another item stack)
+    if !is_instance_valid(item):
+        item = null
+    item_added.emit(item)
     return true
 
 
@@ -198,7 +177,12 @@ func remove_item(item: InventoryItem) -> bool:
     if !_can_remove_item(item):
         return false
 
-    remove_child(item)
+    _items.erase(item)
+    item._inventory = null
+    contents_changed.emit()
+    _disconnect_item_signals(item)
+    _constraint_manager._on_item_removed(item)
+    item_removed.emit(item)
     return true
 
 
@@ -207,9 +191,8 @@ func _can_remove_item(item: InventoryItem) -> bool:
 
 
 func remove_all_items() -> void:
-    while get_child_count() > 0:
-        remove_child(get_child(0))
-    _items = []
+    while _items.size() > 0:
+        remove_item(_items[0])
 
 
 func get_item_by_id(prototype_id: String) -> InventoryItem:
@@ -245,9 +228,10 @@ func reset() -> void:
 
 
 func clear() -> void:
-    for item in get_items():
-        item.queue_free()
-    remove_all_items()
+    while _items.size() > 0:
+        var item = _items[0]
+        remove_item(item)
+        item.free()
 
 
 func serialize() -> Dictionary:

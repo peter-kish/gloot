@@ -34,6 +34,10 @@ func _init(inventory_: Inventory) -> void:
 
 func _on_item_added(item: InventoryItem) -> void:
     assert(_enforce_constraints(item), "Failed to enforce constraints!")
+
+    # Enforcing constraints can result in the item being freed (e.g. when it's merged with another item stack)
+    if !is_instance_valid(item):
+        item = null
     
     if _weight_constraint != null:
         _weight_constraint._on_item_added(item)

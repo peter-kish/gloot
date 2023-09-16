@@ -85,7 +85,7 @@ func get_prototype_max_stack_size(prototype_id: String) -> int:
 
 
 func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_autosplit(item, destination) != null
+    return _constraint_manager.get_stacks_constraint().transfer_autosplit(item, destination).success
 
 
 func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
