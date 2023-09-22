@@ -91,7 +91,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
-    if !_serialized_format.is_empty() && Engine.is_editor_hint():
+    if !_serialized_format.is_empty():
         deserialize(_serialized_format)
     for item in get_items():
         _connect_item_signals(item)
