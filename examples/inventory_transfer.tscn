@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwu4vhba7uc2m"]
+[gd_scene load_steps=8 format=3 uid="uid://dwu4vhba7uc2m"]
 
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
 [node name="InventoryTransfer" type="Control"]
@@ -93,30 +92,34 @@ text = ">>>"
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
 item_protoset = ExtResource("3")
-
-[node name="InventoryItem" type="Node" parent="Inventory"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "item1"
-
-[node name="InventoryItem2" type="Node" parent="Inventory"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "item2"
+_serialized_format = {
+"constraints": {},
+"item_protoset": "res://tests/data/item_definitions_basic.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item1"
+}, {
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item2"
+}],
+"node_name": "Inventory"
+}
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource("2")
 item_protoset = ExtResource("3")
-
-[node name="InventoryItem3" type="Node" parent="Inventory2"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "item1"
-
-[node name="InventoryItem4" type="Node" parent="Inventory2"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "item2"
+_serialized_format = {
+"constraints": {},
+"item_protoset": "res://tests/data/item_definitions_basic.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item1"
+}, {
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item2"
+}],
+"node_name": "Inventory2"
+}
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_v60ia")

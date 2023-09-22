@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b2owv7hirds6s"]
+[gd_scene load_steps=8 format=3 uid="uid://b2owv7hirds6s"]
 
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_stacked.gd" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="2"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_worre"]
 
 [node name="InventoryStackedTransfer" type="Control"]
@@ -90,56 +89,58 @@ text = ">>>"
 script = ExtResource("2")
 capacity = 50.0
 item_protoset = ExtResource("3")
-
-[node name="minimal_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "minimal_item"
-
-[node name="big_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "big_item"
-
-[node name="stackable_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "stackable_item"
-
-[node name="limited_stackable_item" type="Node" parent="InventoryStackedLeft"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "limited_stackable_item"
-properties = {
-"stack_size": 3.0
+_serialized_format = {
+"constraints": {
+"stacks_constraint": {},
+"weight_constraint": {
+"capacity": 50.0,
+"occupied_space": 31.0
+}
+},
+"item_protoset": "res://tests/data/item_definitions_stack.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "minimal_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "big_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "stackable_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "limited_stackable_item"
+}],
+"node_name": "InventoryStackedLeft"
 }
 
 [node name="InventoryStackedRight" type="Node" parent="."]
 script = ExtResource("2")
 capacity = 50.0
 item_protoset = ExtResource("3")
-
-[node name="minimal_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "minimal_item"
-
-[node name="big_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "big_item"
-
-[node name="stackable_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "stackable_item"
-
-[node name="limited_stackable_item" type="Node" parent="InventoryStackedRight"]
-script = ExtResource("8")
-protoset = ExtResource("3")
-prototype_id = "limited_stackable_item"
-properties = {
-"stack_size": 4.0
+_serialized_format = {
+"constraints": {
+"stacks_constraint": {},
+"weight_constraint": {
+"capacity": 50.0,
+"occupied_space": 31.0
+}
+},
+"item_protoset": "res://tests/data/item_definitions_stack.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "minimal_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "big_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "stackable_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "limited_stackable_item"
+}],
+"node_name": "InventoryStackedRight"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
