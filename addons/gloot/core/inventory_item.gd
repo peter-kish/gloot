@@ -87,21 +87,7 @@ func _on_protoset_changed() -> void:
     update_configuration_warnings()
 
 
-# func _get_configuration_warnings() -> PackedStringArray:
-#     if !protoset:
-#         return PackedStringArray()
-
-#     if !protoset.has_prototype(prototype_id):
-#         return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
-
-#     return PackedStringArray()
-
-
-# func _on_protoset_modified() -> void:
-#     update_configuration_warnings()
-
-
-func _reset_properties() -> void:
+func reset_properties() -> void:
     if !protoset || prototype_id.is_empty():
         properties = {}
         return
