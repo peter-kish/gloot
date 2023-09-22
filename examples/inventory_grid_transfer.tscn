@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://jopigw4xplp4"]
+[gd_scene load_steps=8 format=3 uid="uid://jopigw4xplp4"]
 
 [ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="2"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_273xl"]
 
 [node name="InventoryGridTransfer" type="Control"]
@@ -99,36 +98,54 @@ Use the 'Unequip' button to unequip it."
 script = ExtResource("2")
 size = Vector2i(5, 5)
 item_protoset = ExtResource("1")
-
-[node name="L_item_2x2" type="Node" parent="InventoryGridLeft"]
-script = ExtResource("8")
-protoset = ExtResource("1")
-prototype_id = "item_2x2"
-
-[node name="L_item_2x2_2" type="Node" parent="InventoryGridLeft"]
-script = ExtResource("8")
-protoset = ExtResource("1")
-prototype_id = "item_2x2"
-properties = {
-"grid_position": Vector2i(0, 2)
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"size": "Vector2i(5, 5)"
+}
+},
+"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}, {
+"properties": {
+"grid_position": {
+"type": 6,
+"value": "Vector2i(0, 1)"
+}
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_2x2"
+}],
+"node_name": "InventoryGridLeft"
 }
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
 item_protoset = ExtResource("1")
-
-[node name="R_item_2x2" type="Node" parent="InventoryGridRight"]
-script = ExtResource("8")
-protoset = ExtResource("1")
-prototype_id = "item_2x2"
-
-[node name="R_item_1x1" type="Node" parent="InventoryGridRight"]
-script = ExtResource("8")
-protoset = ExtResource("1")
-prototype_id = "item_1x1"
-properties = {
-"grid_position": Vector2i(0, 2)
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"size": "Vector2i(5, 5)"
+}
+},
+"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"items": [{
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}, {
+"properties": {
+"grid_position": {
+"type": 6,
+"value": "Vector2i(0, 1)"
+}
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_2x2"
+}],
+"node_name": "InventoryGridRight"
 }
 
 [node name="LblInfo" type="Label" parent="."]
