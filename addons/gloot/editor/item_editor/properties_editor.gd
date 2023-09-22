@@ -15,10 +15,7 @@ var item: InventoryItem = null :
     set(new_item):
         if new_item == null:
             return
-        assert(item == null, "Item already set!")
         item = new_item
-        if item.protoset:
-            item.protoset.changed.connect(_refresh)
         _refresh()
 
 

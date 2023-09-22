@@ -140,6 +140,7 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
+    _update_serialized_format()
     _constraint_manager._on_item_modified(item)
     item_modified.emit(item)
 

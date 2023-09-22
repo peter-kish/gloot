@@ -3,6 +3,8 @@ extends Control
 
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
+const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
+const POPUP_SIZE = Vector2i(800, 300)
 
 @onready var hsplit_container = $HSplitContainer
 @onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
@@ -18,6 +20,7 @@ var inventory: Inventory :
 
         _refresh()
 var _inventory_control: Control
+var _properties_editor: Window
 
 
 func connect_inventory_signals():
@@ -108,9 +111,14 @@ func _on_prototype_id_picked(index: int) -> void:
 
 func _on_btn_edit() -> void:
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
-    if selected_item != null:
-        # Call it deferred, so that the control can clean up
-        call_deferred("_select_node", selected_item)
+    if selected_item == null || gloot_undo_redo == null || editor_interface == null:
+        return
+    if _properties_editor == null:
+        _properties_editor = PropertiesEditor.instantiate()
+        _properties_editor.init(gloot_undo_redo, editor_interface)
+        add_child(_properties_editor)
+    _properties_editor.item = selected_item
+    _properties_editor.popup_centered(POPUP_SIZE)
 
 
 func _on_btn_remove() -> void:
