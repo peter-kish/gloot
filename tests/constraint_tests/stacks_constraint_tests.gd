@@ -82,7 +82,7 @@ func test_set_item_stack_size() -> void:
 func test_items_mergable() -> void:
     assert(StacksConstraint.items_mergable(item, item_2))
     
-    StacksConstraint.set_item_stack_size(item_2, 1)
+    assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(StacksConstraint.items_mergable(item, item_2))
 
     StacksConstraint.set_item_max_stack_size(item_2, 10)
@@ -108,8 +108,8 @@ func test_get_mergable_items() -> void:
 
 
 func test_add_item_automerge_full() -> void:
-    StacksConstraint.set_item_stack_size(item, 1)
-    StacksConstraint.set_item_stack_size(item_2, 1)
+    assert(StacksConstraint.set_item_stack_size(item, 1))
+    assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(inventory.add_item(item))
     stacks_constraint.add_item_automerge(item_2)
     assert(inventory.get_item_count() == 1)
@@ -127,7 +127,7 @@ func test_add_item_automerge_fail() -> void:
 
 
 func test_add_item_automerge_partial() -> void:
-    StacksConstraint.set_item_stack_size(item, 3)
+    assert(StacksConstraint.set_item_stack_size(item, 3))
     assert(inventory.add_item(item))
     stacks_constraint.add_item_automerge(item_2)
     assert(inventory.get_item_count() == 2)
@@ -148,8 +148,8 @@ func test_stacks_joinable() -> void:
     inventory.add_item(item_2)
     assert(!stacks_constraint.stacks_joinable(item, item_2))
 
-    StacksConstraint.set_item_stack_size(item, 1)
-    StacksConstraint.set_item_stack_size(item_2, 1)
+    assert(StacksConstraint.set_item_stack_size(item, 1))
+    assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(stacks_constraint.stacks_joinable(item, item_2))
     
     item_2.set_property("custom_property", "custom_value")
@@ -162,8 +162,8 @@ func test_join_stacks() -> void:
     assert(!stacks_constraint.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 2)
     
-    StacksConstraint.set_item_stack_size(item, 1)
-    StacksConstraint.set_item_stack_size(item_2, 1)
+    assert(StacksConstraint.set_item_stack_size(item, 1))
+    assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(stacks_constraint.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 1)
     assert(!is_node_valid(item_2))

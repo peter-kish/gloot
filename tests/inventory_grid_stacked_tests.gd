@@ -74,8 +74,8 @@ func test_add_item_automerge() -> void:
     item_2x2_2.prototype_id = "item_2x2"
 
     # No stack space, no grid space
-    InventoryGridStacked.set_item_stack_size(item_2x2,
-        InventoryGridStacked.get_item_max_stack_size(item_2x2))
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2,
+        InventoryGridStacked.get_item_max_stack_size(item_2x2)))
     assert(!inventory_3x3.add_item_automerge(item_2x2_2))
 
     # No stack space but grid space available
@@ -84,7 +84,7 @@ func test_add_item_automerge() -> void:
 
 func test_stack_split() -> void:
     assert(inventory_3x3.add_item(item_1x1))
-    InventoryGridStacked.set_item_stack_size(item_1x1, 2)
+    assert(InventoryGridStacked.set_item_stack_size(item_1x1, 2))
     var new_item = inventory_3x3.split(item_1x1, 1)
     assert(new_item != null)
     assert(inventory_3x3.get_item_count() == 2)
@@ -94,7 +94,7 @@ func test_stack_split() -> void:
 func test_stack_cant_split() -> void:
     # TODO: FIX
     # assert(inventory_3x3.add_item(item_2x2))
-    # InventoryGridStacked.set_item_stack_size(item_2x2, 2)
+    # assert(InventoryGridStacked.set_item_stack_size(item_2x2, 2))
     # var new_item = inventory_3x3.split(item_2x2, 1)
     # assert(new_item == null)
     # assert(inventory_3x3.get_item_count() == 1)
@@ -118,16 +118,16 @@ func test_stack_cant_join() -> void:
 
 func test_automerge() -> void:
     InventoryGridStacked.set_item_max_stack_size(item_2x2, 3)
-    InventoryGridStacked.set_item_stack_size(item_2x2, 1)
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2, 1))
     assert(inventory_3x3.add_item(item_2x2))
-    InventoryGridStacked.set_item_stack_size(item_2x2_2, 3)
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2_2, 3))
     assert(inventory_3x3_2.add_item(item_2x2_2))
     
     # Not enough space
     assert(!inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
 
     # Enough space
-    InventoryGridStacked.set_item_stack_size(item_2x2_2, 2)
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2_2, 2))
     assert(inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
     assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
     assert(!is_node_valid(item_2x2_2))
@@ -135,9 +135,9 @@ func test_automerge() -> void:
 
 func test_autosplitmerge() -> void:
     InventoryGridStacked.set_item_max_stack_size(item_2x2, 3)
-    InventoryGridStacked.set_item_stack_size(item_2x2, 1)
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2, 1))
     assert(inventory_3x3.add_item(item_2x2))
-    InventoryGridStacked.set_item_stack_size(item_2x2_2, 3)
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2_2, 3))
     assert(inventory_3x3_2.add_item(item_2x2_2))
 
     assert(inventory_3x3_2.transfer_autosplitmerge(item_2x2_2, inventory_3x3))

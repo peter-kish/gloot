@@ -100,7 +100,7 @@ func test_s_has_space_for() -> void:
 
     for data in test_data:
         StacksConstraint.set_item_max_stack_size(item, data.input)
-        StacksConstraint.set_item_stack_size(item, data.input)
+        assert(StacksConstraint.set_item_stack_size(item, data.input))
         assert(constraint_manager.get_space_for(item).eq(data.expected.space))
         assert(constraint_manager.has_space_for(item) == data.expected.has_space)
 
@@ -151,7 +151,7 @@ func test_ws_has_space_for() -> void:
     for data in test_data:
         WeightConstraint.set_item_weight(item, data.input.weight)
         StacksConstraint.set_item_max_stack_size(item, data.input.stack_size)
-        StacksConstraint.set_item_stack_size(item, data.input.stack_size)
+        assert(StacksConstraint.set_item_stack_size(item, data.input.stack_size))
         var space : = constraint_manager.get_space_for(item)
         assert(space.eq(data.expected.space))
         assert(constraint_manager.has_space_for(item) == data.expected.has_space)
@@ -207,7 +207,7 @@ func test_sg_has_space_for() -> void:
     for data in test_data:
         assert(grid_constraint.set_item_size(item, data.input.size))
         StacksConstraint.set_item_max_stack_size(item, data.input.max_stack_size)
-        StacksConstraint.set_item_stack_size(item, data.input.stack_size)
+        assert(StacksConstraint.set_item_stack_size(item, data.input.stack_size))
         assert(constraint_manager.get_space_for(item).eq(data.expected.space))
         assert(constraint_manager.has_space_for(item) == data.expected.has_space)
 
@@ -239,7 +239,7 @@ func test_wsg_has_space_for() -> void:
         WeightConstraint.set_item_weight(item, data.input.weight)
         assert(grid_constraint.set_item_size(item, data.input.size))
         StacksConstraint.set_item_max_stack_size(item, data.input.max_stack_size)
-        StacksConstraint.set_item_stack_size(item, data.input.stack_size)
+        assert(StacksConstraint.set_item_stack_size(item, data.input.stack_size))
         assert(constraint_manager.get_space_for(item).eq(data.expected.space))
         assert(constraint_manager.has_space_for(item) == data.expected.has_space)
 
@@ -337,7 +337,7 @@ func test_sg_enforce_constraints() -> void:
 
         grid_constraint.size = data.input.inv_size
         StacksConstraint.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
-        StacksConstraint.set_item_stack_size(new_item, data.input.new_item_stack_size)
+        assert(StacksConstraint.set_item_stack_size(new_item, data.input.new_item_stack_size))
         var add_item_result := inventory.add_item(test_item)
         assert(add_item_result == data.expected)
         if add_item_result && is_node_valid(test_item):
@@ -419,7 +419,7 @@ func test_wsg_enforce_constraints() -> void:
 
         grid_constraint.size = data.input.inv_size
         StacksConstraint.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
-        StacksConstraint.set_item_stack_size(new_item, data.input.new_item_stack_size)
+        assert(StacksConstraint.set_item_stack_size(new_item, data.input.new_item_stack_size))
         WeightConstraint.set_item_weight(test_item, data.input.item_weight)
         var add_item_result := inventory.add_item(test_item)
         assert(add_item_result == data.expected)
@@ -477,8 +477,8 @@ func test_ws_transfer_autosplit() -> void:
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_WS)
 
         inventory2._constraint_manager.get_weight_constraint().capacity = data.input.dst_capacity
-        StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size)
-        StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
+        assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
         assert(result == data.expected.return_val)
         assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
@@ -537,9 +537,9 @@ func test_sg_transfer_autosplit() -> void:
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
 
         inventory2._constraint_manager.get_grid_constraint().size = data.input.dst_inv_size
-        StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size)
+        assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         StacksConstraint.set_item_max_stack_size(src_item, 3)
-        StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
         var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
         assert(result == data.expected.return_val)
@@ -621,9 +621,9 @@ func test_wsg_transfer_autosplit() -> void:
 
         inventory2._constraint_manager.get_grid_constraint().size = data.input.dst_inv_size
         inventory2._constraint_manager.get_weight_constraint().capacity = data.input.dst_inv_capacity
-        StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size)
+        assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         StacksConstraint.set_item_max_stack_size(src_item, 3)
-        StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size)
+        assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
         var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
         assert(result == data.expected.return_val)

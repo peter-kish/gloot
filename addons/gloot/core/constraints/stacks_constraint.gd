@@ -155,8 +155,8 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> i
     if free_dst_stack_space <= 0:
         return MergeResult.FAIL
 
-    set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
-    set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
+    assert(set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0)))
+    assert(set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size)))
 
     if free_dst_stack_space >= src_size:
         return MergeResult.SUCCESS
@@ -179,8 +179,8 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     if new_item.get_parent():
         new_item.get_parent().remove_child(new_item)
 
-    set_item_stack_size(new_item, new_stack_size)
-    set_item_stack_size(item, stack_size - new_stack_size)
+    assert(set_item_stack_size(new_item, new_stack_size))
+    assert(set_item_stack_size(item, stack_size - new_stack_size))
     return new_item
 
 
@@ -279,7 +279,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
 
 func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
     var single_item := item.duplicate()
-    set_item_stack_size(single_item, 1)
+    assert(set_item_stack_size(single_item, 1))
     var count := inventory._constraint_manager.get_space_for(single_item)
     single_item.free()
     return count
