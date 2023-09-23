@@ -180,6 +180,12 @@ _serialized_format = {
 },
 "item_protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
+"properties": {
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
@@ -187,6 +193,10 @@ _serialized_format = {
 "grid_position": {
 "type": 6,
 "value": "Vector2i(0, 1)"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
 }
 },
 "protoset": "res://tests/data/item_definitions_grid.tres",
@@ -208,6 +218,12 @@ _serialized_format = {
 },
 "item_protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
+"properties": {
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
@@ -215,6 +231,10 @@ _serialized_format = {
 "grid_position": {
 "type": 6,
 "value": "Vector2i(0, 1)"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
 }
 },
 "protoset": "res://tests/data/item_definitions_grid.tres",
