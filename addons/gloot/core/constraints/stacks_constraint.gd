@@ -44,7 +44,7 @@ static func set_item_stack_size(item: InventoryItem, stack_size: int) -> bool:
         var inventory: Inventory = item.get_inventory()
         if inventory != null:
             inventory.remove_item(item)
-        item.queue_free()
+        item.free()
         return true
     item.set_property(KEY_STACK_SIZE, stack_size)
     return true
