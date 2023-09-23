@@ -75,8 +75,8 @@ func test_set_item_stack_size() -> void:
 
     inventory.add_item(item)
     assert(StacksConstraint.set_item_stack_size(item, 0))
-    assert(!inventory.has_item(item))
-    assert(item.is_queued_for_deletion())
+    assert(inventory.get_item_count() == 0)
+    assert(!is_node_valid(item))
 
 
 func test_items_mergable() -> void:
