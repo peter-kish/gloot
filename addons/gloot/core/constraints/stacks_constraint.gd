@@ -35,13 +35,24 @@ static func get_item_max_stack_size(item: InventoryItem) -> int:
     return item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
 
 
-static func set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
+static func set_item_stack_size(item: InventoryItem, stack_size: int) -> bool:
     assert(item != null, "item is null!")
+    assert(stack_size >= 0, "stack_size can't be negative!")
+    if stack_size > get_item_max_stack_size(item):
+        return false
+    if stack_size == 0:
+        var inventory = item.get_inventory()
+        if inventory != null:
+            inventory.remove_child(item)
+        item.queue_free()
+        return true
     item.set_property(KEY_STACK_SIZE, stack_size)
+    return true
 
 
 static func set_item_max_stack_size(item: InventoryItem, max_stack_size: int) -> void:
     assert(item != null, "item is null!")
+    assert(max_stack_size > 0, "max_stack_size can't be less than 1!")
     item.set_property(KEY_MAX_STACK_SIZE, max_stack_size)
 
 

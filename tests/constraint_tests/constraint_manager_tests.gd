@@ -514,14 +514,14 @@ func test_sg_transfer_autosplit() -> void:
     # 3. Destination has place for part of the stack when merged
     # 4. Destination has no place for the stack
     var test_data := [
-       {
-           input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(4, 4)},
-           expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 2},
-       },
-       {
-           input = {src_stack_size = 2, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3)},
-           expected = {return_val = true, src_stack_size = 0, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 1},
-       },
+        {
+            input = {src_stack_size = 3, dst_stack_size = 3, dst_inv_size = Vector2i(4, 4)},
+            expected = {return_val = true, src_stack_size = 3, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 2},
+        },
+        {
+            input = {src_stack_size = 2, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3)},
+            expected = {return_val = true, src_stack_size = 0, dst_stack_size = 3, src_inv_count = 0, dst_inv_count = 1},
+        },
         {
             input = {src_stack_size = 3, dst_stack_size = 1, dst_inv_size = Vector2i(3, 3)},
             expected = {return_val = true, src_stack_size = 1, dst_stack_size = 3, src_inv_count = 1, dst_inv_count = 1},
@@ -543,12 +543,19 @@ func test_sg_transfer_autosplit() -> void:
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
         var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
         assert(result == data.expected.return_val)
-        assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
+
         if data.expected.src_stack_size == 0:
+            assert(!inventory.has_item(src_item))
             assert(src_item.is_queued_for_deletion())
-        assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        else:
+            assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
+
         if data.expected.dst_stack_size == 0:
+            assert(!inventory2.has_item(dst_item))
             assert(dst_item.is_queued_for_deletion())
+        else:
+            assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+
         assert(inventory.get_item_count() == data.expected.src_inv_count)
         assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
@@ -620,12 +627,19 @@ func test_wsg_transfer_autosplit() -> void:
         StacksConstraint.set_item_max_stack_size(dst_item, 3)
         var result := stacks_constraint.transfer_autosplit(src_item, inventory2) != null
         assert(result == data.expected.return_val)
-        assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
+
         if data.expected.src_stack_size == 0:
+            assert(!inventory.has_item(src_item))
             assert(src_item.is_queued_for_deletion())
-        assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+        else:
+            assert(StacksConstraint.get_item_stack_size(src_item) == data.expected.src_stack_size)
+
         if data.expected.dst_stack_size == 0:
+            assert(!inventory2.has_item(dst_item))
             assert(dst_item.is_queued_for_deletion())
+        else:
+            assert(StacksConstraint.get_item_stack_size(dst_item) == data.expected.dst_stack_size)
+
         assert(inventory.get_item_count() == data.expected.src_inv_count)
         assert(inventory2.get_item_count() == data.expected.dst_inv_count)
 
