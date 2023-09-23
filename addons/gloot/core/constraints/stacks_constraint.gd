@@ -41,9 +41,9 @@ static func set_item_stack_size(item: InventoryItem, stack_size: int) -> bool:
     if stack_size > get_item_max_stack_size(item):
         return false
     if stack_size == 0:
-        var inventory = item.get_inventory()
+        var inventory: Inventory = item.get_inventory()
         if inventory != null:
-            inventory.remove_child(item)
+            inventory.remove_item(item)
         item.queue_free()
         return true
     item.set_property(KEY_STACK_SIZE, stack_size)
