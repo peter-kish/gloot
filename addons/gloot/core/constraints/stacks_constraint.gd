@@ -126,20 +126,11 @@ func add_item_automerge(
 
     var target_items = get_mergable_items(item)
     for target_item in target_items:
-        if _merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
+        if _merge_stacks(target_item, item) == MergeResult.SUCCESS:
             return true
 
     assert(inventory.add_item(item))
     return true
-
-
-static func _merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
-    var result := _merge_stacks(item_dst, item_src)
-    if result == MergeResult.SUCCESS:
-        if item_src.get_inventory():
-            item_src.get_inventory().remove_item(item_src)
-        item_src.queue_free()
-    return result
 
 
 static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
@@ -203,7 +194,7 @@ func join_stacks(
         return false
 
     # TODO: Check if this can be an assertion
-    _merge_stacks_autodelete(item_dst, item_src)
+    _merge_stacks(item_dst, item_src)
     return true
 
 
@@ -250,7 +241,7 @@ func pack_item(item: InventoryItem) -> void:
 
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:
-        var merge_result := _merge_stacks_autodelete(mergable_item, item)
+        var merge_result := _merge_stacks(mergable_item, item)
         if merge_result == MergeResult.SUCCESS:
             return
 
