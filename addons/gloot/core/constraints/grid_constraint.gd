@@ -45,9 +45,20 @@ func _fill_item_map() -> void:
 
 func _on_inventory_set() -> void:
     _refresh_item_map()
-    inventory.item_added.connect(func(item: InventoryItem): _item_map.fill_rect(get_item_rect(item), item))
-    inventory.item_removed.connect(func(item: InventoryItem): _item_map.clear_rect(get_item_rect(item)))
-    inventory.item_modified.connect(func(_item: InventoryItem): _refresh_item_map())
+
+
+func _on_item_added(item: InventoryItem) -> void:
+    if item == null:
+        return
+    _item_map.fill_rect(get_item_rect(item), item)
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    _item_map.clear_rect(get_item_rect(item))
+
+    
+func _on_item_modified(item: InventoryItem) -> void:
+    _refresh_item_map()
 
 
 func _bounds_broken() -> bool:
