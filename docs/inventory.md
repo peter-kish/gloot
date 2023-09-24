@@ -10,7 +10,7 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 
 ## Properties
 
-* `item_protoset: Resource` - An `ItemProtoset` resource containing item prototypes.
+* `protoset: Resource` - An `ItemProtoset` resource containing item prototypes.
 
 ## Methods
 
@@ -41,5 +41,5 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 * `item_removed(item: InventoryItem)` - Emitted when an item has been removed from the inventory.
 * `item_modified(item: InventoryItem)` - Emitted when an item from the inventory has been modified.
 * `contents_changed()` - Emitted when the contents of the inventory have changed.
-* `protoset_changed()` - Emitted when the `item_protoset` property has been changed.
+* `protoset_changed()` - Emitted when the `protoset` property has been changed.
 * `predelete()` - Emitted before the engine deletes the inventory.
