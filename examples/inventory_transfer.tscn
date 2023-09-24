@@ -91,10 +91,10 @@ text = ">>>"
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
-item_protoset = ExtResource("3")
+protoset = ExtResource("3")
 _serialized_format = {
 "constraints": {},
-"item_protoset": "res://tests/data/item_definitions_basic.tres",
+"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"
@@ -107,10 +107,10 @@ _serialized_format = {
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource("2")
-item_protoset = ExtResource("3")
+protoset = ExtResource("3")
 _serialized_format = {
 "constraints": {},
-"item_protoset": "res://tests/data/item_definitions_basic.tres",
+"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"

@@ -9,7 +9,7 @@ func init_suite() -> void:
 
 func init_test() -> void:
     inventory = Inventory.new()
-    inventory.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory.protoset = preload("res://tests/data/item_definitions_basic.tres")
     inventory.create_and_add_item("minimal_item")
     inventory.create_and_add_item("minimal_item")
 

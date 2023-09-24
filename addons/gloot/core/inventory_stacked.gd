@@ -77,11 +77,11 @@ static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) ->
 
 
 func get_prototype_stack_size(prototype_id: String) -> int:
-    return StacksConstraint.get_prototype_stack_size(item_protoset, prototype_id)
+    return StacksConstraint.get_prototype_stack_size(protoset, prototype_id)
 
 
 func get_prototype_max_stack_size(prototype_id: String) -> int:
-    return StacksConstraint.get_prototype_max_stack_size(item_protoset, prototype_id)
+    return StacksConstraint.get_prototype_max_stack_size(protoset, prototype_id)
 
 
 func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:

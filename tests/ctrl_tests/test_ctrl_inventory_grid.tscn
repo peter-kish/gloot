@@ -26,14 +26,14 @@ default_item_texture = ExtResource("4")
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource("3")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("1")
+protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "size": "Vector2i(5, 5)"
 }
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"

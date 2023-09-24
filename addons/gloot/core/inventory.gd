@@ -11,16 +11,16 @@ signal protoset_changed
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
-@export var item_protoset: ItemProtoset:
+@export var protoset: ItemProtoset:
     get:
-        return item_protoset
-    set(new_item_protoset):
-        if new_item_protoset == item_protoset:
+        return protoset
+    set(new_protoset):
+        if new_protoset == protoset:
             return
         # TODO: Maybe the inventory should be cleared here?
         if not _items.is_empty():
             return
-        item_protoset = new_item_protoset
+        protoset = new_protoset
         protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
@@ -32,7 +32,7 @@ var _serialized_format: Dictionary:
         _serialized_format = new_serialized_format
 
 const KEY_NODE_NAME: String = "node_name"
-const KEY_ITEM_PROTOSET: String = "item_protoset"
+const KEY_PROTOSET: String = "protoset"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/core/verify.gd")
@@ -54,9 +54,9 @@ func _update_serialized_format() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if item_protoset == null:
+    if protoset == null:
         return PackedStringArray([
-                "This inventory node has no protoset. Set the 'item_protoset' field to be able to " \
+                "This inventory node has no protoset. Set the 'protoset' field to be able to " \
                 + "populate the inventory with items."])
     return PackedStringArray()
 
@@ -178,7 +178,7 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 func create_and_add_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
-    item.protoset = item_protoset
+    item.protoset = protoset
     item.prototype_id = prototype_id
     if add_item(item):
         return item
@@ -244,7 +244,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 
 func reset() -> void:
     clear()
-    item_protoset = null
+    protoset = null
     _constraint_manager.reset()
 
 
@@ -260,7 +260,7 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
+    result[KEY_PROTOSET] = protoset.resource_path
     result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
@@ -272,17 +272,17 @@ func serialize() -> Dictionary:
 
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
         !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
-    item_protoset = null
+    protoset = null
 
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    item_protoset = load(source[KEY_ITEM_PROTOSET])
+    protoset = load(source[KEY_PROTOSET])
     # TODO: Check return value:
     if source.has(KEY_CONSTRAINTS):
         _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
