@@ -55,7 +55,7 @@ default_item_texture = ExtResource("5_8hsr1")
 [node name="InventoryGridStacked" type="Node" parent="."]
 script = ExtResource("6_bevw1")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("7_aav1h")
+protoset = ExtResource("7_aav1h")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -63,7 +63,7 @@ _serialized_format = {
 },
 "stacks_constraint": {}
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"

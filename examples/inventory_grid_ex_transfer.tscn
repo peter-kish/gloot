@@ -148,14 +148,14 @@ Use the 'Unequip' button to unequip it."
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("1")
+protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "size": "Vector2i(5, 5)"
 }
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
@@ -175,14 +175,14 @@ _serialized_format = {
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("1")
+protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "size": "Vector2i(5, 5)"
 }
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
+"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"

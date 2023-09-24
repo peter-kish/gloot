@@ -25,7 +25,7 @@ default_item_icon = ExtResource("4")
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource("1")
 capacity = 20.0
-item_protoset = ExtResource("3")
+protoset = ExtResource("3")
 _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
@@ -34,7 +34,7 @@ _serialized_format = {
 "occupied_space": 1.0
 }
 },
-"item_protoset": "res://tests/data/item_definitions_stack.tres",
+"protoset": "res://tests/data/item_definitions_stack.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "minimal_item"

@@ -166,7 +166,7 @@ Use the 'Unequip' button to unequip it."
 [node name="InventoryGridStackedLeft" type="Node" parent="."]
 script = ExtResource("7_6cshf")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("8_8dj3i")
+protoset = ExtResource("8_8dj3i")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -174,7 +174,6 @@ _serialized_format = {
 },
 "stacks_constraint": {}
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "properties": {
 "stack_size": {
@@ -198,13 +197,14 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }],
-"node_name": "InventoryGridStackedLeft"
+"node_name": "InventoryGridStackedLeft",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }
 
 [node name="InventoryGridStackedRight" type="Node" parent="."]
 script = ExtResource("7_6cshf")
 size = Vector2i(5, 5)
-item_protoset = ExtResource("8_8dj3i")
+protoset = ExtResource("8_8dj3i")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -212,7 +212,6 @@ _serialized_format = {
 },
 "stacks_constraint": {}
 },
-"item_protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "properties": {
 "stack_size": {
@@ -236,7 +235,8 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }],
-"node_name": "InventoryGridStackedRight"
+"node_name": "InventoryGridStackedRight",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }
 
 [node name="LblInfo" type="Label" parent="."]

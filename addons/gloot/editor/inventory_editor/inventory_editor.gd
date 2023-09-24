@@ -33,9 +33,9 @@ func connect_inventory_signals():
         inventory.size_changed.connect(_refresh)
     inventory.protoset_changed.connect(_refresh)
 
-    if !inventory.item_protoset:
+    if !inventory.protoset:
         return
-    inventory.item_protoset.changed.connect(_refresh)
+    inventory.protoset.changed.connect(_refresh)
 
 
 func disconnect_inventory_signals():
@@ -48,13 +48,13 @@ func disconnect_inventory_signals():
         inventory.size_changed.disconnect(_refresh)
     inventory.protoset_changed.disconnect(_refresh)
 
-    if !inventory.item_protoset:
+    if !inventory.protoset:
         return
-    inventory.item_protoset.changed.disconnect(_refresh)
+    inventory.protoset.changed.disconnect(_refresh)
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || inventory == null || inventory.item_protoset == null:
+    if !is_inside_tree() || inventory == null || inventory.protoset == null:
         return
         
     # Remove the inventory control, if present
@@ -81,7 +81,7 @@ func _refresh() -> void:
     scroll_container.add_child(_inventory_control)
 
     # Set prototype_id_filter values
-    prototype_id_filter.set_values(inventory.item_protoset._prototypes.keys())
+    prototype_id_filter.set_values(inventory.protoset._prototypes.keys())
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:

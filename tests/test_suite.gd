@@ -46,27 +46,27 @@ func _run_tests():
 
 func create_inventory(protoset: ItemProtoset) -> Inventory:
     var inventory = Inventory.new()
-    inventory.item_protoset = protoset
+    inventory.protoset = protoset
     return inventory
 
 
 func create_inventory_stacked(protoset: ItemProtoset, capacity: float) -> InventoryStacked:
     var inventory = InventoryStacked.new()
-    inventory.item_protoset = protoset
+    inventory.protoset = protoset
     inventory.capacity = capacity
     return inventory
 
 
 func create_inventory_grid(protoset: ItemProtoset, size: Vector2i) -> InventoryGrid:
     var inventory = InventoryGrid.new()
-    inventory.item_protoset = protoset
+    inventory.protoset = protoset
     inventory.size = size
     return inventory
 
 
 func create_inventory_grid_stacked(protoset: ItemProtoset, size: Vector2i) -> InventoryGridStacked:
     var inventory = InventoryGridStacked.new()
-    inventory.item_protoset = protoset
+    inventory.protoset = protoset
     inventory.size = size
     return inventory
 

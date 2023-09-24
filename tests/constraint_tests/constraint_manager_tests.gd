@@ -64,7 +64,7 @@ func test_has_space_for() -> void:
 
 
 func test_w_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -84,7 +84,7 @@ func test_w_has_space_for() -> void:
 
 
 func test_s_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -106,7 +106,7 @@ func test_s_has_space_for() -> void:
 
 
 func test_g_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
@@ -128,7 +128,7 @@ func test_g_has_space_for() -> void:
 
 
 func test_ws_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -158,7 +158,7 @@ func test_ws_has_space_for() -> void:
 
 
 func test_wg_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -184,7 +184,7 @@ func test_wg_has_space_for() -> void:
 
 
 func test_sg_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -213,7 +213,7 @@ func test_sg_has_space_for() -> void:
 
 
 func test_wsg_has_space_for() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
@@ -245,7 +245,7 @@ func test_wsg_has_space_for() -> void:
 
 
 func test_g_enforce_constraints() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
@@ -273,7 +273,7 @@ func test_g_enforce_constraints() -> void:
 
 
 func test_wg_enforce_constraints() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
@@ -306,7 +306,7 @@ func test_wg_enforce_constraints() -> void:
 
 
 func test_sg_enforce_constraints() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
 
     constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
@@ -352,7 +352,7 @@ func test_sg_enforce_constraints() -> void:
 
 
 func test_wsg_enforce_constraints() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
@@ -436,8 +436,8 @@ func test_wsg_enforce_constraints() -> void:
 
 
 func test_ws_transfer_autosplit() -> void:
-    inventory.item_protoset = TEST_PROTOSET_WS
-    inventory2.item_protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOSET_WS
+    inventory2.protoset = TEST_PROTOSET_WS
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()
@@ -494,8 +494,8 @@ func test_ws_transfer_autosplit() -> void:
 
 
 func test_sg_transfer_autosplit() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
-    inventory2.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
+    inventory2.protoset = TEST_PROTOSET_G
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     constraint_manager.enable_stacks_constraint()
@@ -568,8 +568,8 @@ func test_sg_transfer_autosplit() -> void:
 
     
 func test_wsg_transfer_autosplit() -> void:
-    inventory.item_protoset = TEST_PROTOSET_G
-    inventory2.item_protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOSET_G
+    inventory2.protoset = TEST_PROTOSET_G
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()

@@ -44,11 +44,11 @@ static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) ->
 
 
 func get_prototype_stack_size(prototype_id: String) -> int:
-    return _constraint_manager.get_stacks_constraint().get_prototype_stack_size(item_protoset, prototype_id)
+    return _constraint_manager.get_stacks_constraint().get_prototype_stack_size(protoset, prototype_id)
 
 
 func get_prototype_max_stack_size(prototype_id: String) -> int:
-    return _constraint_manager.get_stacks_constraint().get_prototype_max_stack_size(item_protoset, prototype_id)
+    return _constraint_manager.get_stacks_constraint().get_prototype_max_stack_size(protoset, prototype_id)
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:

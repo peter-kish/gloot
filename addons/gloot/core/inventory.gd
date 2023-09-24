@@ -11,13 +11,15 @@ signal protoset_changed
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
-@export var item_protoset: ItemProtoset:
-    set(new_item_protoset):
-        if new_item_protoset == item_protoset:
+@export var protoset: ItemProtoset:
+    get:
+        return protoset
+    set(new_protoset):
+        if new_protoset == protoset:
             return
         clear()
         _disconnect_protoset_signals()
-        item_protoset = new_item_protoset
+        protoset = new_protoset
         _connect_protoset_signals()
         protoset_changed.emit()
         update_configuration_warnings()
@@ -30,22 +32,22 @@ var _serialized_format: Dictionary:
         _serialized_format = new_serialized_format
 
 const KEY_NODE_NAME: String = "node_name"
-const KEY_ITEM_PROTOSET: String = "item_protoset"
+const KEY_PROTOSET: String = "protoset"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func _disconnect_protoset_signals() -> void:
-    if !is_instance_valid(item_protoset):
+    if !is_instance_valid(protoset):
         return
-    item_protoset.changed.disconnect(_on_protoset_changed)
+    protoset.changed.disconnect(_on_protoset_changed)
 
 
 func _connect_protoset_signals() -> void:
-    if !is_instance_valid(item_protoset):
+    if !is_instance_valid(protoset):
         return
-    item_protoset.changed.connect(_on_protoset_changed)
+    protoset.changed.connect(_on_protoset_changed)
 
 
 func _on_protoset_changed() -> void:
@@ -68,9 +70,9 @@ func _update_serialized_format() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if item_protoset == null:
+    if protoset == null:
         return PackedStringArray([
-                "This inventory node has no protoset. Set the 'item_protoset' field to be able to " \
+                "This inventory node has no protoset. Set the 'protoset' field to be able to " \
                 + "populate the inventory with items."])
     return PackedStringArray()
 
@@ -192,7 +194,7 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 func create_and_add_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
-    item.protoset = item_protoset
+    item.protoset = protoset
     item.prototype_id = prototype_id
     if add_item(item):
         return item
@@ -253,7 +255,7 @@ func transfer(item: InventoryItem, destination: Inventory) -> bool:
 
 func reset() -> void:
     clear()
-    item_protoset = null
+    protoset = null
     _constraint_manager.reset()
 
 
@@ -269,7 +271,7 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_ITEM_PROTOSET] = _serialize_item_protoset(item_protoset)
+    result[KEY_ITEM_PROTOSET] = _serialize_item_protoset(protoset)
     result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
@@ -279,28 +281,28 @@ func serialize() -> Dictionary:
     return result
 
 
-static func _serialize_item_protoset(item_protoset: ItemProtoset) -> String:
-    if !is_instance_valid(item_protoset):
+static func _serialize_item_protoset(protoset: ItemProtoset) -> String:
+    if !is_instance_valid(protoset):
         return ""
-    elif item_protoset.resource_path.is_empty():
-        return item_protoset.json_data
+    elif protoset.resource_path.is_empty():
+        return protoset.json_data
     else:
-        return item_protoset.resource_path
+        return protoset.resource_path
 
 
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
         !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
-    item_protoset = null
+    protoset = null
 
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    item_protoset = _deserialize_item_protoset(source[KEY_ITEM_PROTOSET])
+    protoset = _deserialize_item_protoset(source[KEY_ITEM_PROTOSET])
     # TODO: Check return value:
     if source.has(KEY_CONSTRAINTS):
         _constraint_manager.deserialize(source[KEY_CONSTRAINTS])

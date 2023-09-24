@@ -32,7 +32,7 @@ func init_test() -> void:
     item2.protoset = TEST_PROTOSET
     item2.prototype_id = TEST_PROTOTYPE_ID
     inventory = Inventory.new()
-    inventory.item_protoset = TEST_PROTOSET
+    inventory.protoset = TEST_PROTOSET
     inventory.add_item(item)
     inventory.add_item(item2)
     slot = ItemSlot.new()
