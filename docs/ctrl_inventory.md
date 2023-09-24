@@ -19,3 +19,7 @@ A UI control representing a basic `Inventory`. Displays a list of items in the i
 * `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item.
 * `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
 * `deselect_inventory_item() -> void` - Deselects the selected item.
+
+## Signals
+
+* `inventory_item_activated(InventoryItem)` - Emitted when an `InventoryItem` is activated (i.e. double clicked).

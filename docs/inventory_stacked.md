@@ -14,7 +14,7 @@ Inventory that has a limited item capacity in terms of weight.
 ## Methods
 
 * `static get_item_stack_size(item: InventoryItem) -> int` - Returns the stack size of the given item.
-* `static set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the stack size of the given item.
+* `static set_item_stack_size(item: InventoryItem, new_stack_size: int) -> bool` - Sets the stack size of the given item. If the stack size is set to 0 the item will be removed from its directory and queued for deletion. If `new_stack_size` is greater than the maximum stack size or negative, the stack size will remain unchanged and the function will return `false`.
 * `static get_item_max_stack_size(item: InventoryItem) -> int` - Returns the maximum stack size for the given item.
 * `static set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void` - Sets the maximum stack size for the given item.
 * `get_prototype_stack_size(prototype_id: String) -> int` - Returns the stack size of the given item prototype.

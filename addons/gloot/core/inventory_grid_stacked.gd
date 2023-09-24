@@ -30,8 +30,8 @@ static func get_item_stack_size(item: InventoryItem) -> int:
     return StacksConstraint.get_item_stack_size(item)
 
 
-static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> void:
-    StacksConstraint.set_item_stack_size(item, new_stack_size)
+static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> bool:
+    return StacksConstraint.set_item_stack_size(item, new_stack_size)
 
 
 static func get_item_max_stack_size(item: InventoryItem) -> int:

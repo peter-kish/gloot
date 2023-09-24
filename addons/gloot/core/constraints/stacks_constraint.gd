@@ -35,13 +35,24 @@ static func get_item_max_stack_size(item: InventoryItem) -> int:
     return item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
 
 
-static func set_item_stack_size(item: InventoryItem, stack_size: int) -> void:
+static func set_item_stack_size(item: InventoryItem, stack_size: int) -> bool:
     assert(item != null, "item is null!")
+    assert(stack_size >= 0, "stack_size can't be negative!")
+    if stack_size > get_item_max_stack_size(item):
+        return false
+    if stack_size == 0:
+        var inventory: Inventory = item.get_inventory()
+        if inventory != null:
+            inventory.remove_item(item)
+        item.queue_free()
+        return true
     item.set_property(KEY_STACK_SIZE, stack_size)
+    return true
 
 
 static func set_item_max_stack_size(item: InventoryItem, max_stack_size: int) -> void:
     assert(item != null, "item is null!")
+    assert(max_stack_size > 0, "max_stack_size can't be less than 1!")
     item.set_property(KEY_MAX_STACK_SIZE, max_stack_size)
 
 
@@ -115,20 +126,11 @@ func add_item_automerge(
 
     var target_items = get_mergable_items(item)
     for target_item in target_items:
-        if _merge_stacks_autodelete(target_item, item) == MergeResult.SUCCESS:
+        if _merge_stacks(target_item, item) == MergeResult.SUCCESS:
             return true
 
     assert(inventory.add_item(item))
     return true
-
-
-static func _merge_stacks_autodelete(item_dst: InventoryItem, item_src: InventoryItem) -> int:
-    var result := _merge_stacks(item_dst, item_src)
-    if result == MergeResult.SUCCESS:
-        if item_src.get_inventory():
-            item_src.get_inventory().remove_item(item_src)
-        item_src.queue_free()
-    return result
 
 
 static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
@@ -144,8 +146,8 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> i
     if free_dst_stack_space <= 0:
         return MergeResult.FAIL
 
-    set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
-    set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
+    assert(set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0)))
+    assert(set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size)))
 
     if free_dst_stack_space >= src_size:
         return MergeResult.SUCCESS
@@ -168,8 +170,8 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
     if new_item.get_parent():
         new_item.get_parent().remove_child(new_item)
 
-    set_item_stack_size(new_item, new_stack_size)
-    set_item_stack_size(item, stack_size - new_stack_size)
+    assert(set_item_stack_size(new_item, new_stack_size))
+    assert(set_item_stack_size(item, stack_size - new_stack_size))
     return new_item
 
 
@@ -192,7 +194,7 @@ func join_stacks(
         return false
 
     # TODO: Check if this can be an assertion
-    _merge_stacks_autodelete(item_dst, item_src)
+    _merge_stacks(item_dst, item_src)
     return true
 
 
@@ -239,7 +241,7 @@ func pack_item(item: InventoryItem) -> void:
 
     var mergable_items = get_mergable_items(item)
     for mergable_item in mergable_items:
-        var merge_result := _merge_stacks_autodelete(mergable_item, item)
+        var merge_result := _merge_stacks(mergable_item, item)
         if merge_result == MergeResult.SUCCESS:
             return
 
@@ -268,7 +270,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
 
 func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
     var single_item := item.duplicate()
-    set_item_stack_size(single_item, 1)
+    assert(set_item_stack_size(single_item, 1))
     var count := inventory._constraint_manager.get_space_for(single_item)
     single_item.free()
     return count
