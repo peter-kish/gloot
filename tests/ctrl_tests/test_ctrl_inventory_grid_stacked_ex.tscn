@@ -59,41 +59,29 @@ protoset = ExtResource("7_aav1h")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
+"item_positions": {
+"0": "Vector2i(0, 0)",
+"1": "Vector2i(0, 1)",
+"2": "Vector2i(0, 3)",
+"3": "Vector2i(0, 4)"
+},
 "size": "Vector2i(5, 5)"
 },
 "stacks_constraint": {}
 },
-"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 1)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 3)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 4)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }],
-"node_name": "InventoryGridStacked"
+"node_name": "InventoryGridStacked",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }

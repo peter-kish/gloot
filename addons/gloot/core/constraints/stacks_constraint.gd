@@ -93,7 +93,6 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
     var ignore_properies: Array[String] = [
         KEY_STACK_SIZE,
         KEY_MAX_STACK_SIZE,
-        GridConstraint.KEY_GRID_POSITION,
         WeightConstraint.KEY_WEIGHT
     ]
 

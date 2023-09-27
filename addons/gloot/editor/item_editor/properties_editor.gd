@@ -7,7 +7,7 @@ const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
 const COLOR_INVALID = Color.RED
-var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRID_POSITION]
+var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID]
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"

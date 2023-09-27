@@ -304,8 +304,6 @@ func deserialize(source: Dictionary) -> bool:
         name = source[KEY_NODE_NAME]
     protoset = _deserialize_item_protoset(source[KEY_ITEM_PROTOSET])
     # TODO: Check return value:
-    if source.has(KEY_CONSTRAINTS):
-        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
         for item_dict in items:
@@ -313,6 +311,8 @@ func deserialize(source: Dictionary) -> bool:
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
+    if source.has(KEY_CONSTRAINTS):
+        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 
     return true
 

@@ -13,11 +13,12 @@ const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
 const KEY_ROTATED: String = "rotated"
 const KEY_POSITIVE_ROTATION: String = "positive_rotation"
-const KEY_GRID_POSITION: String = "grid_position"
+const KEY_ITEM_POSITIONS: String = "item_positions"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 var _item_map := ItemMap.new(Vector2i.ZERO)
 var _swap_position := Vector2i.ZERO
+var _item_positions := {}
 
 @export var size: Vector2i = DEFAULT_SIZE :
     set(new_size):
@@ -110,17 +111,26 @@ func _bounds_broken() -> bool:
 
 
 func get_item_position(item: InventoryItem) -> Vector2i:
-    return item.get_property(KEY_GRID_POSITION, Vector2i.ZERO)
+    if !_item_positions.has(item):
+        return Vector2i.ZERO
+    return _item_positions[item]
 
 
-# TODO: Consider making a static "unsafe" version of this
 func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
     var new_rect := Rect2i(new_position, get_item_size(item))
     if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
-    item.set_property(KEY_GRID_POSITION, new_position)
+    set_item_position_unsafe(item, new_position)
     return true
+
+
+func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> void:
+    _item_positions[item] = new_position
+    if inventory:
+        inventory._update_serialized_format()
+    _refresh_item_map()
+    inventory.item_modified.emit(item)
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:
@@ -282,7 +292,7 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     var item_size := get_item_size(item)
     var rect := Rect2i(position, item_size)
     if rect_free(rect, item):
-        _move_item_to_unsafe(item, position)
+        set_item_position_unsafe(item, position)
         inventory.contents_changed.emit()
         return true
 
@@ -298,12 +308,6 @@ func move_item_to_free_spot(item: InventoryItem) -> bool:
         return false
 
     return move_item_to(item, free_place.position)
-
-
-func _move_item_to_unsafe(item: InventoryItem, position: Vector2i) -> void:
-    item.set_property(KEY_GRID_POSITION, position)
-    if item.get_property(KEY_GRID_POSITION) == Vector2i.ZERO:
-        item.clear_property(KEY_GRID_POSITION)
 
 
 func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
@@ -400,7 +404,7 @@ func sort() -> bool:
     item_array.sort_custom(_compare_items)
 
     for item in item_array:
-        _move_item_to_unsafe(item, -get_item_size(item))
+        set_item_position_unsafe(item, -get_item_size(item))
 
     for item in item_array:
         var free_place := find_free_place(item)
@@ -467,7 +471,17 @@ func serialize() -> Dictionary:
 
     # Store Vector2i as string to make JSON conversion easier later
     result[KEY_SIZE] = var_to_str(size)
+    result[KEY_ITEM_POSITIONS] = _serialize_item_positions()
 
+    return result
+
+
+func _serialize_item_positions() -> Dictionary:
+    var result = {}
+    for item in _item_positions.keys():
+        var str_item_index := var_to_str(inventory.get_item_index(item))
+        var str_item_position = var_to_str(_item_positions[item])
+        result[str_item_index] = str_item_position
     return result
 
 
@@ -479,6 +493,17 @@ func deserialize(source: Dictionary) -> bool:
 
     var s: Vector2i = str_to_var(source[KEY_SIZE])
     self.size = s
+    _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
 
     return true
+
+
+func _deserialize_item_positions(source: Dictionary) -> bool:
+    for str_item_index in source.keys():
+        var item_index: int = str_to_var(str_item_index)
+        var item := inventory.get_items()[item_index]
+        var item_position = str_to_var(source[str_item_index])
+        _item_positions[item] = item_position
+        set_item_position_unsafe(item, item_position)
+    return false
 
