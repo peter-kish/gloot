@@ -21,8 +21,8 @@ var occupied_space: float :
 
 func _init() -> void:
     super._init()
-    _constraint_manager.enable_weight_constraint_()
-    _constraint_manager.enable_stacks_constraint_()
+    _constraint_manager.enable_weight_constraint()
+    _constraint_manager.enable_stacks_constraint()
     _constraint_manager.get_weight_constraint().capacity_changed.connect(Callable(self, "_on_capacity_changed"))
     _constraint_manager.get_weight_constraint().occupied_space_changed.connect(Callable(self, "_on_occupied_space_changed"))
 

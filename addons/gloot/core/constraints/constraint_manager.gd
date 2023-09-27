@@ -142,13 +142,13 @@ func has_space_for(item: InventoryItem) -> bool:
     return not get_space_for(item).less(ItemCount.new(1))
 
 
-func enable_weight_constraint_(capacity: float = 0.0) -> void:
+func enable_weight_constraint(capacity: float = 0.0) -> void:
     assert(_weight_constraint == null, "Weight constraint is already enabled")
     _weight_constraint = WeightConstraint.new(inventory)
     _weight_constraint.capacity = capacity
 
 
-func enable_stacks_constraint_() -> void:
+func enable_stacks_constraint() -> void:
     assert(_stacks_constraint == null, "Stacks constraint is already enabled")
     _stacks_constraint = StacksConstraint.new(inventory)
 

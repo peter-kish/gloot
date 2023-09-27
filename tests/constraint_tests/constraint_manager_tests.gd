@@ -68,7 +68,7 @@ func test_w_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    constraint_manager.enable_weight_constraint_(10.0)
+    constraint_manager.enable_weight_constraint(10.0)
     assert(constraint_manager.get_weight_constraint() != null)
 
     var test_data := [
@@ -88,7 +88,7 @@ func test_s_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_stacks_constraint()
     assert(constraint_manager.get_stacks_constraint() != null)
 
     var test_data := [
@@ -132,8 +132,8 @@ func test_ws_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    constraint_manager.enable_weight_constraint_(10.0)
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_weight_constraint(10.0)
+    constraint_manager.enable_stacks_constraint()
     var weight_constraint = constraint_manager.get_weight_constraint()
     var stacks_constraint = constraint_manager.get_stacks_constraint()
     assert(weight_constraint != null)
@@ -163,7 +163,7 @@ func test_wg_has_space_for() -> void:
     item.prototype_id = TEST_PROTOTYPE_WS
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    constraint_manager.enable_weight_constraint_(10.0)
+    constraint_manager.enable_weight_constraint(10.0)
     var grid_constraint = constraint_manager.get_grid_constraint()
     var weight_constraint = constraint_manager.get_weight_constraint()
     assert(grid_constraint != null)
@@ -188,7 +188,7 @@ func test_sg_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var stacks_constraint = constraint_manager.get_stacks_constraint()
     var grid_constraint = constraint_manager.get_grid_constraint()
@@ -217,8 +217,8 @@ func test_wsg_has_space_for() -> void:
     item.protoset = TEST_PROTOSET_WS
     item.prototype_id = TEST_PROTOTYPE_WS
 
-    constraint_manager.enable_weight_constraint_(10.0)
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_weight_constraint(10.0)
+    constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var weight_constraint = constraint_manager.get_weight_constraint()
     var stacks_constraint = constraint_manager.get_stacks_constraint()
@@ -277,7 +277,7 @@ func test_wg_enforce_constraints() -> void:
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
-    constraint_manager.enable_weight_constraint_(10.0)
+    constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var weight_constraint = constraint_manager.get_weight_constraint()
     var grid_constraint = constraint_manager.get_grid_constraint()
@@ -308,7 +308,7 @@ func test_wg_enforce_constraints() -> void:
 func test_sg_enforce_constraints() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
 
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var stacks_constraint := constraint_manager.get_stacks_constraint()
     var grid_constraint := constraint_manager.get_grid_constraint()
@@ -355,8 +355,8 @@ func test_wsg_enforce_constraints() -> void:
     item.protoset = TEST_PROTOSET_G
     item.prototype_id = TEST_PROTOTYPE_G
 
-    constraint_manager.enable_stacks_constraint_()
-    constraint_manager.enable_weight_constraint_(10.0)
+    constraint_manager.enable_stacks_constraint()
+    constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var stacks_constraint = constraint_manager.get_stacks_constraint()
     var weight_constraint = constraint_manager.get_weight_constraint()
@@ -437,15 +437,15 @@ func test_ws_transfer_autosplit() -> void:
     inventory.item_protoset = TEST_PROTOSET_WS
     inventory2.item_protoset = TEST_PROTOSET_WS
 
-    constraint_manager.enable_weight_constraint_(10.0)
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_weight_constraint(10.0)
+    constraint_manager.enable_stacks_constraint()
     var weight_constraint = constraint_manager.get_weight_constraint()
     var stacks_constraint = constraint_manager.get_stacks_constraint()
     assert(weight_constraint != null)
     assert(stacks_constraint != null)
 
-    inventory2._constraint_manager.enable_weight_constraint_(3.0)
-    inventory2._constraint_manager.enable_stacks_constraint_()
+    inventory2._constraint_manager.enable_weight_constraint(3.0)
+    inventory2._constraint_manager.enable_stacks_constraint()
     assert(inventory2._constraint_manager.get_weight_constraint() != null)
     assert(inventory2._constraint_manager.get_stacks_constraint() != null)
 
@@ -497,14 +497,14 @@ func test_sg_transfer_autosplit() -> void:
     inventory2.item_protoset = TEST_PROTOSET_G
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_stacks_constraint()
     var grid_constraint = constraint_manager.get_grid_constraint()
     var stacks_constraint = constraint_manager.get_stacks_constraint()
     assert(grid_constraint != null)
     assert(stacks_constraint != null)
 
     inventory2._constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    inventory2._constraint_manager.enable_stacks_constraint_()
+    inventory2._constraint_manager.enable_stacks_constraint()
     assert(inventory2._constraint_manager.get_grid_constraint() != null)
     assert(inventory2._constraint_manager.get_stacks_constraint() != null)
 
@@ -569,8 +569,8 @@ func test_wsg_transfer_autosplit() -> void:
     inventory.item_protoset = TEST_PROTOSET_G
     inventory2.item_protoset = TEST_PROTOSET_G
 
-    constraint_manager.enable_weight_constraint_(10.0)
-    constraint_manager.enable_stacks_constraint_()
+    constraint_manager.enable_weight_constraint(10.0)
+    constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var weight_constraint = constraint_manager.get_weight_constraint()
     var stacks_constraint = constraint_manager.get_stacks_constraint()
@@ -579,8 +579,8 @@ func test_wsg_transfer_autosplit() -> void:
     assert(grid_constraint != null)
     assert(stacks_constraint != null)
 
-    inventory2._constraint_manager.enable_weight_constraint_(10.0)
-    inventory2._constraint_manager.enable_stacks_constraint_()
+    inventory2._constraint_manager.enable_weight_constraint(10.0)
+    inventory2._constraint_manager.enable_stacks_constraint()
     inventory2._constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     assert(inventory2._constraint_manager.get_weight_constraint() != null)
     assert(inventory2._constraint_manager.get_stacks_constraint() != null)
