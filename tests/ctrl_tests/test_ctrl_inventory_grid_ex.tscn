@@ -59,22 +59,20 @@ protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
+"item_positions": {
+"0": "Vector2i(0, 0)",
+"1": "Vector2i(0, 2)"
+},
 "size": "Vector2i(5, 5)"
 }
 },
-"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 2)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }],
-"node_name": "InventoryGrid"
+"node_name": "InventoryGrid",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }

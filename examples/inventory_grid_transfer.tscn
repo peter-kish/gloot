@@ -101,24 +101,22 @@ protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
+"item_positions": {
+"0": "Vector2i(0, 0)",
+"1": "Vector2i(0, 1)"
+},
 "size": "Vector2i(5, 5)"
 }
 },
-"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 1)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }],
-"node_name": "InventoryGridLeft"
+"node_name": "InventoryGridLeft",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }
 
 [node name="InventoryGridRight" type="Node" parent="."]
@@ -128,24 +126,22 @@ protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
+"item_positions": {
+"0": "Vector2i(0, 0)",
+"1": "Vector2i(0, 1)"
+},
 "size": "Vector2i(5, 5)"
 }
 },
-"protoset": "res://tests/data/item_definitions_grid.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_1x1"
 }, {
-"properties": {
-"grid_position": {
-"type": 6,
-"value": "Vector2i(0, 1)"
-}
-},
 "protoset": "res://tests/data/item_definitions_grid.tres",
 "prototype_id": "item_2x2"
 }],
-"node_name": "InventoryGridRight"
+"node_name": "InventoryGridRight",
+"protoset": "res://tests/data/item_definitions_grid.tres"
 }
 
 [node name="LblInfo" type="Label" parent="."]
