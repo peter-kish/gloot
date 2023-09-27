@@ -7,9 +7,6 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const ItemMap = preload("res://addons/gloot/core/constraints/item_map.gd")
 
-# TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
-const KEY_WIDTH: String = "width"
-const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
 const KEY_ROTATED: String = "rotated"
 const KEY_POSITIVE_ROTATION: String = "positive_rotation"
@@ -161,8 +158,7 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
-    item.set_property(KEY_WIDTH, new_size.x)
-    item.set_property(KEY_HEIGHT, new_size.y)
+    item.set_property(KEY_SIZE, new_size)
     return true
 
 
@@ -218,9 +214,8 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
 func _get_prototype_size(prototype_id: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
     assert(inventory.protoset != null, "Inventory protoset is null!")
-    var width: int = inventory.protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
-    var height: int = inventory.protoset.get_item_property(prototype_id, KEY_HEIGHT, 1)
-    return Vector2i(width, height)
+    var size: Vector2i = inventory.protoset.get_item_property(prototype_id, KEY_SIZE, Vector2i.ONE)
+    return size
 
 
 func _is_sorted() -> bool:
