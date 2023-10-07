@@ -23,11 +23,8 @@ signal removed_from_slot(item_slot)
         if new_protoset && new_protoset._prototypes && new_protoset._prototypes.keys().size() > 0:
             self.prototype_id = new_protoset._prototypes.keys()[0]
 
-        new_protoset.changed.connect(func(): update_configuration_warnings())
-
         protoset = new_protoset
         protoset_changed.emit()
-        # update_configuration_warnings()
 
 @export var prototype_id: String :
     get:
@@ -37,7 +34,6 @@ signal removed_from_slot(item_slot)
             return
         reset_properties()
         prototype_id = new_prototype_id
-        # update_configuration_warnings()
         prototype_id_changed.emit()
 
 @export var properties: Dictionary :
@@ -46,7 +42,6 @@ signal removed_from_slot(item_slot)
     set(new_properties):
         properties = new_properties
         properties_changed.emit()
-        # update_configuration_warnings()
 
 var _inventory: Inventory
 var _item_slot: ItemSlot
