@@ -30,7 +30,6 @@ signal removed_from_slot(item_slot)
             prototype_id = ""
 
         protoset_changed.emit()
-        # update_configuration_warnings()
 
 @export var prototype_id: String :
     set(new_prototype_id):
@@ -41,15 +40,12 @@ signal removed_from_slot(item_slot)
         if (protoset != null) && (!protoset.has_prototype(new_prototype_id)):
             return
         prototype_id = new_prototype_id
-        _reset_properties()
-        # update_configuration_warnings()
         prototype_id_changed.emit()
 
 @export var properties: Dictionary :
     set(new_properties):
         properties = new_properties
         properties_changed.emit()
-        # update_configuration_warnings()
 
 var _inventory: Inventory :
     set(new_inventory):
