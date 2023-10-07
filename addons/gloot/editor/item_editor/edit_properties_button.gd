@@ -18,7 +18,7 @@ func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Edit Properties"
-    _btn_prototype_id.pressed.connect(Callable(self, "_on_btn_edit"))
+    _btn_prototype_id.pressed.connect(_on_btn_edit)
     add_child(_btn_prototype_id)
 
 
@@ -29,11 +29,11 @@ func _ready() -> void:
     if !item:
         return
     _properties_editor.item = item
-    item.properties_changed.connect(Callable(self, "update_property"))
+    item.properties_changed.connect(update_property)
 
     if !item.protoset:
         return
-    item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
+    item.protoset.changed.connect(_on_protoset_changed)
 
     _refresh_button()
 

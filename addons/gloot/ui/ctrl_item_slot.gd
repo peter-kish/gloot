@@ -68,24 +68,24 @@ func _connect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if !item_slot.item_set.is_connected(Callable(self, "_on_item_set")):
-        item_slot.item_set.connect(Callable(self, "_on_item_set"))
-    if !item_slot.item_cleared.is_connected(Callable(self, "_refresh")):
-        item_slot.item_cleared.connect(Callable(self, "_refresh"))
-    if !item_slot.inventory_changed.is_connected(Callable(self, "_on_inventory_changed")):
-        item_slot.inventory_changed.connect(Callable(self, "_on_inventory_changed"))
+    if !item_slot.item_set.is_connected(_on_item_set):
+        item_slot.item_set.connect(_on_item_set)
+    if !item_slot.item_cleared.is_connected(_refresh):
+        item_slot.item_cleared.connect(_refresh)
+    if !item_slot.inventory_changed.is_connected(_on_inventory_changed):
+        item_slot.inventory_changed.connect(_on_inventory_changed)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if item_slot.item_set.is_connected(Callable(self, "_on_item_set")):
-        item_slot.item_set.disconnect(Callable(self, "_on_item_set"))
-    if item_slot.item_cleared.is_connected(Callable(self, "_refresh")):
-        item_slot.item_cleared.disconnect(Callable(self, "_refresh"))
-    if item_slot.inventory_changed.is_connected(Callable(self, "_on_inventory_changed")):
-        item_slot.inventory_changed.disconnect(Callable(self, "_on_inventory_changed"))
+    if item_slot.item_set.is_connected(_on_item_set):
+        item_slot.item_set.disconnect(_on_item_set)
+    if item_slot.item_cleared.is_connected(_refresh):
+        item_slot.item_cleared.disconnect(_refresh)
+    if item_slot.inventory_changed.is_connected(_on_inventory_changed):
+        item_slot.inventory_changed.disconnect(_on_inventory_changed)
 
 
 func _on_item_set(_item: InventoryItem) -> void:
@@ -124,7 +124,7 @@ func _ready():
 
     _refresh()
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.connect(Callable(self, "_on_item_dropped"))
+        _gloot.item_dropped.connect(_on_item_dropped)
 
 
 func _get_gloot() -> Node:

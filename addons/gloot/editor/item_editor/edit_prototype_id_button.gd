@@ -17,16 +17,16 @@ func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Prototype ID"
-    _btn_prototype_id.pressed.connect(Callable(self, "_on_btn_prototype_id"))
+    _btn_prototype_id.pressed.connect(_on_btn_prototype_id)
     add_child(_btn_prototype_id)
 
 
 func _ready() -> void:
     var item: InventoryItem = get_edited_object()
     _prototype_id_editor.item = item
-    item.prototype_id_changed.connect(Callable(self, "_on_prototype_id_changed"))
+    item.prototype_id_changed.connect(_refresh_button)
     if item.protoset:
-        item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
+        item.protoset.changed.connect(_refresh_button)
     _refresh_button()
 
 
@@ -48,14 +48,6 @@ func _get_popup_at_mouse_position(size: Vector2i) -> Vector2i:
     popup_pos.y = clamp(local_mouse_pos.y, 0, screen_size.y - size.y)
 
     return popup_pos
-
-
-func _on_prototype_id_changed() -> void:
-    _refresh_button()
-
-
-func _on_protoset_changed() -> void:
-    _refresh_button()
 
 
 func update_property() -> void:

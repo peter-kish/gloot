@@ -18,7 +18,7 @@ var item: InventoryItem = null :
         assert(item == null, "Item already set!")
         item = new_item
         if item.protoset:
-            item.protoset.changed.connect(Callable(self, "_refresh"))
+            item.protoset.changed.connect(_refresh)
         _refresh()
 
 

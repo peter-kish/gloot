@@ -23,16 +23,8 @@ func _init() -> void:
     super._init()
     _constraint_manager.enable_weight_constraint()
     _constraint_manager.enable_stacks_constraint()
-    _constraint_manager.get_weight_constraint().capacity_changed.connect(Callable(self, "_on_capacity_changed"))
-    _constraint_manager.get_weight_constraint().occupied_space_changed.connect(Callable(self, "_on_occupied_space_changed"))
-
-
-func _on_capacity_changed() -> void:
-    capacity_changed.emit()
-
-
-func _on_occupied_space_changed() -> void:
-    occupied_space_changed.emit()
+    _constraint_manager.get_weight_constraint().capacity_changed.connect(func(): capacity_changed.emit())
+    _constraint_manager.get_weight_constraint().occupied_space_changed.connect(func(): occupied_space_changed.emit())
 
 
 func has_unlimited_capacity() -> bool:

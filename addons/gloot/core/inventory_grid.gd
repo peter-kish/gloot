@@ -16,11 +16,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 func _init() -> void:
     super._init()
     _constraint_manager.enable_grid_constraint()
-    _constraint_manager.get_grid_constraint().size_changed.connect(Callable(self, "_on_size_changed"))
-
-
-func _on_size_changed() -> void:
-    size_changed.emit()
+    _constraint_manager.get_grid_constraint().size_changed.connect(func(): size_changed.emit())
 
 
 func get_item_position(item: InventoryItem) -> Vector2i:

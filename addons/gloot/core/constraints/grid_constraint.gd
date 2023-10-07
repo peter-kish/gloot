@@ -315,7 +315,7 @@ func sort() -> bool:
     var item_array: Array[InventoryItem]
     for item in inventory.get_items():
         item_array.append(item)
-    item_array.sort_custom(Callable(self, "_compare_items"))
+    item_array.sort_custom(_compare_items)
 
     for item in item_array:
         _move_item_to_unsafe(item, -get_item_size(item))

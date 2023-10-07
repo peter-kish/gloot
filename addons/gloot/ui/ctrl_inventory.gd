@@ -65,7 +65,7 @@ func _ready():
     _item_list = ItemList.new()
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
-    _item_list.item_activated.connect(Callable(self, "_on_list_item_activated"))
+    _item_list.item_activated.connect(_on_list_item_activated)
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
@@ -78,20 +78,20 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.contents_changed.is_connected(Callable(self, "_refresh")):
-        inventory.contents_changed.connect(Callable(self, "_refresh"))
-    if !inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
-        inventory.item_modified.connect(Callable(self, "_on_item_modified"))
+    if !inventory.contents_changed.is_connected(_refresh):
+        inventory.contents_changed.connect(_refresh)
+    if !inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.connect(_on_item_modified)
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.contents_changed.is_connected(Callable(self, "_refresh")):
-        inventory.contents_changed.disconnect(Callable(self, "_refresh"))
-    if inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
-        inventory.item_modified.disconnect(Callable(self, "_on_item_modified"))
+    if inventory.contents_changed.is_connected(_refresh):
+        inventory.contents_changed.disconnect(_refresh)
+    if inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.disconnect(_on_item_modified)
 
 
 func _on_list_item_activated(index: int) -> void:
