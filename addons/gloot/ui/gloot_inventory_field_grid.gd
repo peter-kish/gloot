@@ -46,13 +46,17 @@ var inventory: Inventory = null :
         if inventory == new_inventory:
             return
         inventory = new_inventory
-        _refresh()
+        if inventory == null:
+            return
+        if inventory.is_node_ready():
+            _refresh()
+        else:
+            inventory.ready.connect(_refresh)
 
 
 func _ready() -> void:
     if !inventory_path.is_empty():
         inventory = get_node_or_null(inventory_path)
-    _refresh()
 
 
 func _refresh() -> void:
@@ -107,4 +111,11 @@ func _update_field_size(new_field_size: Vector2) -> void:
 
     for child in get_children():
         (child as GlootInventoryField).custom_minimum_size = new_field_size
+
+
+func get_field_position(field_coords: Vector2i) -> Vector2:
+    var field_index := field_coords.y * columns + field_coords.x
+    field_index = min(field_index, get_child_count() - 1)
+    var field = get_children()[field_index]
+    return field.position
 
