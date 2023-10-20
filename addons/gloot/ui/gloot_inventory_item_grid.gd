@@ -23,13 +23,17 @@ var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
             return
-        inventory = new_inventory
-        if inventory == null:
+
+        if new_inventory == null:
+            _disconnect_inventory_signals()
+            inventory = null
+            _clear()
             return
+
+        inventory = new_inventory
         if inventory.is_node_ready():
             _refresh()
-        else:
-            inventory.ready.connect(_refresh)
+        _connect_inventory_signals()
 
 var field_grid: GlootInventoryFieldGrid = null :
     get:
@@ -37,11 +41,36 @@ var field_grid: GlootInventoryFieldGrid = null :
     set(new_field_grid):
         if field_grid == new_field_grid:
             return
-        field_grid = new_field_grid
-        if field_grid == null:
+
+        if new_field_grid == null:
+            field_grid.sort_children.disconnect(_update_item_rects)
+            field_grid = null
+            _clear()
             return
-        field_grid.sort_children.connect(_update_item_positions)
+
+        field_grid = new_field_grid
+        field_grid.sort_children.connect(_update_item_rects)
         _refresh()
+
+
+func _connect_inventory_signals() -> void:
+    if !inventory.is_node_ready():
+        inventory.ready.connect(_refresh)
+    inventory.contents_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
+    inventory.item_modified.connect(_on_item_modified)
+
+
+func _disconnect_inventory_signals() -> void:
+    if inventory.ready.is_connected(_refresh):
+        inventory.ready.disconnect(_refresh)
+    inventory.contents_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
+    inventory.item_modified.disconnect(_on_item_modified)
+
+
+func _on_item_modified(item_: InventoryItem) -> void:
+    _refresh()
 
 
 func _ready() -> void:
@@ -62,6 +91,7 @@ func _clear() -> void:
     for child in get_children():
         remove_child(child)
         child.queue_free()
+    custom_minimum_size = Vector2.ZERO
 
 
 func _populate() -> void:
@@ -83,7 +113,7 @@ func _populate() -> void:
     custom_minimum_size = field_grid.size
 
 
-func _update_item_positions() -> void:
+func _update_item_rects() -> void:
     if inventory == null || !inventory.is_node_ready() || field_grid == null:
         return
 

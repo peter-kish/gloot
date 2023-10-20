@@ -27,7 +27,8 @@ var inventory: Inventory = null :
         return field_size
     set(new_field_size):
         field_size = new_field_size
-        _refresh()
+        if _inventory_field_grid:
+            _inventory_field_grid.field_size = field_size
 
 @export var item_spacing: int = 0 :
     get:
@@ -43,21 +44,24 @@ var inventory: Inventory = null :
         return field_style
     set(new_field_style):
         field_style = new_field_style
-        _refresh()
+        if _inventory_field_grid:
+            _inventory_field_grid.style = field_style
 
 @export var field_hover_style: StyleBox :
     get:
         return field_hover_style
     set(new_field_hover_style):
         field_hover_style = new_field_hover_style
-        _refresh()
+        if _inventory_field_grid:
+            _inventory_field_grid.hover_style = field_hover_style
 
 @export var field_selected_style: StyleBox :
     get:
         return field_selected_style
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
-        _refresh()
+        if _inventory_field_grid:
+            _inventory_field_grid.selected_style = field_selected_style
 
 @export var selection_style: StyleBox :
     get:
@@ -85,9 +89,13 @@ func _clear() -> void:
     if _inventory_field_grid:
         remove_child(_inventory_field_grid)
         _inventory_field_grid.queue_free()
+        _inventory_field_grid = null
     if _inventory_item_grid:
         remove_child(_inventory_item_grid)
         _inventory_item_grid.queue_free()
+        _inventory_item_grid = null
+    custom_minimum_size = Vector2.ZERO
+    size = Vector2.ZERO
 
 
 func _populate() -> void:
