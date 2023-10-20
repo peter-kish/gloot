@@ -45,13 +45,31 @@ var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
             return
-        inventory = new_inventory
-        if inventory == null:
+
+        if new_inventory == null:
+            _disconnect_inventory_signals()
+            inventory = null
+            _clear()
             return
+
+        inventory = new_inventory
         if inventory.is_node_ready():
             _refresh()
-        else:
-            inventory.ready.connect(_refresh)
+        _connect_inventory_signals()
+
+
+func _connect_inventory_signals() -> void:
+    if !inventory.is_node_ready():
+        inventory.ready.connect(_refresh)
+    inventory.contents_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
+
+
+func _disconnect_inventory_signals() -> void:
+    if inventory.ready.is_connected(_refresh):
+        inventory.ready.disconnect(_refresh)
+    inventory.contents_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
 
 
 func _ready() -> void:
@@ -114,6 +132,8 @@ func _update_field_size(new_field_size: Vector2) -> void:
 
 
 func get_field_position(field_coords: Vector2i) -> Vector2:
+    if get_child_count() == 0:
+        return Vector2.ZERO
     var field_index := field_coords.y * columns + field_coords.x
     field_index = min(field_index, get_child_count() - 1)
     var field = get_children()[field_index]
