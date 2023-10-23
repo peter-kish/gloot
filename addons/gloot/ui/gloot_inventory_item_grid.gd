@@ -104,11 +104,12 @@ func _populate() -> void:
 
     for item in inventory.get_items():
         var item_rect = _get_item_ui_rect(item)
-        var color_rect := ColorRect.new()
-        color_rect.position = item_rect.position
-        color_rect.size = item_rect.size
-        color_rect.modulate = Color(1.0, 1.0, 1.0, 0.25)
-        add_child(color_rect)
+        var texture_rect := TextureRect.new()
+        texture_rect.position = item_rect.position
+        texture_rect.size = item_rect.size
+        texture_rect.texture = item.get_texture()
+
+        add_child(texture_rect)
 
     custom_minimum_size = field_grid.size
 
@@ -121,9 +122,9 @@ func _update_item_rects() -> void:
     for item_index in range(inventory.get_items().size()):
         var item = inventory.get_items()[item_index]
         var item_rect = _get_item_ui_rect(item)
-        var color_rect = get_child(item_index)
-        color_rect.position = item_rect.position
-        color_rect.size = item_rect.size
+        var texture_rect = get_child(item_index)
+        texture_rect.position = item_rect.position
+        texture_rect.size = item_rect.size
 
     custom_minimum_size = field_grid.size
 
