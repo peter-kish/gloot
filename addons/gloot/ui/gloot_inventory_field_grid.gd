@@ -104,7 +104,32 @@ func _populate() -> void:
         field.hover_style = hover_style
         field.selected_style = selected_style
         field.custom_minimum_size = field_size
+        field.item_dropped.connect(_on_item_dropped.bind(i))
         add_child(field)
+
+
+func _on_item_dropped(item: InventoryItem, index: int) -> void:
+    if inventory == null:
+        return
+        
+    var dst_grid_constraint := inventory._constraint_manager.get_grid_constraint()
+    if dst_grid_constraint == null:
+        return
+
+    var src_inventory = item.get_inventory()
+    if src_inventory == null:
+        return
+
+    var field_coords := Vector2i(index % dst_grid_constraint.size.x, index / dst_grid_constraint.size.x)
+    if src_inventory == inventory:
+        dst_grid_constraint.move_item_to(item, field_coords)
+    else:
+        if src_inventory == null:
+            return
+        var src_grid_constraint = src_inventory._constraint_manager.get_grid_constraint()
+        if src_grid_constraint == null:
+            return
+        src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
 
 
 func _update_style(new_style: StyleBox) -> void:

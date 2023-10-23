@@ -1,6 +1,8 @@
 @tool
 extends Panel
 
+signal item_dropped(item)
+
 @export var style: StyleBox :
     get:
         return style
@@ -53,3 +55,11 @@ func _on_mouse_entered() -> void:
 func _on_mouse_exited() -> void:
     if !selected:
         _set_active_style(style)
+
+
+func _can_drop_data(at_position, data) -> bool:
+    return true
+
+
+func _drop_data(at_position, data):
+    item_dropped.emit(data.item)

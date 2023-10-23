@@ -2,6 +2,7 @@
 extends Control
 
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
+const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_item_rect.gd")
 
 @export var inventory_path: NodePath :
     get:
@@ -104,10 +105,11 @@ func _populate() -> void:
 
     for item in inventory.get_items():
         var item_rect = _get_item_ui_rect(item)
-        var texture_rect := TextureRect.new()
+        var texture_rect := GlootInventoryItemRect.new()
         texture_rect.position = item_rect.position
         texture_rect.size = item_rect.size
         texture_rect.texture = item.get_texture()
+        texture_rect.item = item
 
         add_child(texture_rect)
 
