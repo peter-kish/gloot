@@ -1,11 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://1fg6qguy66yl"]
+[gd_scene load_steps=16 format=3 uid="uid://1fg6qguy66yl"]
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="1_x3bmh"]
+[ext_resource type="Script" path="res://gloot_inventory_grid_test.gd" id="1_xbnfo"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_field.gd" id="3_bxfgd"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_item_grid.gd" id="3_hyefx"]
 [ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="3_i1xkj"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_grid.gd" id="4_awb3l"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_field_grid.gd" id="4_jp37q"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="7_fegla"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r7srh"]
 bg_color = Color(0.219608, 0.219608, 0.219608, 1)
@@ -55,6 +57,14 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_op85y"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 1, 0, 1)
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -62,13 +72,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_xbnfo")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+columns = 2
 
-[node name="GlootInventoryField" type="Panel" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+
+[node name="GlootInventoryField" type="Panel" parent="GridContainer/VBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -79,33 +94,52 @@ style = SubResource("StyleBoxFlat_r7srh")
 hover_style = SubResource("StyleBoxFlat_j1dma")
 selected_style = SubResource("StyleBoxFlat_mht41")
 
-[node name="GlootInventoryFieldGrid" type="GridContainer" parent="VBoxContainer"]
+[node name="GlootInventoryFieldGrid" type="GridContainer" parent="GridContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 columns = 5
 script = ExtResource("4_jp37q")
-inventory_path = NodePath("../../InventoryGrid")
+inventory_path = NodePath("../../../InventoryGrid")
 style = SubResource("StyleBoxFlat_r7srh")
 hover_style = SubResource("StyleBoxFlat_j1dma")
 selected_style = SubResource("StyleBoxFlat_mht41")
 
-[node name="GlootInventoryItemGrid" type="Control" parent="VBoxContainer"]
+[node name="GlootInventoryItemGrid" type="Control" parent="GridContainer/VBoxContainer"]
 custom_minimum_size = Vector2(176, 176)
 layout_mode = 2
+mouse_filter = 2
 script = ExtResource("3_hyefx")
-inventory_path = NodePath("../../InventoryGrid")
+inventory_path = NodePath("../../../InventoryGrid")
 field_grid_path = NodePath("../GlootInventoryFieldGrid")
 
-[node name="GlootInventoryGrid" type="Control" parent="VBoxContainer"]
+[node name="GlootInventoryGrid" type="Control" parent="GridContainer/VBoxContainer"]
 custom_minimum_size = Vector2(176, 176)
 layout_mode = 2
 script = ExtResource("4_awb3l")
-inventory_path = NodePath("../../InventoryGrid")
+inventory_path = NodePath("../../../InventoryGrid")
 item_spacing = 4
 field_style = SubResource("StyleBoxFlat_kmiyu")
 field_hover_style = SubResource("StyleBoxFlat_gfx0j")
 field_selected_style = SubResource("StyleBoxFlat_4kgin")
+selection_style = SubResource("StyleBoxFlat_op85y")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="GridContainer"]
+layout_mode = 2
+
+[node name="GlootInventoryGrid2" type="Control" parent="GridContainer/VBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 176)
+layout_mode = 2
+script = ExtResource("4_awb3l")
+inventory_path = NodePath("../../../InventoryGridStacked")
+item_spacing = 4
+selection_style = SubResource("StyleBoxFlat_op85y")
+
+[node name="Button" type="Button" parent="GridContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Split"
 
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource("1_x3bmh")
@@ -128,5 +162,40 @@ _serialized_format = {
 "prototype_id": "item_2x2"
 }],
 "node_name": "InventoryGrid",
+"protoset": "res://tests/data/item_definitions_grid.tres"
+}
+
+[node name="InventoryGridStacked" type="Node" parent="."]
+script = ExtResource("7_fegla")
+size = Vector2i(5, 5)
+protoset = ExtResource("3_i1xkj")
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"item_positions": {
+"1": "Vector2i(0, 1)",
+"2": "Vector2i(0, 3)"
+},
+"size": "Vector2i(5, 5)"
+},
+"stacks_constraint": {}
+},
+"items": [{
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_1x1"
+}, {
+"properties": {
+"stack_size": {
+"type": 2,
+"value": "3"
+}
+},
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_2x2"
+}, {
+"protoset": "res://tests/data/item_definitions_grid.tres",
+"prototype_id": "item_2x2"
+}],
+"node_name": "InventoryGridStacked",
 "protoset": "res://tests/data/item_definitions_grid.tres"
 }

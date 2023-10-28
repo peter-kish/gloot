@@ -127,6 +127,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
     _item_positions[item] = new_position
     if inventory:
         inventory._update_serialized_format()
+    # Is this necessary (see _on_item_modified())
     _refresh_item_map()
     inventory.item_modified.emit(item)
 

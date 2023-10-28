@@ -53,6 +53,16 @@ var field_grid: GlootInventoryFieldGrid = null :
         field_grid.sort_children.connect(_update_item_rects)
         _refresh()
 
+
+@export var selection_style: StyleBox :
+    get:
+        return selection_style
+    set(new_selection_style):
+        selection_style = new_selection_style
+        for gloot_inventory_item_rect in get_children():
+            gloot_inventory_item_rect.selection_style = selection_style
+
+
 var _selected_item_rect: GlootInventoryItemRect = null
 
 
@@ -111,6 +121,7 @@ func _populate() -> void:
         gloot_inventory_item_rect.position = item_rect.position
         gloot_inventory_item_rect.size = item_rect.size
         gloot_inventory_item_rect.texture = item.get_texture()
+        gloot_inventory_item_rect.selection_style = selection_style
         gloot_inventory_item_rect.item = item
         gloot_inventory_item_rect.selected_status_changed.connect(_on_selected_status_changed.bind(gloot_inventory_item_rect))
 
