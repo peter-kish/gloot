@@ -15,14 +15,15 @@ signal selected_status_changed
 var item: InventoryItem = null
 var _label_stack_size: Label = null
 var _panel_selection: Panel = null
-var selected: bool :
+var selected: bool = false :
     get:
         return selected
     set(new_selected):
         if selected == new_selected:
             return
         selected = new_selected
-        _panel_selection.visible = selected
+        if _panel_selection != null:
+            _panel_selection.visible = selected
         selected_status_changed.emit()
 
 
@@ -30,7 +31,7 @@ func _ready() -> void:
     _panel_selection = Panel.new()
     _panel_selection.size = size
     _panel_selection.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    _panel_selection.hide()
+    _panel_selection.visible = selected
     add_child(_panel_selection)
     _set_selection_style(selection_style)
     item_rect_changed.connect(func():
@@ -39,7 +40,7 @@ func _ready() -> void:
 
     _label_stack_size = Label.new()
     add_child(_label_stack_size)
-    
+
     _update_stack_size_label()
 
 

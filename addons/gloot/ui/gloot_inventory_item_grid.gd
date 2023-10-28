@@ -96,8 +96,20 @@ func _ready() -> void:
 
         
 func _refresh() -> void:
+    var selected_item := _selected_item()
     _clear()
-    _populate()
+    _populate(selected_item)
+
+
+func _selected_item() -> InventoryItem:
+    if inventory == null:
+        return null
+    if _selected_item_rect == null:
+        return null
+    if !is_instance_valid(_selected_item_rect.item):
+        return null
+
+    return _selected_item_rect.item
 
 
 func _clear() -> void:
@@ -107,7 +119,7 @@ func _clear() -> void:
     custom_minimum_size = Vector2.ZERO
 
 
-func _populate() -> void:
+func _populate(selected_item: InventoryItem) -> void:
     if inventory == null || !inventory.is_node_ready() || field_grid == null:
         return
 
@@ -124,6 +136,7 @@ func _populate() -> void:
         gloot_inventory_item_rect.selection_style = selection_style
         gloot_inventory_item_rect.item = item
         gloot_inventory_item_rect.selected_status_changed.connect(_on_selected_status_changed.bind(gloot_inventory_item_rect))
+        gloot_inventory_item_rect.selected = (item == selected_item)
 
         add_child(gloot_inventory_item_rect)
 
