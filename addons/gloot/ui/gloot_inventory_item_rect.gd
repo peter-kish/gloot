@@ -2,6 +2,35 @@
 extends TextureRect
 
 var item: InventoryItem = null
+var _label_stack_size: Label = null
+
+
+func _ready() -> void:
+    _label_stack_size = Label.new()
+    add_child(_label_stack_size)
+    _update_stack_size_label()
+
+
+func _update_stack_size_label() -> void:
+    if _label_stack_size == null:
+        return
+    _label_stack_size.text = ""
+
+    if item == null:
+        return
+
+    var inventory := item.get_inventory()
+    if inventory == null:
+        return
+
+    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    if stacks_constraint == null:
+        return
+
+    var stack_size: int = stacks_constraint.get_item_stack_size(item)
+    if stack_size <= 1:
+        return
+    _label_stack_size.text = str(stack_size)
 
 
 func _get_drag_data(at_position: Vector2):
