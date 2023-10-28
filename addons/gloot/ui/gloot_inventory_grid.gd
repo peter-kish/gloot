@@ -142,3 +142,9 @@ func _update_item_spacing() -> void:
     _inventory_field_grid.remove_theme_constant_override("v_separation")
     _inventory_field_grid.add_theme_constant_override("h_separation", item_spacing)
     _inventory_field_grid.add_theme_constant_override("v_separation", item_spacing)
+
+
+func get_selected_item() -> InventoryItem:
+    if _inventory_item_grid == null:
+        return null
+    return _inventory_item_grid.get_selected_item()

@@ -53,6 +53,8 @@ var field_grid: GlootInventoryFieldGrid = null :
         field_grid.sort_children.connect(_update_item_rects)
         _refresh()
 
+var _selected_item_rect: GlootInventoryItemRect = null
+
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
@@ -105,15 +107,28 @@ func _populate() -> void:
 
     for item in inventory.get_items():
         var item_rect = _get_item_ui_rect(item)
-        var texture_rect := GlootInventoryItemRect.new()
-        texture_rect.position = item_rect.position
-        texture_rect.size = item_rect.size
-        texture_rect.texture = item.get_texture()
-        texture_rect.item = item
+        var gloot_inventory_item_rect := GlootInventoryItemRect.new()
+        gloot_inventory_item_rect.position = item_rect.position
+        gloot_inventory_item_rect.size = item_rect.size
+        gloot_inventory_item_rect.texture = item.get_texture()
+        gloot_inventory_item_rect.item = item
+        gloot_inventory_item_rect.selected_status_changed.connect(_on_selected_status_changed.bind(gloot_inventory_item_rect))
 
-        add_child(texture_rect)
+        add_child(gloot_inventory_item_rect)
 
     custom_minimum_size = field_grid.size
+
+
+func _on_selected_status_changed(gloot_inventory_item_rect: GlootInventoryItemRect) -> void:
+    if gloot_inventory_item_rect.selected && (_selected_item_rect != null):
+        _selected_item_rect.selected = false
+    _selected_item_rect = gloot_inventory_item_rect
+
+
+func get_selected_item() -> InventoryItem:
+    if _selected_item_rect == null:
+        return null
+    return _selected_item_rect.item
 
 
 func _update_item_rects() -> void:
