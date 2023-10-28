@@ -66,3 +66,33 @@ func _on_drag_end() -> void:
     mouse_filter = Control.MOUSE_FILTER_STOP
     modulate = Color.WHITE
 
+
+func _can_drop_data(at_position, data) -> bool:
+    var inventory = item.get_inventory()
+    if inventory == null:
+        return false
+
+    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    if stacks_constraint == null:
+        return false
+
+    if !stacks_constraint.items_mergable(item, data.item):
+        return false
+
+    return true
+
+
+func _drop_data(at_position, data):
+    if item == null:
+        return
+
+    var inventory = item.get_inventory()
+    if inventory == null:
+        return
+
+    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    if stacks_constraint == null:
+        return
+
+    stacks_constraint.join_stacks_autosplit(item, data.item)
+

@@ -144,7 +144,8 @@ func test_add_item_at() -> void:
     for data in test_data:
         assert(grid_constraint.add_item_at(item, data.input) == data.expected.return_value)
         assert(inventory.has_item(item) == data.expected.has_item)
-        assert(grid_constraint.get_item_position(item) == data.expected.position)
+        if data.expected.has_item:
+            assert(grid_constraint.get_item_position(item) == data.expected.position)
 
         if inventory.has_item(item):
             inventory.remove_item(item)

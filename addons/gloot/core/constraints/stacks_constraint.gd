@@ -215,6 +215,22 @@ static func stacks_joinable(
     return true
 
 
+func join_stacks_autosplit(
+    item_dst: InventoryItem,
+    item_src: InventoryItem
+) -> bool:
+    assert(inventory != null, "inventory is null!")
+    assert(item_dst != null, "item_dst is null!")
+    assert(item_src != null, "item_src is null!")
+
+    if not items_mergable(item_dst, item_src):
+        return false
+
+    var old_stack_size := get_item_stack_size(item_dst)
+    _merge_stacks(item_dst, item_src)
+    return old_stack_size != get_item_stack_size(item_dst)
+
+
 func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.inf()
 
