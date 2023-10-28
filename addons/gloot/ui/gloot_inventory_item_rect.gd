@@ -3,8 +3,18 @@ extends TextureRect
 
 signal selected_status_changed
 
+@export var selection_style: StyleBox :
+    get:
+        return selection_style
+    set(new_selection_style):
+        if new_selection_style == selection_style:
+            return
+        selection_style = new_selection_style
+        _set_selection_style(selection_style)
+
 var item: InventoryItem = null
 var _label_stack_size: Label = null
+var _panel_selection: Panel = null
 var selected: bool :
     get:
         return selected
@@ -12,13 +22,33 @@ var selected: bool :
         if selected == new_selected:
             return
         selected = new_selected
+        _panel_selection.visible = selected
         selected_status_changed.emit()
 
 
 func _ready() -> void:
+    _panel_selection = Panel.new()
+    _panel_selection.size = size
+    _panel_selection.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _panel_selection.hide()
+    add_child(_panel_selection)
+    _set_selection_style(selection_style)
+    item_rect_changed.connect(func():
+        _panel_selection.size = size
+    )
+
     _label_stack_size = Label.new()
     add_child(_label_stack_size)
+    
     _update_stack_size_label()
+
+
+func _set_selection_style(style: StyleBox) -> void:
+    if _panel_selection == null:
+        return
+    _panel_selection.remove_theme_stylebox_override("panel")
+    if style != null:
+        _panel_selection.add_theme_stylebox_override("panel", style)
 
 
 func _gui_input(event):

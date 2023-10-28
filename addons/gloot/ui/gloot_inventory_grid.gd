@@ -68,7 +68,8 @@ var inventory: Inventory = null :
         return selection_style
     set(new_selection_style):
         selection_style = new_selection_style
-        _refresh()
+        if _inventory_item_grid:
+            _inventory_item_grid.selection_style = selection_style
 
 var _inventory_field_grid: GlootInventoryFieldGrid = null
 var _inventory_item_grid: GlootInventoryItemGrid = null
@@ -123,6 +124,7 @@ func _populate() -> void:
     _inventory_item_grid = GlootInventoryItemGrid.new()
     _inventory_item_grid.inventory = inventory
     _inventory_item_grid.field_grid = _inventory_field_grid
+    _inventory_item_grid.selection_style = selection_style
     add_child(_inventory_item_grid)
 
     _update_size()
