@@ -1,14 +1,35 @@
 @tool
 extends TextureRect
 
+signal selected_status_changed
+
 var item: InventoryItem = null
 var _label_stack_size: Label = null
+var selected: bool :
+    get:
+        return selected
+    set(new_selected):
+        if selected == new_selected:
+            return
+        selected = new_selected
+        selected_status_changed.emit()
 
 
 func _ready() -> void:
     _label_stack_size = Label.new()
     add_child(_label_stack_size)
     _update_stack_size_label()
+
+
+func _gui_input(event):
+    if !(event is InputEventMouseButton):
+        return
+    if !event.pressed:
+        return
+    if event.button_index != MOUSE_BUTTON_LEFT:
+        return
+
+    selected = true
 
 
 func _update_stack_size_label() -> void:
@@ -60,6 +81,7 @@ func _notification(what) -> void:
 func _on_drag_start() -> void:
     mouse_filter = Control.MOUSE_FILTER_IGNORE
     modulate = Color(1.0, 1.0, 1.0, 0.5)
+    selected = true
 
 
 func _on_drag_end() -> void:
@@ -68,6 +90,9 @@ func _on_drag_end() -> void:
 
 
 func _can_drop_data(at_position, data) -> bool:
+    if item == null:
+        return false
+
     var inventory = item.get_inventory()
     if inventory == null:
         return false

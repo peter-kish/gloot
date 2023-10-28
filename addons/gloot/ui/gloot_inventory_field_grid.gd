@@ -122,6 +122,8 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
 
     var field_coords := Vector2i(index % dst_grid_constraint.size.x, index / dst_grid_constraint.size.x)
     if src_inventory == inventory:
+        if dst_grid_constraint.get_item_position(item) == field_coords:
+            return
         dst_grid_constraint.move_item_to(item, field_coords)
     else:
         if src_inventory == null:
