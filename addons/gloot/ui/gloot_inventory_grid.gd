@@ -104,7 +104,7 @@ func _populate() -> void:
         # TODO: Configuration warning
         return
 
-    var grid_constraint: GridConstraint = inventory._constraint_manager.get_grid_constraint()
+    var grid_constraint: GridConstraint = inventory.get_grid_constraint()
     if grid_constraint == null:
         # TODO: Configuration warning
         return

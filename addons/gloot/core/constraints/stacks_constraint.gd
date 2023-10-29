@@ -317,7 +317,7 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
     if !transfer_autosplit_result.success:
         return false
     if transfer_autosplit_result.new_item:
-        destination._constraint_manager.get_stacks_constraint().pack_item(transfer_autosplit_result.new_item)
+        destination.get_stacks_constraint().pack_item(transfer_autosplit_result.new_item)
     return true
 
 
@@ -327,7 +327,7 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
         # Item could have been packed already
         if item == null:
             return true
-        destination._constraint_manager.get_stacks_constraint().pack_item(item)
+        destination.get_stacks_constraint().pack_item(item)
         return true
     return false
 

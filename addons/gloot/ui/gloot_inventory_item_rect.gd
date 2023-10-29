@@ -75,7 +75,7 @@ func _update_stack_size_label() -> void:
     if inventory == null:
         return
 
-    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    var stacks_constraint = inventory.get_stacks_constraint()
     if stacks_constraint == null:
         return
 
@@ -128,7 +128,7 @@ func _can_drop_data(at_position, data) -> bool:
     if inventory == null:
         return false
 
-    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    var stacks_constraint = inventory.get_stacks_constraint()
     if stacks_constraint == null:
         return false
 
@@ -146,7 +146,7 @@ func _drop_data(at_position, data):
     if inventory == null:
         return
 
-    var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    var stacks_constraint = inventory.get_stacks_constraint()
     if stacks_constraint == null:
         return
 

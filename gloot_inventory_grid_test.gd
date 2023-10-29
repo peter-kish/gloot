@@ -11,7 +11,7 @@ func _ready() -> void:
         if item == null:
             return
         var inventory := item.get_inventory()
-        var stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+        var stacks_constraint = inventory.get_stacks_constraint()
         var stack_size: int = stacks_constraint.get_item_stack_size(item)
         if stack_size <= 1:
             return

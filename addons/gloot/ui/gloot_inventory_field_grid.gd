@@ -92,7 +92,7 @@ func _populate() -> void:
     if inventory == null:
         return
         
-    var grid_constraint := inventory._constraint_manager.get_grid_constraint()
+    var grid_constraint := inventory.get_grid_constraint()
     if grid_constraint == null:
         return
 
@@ -112,7 +112,7 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
     if inventory == null:
         return
         
-    var dst_grid_constraint := inventory._constraint_manager.get_grid_constraint()
+    var dst_grid_constraint := inventory.get_grid_constraint()
     if dst_grid_constraint == null:
         return
 
@@ -128,7 +128,7 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
     else:
         if src_inventory == null:
             return
-        var src_grid_constraint = src_inventory._constraint_manager.get_grid_constraint()
+        var src_grid_constraint = src_inventory.get_grid_constraint()
         if src_grid_constraint == null:
             return
         src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
@@ -150,7 +150,7 @@ func _update_selected_style(new_selected_style: StyleBox) -> void:
 
 
 func _update_field_size(new_field_size: Vector2) -> void:
-    var grid_constraint := inventory._constraint_manager.get_grid_constraint()
+    var grid_constraint := inventory.get_grid_constraint()
     if grid_constraint == null:
         return
 

@@ -3,8 +3,6 @@
 extends InventoryGrid
 class_name InventoryGridStacked
 
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
-
 
 func _init() -> void:
     super._init()
@@ -60,7 +58,7 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
 
 
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
-    return _constraint_manager.get_grid_constraint().transfer_to(item, destination._constraint_manager.get_grid_constraint(), position)
+    return _constraint_manager.get_grid_constraint().transfer_to(item, destination.get_grid_constraint(), position)
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:

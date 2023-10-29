@@ -326,17 +326,17 @@ func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vecto
     if item_dst == null:
         return false
 
-    return inventory._constraint_manager.get_stacks_constraint().join_stacks(item_dst, item)
-
+    return inventory.get_stacks_constraint().join_stacks(item_dst, item)
+    
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    if inventory._constraint_manager.get_stacks_constraint() == null:
+    if inventory.get_stacks_constraint() == null:
         return null
 
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if inventory._constraint_manager.get_stacks_constraint().stacks_joinable(item, mergable_item):
+        if inventory.get_stacks_constraint().stacks_joinable(item, mergable_item):
             return mergable_item
     return null
 

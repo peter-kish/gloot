@@ -34,8 +34,8 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    inventory._constraint_manager.enable_grid_constraint()
-    grid_constraint = inventory._constraint_manager.get_grid_constraint()
+    inventory.enable_grid_constraint()
+    grid_constraint = inventory.get_grid_constraint()
 
 
 func cleanup_test() -> void:
@@ -228,8 +228,8 @@ func test_swap_items() -> void:
 
 func test_transfer_to() -> void:
     var inventory2 := create_inventory(TEST_PROTOSET)
-    inventory2._constraint_manager.enable_grid_constraint()
-    var grid_constraint2 := inventory2._constraint_manager.get_grid_constraint()
+    inventory2.enable_grid_constraint()
+    var grid_constraint2 := inventory2.get_grid_constraint()
     grid_constraint2.create_and_add_item_at(TEST_PROTOTYPE, Vector2i(2, 2))
 
     inventory.add_item(item)

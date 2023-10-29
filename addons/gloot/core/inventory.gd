@@ -10,6 +10,9 @@ signal contents_changed
 signal protoset_changed
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
+const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 @export var protoset: ItemProtoset:
     get:
@@ -251,6 +254,36 @@ func has_item_by_id(prototype_id: String) -> bool:
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
     return destination.add_item(item)
+
+
+func enable_weight_constraint(capacity: float = 0) -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.enable_weight_constraint(capacity)
+
+
+func enable_stacks_constraint() -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.enable_stacks_constraint()
+
+
+func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.enable_grid_constraint(size)
+
+
+func get_weight_constraint() -> WeightConstraint:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    return _constraint_manager.get_weight_constraint()
+
+
+func get_stacks_constraint() -> StacksConstraint:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    return _constraint_manager.get_stacks_constraint()
+
+
+func get_grid_constraint() -> GridConstraint:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    return _constraint_manager.get_grid_constraint()
 
 
 func reset() -> void:
