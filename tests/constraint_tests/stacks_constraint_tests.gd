@@ -36,8 +36,8 @@ func init_test() -> void:
     item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     item_2 = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
     inventory = create_inventory(TEST_PROTOSET)
-    inventory._constraint_manager.enable_stacks_constraint()
-    stacks_constraint = inventory._constraint_manager.get_stacks_constraint()
+    inventory.enable_stacks_constraint()
+    stacks_constraint = inventory.get_stacks_constraint()
 
 
 func cleanup_test() -> void:

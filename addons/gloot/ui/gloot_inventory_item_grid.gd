@@ -123,8 +123,7 @@ func _populate(selected_item: InventoryItem) -> void:
     if inventory == null || !inventory.is_node_ready() || field_grid == null:
         return
 
-    var grid_constraint := inventory._constraint_manager.get_grid_constraint()
-    if grid_constraint == null:
+    if inventory.get_grid_constraint() == null:
         return
 
     for item in inventory.get_items():
@@ -171,7 +170,7 @@ func _update_item_rects() -> void:
 
 
 func _get_item_ui_rect(item: InventoryItem) -> Rect2:
-    var grid_constraint := inventory._constraint_manager.get_grid_constraint()
+    var grid_constraint := inventory.get_grid_constraint()
     
     var item_field_rect := grid_constraint.get_item_rect(item)
     var top_left := field_grid.get_field_position(item_field_rect.position)

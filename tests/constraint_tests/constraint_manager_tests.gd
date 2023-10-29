@@ -446,10 +446,10 @@ func test_ws_transfer_autosplit() -> void:
     assert(weight_constraint != null)
     assert(stacks_constraint != null)
 
-    inventory2._constraint_manager.enable_weight_constraint(3.0)
-    inventory2._constraint_manager.enable_stacks_constraint()
-    assert(inventory2._constraint_manager.get_weight_constraint() != null)
-    assert(inventory2._constraint_manager.get_stacks_constraint() != null)
+    inventory2.enable_weight_constraint(3.0)
+    inventory2.enable_stacks_constraint()
+    assert(inventory2.get_weight_constraint() != null)
+    assert(inventory2.get_stacks_constraint() != null)
 
     var test_data := [
         {
@@ -478,7 +478,7 @@ func test_ws_transfer_autosplit() -> void:
         var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_WS)
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_WS)
 
-        inventory2._constraint_manager.get_weight_constraint().capacity = data.input.dst_capacity
+        inventory2.get_weight_constraint().capacity = data.input.dst_capacity
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
         assert(stacks_constraint.transfer_autosplit(src_item, inventory2).success == data.expected.return_val)
@@ -504,10 +504,10 @@ func test_sg_transfer_autosplit() -> void:
     assert(grid_constraint != null)
     assert(stacks_constraint != null)
 
-    inventory2._constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    inventory2._constraint_manager.enable_stacks_constraint()
-    assert(inventory2._constraint_manager.get_grid_constraint() != null)
-    assert(inventory2._constraint_manager.get_stacks_constraint() != null)
+    inventory2.enable_grid_constraint(Vector2i(3, 3))
+    inventory2.enable_stacks_constraint()
+    assert(inventory2.get_grid_constraint() != null)
+    assert(inventory2.get_stacks_constraint() != null)
 
     # Test cases:
     # 1. Destination has place for the full stack without merging
@@ -537,7 +537,7 @@ func test_sg_transfer_autosplit() -> void:
         var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
 
-        inventory2._constraint_manager.get_grid_constraint().size = data.input.dst_inv_size
+        inventory2.get_grid_constraint().size = data.input.dst_inv_size
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         StacksConstraint.set_item_max_stack_size(src_item, 3)
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))
@@ -581,12 +581,12 @@ func test_wsg_transfer_autosplit() -> void:
     assert(grid_constraint != null)
     assert(stacks_constraint != null)
 
-    inventory2._constraint_manager.enable_weight_constraint(10.0)
-    inventory2._constraint_manager.enable_stacks_constraint()
-    inventory2._constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    assert(inventory2._constraint_manager.get_weight_constraint() != null)
-    assert(inventory2._constraint_manager.get_stacks_constraint() != null)
-    assert(inventory2._constraint_manager.get_grid_constraint() != null)
+    inventory2.enable_weight_constraint(10.0)
+    inventory2.enable_stacks_constraint()
+    inventory2.enable_grid_constraint(Vector2i(3, 3))
+    assert(inventory2.get_weight_constraint() != null)
+    assert(inventory2.get_stacks_constraint() != null)
+    assert(inventory2.get_grid_constraint() != null)
 
     # Test cases
     # 1. Destination has place (capacity and space) for the full stack
@@ -621,8 +621,8 @@ func test_wsg_transfer_autosplit() -> void:
         var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
         var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
 
-        inventory2._constraint_manager.get_grid_constraint().size = data.input.dst_inv_size
-        inventory2._constraint_manager.get_weight_constraint().capacity = data.input.dst_inv_capacity
+        inventory2.get_grid_constraint().size = data.input.dst_inv_size
+        inventory2.get_weight_constraint().capacity = data.input.dst_inv_capacity
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
         StacksConstraint.set_item_max_stack_size(src_item, 3)
         assert(StacksConstraint.set_item_stack_size(dst_item, data.input.dst_stack_size))

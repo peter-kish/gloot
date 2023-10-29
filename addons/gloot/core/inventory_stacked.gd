@@ -3,8 +3,6 @@
 extends Inventory
 class_name InventoryStacked
 
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
-
 signal capacity_changed
 signal occupied_space_changed
 
