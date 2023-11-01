@@ -1,3 +1,5 @@
+extends Object
+
 var inventory: Inventory = null :
     get:
         return inventory

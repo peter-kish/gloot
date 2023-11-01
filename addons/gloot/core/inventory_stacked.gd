@@ -9,11 +9,15 @@ signal occupied_space_changed
 
 @export var capacity: float :
     get:
+        if _constraint_manager.get_weight_constraint() == null:
+            return 0.0
         return _constraint_manager.get_weight_constraint().capacity
     set(new_capacity):
         _constraint_manager.get_weight_constraint().capacity = new_capacity
 var occupied_space: float :
     get:
+        if _constraint_manager.get_weight_constraint() == null:
+            return 0.0
         return _constraint_manager.get_weight_constraint().occupied_space
     set(new_occupied_space):
         assert(false, "occupied_space is read-only!")
