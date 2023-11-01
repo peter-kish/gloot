@@ -54,6 +54,8 @@ func _enter_tree():
 
 func _exit_tree():
     _items.clear()
+    if _constraint_manager != null:
+        _constraint_manager.free()
 
 
 func _init() -> void:

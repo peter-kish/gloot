@@ -1,3 +1,5 @@
+extends Object
+
 const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"
 const KEY_GRID_CONSTRAINT = "grid_constraint"
