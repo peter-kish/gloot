@@ -487,10 +487,8 @@ func deserialize(source: Dictionary) -> bool:
         return false
 
     reset()
-
-    var s: Vector2i = str_to_var(source[KEY_SIZE])
-    self.size = s
     _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
+    size = str_to_var(source[KEY_SIZE])
 
     return true
 

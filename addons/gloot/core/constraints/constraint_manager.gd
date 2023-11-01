@@ -1,5 +1,8 @@
 extends RefCounted
 
+signal constraint_enabled
+signal constraint_disabled
+
 const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"
 const KEY_GRID_CONSTRAINT = "grid_constraint"
@@ -25,6 +28,7 @@ var inventory: Inventory = null :
             _grid_constraint.inventory = inventory
 
 
+enum Constraint {WEIGHT, STACKS, GRID}
 enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
 
 
@@ -193,17 +197,38 @@ func enable_weight_constraint(capacity: float = 0.0) -> void:
     assert(_weight_constraint == null, "Weight constraint is already enabled")
     _weight_constraint = WeightConstraint.new(inventory)
     _weight_constraint.capacity = capacity
+    constraint_enabled.emit(Constraint.WEIGHT)
 
 
 func enable_stacks_constraint() -> void:
     assert(_stacks_constraint == null, "Stacks constraint is already enabled")
     _stacks_constraint = StacksConstraint.new(inventory)
+    constraint_enabled.emit(Constraint.STACKS)
 
 
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(_grid_constraint == null, "Grid constraint is already enabled")
     _grid_constraint = GridConstraint.new(inventory)
     _grid_constraint.size = size
+    constraint_enabled.emit(Constraint.GRID)
+
+
+func disable_weight_constraint() -> void:
+    assert(_weight_constraint != null, "Weight constraint is already disabled")
+    _weight_constraint = null
+    constraint_disabled.emit(Constraint.WEIGHT)
+
+
+func disable_stacks_constraint() -> void:
+    assert(_stacks_constraint != null, "Stacks constraint is already disabled")
+    _stacks_constraint = null
+    constraint_disabled.emit(Constraint.STACKS)
+
+
+func disable_grid_constraint() -> void:
+    assert(_grid_constraint != null, "Grid constraint is already disabled")
+    _grid_constraint = null
+    constraint_disabled.emit(Constraint.GRID)
 
 
 func get_weight_constraint() -> WeightConstraint:
@@ -219,12 +244,12 @@ func get_grid_constraint() -> GridConstraint:
 
 
 func reset() -> void:
-    if get_weight_constraint():
-        get_weight_constraint().reset()
-    if get_stacks_constraint():
-        get_stacks_constraint().reset()
-    if get_grid_constraint():
-        get_grid_constraint().reset()
+    if _weight_constraint:
+        disable_weight_constraint()
+    if _stacks_constraint:
+        disable_stacks_constraint()
+    if _grid_constraint:
+        disable_grid_constraint()
 
 
 func serialize() -> Dictionary:
@@ -251,12 +276,15 @@ func deserialize(source: Dictionary) -> bool:
     reset()
 
     if source.has(KEY_WEIGHT_CONSTRAINT):
+        enable_weight_constraint()
         if !get_weight_constraint().deserialize(source[KEY_WEIGHT_CONSTRAINT]):
             return false
     if source.has(KEY_STACKS_CONSTRAINT):
+        enable_stacks_constraint()
         if !get_stacks_constraint().deserialize(source[KEY_STACKS_CONSTRAINT]):
             return false
     if source.has(KEY_GRID_CONSTRAINT):
+        enable_grid_constraint()
         if !get_grid_constraint().deserialize(source[KEY_GRID_CONSTRAINT]):
             return false
 

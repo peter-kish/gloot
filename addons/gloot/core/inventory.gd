@@ -269,6 +269,21 @@ func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> voi
     _constraint_manager.enable_grid_constraint(size)
 
 
+func disable_weight_constraint(capacity: float = 0) -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.disable_weight_constraint()
+
+
+func disable_stacks_constraint() -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.disable_stacks_constraint()
+
+
+func disable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
+    assert(_constraint_manager != null, "Missing constraint manager!")
+    _constraint_manager.disable_grid_constraint()
+
+
 func get_weight_constraint() -> WeightConstraint:
     assert(_constraint_manager != null, "Missing constraint manager!")
     return _constraint_manager.get_weight_constraint()

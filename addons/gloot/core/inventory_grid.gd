@@ -95,3 +95,9 @@ func find_free_place(item: InventoryItem) -> Dictionary:
 func sort() -> bool:
     return _constraint_manager.get_grid_constraint().sort()
 
+
+func reset() -> void:
+    super.reset()
+    _constraint_manager.enable_grid_constraint()
+    _constraint_manager.get_grid_constraint().size_changed.connect(func(): size_changed.emit())
+
