@@ -92,3 +92,11 @@ func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> b
 
 func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
     return _constraint_manager.get_stacks_constraint().transfer_autosplitmerge(item, destination)
+
+
+func reset() -> void:
+    super.reset()
+    _constraint_manager.enable_weight_constraint()
+    _constraint_manager.enable_stacks_constraint()
+    _constraint_manager.get_weight_constraint().capacity_changed.connect(func(): capacity_changed.emit())
+    _constraint_manager.get_weight_constraint().occupied_space_changed.connect(func(): occupied_space_changed.emit())
