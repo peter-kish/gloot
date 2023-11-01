@@ -85,10 +85,8 @@ static func _get_item_script() -> Script:
 
 
 func _exit_tree():
-    _items.clear()
     if _constraint_manager != null:
         _constraint_manager.free()
-    _update_serialized_format()
 
 
 func _init() -> void:
