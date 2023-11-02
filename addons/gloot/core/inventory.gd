@@ -91,6 +91,12 @@ func _exit_tree():
 
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
+    _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
+
+
+func _on_constraint_enabled(constraint: int) -> void:
+    if constraint == ConstraintManager.Constraint.GRID:
+        _constraint_manager.get_grid_constraint().size_changed.connect(_update_serialized_format)
 
 
 func _ready() -> void:
@@ -315,6 +321,9 @@ func clear() -> void:
 
 func serialize() -> Dictionary:
     var result: Dictionary = {}
+
+    if protoset == null || _constraint_manager == null:
+        return result
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_ITEM_PROTOSET] = _serialize_item_protoset(protoset)
