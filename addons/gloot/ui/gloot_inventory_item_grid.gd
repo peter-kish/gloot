@@ -72,6 +72,8 @@ func _connect_inventory_signals() -> void:
     inventory.contents_changed.connect(_refresh)
     inventory.protoset_changed.connect(_refresh)
     inventory.item_modified.connect(_on_item_modified)
+    if inventory.get_grid_constraint() != null:
+        inventory.get_grid_constraint().item_moved.connect(_on_item_modified)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -80,6 +82,8 @@ func _disconnect_inventory_signals() -> void:
     inventory.contents_changed.disconnect(_refresh)
     inventory.protoset_changed.disconnect(_refresh)
     inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.get_grid_constraint() != null:
+        inventory.get_grid_constraint().item_moved.disconnect(_on_item_modified)
 
 
 func _on_item_modified(item_: InventoryItem) -> void:
