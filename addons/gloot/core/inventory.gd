@@ -84,14 +84,15 @@ static func _get_item_script() -> Script:
     return preload("inventory_item.gd")
 
 
-func _exit_tree():
-    if _constraint_manager != null:
-        _constraint_manager.free()
-
-
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
     _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE:
+        _constraint_manager.free()
+        _constraint_manager = null
 
 
 func _on_constraint_enabled(constraint: int) -> void:
