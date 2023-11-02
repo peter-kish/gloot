@@ -1,6 +1,7 @@
 extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
 
 signal size_changed
+signal item_moved(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
@@ -124,12 +125,12 @@ func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
 
 
 func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> void:
+    if new_position == get_item_position(item):
+        return
+
     _item_positions[item] = new_position
-    if inventory:
-        inventory._update_serialized_format()
-    # Is this necessary (see _on_item_modified())
     _refresh_item_map()
-    inventory.item_modified.emit(item)
+    item_moved.emit(item)
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:
@@ -461,6 +462,8 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
 
 func reset() -> void:
     size = DEFAULT_SIZE
+    _item_map.resize(size)
+    _item_positions.clear()
 
 
 func serialize() -> Dictionary:

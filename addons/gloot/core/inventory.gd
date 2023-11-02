@@ -274,6 +274,7 @@ func enable_stacks_constraint() -> void:
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(_constraint_manager != null, "Missing constraint manager!")
     _constraint_manager.enable_grid_constraint(size)
+    _constraint_manager.get_grid_constraint().item_moved.connect(_on_item_moved)
 
 
 func disable_weight_constraint(capacity: float = 0) -> void:
@@ -304,6 +305,10 @@ func get_stacks_constraint() -> StacksConstraint:
 func get_grid_constraint() -> GridConstraint:
     assert(_constraint_manager != null, "Missing constraint manager!")
     return _constraint_manager.get_grid_constraint()
+
+
+func _on_item_moved(item: InventoryItem) -> void:
+    _update_serialized_format()
 
 
 func reset() -> void:
