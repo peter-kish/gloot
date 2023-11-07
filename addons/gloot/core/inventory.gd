@@ -54,8 +54,14 @@ func _enter_tree():
 
 func _exit_tree():
     _items.clear()
-    if _constraint_manager != null:
-        _constraint_manager.free()
+
+
+func _notification(what):
+    if what == NOTIFICATION_PREDELETE:
+        if _constraint_manager != null:
+            _constraint_manager.free()
+            _constraint_manager = null
+        
 
 
 func _init() -> void:
@@ -71,7 +77,8 @@ func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
     contents_changed.emit()
     _connect_item_signals(item)
-    _constraint_manager._on_item_added(item)
+    if _constraint_manager:
+        _constraint_manager._on_item_added(item)
     item_added.emit(item)
 
 
@@ -79,7 +86,8 @@ func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     contents_changed.emit()
     _disconnect_item_signals(item)
-    _constraint_manager._on_item_removed(item)
+    if _constraint_manager:
+        _constraint_manager._on_item_removed(item)
     item_removed.emit(item)
 
 

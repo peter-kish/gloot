@@ -8,6 +8,8 @@ signal inventory_item_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     get:
         return field_dimensions
@@ -80,7 +82,6 @@ var inventory: InventoryGrid = null :
         _connect_inventory_signals()
 
         _refresh()
-var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
@@ -453,22 +454,20 @@ func get_selected_inventory_item() -> InventoryItem:
     return _selected_item
 
 
-# TODO: Find a better way for undoing/redoing item movements
 func _move_item(item: InventoryItem, position: Vector2i) -> void:
-    if _gloot_undo_redo:
-        _gloot_undo_redo.move_inventory_item(inventory, item, position)
+    if Engine.is_editor_hint():
+        GlootUndoRedo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)
 
         
-# TODO: Find a better way for undoing/redoing item merges
 func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
     var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
     if item_dst == null:
         return
 
-    if _gloot_undo_redo:
-        _gloot_undo_redo.join_inventory_items(inventory, item_dst, item_src)
+    if Engine.is_editor_hint():
+        GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
     else:
         (inventory as InventoryGridStacked).join(item_dst, item_src)
 

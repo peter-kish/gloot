@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+
 var inspector_plugin: EditorInspectorPlugin
 
 
@@ -23,9 +25,10 @@ func _enter_tree() -> void:
     add_custom_type("CtrlItemSlot", "Control", preload("ui/ctrl_item_slot.gd"), preload("images/icon_ctrl_item_slot.svg"))
     add_custom_type("CtrlItemSlotEx", "Control", preload("ui/ctrl_item_slot_ex.gd"), preload("images/icon_ctrl_item_slot.svg"))
 
+    GlootUndoRedo.undo_redo_manager = get_undo_redo()
+
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
     inspector_plugin.editor_interface = get_editor_interface()
-    inspector_plugin.undo_redo_manager = get_undo_redo()
     add_inspector_plugin(inspector_plugin)
 
     add_autoload_singleton("GLoot", "res://addons/gloot/gloot_autoload.gd")

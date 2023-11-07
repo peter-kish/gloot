@@ -1,13 +1,13 @@
 @tool
 extends Window
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const ChoiceFilter = preload("res://addons/gloot/editor/common/choice_filter.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const POPUP_MARGIN = 10
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _choice_filter: Control = $"MarginContainer/ChoiceFilter"
-var gloot_undo_redo = null
 var editor_interface: EditorInterface
 var item: InventoryItem = null :
     get:
@@ -22,10 +22,8 @@ var item: InventoryItem = null :
         _refresh()
 
 
-func init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
-    assert(gloot_undo_redo_, "gloot_undo_redo_ is null!")
+func init(editor_interface_: EditorInterface) -> void:
     assert(editor_interface_, "editor_interface_ is null!")
-    gloot_undo_redo = gloot_undo_redo_
     editor_interface = editor_interface_
 
 
@@ -41,7 +39,7 @@ func _on_choice_picked(value_index: int) -> void:
     assert(item, "Item not set!")
     var new_prototype_id = _choice_filter.values[value_index]
     if new_prototype_id != item.prototype_id:
-        gloot_undo_redo.set_item_prototype_id(item, new_prototype_id)
+        GlootUndoRedo.set_item_prototype_id(item, new_prototype_id)
     hide()
 
 

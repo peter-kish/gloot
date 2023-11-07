@@ -1,6 +1,7 @@
 @tool
 extends Window
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
@@ -10,7 +11,6 @@ var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRI
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"
-var gloot_undo_redo = null
 var editor_interface: EditorInterface
 var item: InventoryItem = null :
     get:
@@ -25,10 +25,8 @@ var item: InventoryItem = null :
         _refresh()
 
 
-func init(gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
-    assert(gloot_undo_redo_, "gloot_undo_redo_ is null!")
+func init(editor_interface_: EditorInterface) -> void:
     assert(editor_interface_, "editor_interface_ is null!")
-    gloot_undo_redo = gloot_undo_redo_
     editor_interface = editor_interface_
 
 
@@ -51,7 +49,7 @@ func _on_value_changed(key: String, new_value) -> void:
     if new_properties.hash() == item.properties.hash():
         return
 
-    gloot_undo_redo.set_item_properties(item, new_properties)
+    GlootUndoRedo.set_item_properties(item, new_properties)
     _refresh()
 
 
@@ -62,7 +60,7 @@ func _on_value_removed(key: String) -> void:
     if new_properties.hash() == item.properties.hash():
         return
 
-    gloot_undo_redo.set_item_properties(item, new_properties)
+    GlootUndoRedo.set_item_properties(item, new_properties)
     _refresh()
 
 

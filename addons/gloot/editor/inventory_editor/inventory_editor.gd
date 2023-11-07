@@ -1,6 +1,7 @@
 @tool
 extends Control
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 
 @onready var hsplit_container = $HSplitContainer
@@ -19,13 +20,6 @@ var inventory: Inventory :
 
         _refresh()
 var editor_interface: EditorInterface
-var gloot_undo_redo :
-    get:
-        return gloot_undo_redo
-    set(new_gloot_undo_redo):
-        gloot_undo_redo = new_gloot_undo_redo
-        if _inventory_control is CtrlInventoryGrid:
-            _inventory_control._gloot_undo_redo = gloot_undo_redo
 var _inventory_control: Control
 
 
@@ -74,8 +68,6 @@ func _refresh() -> void:
         _inventory_control = CtrlInventoryGrid.new()
         _inventory_control.grid_color = Color.GRAY
         _inventory_control.draw_selections = true
-        # TODO: Find a better way for undoing/redoing item movements:
-        _inventory_control._gloot_undo_redo = gloot_undo_redo
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
@@ -92,8 +84,7 @@ func _refresh() -> void:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    assert(gloot_undo_redo)
-    gloot_undo_redo.remove_inventory_item(inventory, item)
+    GlootUndoRedo.remove_inventory_item(inventory, item)
 
 
 func _ready() -> void:
@@ -109,9 +100,8 @@ func _ready() -> void:
 
 
 func _on_prototype_id_picked(index: int) -> void:
-    assert(gloot_undo_redo)
     var prototype_id = prototype_id_filter.values[index]
-    gloot_undo_redo.add_inventory_item(inventory, prototype_id)
+    GlootUndoRedo.add_inventory_item(inventory, prototype_id)
     
 
 func _on_btn_edit() -> void:
@@ -122,10 +112,9 @@ func _on_btn_edit() -> void:
 
 
 func _on_btn_remove() -> void:
-    assert(gloot_undo_redo)
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
     if selected_item != null:
-        gloot_undo_redo.remove_inventory_item(inventory, selected_item)
+        GlootUndoRedo.remove_inventory_item(inventory, selected_item)
 
 
 static func _select_node(editor_interface: EditorInterface, node: Node) -> void:

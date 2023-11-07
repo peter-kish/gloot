@@ -1,6 +1,7 @@
 @tool
 extends Control
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 
 @onready var prototype_filter = $"%PrototypeFilter"
@@ -18,7 +19,6 @@ var protoset: ItemProtoset :
         if protoset:
             protoset.changed.connect(_on_protoset_changed)
         _refresh()
-var gloot_undo_redo = null
 var editor_interface: EditorInterface :
     get:
         return editor_interface
@@ -118,7 +118,7 @@ func _on_property_changed(property_name: String, new_value) -> void:
     if new_properties.hash() == protoset.get_prototype(selected_prototype_id).hash():
         return
 
-    gloot_undo_redo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
+    GlootUndoRedo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
 
 
 func _on_property_removed(property_name: String) -> void:
@@ -127,7 +127,7 @@ func _on_property_removed(property_name: String) -> void:
     var new_properties = protoset.get_prototype(selected_prototype_id).duplicate()
     new_properties.erase(property_name)
 
-    gloot_undo_redo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
+    GlootUndoRedo.set_prototype_properties(protoset, selected_prototype_id, new_properties)
 
 
 func _on_prototype_id_changed() -> void:
@@ -144,27 +144,24 @@ func _on_btn_add_prototype() -> void:
 
 
 func _on_btn_rename_prototype() -> void:
-    assert(gloot_undo_redo)
     if selected_prototype_id.is_empty():
         return
 
-    gloot_undo_redo.rename_prototype(protoset,
+    GlootUndoRedo.rename_prototype(protoset,
             selected_prototype_id,
             txt_prototype_id.text)
     txt_prototype_id.text = ""
 
 
 func _add_prototype_id(prototype_id: String) -> void:
-    assert(gloot_undo_redo)
-    gloot_undo_redo.add_prototype(protoset, prototype_id)
+    GlootUndoRedo.add_prototype(protoset, prototype_id)
     txt_prototype_id.text = ""
 
 
 func _on_btn_remove_prototype() -> void:
-    assert(gloot_undo_redo)
     if selected_prototype_id.is_empty():
         return
 
     var prototype_id = selected_prototype_id
     if !prototype_id.is_empty():
-        gloot_undo_redo.remove_prototype(protoset, prototype_id)
+        GlootUndoRedo.remove_prototype(protoset, prototype_id)

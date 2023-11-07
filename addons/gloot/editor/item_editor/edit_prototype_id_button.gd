@@ -10,9 +10,9 @@ var _prototype_id_editor: Window
 var _btn_prototype_id: Button
 
 
-func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
+func _init(editor_interface_: EditorInterface):
     _prototype_id_editor = PrototypeIdEditor.instantiate()
-    _prototype_id_editor.init(gloot_undo_redo_, editor_interface_)
+    _prototype_id_editor.init(editor_interface_)
     add_child(_prototype_id_editor)
 
     _btn_prototype_id = Button.new()

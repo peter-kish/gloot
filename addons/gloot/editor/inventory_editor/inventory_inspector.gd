@@ -22,18 +22,10 @@ var editor_interface: EditorInterface :
         editor_interface = new_editor_interface
         if inventory_editor:
             inventory_editor.editor_interface = editor_interface
-var gloot_undo_redo :
-    get:
-        return gloot_undo_redo
-    set(new_gloot_undo_redo):
-        gloot_undo_redo = new_gloot_undo_redo
-        if inventory_editor:
-            inventory_editor.gloot_undo_redo = gloot_undo_redo
 
 
-func init(inventory_: Inventory, gloot_undo_redo_, editor_interface_: EditorInterface) -> void:
+func init(inventory_: Inventory, editor_interface_: EditorInterface) -> void:
     inventory = inventory_
-    gloot_undo_redo = gloot_undo_redo_
     editor_interface = editor_interface_
 
 
@@ -41,7 +33,6 @@ func _ready() -> void:
     if inventory_editor:
         inventory_editor.inventory = inventory
         inventory_editor.editor_interface = editor_interface
-        inventory_editor.gloot_undo_redo = gloot_undo_redo
     _apply_editor_settings()
     btn_expand.icon = EditorIcons.get_icon(editor_interface, "DistractionFree")
     btn_expand.pressed.connect(on_btn_expand)
@@ -50,7 +41,6 @@ func _ready() -> void:
 
 func on_btn_expand() -> void:
     _inventory_editor.inventory = inventory
-    _inventory_editor.gloot_undo_redo = gloot_undo_redo
     _inventory_editor.editor_interface = editor_interface
     _window_dialog.popup_centered()
 

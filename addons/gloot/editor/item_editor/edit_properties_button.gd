@@ -11,9 +11,9 @@ var _btn_prototype_id: Button
 var _properties_editor: Window
 
 
-func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
+func _init(editor_interface_: EditorInterface):
     _properties_editor = PropertiesEditor.instantiate()
-    _properties_editor.init(gloot_undo_redo_, editor_interface_)
+    _properties_editor.init(editor_interface_)
     add_child(_properties_editor)
 
     _btn_prototype_id = Button.new()
