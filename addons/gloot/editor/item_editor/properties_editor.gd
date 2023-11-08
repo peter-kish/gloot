@@ -11,7 +11,6 @@ var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRI
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"
-var editor_interface: EditorInterface
 var item: InventoryItem = null :
     get:
         return item
@@ -23,11 +22,6 @@ var item: InventoryItem = null :
         if item.protoset:
             item.protoset.changed.connect(_refresh)
         _refresh()
-
-
-func init(editor_interface_: EditorInterface) -> void:
-    assert(editor_interface_, "editor_interface_ is null!")
-    editor_interface = editor_interface_
 
 
 func _ready() -> void:
@@ -66,7 +60,7 @@ func _on_value_removed(key: String) -> void:
 
 func _refresh() -> void:
     if _dict_editor.btn_add:
-        _dict_editor.btn_add.icon = EditorIcons.get_icon(editor_interface, "Add")
+        _dict_editor.btn_add.icon = EditorIcons.get_icon("Add")
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
     _dict_editor.remove_button_map = _get_remove_button_map()
@@ -121,10 +115,10 @@ func _get_remove_button_map() -> Dictionary:
         result[key] = {}
         if item.protoset.get_prototype(item.prototype_id).has(key):
             result[key]["text"] = ""
-            result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Reload")
+            result[key]["icon"] = EditorIcons.get_icon("Reload")
         else:
             result[key]["text"] = ""
-            result[key]["icon"] = EditorIcons.get_icon(editor_interface, "Remove")
+            result[key]["icon"] = EditorIcons.get_icon("Remove")
 
         result[key]["disabled"] = (not key in item.properties) or (key in IMMUTABLE_KEYS)
     return result

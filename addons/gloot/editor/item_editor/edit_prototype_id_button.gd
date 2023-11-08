@@ -10,9 +10,8 @@ var _prototype_id_editor: Window
 var _btn_prototype_id: Button
 
 
-func _init(editor_interface_: EditorInterface):
+func _init():
     _prototype_id_editor = PrototypeIdEditor.instantiate()
-    _prototype_id_editor.init(editor_interface_)
     add_child(_prototype_id_editor)
 
     _btn_prototype_id = Button.new()

@@ -8,7 +8,6 @@ const POPUP_MARGIN = 10
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _choice_filter: Control = $"MarginContainer/ChoiceFilter"
-var editor_interface: EditorInterface
 var item: InventoryItem = null :
     get:
         return item
@@ -22,13 +21,8 @@ var item: InventoryItem = null :
         _refresh()
 
 
-func init(editor_interface_: EditorInterface) -> void:
-    assert(editor_interface_, "editor_interface_ is null!")
-    editor_interface = editor_interface_
-
-
 func _ready() -> void:
-    _choice_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
+    _choice_filter.filter_icon = EditorIcons.get_icon("Search")
     about_to_popup.connect(func(): _refresh())
     close_requested.connect(func(): hide())
     _choice_filter.choice_picked.connect(func(value_index: int): _on_choice_picked(value_index))

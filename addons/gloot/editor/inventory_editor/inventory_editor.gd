@@ -3,6 +3,7 @@ extends Control
 
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
+const Gloot = preload("res://addons/gloot/gloot.gd")
 
 @onready var hsplit_container = $HSplitContainer
 @onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
@@ -19,7 +20,7 @@ var inventory: Inventory :
         connect_inventory_signals()
 
         _refresh()
-var editor_interface: EditorInterface
+static var editor_interface: EditorInterface = null
 var _inventory_control: Control
 
 
@@ -88,10 +89,10 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
-    prototype_id_filter.pick_icon = EditorIcons.get_icon(editor_interface, "Add")
-    prototype_id_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
-    btn_edit.icon = EditorIcons.get_icon(editor_interface, "Edit")
-    btn_remove.icon = EditorIcons.get_icon(editor_interface, "Remove")
+    prototype_id_filter.pick_icon = EditorIcons.get_icon("Add")
+    prototype_id_filter.filter_icon = EditorIcons.get_icon("Search")
+    btn_edit.icon = EditorIcons.get_icon("Edit")
+    btn_remove.icon = EditorIcons.get_icon("Remove")
 
     prototype_id_filter.choice_picked.connect(_on_prototype_id_picked)
     btn_edit.pressed.connect(_on_btn_edit)
@@ -108,7 +109,7 @@ func _on_btn_edit() -> void:
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
     if selected_item != null:
         # Call it deferred, so that the control can clean up
-        call_deferred("_select_node", editor_interface, selected_item)
+        call_deferred("_select_node", selected_item)
 
 
 func _on_btn_remove() -> void:
@@ -117,7 +118,8 @@ func _on_btn_remove() -> void:
         GlootUndoRedo.remove_inventory_item(inventory, selected_item)
 
 
-static func _select_node(editor_interface: EditorInterface, node: Node) -> void:
+static func _select_node(node: Node) -> void:
+    assert(editor_interface)
     editor_interface.get_selection().clear()
     editor_interface.get_selection().add_node(node)
     editor_interface.edit_node(node)

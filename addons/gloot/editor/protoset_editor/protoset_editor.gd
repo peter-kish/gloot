@@ -18,18 +18,9 @@ var protoset: ItemProtoset :
         protoset = new_protoset
         if protoset:
             protoset.changed.connect(_on_protoset_changed)
-        _refresh()
-var editor_interface: EditorInterface :
-    get:
-        return editor_interface
-    set(new_editor_interface):
-        editor_interface = new_editor_interface
-        btn_add_prototype.icon = EditorIcons.get_icon(editor_interface, "Add")
-        btn_rename_prototype.icon = EditorIcons.get_icon(editor_interface, "Edit")
-        btn_remove_prototype.icon = EditorIcons.get_icon(editor_interface, "Remove")
-        prototype_filter.filter_icon = EditorIcons.get_icon(editor_interface, "Search")
+        _refresh()   
 var selected_prototype_id: String = ""
-
+        
 
 func _ready() -> void:
     prototype_filter.choice_selected.connect(_on_prototype_selected)
@@ -40,6 +31,11 @@ func _ready() -> void:
     btn_add_prototype.pressed.connect(_on_btn_add_prototype)
     btn_rename_prototype.pressed.connect(_on_btn_rename_prototype)
     btn_remove_prototype.pressed.connect(_on_btn_remove_prototype)
+
+    btn_add_prototype.icon = EditorIcons.get_icon("Add")
+    btn_rename_prototype.icon = EditorIcons.get_icon("Edit")
+    btn_remove_prototype.icon = EditorIcons.get_icon("Remove")
+    prototype_filter.filter_icon = EditorIcons.get_icon("Search")
     _refresh()
 
 
@@ -105,7 +101,7 @@ func _inspect_prototype_id(prototype_id: String) -> void:
         property_editor.set_remove_button_config(property_name, {
             "text": "",
             "disabled": property_name == ItemProtoset.KEY_ID,
-            "icon": EditorIcons.get_icon(editor_interface, "Remove"),
+            "icon": EditorIcons.get_icon("Remove"),
         })
 
 

@@ -15,33 +15,23 @@ var inventory: Inventory :
         inventory = new_inventory
         if inventory_editor:
             inventory_editor.inventory = inventory
-var editor_interface: EditorInterface :
-    get:
-        return editor_interface
-    set(new_editor_interface):
-        editor_interface = new_editor_interface
-        if inventory_editor:
-            inventory_editor.editor_interface = editor_interface
 
 
-func init(inventory_: Inventory, editor_interface_: EditorInterface) -> void:
+func init(inventory_: Inventory) -> void:
     inventory = inventory_
-    editor_interface = editor_interface_
 
 
 func _ready() -> void:
     if inventory_editor:
         inventory_editor.inventory = inventory
-        inventory_editor.editor_interface = editor_interface
     _apply_editor_settings()
-    btn_expand.icon = EditorIcons.get_icon(editor_interface, "DistractionFree")
+    btn_expand.icon = EditorIcons.get_icon("DistractionFree")
     btn_expand.pressed.connect(on_btn_expand)
     _window_dialog.close_requested.connect(func(): _window_dialog.hide())
 
 
 func on_btn_expand() -> void:
     _inventory_editor.inventory = inventory
-    _inventory_editor.editor_interface = editor_interface
     _window_dialog.popup_centered()
 
 
