@@ -1,13 +1,19 @@
 @tool
 extends Object
 
+const Gloot = preload("res://addons/gloot/gloot.gd")
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 
-static var undo_redo_manager: EditorUndoRedoManager = null
+
+static func _get_undo_redo_manager() -> EditorUndoRedoManager:
+    assert(Gloot.instance())
+    var undo_redo_manager = Gloot.instance().get_undo_redo()
+    assert(undo_redo_manager)
+    return undo_redo_manager
 
 
 static func add_inventory_item(inventory: Inventory, prototype_id: String) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_inv_state := inventory.serialize()
     if inventory.create_and_add_item(prototype_id) == null:
@@ -21,7 +27,7 @@ static func add_inventory_item(inventory: Inventory, prototype_id: String) -> vo
 
 
 static func remove_inventory_item(inventory: Inventory, item: InventoryItem) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_inv_state := inventory.serialize()
     if !inventory.remove_item(item):
@@ -35,7 +41,7 @@ static func remove_inventory_item(inventory: Inventory, item: InventoryItem) -> 
 
 
 static func remove_inventory_items(inventory: Inventory, items: Array[InventoryItem]) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_inv_state := inventory.serialize()
     for item in items:
@@ -49,7 +55,7 @@ static func remove_inventory_items(inventory: Inventory, items: Array[InventoryI
 
 
 static func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var inventory: Inventory = item.get_inventory()
     if inventory:
@@ -65,7 +71,7 @@ static func set_item_properties(item: InventoryItem, new_properties: Dictionary)
 
 
 static func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var inventory: Inventory = item.get_inventory()
     if inventory:
@@ -95,7 +101,7 @@ static func _set_item_properties(inventory: Inventory, item_index: int, new_prop
 
 
 static func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     undo_redo_manager.create_action("Set equipped_item")
     undo_redo_manager.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
@@ -104,7 +110,7 @@ static func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: 
 
 
 static func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, to: Vector2i) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_position := inventory.get_item_position(item)
     if old_position == to:
@@ -128,7 +134,7 @@ static func join_inventory_items(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_inv_state := inventory.serialize()
     if !inventory.join(item_dst, item_src):
@@ -142,7 +148,7 @@ static func join_inventory_items(
 
 
 static func rename_prototype(protoset: ItemProtoset, id: String, new_id: String) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_prototypes = _prototypes_deep_copy(protoset)
 
@@ -153,7 +159,7 @@ static func rename_prototype(protoset: ItemProtoset, id: String, new_id: String)
 
 
 static func add_prototype(protoset: ItemProtoset, id: String) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_prototypes = _prototypes_deep_copy(protoset)
 
@@ -164,7 +170,7 @@ static func add_prototype(protoset: ItemProtoset, id: String) -> void:
 
 
 static func remove_prototype(protoset: ItemProtoset, id: String) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
 
     var old_prototypes = _prototypes_deep_copy(protoset)
 
@@ -188,7 +194,7 @@ static func _set_prototypes(protoset: ItemProtoset, prototypes: Dictionary) -> v
 static func set_prototype_properties(protoset: ItemProtoset,
         prototype_id: String,
         new_properties: Dictionary) -> void:
-    assert(undo_redo_manager)
+    var undo_redo_manager = _get_undo_redo_manager()
     assert(protoset.has_prototype(prototype_id))
     var old_properties = protoset.get_prototype(prototype_id).duplicate()
 

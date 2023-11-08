@@ -1,18 +1,19 @@
 @tool
 extends EditorPlugin
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
-const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
-const InventoryEditor = preload("res://addons/gloot/editor/inventory_editor/inventory_editor.gd")
-
 var inspector_plugin: EditorInspectorPlugin
+static var _instance: EditorPlugin
+
+
+func _init() -> void:
+    _instance = self
+
+
+static func instance() -> EditorPlugin:
+    return _instance
 
 
 func _enter_tree() -> void:
-    GlootUndoRedo.undo_redo_manager = get_undo_redo()
-    EditorIcons.editor_interface = get_editor_interface()
-    InventoryEditor.editor_interface = get_editor_interface()
-
     add_custom_type("ItemProtoset", "Resource", preload("core/item_protoset.gd"), preload("images/icon_item_protoset.svg"))
 
     add_custom_type("InventoryItem", "Node", preload("core/inventory_item.gd"), preload("images/icon_item.svg"))

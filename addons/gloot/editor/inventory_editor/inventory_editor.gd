@@ -20,7 +20,6 @@ var inventory: Inventory :
         connect_inventory_signals()
 
         _refresh()
-static var editor_interface: EditorInterface = null
 var _inventory_control: Control
 
 
@@ -119,6 +118,8 @@ func _on_btn_remove() -> void:
 
 
 static func _select_node(node: Node) -> void:
+    assert(Gloot.instance())
+    var editor_interface := Gloot.instance().get_editor_interface()
     assert(editor_interface)
     editor_interface.get_selection().clear()
     editor_interface.get_selection().add_node(node)
