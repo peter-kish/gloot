@@ -111,11 +111,10 @@ func _on_prototype_id_picked(index: int) -> void:
 
 func _on_btn_edit() -> void:
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
-    if selected_item == null || gloot_undo_redo == null || editor_interface == null:
+    if selected_item == null:
         return
     if _properties_editor == null:
         _properties_editor = PropertiesEditor.instantiate()
-        _properties_editor.init(gloot_undo_redo, editor_interface)
         add_child(_properties_editor)
     _properties_editor.item = selected_item
     _properties_editor.popup_centered(POPUP_SIZE)
