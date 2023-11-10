@@ -3,6 +3,8 @@ extends TextureRect
 
 signal selected_status_changed
 
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
+
 @export var selection_style: StyleBox :
     get:
         return selection_style
@@ -150,5 +152,7 @@ func _drop_data(at_position, data):
     if stacks_constraint == null:
         return
 
-    stacks_constraint.join_stacks_autosplit(item, data.item)
+    Undoables.exec_inventory_undoable([inventory], "Join Item Stacks", func():
+        stacks_constraint.join_stacks_autosplit(item, data.item)
+    )
 
