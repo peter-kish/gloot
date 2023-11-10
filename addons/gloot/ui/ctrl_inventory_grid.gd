@@ -222,6 +222,67 @@ func _process(_delta) -> void:
         _refresh_queued = false
 
 
+func _connect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if !inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.connect(_queue_refresh)
+    if !inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.connect(_on_item_modified)
+    if !inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.connect(_on_inventory_resized)
+    if !inventory.item_removed.is_connected(_on_item_removed):
+        inventory.item_removed.connect(_on_item_removed)
+    var grid_constraint = inventory.get_grid_constraint()
+    if grid_constraint != null && !grid_constraint.item_moved.is_connected(_on_item_moved):
+        grid_constraint.item_moved.connect(_on_item_moved)
+    if !inventory.constraint_enabled.is_connected(_on_constraint_enabled):
+        inventory.constraint_enabled.connect(_on_constraint_enabled)
+
+
+func _disconnect_inventory_signals() -> void:
+    if !inventory:
+        return
+
+    if inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.disconnect(_queue_refresh)
+    if inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.disconnect(_on_inventory_resized)
+    if inventory.item_removed.is_connected(_on_item_removed):
+        inventory.item_removed.disconnect(_on_item_removed)
+    var grid_constraint = inventory.get_grid_constraint()
+    if grid_constraint != null && grid_constraint.item_moved.is_connected(_on_item_moved):
+        grid_constraint.item_moved.disconnect(_on_item_moved)
+    if inventory.constraint_enabled.is_connected(_on_constraint_enabled):
+        inventory.constraint_enabled.disconnect(_on_constraint_enabled)
+
+
+func _on_item_modified(_item: InventoryItem) -> void:
+    _queue_refresh()
+
+
+func _on_inventory_resized() -> void:
+    _queue_refresh()
+
+
+func _on_item_removed(_item: InventoryItem) -> void:
+    if _item == _selected_item:
+        _select(null)
+
+
+func _on_item_moved(_item: InventoryItem) -> void:
+    _queue_refresh()
+
+
+func _on_constraint_enabled(constraint: int) -> void:
+    if constraint == inventory.Constraint.GRID:
+        if !inventory.get_grid_constraint().item_moved.is_connected(_on_item_moved):
+            inventory.get_grid_constraint().item_moved.connect(_on_item_moved)
+
+
 func _refresh() -> void:
     if is_instance_valid(_ctrl_grid):
         _ctrl_grid.dimensions = _get_inventory_dimensions()
