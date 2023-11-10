@@ -149,6 +149,11 @@ func _connect_inventory_signals() -> void:
         inventory.size_changed.connect(_on_inventory_resized)
     if !inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.connect(_on_item_removed)
+    var grid_constraint = inventory.get_grid_constraint()
+    if grid_constraint != null && !grid_constraint.item_moved.is_connected(_on_item_moved):
+        grid_constraint.item_moved.connect(_on_item_moved)
+    if !inventory.constraint_enabled.is_connected(_on_constraint_enabled):
+        inventory.constraint_enabled.connect(_on_constraint_enabled)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -163,6 +168,11 @@ func _disconnect_inventory_signals() -> void:
         inventory.size_changed.disconnect(_on_inventory_resized)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
+    var grid_constraint = inventory.get_grid_constraint()
+    if grid_constraint != null && grid_constraint.item_moved.is_connected(_on_item_moved):
+        grid_constraint.item_moved.disconnect(_on_item_moved)
+    if inventory.constraint_enabled.is_connected(_on_constraint_enabled):
+        inventory.constraint_enabled.disconnect(_on_constraint_enabled)
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
@@ -176,6 +186,16 @@ func _on_inventory_resized() -> void:
 func _on_item_removed(_item: InventoryItem) -> void:
     if _item == _selected_item:
         _select(null)
+
+
+func _on_item_moved(_item: InventoryItem) -> void:
+    _refresh()
+
+
+func _on_constraint_enabled(constraint: int) -> void:
+    if constraint == inventory.Constraint.GRID:
+        if !inventory.get_grid_constraint().item_moved.is_connected(_on_item_moved):
+            inventory.get_grid_constraint().item_moved.connect(_on_item_moved)
 
 
 func _refresh() -> void:
