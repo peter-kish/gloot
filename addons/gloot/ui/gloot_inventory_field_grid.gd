@@ -3,6 +3,7 @@ extends GridContainer
 
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const GlootInventoryField = preload("res://addons/gloot/ui/gloot_inventory_field.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
 @export var inventory_path: NodePath :
     get:
@@ -124,14 +125,18 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
     if src_inventory == inventory:
         if dst_grid_constraint.get_item_position(item) == field_coords:
             return
-        dst_grid_constraint.move_item_to(item, field_coords)
+        Undoables.exec_inventory_undoable([inventory], "Move Inventory Item", func():
+            dst_grid_constraint.move_item_to(item, field_coords)
+        )
     else:
         if src_inventory == null:
             return
         var src_grid_constraint = src_inventory.get_grid_constraint()
         if src_grid_constraint == null:
             return
-        src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
+        Undoables.exec_inventory_undoable([inventory, src_inventory], "Transfer Inventory Item", func():
+            src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
+        )
 
 
 func _update_style(new_style: StyleBox) -> void:
