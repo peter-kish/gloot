@@ -8,11 +8,15 @@ signal item_removed(item)
 signal item_modified(item)
 signal contents_changed
 signal protoset_changed
+signal constraint_enabled(constraint)
+signal constraint_disabled(constraint)
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+
+enum Constraint {WEIGHT, STACKS, GRID}
 
 @export var protoset: ItemProtoset:
     get:
@@ -87,6 +91,7 @@ static func _get_item_script() -> Script:
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
     _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
+    _constraint_manager.constraint_disabled.connect(func(constraint: int): constraint_disabled.emit(constraint))
 
 
 func _notification(what: int) -> void:
@@ -98,6 +103,7 @@ func _notification(what: int) -> void:
 func _on_constraint_enabled(constraint: int) -> void:
     if constraint == ConstraintManager.Constraint.GRID:
         _constraint_manager.get_grid_constraint().size_changed.connect(_update_serialized_format)
+    constraint_enabled.emit(constraint)
 
 
 func _ready() -> void:
