@@ -1,16 +1,19 @@
 extends Object
 
-const Gloot = preload("res://addons/gloot/gloot.gd")
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
 
 static func _get_undo_redo_manager() -> EditorUndoRedoManager:
-    if Gloot.instance() == null:
+    if Engine.is_editor_hint():
+        var Gloot = load("res://addons/gloot/gloot.gd")
+        if Gloot.instance() == null:
+            return null
+        var undo_redo_manager = Gloot.instance().get_undo_redo()
+        if undo_redo_manager == null:
+            return null
+        return undo_redo_manager
+    else:
         return null
-    var undo_redo_manager = Gloot.instance().get_undo_redo()
-    if undo_redo_manager == null:
-        return null
-    return undo_redo_manager
 
 
 static func exec_inventory_undoable(inventories: Array[Inventory], action_name: String, callable: Callable):
@@ -19,7 +22,9 @@ static func exec_inventory_undoable(inventories: Array[Inventory], action_name: 
         return callable.call()
 
     var old_inv_states := _serialize_inventories(inventories)
-    var result = callable.call()
+    var result: bool = callable.call()
+    if !result:
+        return false
     var new_inv_states := _serialize_inventories(inventories)
 
     undo_redo_manager.create_action(action_name)
@@ -27,7 +32,7 @@ static func exec_inventory_undoable(inventories: Array[Inventory], action_name: 
     undo_redo_manager.add_undo_method(Undoables, "_set_inventories", inventories, old_inv_states)
     undo_redo_manager.commit_action()
 
-    return result
+    return true
 
 
 static func _set_inventories(inventories: Array[Inventory], inventory_data: Array[Dictionary]) -> void:
