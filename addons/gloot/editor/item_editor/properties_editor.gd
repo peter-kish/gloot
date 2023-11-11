@@ -1,7 +1,7 @@
 @tool
 extends Window
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
@@ -38,7 +38,7 @@ func _on_value_changed(key: String, new_value) -> void:
     if new_properties.hash() == item.properties.hash():
         return
 
-    GlootUndoRedo.set_item_properties(item, new_properties)
+    _set_item_properties_undoable(item, new_properties)
     _refresh()
 
 
@@ -49,8 +49,15 @@ func _on_value_removed(key: String) -> void:
     if new_properties.hash() == item.properties.hash():
         return
 
-    GlootUndoRedo.set_item_properties(item, new_properties)
+    _set_item_properties_undoable(item, new_properties)
     _refresh()
+
+
+func _set_item_properties_undoable(item: InventoryItem, new_properties: Dictionary) -> void:
+    Undoables.exec_item_undoable(item, "Set Item Properties", func():
+        item.properties = new_properties.duplicate()
+        return true
+    )
 
 
 func _refresh() -> void:
