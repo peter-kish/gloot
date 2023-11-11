@@ -148,7 +148,10 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_PROTOSET] = protoset.resource_path
+    if protoset == null:
+        result[KEY_PROTOSET] = ""
+    else:
+        result[KEY_PROTOSET] = protoset.resource_path
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.is_empty():
         result[KEY_PROPERTIES] = {}
