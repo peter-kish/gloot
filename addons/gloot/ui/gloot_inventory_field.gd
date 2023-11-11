@@ -48,7 +48,7 @@ func _ready() -> void:
 
 
 func _on_mouse_entered() -> void:
-    if !selected:
+    if !selected && (hover_style != null):
         _set_active_style(hover_style)
 
 
