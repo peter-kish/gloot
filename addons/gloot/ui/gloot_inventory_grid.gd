@@ -2,6 +2,9 @@
 class_name GlootInventoryGrid
 extends Control
 
+# TODO: Consider renaming to item_activated
+signal inventory_item_activated(item)
+
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
 const GlootInventoryItemGrid = preload("res://addons/gloot/ui/gloot_inventory_item_grid.gd")
@@ -125,6 +128,9 @@ func _populate() -> void:
     _inventory_item_grid.inventory = inventory
     _inventory_item_grid.field_grid = _inventory_field_grid
     _inventory_item_grid.selection_style = selection_style
+    _inventory_item_grid.inventory_item_activated.connect(func(item: InventoryItem):
+        inventory_item_activated.emit(item)
+    )
     add_child(_inventory_item_grid)
 
     _update_size()
@@ -146,7 +152,8 @@ func _update_item_spacing() -> void:
     _inventory_field_grid.add_theme_constant_override("v_separation", item_spacing)
 
 
-func get_selected_item() -> InventoryItem:
+# TODO: Consider renaming to get_selected_item
+func get_selected_inventory_item() -> InventoryItem:
     if _inventory_item_grid == null:
         return null
     return _inventory_item_grid.get_selected_item()
