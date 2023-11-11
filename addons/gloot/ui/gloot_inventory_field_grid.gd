@@ -126,7 +126,7 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
         if dst_grid_constraint.get_item_position(item) == field_coords:
             return
         Undoables.exec_inventory_undoable([inventory], "Move Inventory Item", func():
-            dst_grid_constraint.move_item_to(item, field_coords)
+            return dst_grid_constraint.move_item_to(item, field_coords)
         )
     else:
         if src_inventory == null:
@@ -135,7 +135,7 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
         if src_grid_constraint == null:
             return
         Undoables.exec_inventory_undoable([inventory, src_inventory], "Transfer Inventory Item", func():
-            src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
+            return src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
         )
 
 

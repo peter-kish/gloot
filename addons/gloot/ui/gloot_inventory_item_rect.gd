@@ -2,6 +2,7 @@
 extends TextureRect
 
 signal selected_status_changed
+signal activated
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
@@ -57,12 +58,12 @@ func _set_selection_style(style: StyleBox) -> void:
 func _gui_input(event):
     if !(event is InputEventMouseButton):
         return
-    if !event.pressed:
-        return
     if event.button_index != MOUSE_BUTTON_LEFT:
         return
-
-    selected = true
+    if event.pressed:
+        selected = true
+    if event.double_click:
+        activated.emit()
 
 
 func _update_stack_size_label() -> void:
@@ -153,6 +154,6 @@ func _drop_data(at_position, data):
         return
 
     Undoables.exec_inventory_undoable([inventory], "Join Item Stacks", func():
-        stacks_constraint.join_stacks_autosplit(item, data.item)
+        return stacks_constraint.join_stacks_autosplit(item, data.item)
     )
 
