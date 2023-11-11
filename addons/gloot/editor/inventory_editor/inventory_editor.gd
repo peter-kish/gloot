@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
 const POPUP_SIZE = Vector2i(800, 300)
@@ -67,9 +67,9 @@ func _refresh() -> void:
 
     # Create the appropriate inventory control and populate it
     if inventory is InventoryGrid:
-        _inventory_control = CtrlInventoryGrid.new()
-        _inventory_control.grid_color = Color.GRAY
-        _inventory_control.draw_selections = true
+        _inventory_control = GlootInventoryGrid.new()
+        _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
+        _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
     elif inventory is InventoryStacked:
         _inventory_control = CtrlInventoryStacked.new()
     elif inventory is Inventory:
@@ -86,7 +86,9 @@ func _refresh() -> void:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    GlootUndoRedo.remove_inventory_item(inventory, item)
+    Undoables.exec_inventory_undoable([inventory], "Remove Inventory Item", func():
+        return inventory.remove_item(item)
+    )
 
 
 func _ready() -> void:
@@ -103,7 +105,9 @@ func _ready() -> void:
 
 func _on_prototype_id_picked(index: int) -> void:
     var prototype_id = prototype_id_filter.values[index]
-    GlootUndoRedo.add_inventory_item(inventory, prototype_id)
+    Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
+        return (inventory.create_and_add_item(prototype_id) != null)
+    )
     
 
 func _on_btn_edit() -> void:
@@ -120,7 +124,9 @@ func _on_btn_edit() -> void:
 func _on_btn_remove() -> void:
     var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
     if selected_item != null:
-        GlootUndoRedo.remove_inventory_item(inventory, selected_item)
+        Undoables.exec_inventory_undoable([inventory], "Remove Inventory Item", func():
+            return inventory.remove_item(selected_item)
+        )
 
 
 static func _select_node(node: Node) -> void:
