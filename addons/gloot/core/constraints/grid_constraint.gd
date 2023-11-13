@@ -337,6 +337,9 @@ func _sort_if_needed() -> void:
 func get_space_for(item: InventoryItem) -> ItemCount:
     var occupied_rects: Array[Rect2i]
     var item_size = get_item_size(item)
+    if item_size == Vector2i.ONE:
+        return ItemCount.new(_item_map.free_fields)
+
     var free_space := find_free_space(item_size, occupied_rects)
     while free_space.success:
         occupied_rects.append(Rect2i(free_space.position, item_size))
@@ -345,7 +348,11 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    return find_free_space(get_item_size(item)).success
+    var item_size = get_item_size(item)
+    if item_size == Vector2i.ONE:
+        return _item_map.free_fields > 0
+        
+    return find_free_space(item_size).success
 
 
 # TODO: Check if find_free_place is needed
