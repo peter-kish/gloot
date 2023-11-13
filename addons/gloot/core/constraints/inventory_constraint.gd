@@ -20,6 +20,11 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 # Override this
+func has_space_for(item:InventoryItem) -> bool:
+    return false
+
+
+# Override this
 func reset() -> void:
     pass
 

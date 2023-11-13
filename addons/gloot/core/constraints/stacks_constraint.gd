@@ -220,6 +220,10 @@ func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.inf()
 
 
+func has_space_for(item: InventoryItem) -> bool:
+    return true
+
+
 func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     assert(inventory != null, "Inventory not set!")
 

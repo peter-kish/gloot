@@ -102,6 +102,13 @@ func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.new(floor(get_free_space() / unit_weight))
 
 
+func has_space_for(item: InventoryItem) -> bool:
+    if has_unlimited_capacity():
+        return true
+    var item_weight := get_item_weight(item)
+    return get_free_space() >= item_weight
+
+
 func reset() -> void:
     capacity = 0.0
 

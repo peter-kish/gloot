@@ -141,7 +141,31 @@ func _sg_get_space_for(item: InventoryItem) -> ItemCount:
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    return not get_space_for(item).less(ItemCount.new(1))
+    match get_configuration():
+        Configuration.W:
+            return _weight_constraint.has_space_for(item)
+        Configuration.S:
+            return _stacks_constraint.has_space_for(item)
+        Configuration.G:
+            return _grid_constraint.has_space_for(item)
+        Configuration.WS:
+            return _weight_constraint.has_space_for(item)
+        Configuration.WG:
+            return _weight_constraint.has_space_for(item) && _grid_constraint.has_space_for(item)
+        Configuration.SG:
+            return _sg_has_space_for(item)
+        Configuration.WSG:
+            return _sg_has_space_for(item) && _weight_constraint.has_space_for(item)
+
+    return true
+
+
+func _sg_has_space_for(item: InventoryItem) -> bool:
+    if _grid_constraint.has_space_for(item):
+        return true
+    var stack_size := ItemCount.new(_stacks_constraint.get_item_stack_size(item))
+    var free_stacks_space := _stacks_constraint.get_free_stack_space_for(item)
+    return free_stacks_space.ge(stack_size)
 
 
 func enable_weight_constraint(capacity: float = 0.0) -> void:

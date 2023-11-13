@@ -344,6 +344,10 @@ func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.new(occupied_rects.size())
 
 
+func has_space_for(item: InventoryItem) -> bool:
+    return find_free_space(get_item_size(item)).success
+
+
 # TODO: Check if find_free_place is needed
 func find_free_space(item_size: Vector2i, occupied_rects: Array[Rect2i] = []) -> Dictionary:
     var result := {success = false, position = Vector2i(-1, -1)}
