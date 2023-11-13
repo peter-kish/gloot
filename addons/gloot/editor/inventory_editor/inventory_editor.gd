@@ -3,7 +3,6 @@ extends Control
 
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
-const Gloot = preload("res://addons/gloot/gloot.gd")
 
 @onready var hsplit_container = $HSplitContainer
 @onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
@@ -118,8 +117,9 @@ func _on_btn_remove() -> void:
 
 
 static func _select_node(node: Node) -> void:
-    assert(Gloot.instance())
-    var editor_interface := Gloot.instance().get_editor_interface()
+    var gloot = load("res://addons/gloot/gloot.gd")
+    assert(gloot.instance())
+    var editor_interface: EditorInterface = gloot.instance().get_editor_interface()
     assert(editor_interface)
     editor_interface.get_selection().clear()
     editor_interface.get_selection().add_node(node)

@@ -1,13 +1,13 @@
 @tool
 extends Object
 
-const Gloot = preload("res://addons/gloot/gloot.gd")
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 
 
 static func _get_undo_redo_manager() -> EditorUndoRedoManager:
-    assert(Gloot.instance())
-    var undo_redo_manager = Gloot.instance().get_undo_redo()
+    var gloot = load("res://addons/gloot/gloot.gd")
+    assert(gloot.instance())
+    var undo_redo_manager = gloot.instance().get_undo_redo()
     assert(undo_redo_manager)
     return undo_redo_manager
 
