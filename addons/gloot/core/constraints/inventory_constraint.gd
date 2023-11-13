@@ -1,3 +1,5 @@
+extends Object
+
 var inventory: Inventory = null :
     get:
         return inventory
@@ -15,6 +17,11 @@ func _init(inventory_: Inventory) -> void:
 # Override this
 func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.zero()
+
+
+# Override this
+func has_space_for(item:InventoryItem) -> bool:
+    return false
 
 
 # Override this

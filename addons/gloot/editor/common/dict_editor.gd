@@ -65,8 +65,8 @@ const supported_types: Array[int] = [
 
 
 func _ready() -> void:
-    btn_add.pressed.connect(Callable(self, "_on_btn_add"))
-    edt_property_name.text_submitted.connect(Callable(self, "_on_text_entered"))
+    btn_add.pressed.connect(_on_btn_add)
+    edt_property_name.text_submitted.connect(_on_text_entered)
     refresh()
 
 
@@ -150,7 +150,7 @@ func _add_value_editor(key: String) -> void:
     value_editor.value = dictionary[key]
     value_editor.size_flags_horizontal = SIZE_EXPAND_FILL
     value_editor.enabled = (not key in immutable_keys)
-    value_editor.value_changed.connect(Callable(self, "_on_value_changed").bind(key, value_editor))
+    value_editor.value_changed.connect(_on_value_changed.bind(key, value_editor))
     grid_container.add_child(value_editor)
 
 
@@ -166,7 +166,7 @@ func _add_remove_button(key: String) -> void:
         button.text = remove_button_map[key].text
         button.disabled = remove_button_map[key].disabled
         button.icon = remove_button_map[key].icon
-    button.pressed.connect(Callable(self, "_on_remove_button").bind(key))
+    button.pressed.connect(_on_remove_button.bind(key))
     grid_container.add_child(button)
 
 

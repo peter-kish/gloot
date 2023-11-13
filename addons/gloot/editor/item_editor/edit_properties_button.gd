@@ -6,34 +6,31 @@ const POPUP_SIZE = Vector2i(800, 300)
 
 var current_value: Dictionary
 var updating: bool = false
-var editor_interface: EditorInterface
 var _btn_prototype_id: Button
 var _properties_editor: Window
 
 
-func _init(gloot_undo_redo_, editor_interface_: EditorInterface):
+func _init():
     _properties_editor = PropertiesEditor.instantiate()
-    _properties_editor.init(gloot_undo_redo_, editor_interface_)
     add_child(_properties_editor)
 
     _btn_prototype_id = Button.new()
     _btn_prototype_id.text = "Edit Properties"
-    _btn_prototype_id.pressed.connect(Callable(self, "_on_btn_edit"))
+    _btn_prototype_id.pressed.connect(_on_btn_edit)
+    _btn_prototype_id.icon = EditorIcons.get_icon("Edit")
     add_child(_btn_prototype_id)
 
 
 func _ready() -> void:
-    _btn_prototype_id.icon = EditorIcons.get_icon(editor_interface, "Edit")
-
     var item: InventoryItem = get_edited_object()
     if !item:
         return
     _properties_editor.item = item
-    item.properties_changed.connect(Callable(self, "update_property"))
+    item.properties_changed.connect(update_property)
 
     if !item.protoset:
         return
-    item.protoset.changed.connect(Callable(self, "_on_protoset_changed"))
+    item.protoset.changed.connect(_on_protoset_changed)
 
     _refresh_button()
 

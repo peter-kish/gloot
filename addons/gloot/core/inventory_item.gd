@@ -18,7 +18,7 @@ signal properties_changed
         if new_protoset && new_protoset._prototypes && new_protoset._prototypes.keys().size() > 0:
             self.prototype_id = new_protoset._prototypes.keys()[0]
 
-        new_protoset.changed.connect(Callable(self, "_on_protoset_modified"))
+        new_protoset.changed.connect(func(): update_configuration_warnings())
 
         protoset = new_protoset
         protoset_changed.emit()
@@ -66,10 +66,6 @@ func _get_configuration_warnings() -> PackedStringArray:
         return PackedStringArray(["Undefined prototype '%s'. Check the item protoset!" % prototype_id])
 
     return PackedStringArray()
-
-
-func _on_protoset_modified() -> void:
-    update_configuration_warnings()
 
 
 func reset_properties() -> void:

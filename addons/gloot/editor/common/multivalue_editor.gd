@@ -35,8 +35,8 @@ func _ready() -> void:
         var line_edit: LineEdit = LineEdit.new()
         line_edit.text = var_to_str(values[i])
         line_edit.size_flags_horizontal = SIZE_EXPAND_FILL
-        line_edit.text_submitted.connect(Callable(self, "_on_line_edit_value_entered").bind(line_edit, i))
-        line_edit.focus_exited.connect(Callable(self, "_on_line_edit_focus_exited").bind(line_edit, i))
+        line_edit.text_submitted.connect(_on_line_edit_value_entered.bind(line_edit, i))
+        line_edit.focus_exited.connect(_on_line_edit_focus_exited.bind(line_edit, i))
         line_edit.editable = enabled
         hbox.add_child(line_edit)
 

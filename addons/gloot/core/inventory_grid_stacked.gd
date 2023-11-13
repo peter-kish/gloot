@@ -7,7 +7,7 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
 
 func _init() -> void:
     super._init()
-    _constraint_manager.enable_stacks_constraint_()
+    _constraint_manager.enable_stacks_constraint()
 
 
 func has_place_for(item: InventoryItem) -> bool:

@@ -56,6 +56,14 @@ func _exit_tree():
     _items.clear()
 
 
+func _notification(what):
+    if what == NOTIFICATION_PREDELETE:
+        if _constraint_manager != null:
+            _constraint_manager.free()
+            _constraint_manager = null
+        
+
+
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
 
@@ -69,7 +77,8 @@ func _on_item_added(item: InventoryItem) -> void:
     _items.append(item)
     contents_changed.emit()
     _connect_item_signals(item)
-    _constraint_manager._on_item_added(item)
+    if _constraint_manager:
+        _constraint_manager._on_item_added(item)
     item_added.emit(item)
 
 
@@ -77,7 +86,8 @@ func _on_item_removed(item: InventoryItem) -> void:
     _items.erase(item)
     contents_changed.emit()
     _disconnect_item_signals(item)
-    _constraint_manager._on_item_removed(item)
+    if _constraint_manager:
+        _constraint_manager._on_item_removed(item)
     item_removed.emit(item)
 
 
@@ -105,21 +115,21 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.protoset_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.protoset_changed.connect(Callable(self, "_emit_item_modified").bind(item))
-    if !item.prototype_id_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.prototype_id_changed.connect(Callable(self, "_emit_item_modified").bind(item))
-    if !item.properties_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.properties_changed.connect(Callable(self, "_emit_item_modified").bind(item))
+    if !item.protoset_changed.is_connected(_emit_item_modified):
+        item.protoset_changed.connect(_emit_item_modified.bind(item))
+    if !item.prototype_id_changed.is_connected(_emit_item_modified):
+        item.prototype_id_changed.connect(_emit_item_modified.bind(item))
+    if !item.properties_changed.is_connected(_emit_item_modified):
+        item.properties_changed.connect(_emit_item_modified.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.protoset_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.protoset_changed.disconnect(Callable(self, "_emit_item_modified"))
-    if item.prototype_id_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.prototype_id_changed.disconnect(Callable(self, "_emit_item_modified"))
-    if item.properties_changed.is_connected(Callable(self, "_emit_item_modified")):
-        item.properties_changed.disconnect(Callable(self, "_emit_item_modified"))
+    if item.protoset_changed.is_connected(_emit_item_modified):
+        item.protoset_changed.disconnect(_emit_item_modified)
+    if item.prototype_id_changed.is_connected(_emit_item_modified):
+        item.prototype_id_changed.disconnect(_emit_item_modified)
+    if item.properties_changed.is_connected(_emit_item_modified):
+        item.properties_changed.disconnect(_emit_item_modified)
 
 
 func _emit_item_modified(item: InventoryItem) -> void:

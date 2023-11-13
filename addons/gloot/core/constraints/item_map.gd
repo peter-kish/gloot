@@ -1,4 +1,10 @@
 var map: Array
+var _free_fields: int
+var free_fields :
+    get:
+        return _free_fields
+    set(new_free_fields):
+        assert(false, "free_fields is read-only!")
 
 
 func _init(size: Vector2i) -> void:
@@ -11,6 +17,7 @@ func resize(size: Vector2i) -> void:
     for i in map.size():
         map[i] = []
         map[i].resize(size.y)
+    _free_fields = size.x * size.y
 
 
 func fill_rect(rect: Rect2i, value) -> void:
@@ -20,6 +27,7 @@ func fill_rect(rect: Rect2i, value) -> void:
             if !contains(map_coords):
                 continue
             map[map_coords.x][map_coords.y] = value
+            _free_fields -= 1
 
 
 func clear_rect(rect: Rect2i) -> void:
@@ -44,6 +52,8 @@ func print() -> void:
 func clear() -> void:
     for column in map:
         column.fill(null)
+    var size = get_size()
+    _free_fields = size.x * size.y
 
 
 func contains(position: Vector2i) -> bool:

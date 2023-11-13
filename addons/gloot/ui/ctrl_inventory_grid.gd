@@ -8,6 +8,8 @@ signal inventory_item_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
+const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     get:
         return field_dimensions
@@ -80,7 +82,6 @@ var inventory: InventoryGrid = null :
         _connect_inventory_signals()
 
         _refresh()
-var _gloot_undo_redo = null
 var _grabbed_ctrl_inventory_item = null
 var _grab_offset: Vector2
 var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
@@ -129,7 +130,7 @@ func _ready() -> void:
 
     _refresh()
     if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.connect(Callable(self, "_on_item_dropped"))
+        _gloot.item_dropped.connect(_on_item_dropped)
 
 
 func _get_gloot() -> Node:
@@ -144,28 +145,28 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.contents_changed.is_connected(Callable(self, "_refresh")):
-        inventory.contents_changed.connect(Callable(self, "_refresh"))
-    if !inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
-        inventory.item_modified.connect(Callable(self, "_on_item_modified"))
-    if !inventory.size_changed.is_connected(Callable(self, "_on_inventory_resized")):
-        inventory.size_changed.connect(Callable(self, "_on_inventory_resized"))
-    if !inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
-        inventory.item_removed.connect(Callable(self, "_on_item_removed"))
+    if !inventory.contents_changed.is_connected(_refresh):
+        inventory.contents_changed.connect(_refresh)
+    if !inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.connect(_on_item_modified)
+    if !inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.connect(_on_inventory_resized)
+    if !inventory.item_removed.is_connected(_on_item_removed):
+        inventory.item_removed.connect(_on_item_removed)
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.contents_changed.is_connected(Callable(self, "_refresh")):
-        inventory.contents_changed.disconnect(Callable(self, "_refresh"))
-    if inventory.item_modified.is_connected(Callable(self, "_on_item_modified")):
-        inventory.item_modified.disconnect(Callable(self, "_on_item_modified"))
-    if inventory.size_changed.is_connected(Callable(self, "_on_inventory_resized")):
-        inventory.size_changed.disconnect(Callable(self, "_on_inventory_resized"))
-    if inventory.item_removed.is_connected(Callable(self, "_on_item_removed")):
-        inventory.item_removed.disconnect(Callable(self, "_on_item_removed"))
+    if inventory.contents_changed.is_connected(_refresh):
+        inventory.contents_changed.disconnect(_refresh)
+    if inventory.item_modified.is_connected(_on_item_modified):
+        inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.disconnect(_on_inventory_resized)
+    if inventory.item_removed.is_connected(_on_item_removed):
+        inventory.item_removed.disconnect(_on_item_removed)
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
@@ -268,10 +269,10 @@ func _populate_list() -> void:
         ctrl_inventory_item.ctrl_inventory = self
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        ctrl_inventory_item.grabbed.connect(Callable(self, "_on_item_grab"))
-        ctrl_inventory_item.activated.connect(Callable(self, "_on_item_activated"))
-        ctrl_inventory_item.mouse_entered.connect(Callable(self, "_on_item_mouse_entered").bind(ctrl_inventory_item))
-        ctrl_inventory_item.mouse_exited.connect(Callable(self, "_on_item_mouse_exited").bind(ctrl_inventory_item))
+        ctrl_inventory_item.grabbed.connect(_on_item_grab)
+        ctrl_inventory_item.activated.connect(_on_item_activated)
+        ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
+        ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
         ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
@@ -453,22 +454,20 @@ func get_selected_inventory_item() -> InventoryItem:
     return _selected_item
 
 
-# TODO: Find a better way for undoing/redoing item movements
 func _move_item(item: InventoryItem, position: Vector2i) -> void:
-    if _gloot_undo_redo:
-        _gloot_undo_redo.move_inventory_item(inventory, item, position)
+    if Engine.is_editor_hint():
+        GlootUndoRedo.move_inventory_item(inventory, item, position)
     else:
         inventory.move_item_to(item, position)
 
         
-# TODO: Find a better way for undoing/redoing item merges
 func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
     var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
     if item_dst == null:
         return
 
-    if _gloot_undo_redo:
-        _gloot_undo_redo.join_inventory_items(inventory, item_dst, item_src)
+    if Engine.is_editor_hint():
+        GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
     else:
         (inventory as InventoryGridStacked).join(item_dst, item_src)
 

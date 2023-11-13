@@ -45,9 +45,20 @@ func _fill_item_map() -> void:
 
 func _on_inventory_set() -> void:
     _refresh_item_map()
-    inventory.item_added.connect(func(item: InventoryItem): _item_map.fill_rect(get_item_rect(item), item))
-    inventory.item_removed.connect(func(item: InventoryItem): _item_map.clear_rect(get_item_rect(item)))
-    inventory.item_modified.connect(func(_item: InventoryItem): _refresh_item_map())
+
+
+func _on_item_added(item: InventoryItem) -> void:
+    if item == null:
+        return
+    _item_map.fill_rect(get_item_rect(item), item)
+
+
+func _on_item_removed(item: InventoryItem) -> void:
+    _item_map.clear_rect(get_item_rect(item))
+
+    
+func _on_item_modified(item: InventoryItem) -> void:
+    _refresh_item_map()
 
 
 func _bounds_broken() -> bool:
@@ -304,7 +315,7 @@ func sort() -> bool:
     var item_array: Array[InventoryItem]
     for item in inventory.get_items():
         item_array.append(item)
-    item_array.sort_custom(Callable(self, "_compare_items"))
+    item_array.sort_custom(_compare_items)
 
     for item in item_array:
         _move_item_to_unsafe(item, -get_item_size(item))
@@ -326,11 +337,22 @@ func _sort_if_needed() -> void:
 func get_space_for(item: InventoryItem) -> ItemCount:
     var occupied_rects: Array[Rect2i]
     var item_size = get_item_size(item)
+    if item_size == Vector2i.ONE:
+        return ItemCount.new(_item_map.free_fields)
+
     var free_space := find_free_space(item_size, occupied_rects)
     while free_space.success:
         occupied_rects.append(Rect2i(free_space.position, item_size))
         free_space = find_free_space(item_size, occupied_rects)
     return ItemCount.new(occupied_rects.size())
+
+
+func has_space_for(item: InventoryItem) -> bool:
+    var item_size = get_item_size(item)
+    if item_size == Vector2i.ONE:
+        return _item_map.free_fields > 0
+        
+    return find_free_space(item_size).success
 
 
 # TODO: Check if find_free_place is needed

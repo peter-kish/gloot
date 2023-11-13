@@ -173,7 +173,8 @@ func test_move_item_to() -> void:
 
 func test_transfer_to() -> void:
     var inventory2 := create_inventory(TEST_PROTOSET)
-    var grid_constraint2 := GridConstraint.new(inventory2)
+    inventory2._constraint_manager.enable_grid_constraint()
+    var grid_constraint2 := inventory2._constraint_manager.get_grid_constraint()
     grid_constraint2.create_and_add_item_at(TEST_PROTOTYPE, Vector2i(2, 2))
 
     inventory.add_item(item)

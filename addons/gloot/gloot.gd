@@ -2,6 +2,15 @@
 extends EditorPlugin
 
 var inspector_plugin: EditorInspectorPlugin
+static var _instance: EditorPlugin
+
+
+func _init() -> void:
+    _instance = self
+
+
+static func instance() -> EditorPlugin:
+    return _instance
 
 
 func _enter_tree() -> void:
@@ -24,8 +33,6 @@ func _enter_tree() -> void:
     add_custom_type("CtrlItemSlotEx", "Control", preload("ui/ctrl_item_slot_ex.gd"), preload("images/icon_ctrl_item_slot.svg"))
 
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
-    inspector_plugin.editor_interface = get_editor_interface()
-    inspector_plugin.undo_redo_manager = get_undo_redo()
     add_inspector_plugin(inspector_plugin)
 
     add_autoload_singleton("GLoot", "res://addons/gloot/gloot_autoload.gd")
