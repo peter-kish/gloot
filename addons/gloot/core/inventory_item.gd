@@ -35,17 +35,11 @@ signal removed_from_slot(item_slot)
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
             return
-        if protoset == null && !new_prototype_id.is_empty():
-            return
-        if (protoset != null) && (!protoset.has_prototype(new_prototype_id)):
-            return
+        _reset_properties()
         prototype_id = new_prototype_id
         prototype_id_changed.emit()
 
-@export var properties: Dictionary :
-    set(new_properties):
-        properties = new_properties
-        properties_changed.emit()
+@export var _properties: Dictionary
 
 var _inventory: Inventory :
     set(new_inventory):
@@ -83,24 +77,20 @@ func _on_protoset_changed() -> void:
     update_configuration_warnings()
 
 
-func reset_properties() -> void:
+func _reset_properties() -> void:
     if !protoset || prototype_id.is_empty():
-        properties = {}
+        _properties = {}
         return
 
-    # Reset (erase) all properties from the current prototype but preserve the rest
-    var prototype: Dictionary = protoset.get_prototype(prototype_id)
-    var keys: Array = properties.keys().duplicate()
-    for property in keys:
-        if prototype.has(property):
-            properties.erase(property)
+    for property in get_overridden_properties():
+        _properties.erase(property)
 
 
 func duplicate() -> InventoryItem:
     var result := InventoryItem.new()
     result.protoset = protoset
     result.prototype_id = prototype_id
-    result.properties = properties.duplicate()
+    result._properties = _properties.duplicate()
     return result
 
 
@@ -211,44 +201,78 @@ static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> b
         return false
     return (item_owner as ItemSlot).equip(item)
 
+    
+func has_property(property_name: String) -> bool:
+    if _properties.has(property_name):
+        return true
+    if protoset && protoset.has_item_property(prototype_id, property_name):
+        return true
+    return false
+
 
 func get_property(property_name: String, default_value = null) -> Variant:
     # Note: The protoset editor still doesn't support arrays and dictionaries,
     # but those can still be added via JSON definitions or via code.
-    if properties.has(property_name):
-        var value = properties[property_name]
+    if _properties.has(property_name):
+        var value = _properties[property_name]
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
         return value
 
-    if protoset && protoset.prototype_has_property(prototype_id, property_name):
+    if protoset && protoset.has_item_property(prototype_id, property_name):
         var value = protoset.get_prototype_property(prototype_id, property_name, default_value)
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
         return value
-
+        
+    if _properties.has(property_name):
+        return _properties[property_name]
+    if protoset:
+        return protoset.get_item_property(prototype_id, property_name, default_value)
     return default_value
 
 
 func set_property(property_name: String, value) -> void:
-    var old_property = null
-    if properties.has(property_name):
-        old_property = properties[property_name]
-    properties[property_name] = value
-    if old_property != properties[property_name]:
+    if get_property(property_name) == value:
+        return
+
+    if protoset && protoset.has_item_property(prototype_id, property_name):
+        if protoset.get_item_property(prototype_id, property_name) == value && _properties.has(property_name):
+            _properties.erase(property_name)
+            properties_changed.emit()
+            return
+
+    if value == null:
+        if _properties.has(property_name):
+            _properties.erase(property_name)
+            properties_changed.emit()
+    else:
+        _properties[property_name] = value
         properties_changed.emit()
 
 
 func clear_property(property_name: String) -> void:
-    if properties.has(property_name):
-        properties.erase(property_name)
+    if _properties.has(property_name):
+        _properties.erase(property_name)
         properties_changed.emit()
+
+
+func get_overridden_properties() -> Array:
+    return _properties.keys().duplicate()
+
+
+func get_properties() -> Array:
+    return _properties.keys() + protoset.get_prototype(prototype_id).keys()
+
+
+func is_property_overridden(property_name) -> bool:
+    return _properties.has(property_name)
 
 
 func reset() -> void:
     protoset = null
     prototype_id = ""
-    properties = {}
+    _properties = {}
 
 
 func serialize() -> Dictionary:
@@ -256,9 +280,9 @@ func serialize() -> Dictionary:
 
     result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
     result[KEY_PROTOTYE_ID] = prototype_id
-    if !properties.is_empty():
+    if !_properties.is_empty():
         result[KEY_PROPERTIES] = {}
-        for property_name in properties.keys():
+        for property_name in _properties.keys():
             result[KEY_PROPERTIES][property_name] = _serialize_property(property_name)
 
     return result
@@ -267,7 +291,7 @@ func serialize() -> Dictionary:
 func _serialize_property(property_name: String) -> Dictionary:
     # Store all properties as strings for JSON support.
     var result: Dictionary = {}
-    var property_value = properties[property_name]
+    var property_value = _properties[property_name]
     var property_type = typeof(property_value)
     result = {
         KEY_TYPE: property_type,
@@ -288,9 +312,10 @@ func deserialize(source: Dictionary) -> bool:
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():
-            properties[key] = _deserialize_property(source[KEY_PROPERTIES][key])
-            if properties[key] == null:
-                properties = {}
+            var value = _deserialize_property(source[KEY_PROPERTIES][key])
+            set_property(key, value)
+            if value == null:
+                _properties = {}
                 return false
 
     return true

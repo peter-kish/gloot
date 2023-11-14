@@ -28,36 +28,19 @@ func _ready() -> void:
 
 
 func _on_value_changed(key: String, new_value) -> void:
-    var new_properties = item.properties.duplicate()
-    new_properties[key] = new_value
-
-    var item_prototype: Dictionary = item.protoset.get_prototype(item.prototype_id)
-    if item_prototype.has(key) && (item_prototype[key] == new_value):
-        new_properties.erase(key)
-
-    if new_properties.hash() == item.properties.hash():
-        return
-
-    _set_item_properties_undoable(item, new_properties)
+    Undoables.exec_item_undoable(item, "Set Item Property", func():
+        item.set_property(key, new_value)
+        return true
+    )
     _refresh()
 
 
 func _on_value_removed(key: String) -> void:
-    var new_properties = item.properties.duplicate()
-    new_properties.erase(key)
-
-    if new_properties.hash() == item.properties.hash():
-        return
-
-    _set_item_properties_undoable(item, new_properties)
-    _refresh()
-
-
-func _set_item_properties_undoable(item: InventoryItem, new_properties: Dictionary) -> void:
-    Undoables.exec_item_undoable(item, "Set Item Properties", func():
-        item.properties = new_properties.duplicate()
+    Undoables.exec_item_undoable(item, "Clear Item Property", func():
+        item.clear_property(key)
         return true
     )
+    _refresh()
 
 
 func _refresh() -> void:
@@ -81,8 +64,8 @@ func _get_dictionary() -> Dictionary:
         return {}
 
     var result: Dictionary = item.protoset.get_prototype(item.prototype_id).duplicate()
-    for key in item.properties.keys():
-        result[key] = item.properties[key]
+    for key in item.get_properties():
+        result[key] = item.get_property(key)
     return result
 
 
@@ -96,7 +79,7 @@ func _get_color_map() -> Dictionary:
     var result: Dictionary = {}
     var dictionary: Dictionary = _get_dictionary()
     for key in dictionary.keys():
-        if item.properties.has(key):
+        if item.is_property_overridden(key):
             result[key] = COLOR_OVERRIDDEN
         if key == ItemProtoset.KEY_ID && !item.protoset.has_prototype(dictionary[key]):
             result[key] = COLOR_INVALID
@@ -122,6 +105,6 @@ func _get_remove_button_map() -> Dictionary:
             result[key]["text"] = ""
             result[key]["icon"] = EditorIcons.get_icon("Remove")
 
-        result[key]["disabled"] = (not key in item.properties) or (key in IMMUTABLE_KEYS)
+        result[key]["disabled"] = (not item.is_property_overridden(key)) or (key in IMMUTABLE_KEYS)
     return result
 
