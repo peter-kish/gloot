@@ -7,7 +7,7 @@ extends Control
 
 func _ready() -> void:
     button.pressed.connect(func():
-        var item: InventoryItem = gloot_inventory_grid_2.get_selected_item()
+        var item: InventoryItem = gloot_inventory_grid_2.get_selected_inventory_item()
         if item == null:
             return
         var inventory := item.get_inventory()
