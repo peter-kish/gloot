@@ -20,9 +20,13 @@ static func _get_free_stack_space(item: InventoryItem) -> int:
     return get_item_max_stack_size(item) - get_item_stack_size(item)
 
 
-static func _has_custom_property(item: InventoryItem, property: String, value) -> bool:
+static func _has_overridden_property(item: InventoryItem, property: String, value) -> bool:
     assert(item != null, "item is null!")
-    return item.properties.has(property) && item.properties[property] == value;
+    if !item.is_property_overridden(property):
+        return false
+    if item.get_property(property) != value:
+        return false
+    return true
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
@@ -85,7 +89,7 @@ func get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:
 
 static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool:
     # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
-    # custom properties that the other one doesn't have (except for "stack_size", "max_stack_size",
+    # overridden properties that the other one doesn't have (except for "stack_size", "max_stack_size",
     # "grid_position", or "weight").
     assert(item_1 != null, "item_1 is null!")
     assert(item_2 != null, "item_2 is null!")
@@ -99,16 +103,16 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
     if item_1.prototype_id != item_2.prototype_id:
         return false
 
-    for property in item_1.properties.keys():
+    for property in item_1.get_overridden_properties():
         if property in ignore_properies:
             continue
-        if !_has_custom_property(item_2, property, item_1.properties[property]):
+        if !_has_overridden_property(item_2, property, item_1.get_property(property)):
             return false
 
-    for property in item_2.properties.keys():
+    for property in item_2.get_overridden_properties():
         if property in ignore_properies:
             continue
-        if !_has_custom_property(item_1, property, item_2.properties[property]):
+        if !_has_overridden_property(item_1, property, item_2.get_property(property)):
             return false
 
     return true

@@ -137,3 +137,11 @@ func get_item_property(id: String, property_name: String, default_value = null) 
             return prototype[property_name]
     
     return default_value
+
+
+func has_item_property(id: String, property_name: String) -> bool:
+    if !has_prototype(id):
+        return false
+
+    var prototype = get_prototype(id)
+    return prototype.has(property_name)
