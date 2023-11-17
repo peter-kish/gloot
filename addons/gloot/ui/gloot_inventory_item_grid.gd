@@ -74,9 +74,11 @@ func _connect_inventory_signals() -> void:
         inventory.ready.connect(_refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.protoset_changed.connect(_refresh)
-    inventory.item_modified.connect(_on_item_modified)
+    inventory.item_protoset_changed.connect(_refresh_item)
+    inventory.item_prototype_id_changed.connect(_refresh_item)
+    inventory.item_property_changed.connect(_on_item_property_changed)
     if inventory.get_grid_constraint() != null:
-        inventory.get_grid_constraint().item_moved.connect(_on_item_modified)
+        inventory.get_grid_constraint().item_moved.connect(_refresh_item)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -84,13 +86,20 @@ func _disconnect_inventory_signals() -> void:
         inventory.ready.disconnect(_refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.protoset_changed.disconnect(_refresh)
-    inventory.item_modified.disconnect(_on_item_modified)
+    inventory.item_protoset_changed.disconnect(_refresh_item)
+    inventory.item_prototype_id_changed.disconnect(_refresh_item)
+    inventory.item_property_changed.disconnect(_on_item_property_changed)
     if inventory.get_grid_constraint() != null:
-        inventory.get_grid_constraint().item_moved.disconnect(_on_item_modified)
+        inventory.get_grid_constraint().item_moved.disconnect(_refresh_item)
 
 
-func _on_item_modified(item_: InventoryItem) -> void:
-    _refresh()
+func _refresh_item(item: InventoryItem) -> void:
+    var index := inventory.get_item_index(item)
+    get_children()[index].refresh(_get_item_ui_rect(item))
+
+
+func _on_item_property_changed(item: InventoryItem, property_: String) -> void:
+    _refresh_item(item)
 
 
 func _ready() -> void:
@@ -135,12 +144,8 @@ func _populate(selected_item: InventoryItem) -> void:
 
     for item in inventory.get_items():
         var item_rect = _get_item_ui_rect(item)
-        var gloot_inventory_item_rect := GlootInventoryItemRect.new()
-        gloot_inventory_item_rect.position = item_rect.position
-        gloot_inventory_item_rect.size = item_rect.size
-        gloot_inventory_item_rect.texture = item.get_texture()
+        var gloot_inventory_item_rect := GlootInventoryItemRect.new(item, item_rect)
         gloot_inventory_item_rect.selection_style = selection_style
-        gloot_inventory_item_rect.item = item
         gloot_inventory_item_rect.selected_status_changed.connect(_on_selected_status_changed.bind(gloot_inventory_item_rect))
         gloot_inventory_item_rect.activated.connect(func(): inventory_item_activated.emit(item))
         gloot_inventory_item_rect.selected = (item == selected_item)

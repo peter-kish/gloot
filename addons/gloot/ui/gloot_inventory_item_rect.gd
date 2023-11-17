@@ -15,7 +15,15 @@ const Undoables = preload("res://addons/gloot/editor/undoables.gd")
         selection_style = new_selection_style
         _set_selection_style(selection_style)
 
-var item: InventoryItem = null
+var item: InventoryItem = null :
+    get:
+        return item
+    set(new_item):
+        if new_item == item:
+            return
+        item = new_item
+        texture = item.get_texture()
+        _update_stack_size_label()
 var _label_stack_size: Label = null
 var _panel_selection: Panel = null
 var selected: bool = false :
@@ -28,6 +36,11 @@ var selected: bool = false :
         if _panel_selection != null:
             _panel_selection.visible = selected
         selected_status_changed.emit()
+
+
+func _init(item_: InventoryItem, item_rect: Rect2) -> void:
+    item = item_
+    refresh(item_rect)
 
 
 func _ready() -> void:
@@ -44,6 +57,13 @@ func _ready() -> void:
     _label_stack_size = Label.new()
     add_child(_label_stack_size)
 
+    _update_stack_size_label()
+
+
+func refresh(item_rect: Rect2) -> void:
+    position = item_rect.position
+    size = item_rect.size
+    texture = item.get_texture()
     _update_stack_size_label()
 
 
