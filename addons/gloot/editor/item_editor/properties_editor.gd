@@ -32,7 +32,8 @@ func _on_value_changed(key: String, new_value) -> void:
         item.set_property(key, new_value)
         return true
     )
-    _refresh()
+    # TODO: Figure out why this is needed
+    _refresh.call_deferred()
 
 
 func _on_value_removed(key: String) -> void:
