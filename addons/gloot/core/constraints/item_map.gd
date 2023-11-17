@@ -20,18 +20,19 @@ func resize(size: Vector2i) -> void:
     _free_fields = size.x * size.y
 
 
-func fill_rect(rect: Rect2i, value) -> void:
+func fill_rect(rect: Rect2i, value, expected_value = null) -> void:
     for x in range(rect.size.x):
         for y in range(rect.size.y):
             var map_coords := Vector2i(rect.position.x + x, rect.position.y + y)
             if !contains(map_coords):
                 continue
-            map[map_coords.x][map_coords.y] = value
-            _free_fields -= 1
+            if map[map_coords.x][map_coords.y] == expected_value:
+                map[map_coords.x][map_coords.y] = value
+                _free_fields -= 1
 
 
-func clear_rect(rect: Rect2i) -> void:
-    fill_rect(rect, null)
+func clear_rect(rect: Rect2i, expected_value) -> void:
+    fill_rect(rect, null, expected_value)
 
 
 func print() -> void:
