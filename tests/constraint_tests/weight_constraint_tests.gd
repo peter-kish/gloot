@@ -55,7 +55,7 @@ func test_occupied_space() -> void:
     inventory.add_item(item)
     assert(weight_constraint.occupied_space == WeightConstraint.get_item_weight(item))
 
-    # Check if occupied_space is updated on item_modified
+    # Check if occupied_space is updated on item_property_changed
     WeightConstraint.set_item_weight(item, 10.0)
     assert(weight_constraint.occupied_space == 10.0)
 

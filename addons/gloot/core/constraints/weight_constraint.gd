@@ -46,7 +46,16 @@ func _on_item_removed(item: InventoryItem) -> void:
     _calculate_occupied_space()
 
     
-func _on_item_modified(item: InventoryItem) -> void:
+func _on_item_property_changed(item: InventoryItem, property: String) -> void:
+    if property == KEY_WEIGHT || property == StacksConstraint.KEY_STACK_SIZE:
+        _calculate_occupied_space()
+
+
+func _on_item_protoset_changed(item: InventoryItem) -> void:
+    _calculate_occupied_space()
+
+
+func _on_item_prototype_id_changed(item: InventoryItem) -> void:
     _calculate_occupied_space()
 
 

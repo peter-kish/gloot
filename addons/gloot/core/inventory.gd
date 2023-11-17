@@ -5,7 +5,9 @@ class_name Inventory
 
 signal item_added(item)
 signal item_removed(item)
-signal item_modified(item)
+signal item_property_changed(item, property)
+signal item_protoset_changed(item)
+signal item_prototype_id_changed(item)
 signal contents_changed
 signal protoset_changed
 signal constraint_enabled(constraint)
@@ -138,27 +140,39 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.protoset_changed.is_connected(_emit_item_modified):
-        item.protoset_changed.connect(_emit_item_modified.bind(item))
-    if !item.prototype_id_changed.is_connected(_emit_item_modified):
-        item.prototype_id_changed.connect(_emit_item_modified.bind(item))
-    if !item.properties_changed.is_connected(_emit_item_modified):
-        item.properties_changed.connect(_emit_item_modified.bind(item))
+    if !item.protoset_changed.is_connected(_on_item_protoset_changed):
+        item.protoset_changed.connect(_on_item_protoset_changed.bind(item))
+    if !item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
+        item.prototype_id_changed.connect(_on_item_prototype_id_changed.bind(item))
+    if !item.properties_changed.is_connected(_on_item_property_changed):
+        item.properties_changed.connect(_on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.protoset_changed.is_connected(_emit_item_modified):
-        item.protoset_changed.disconnect(_emit_item_modified)
-    if item.prototype_id_changed.is_connected(_emit_item_modified):
-        item.prototype_id_changed.disconnect(_emit_item_modified)
-    if item.properties_changed.is_connected(_emit_item_modified):
-        item.properties_changed.disconnect(_emit_item_modified)
+    if item.protoset_changed.is_connected(_on_item_protoset_changed):
+        item.protoset_changed.disconnect(_on_item_protoset_changed)
+    if item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
+        item.prototype_id_changed.disconnect(_on_item_prototype_id_changed)
+    if item.properties_changed.is_connected(_on_item_property_changed):
+        item.properties_changed.disconnect(_on_item_property_changed)
 
 
-func _emit_item_modified(item: InventoryItem) -> void:
+func _on_item_property_changed(property: String, item: InventoryItem) -> void:
     _update_serialized_format()
-    _constraint_manager._on_item_modified(item)
-    item_modified.emit(item)
+    _constraint_manager._on_item_property_changed(item, property)
+    item_property_changed.emit(item, property)
+
+
+func _on_item_protoset_changed(item: InventoryItem) -> void:
+    _update_serialized_format()
+    _constraint_manager._on_item_protoset_changed(item)
+    item_protoset_changed.emit(item)
+
+
+func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+    _update_serialized_format()
+    _constraint_manager._on_item_prototype_id_changed(item)
+    item_prototype_id_changed.emit(item)
 
 
 func get_items() -> Array[InventoryItem]:

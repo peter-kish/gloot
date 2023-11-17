@@ -60,13 +60,31 @@ func _on_item_removed(item: InventoryItem) -> void:
         _grid_constraint._on_item_removed(item)
 
 
-func _on_item_modified(item: InventoryItem) -> void:
+func _on_item_property_changed(item: InventoryItem, property: String) -> void:
     if _weight_constraint != null:
-        _weight_constraint._on_item_modified(item)
+        _weight_constraint._on_item_property_changed(item, property)
     if _stacks_constraint != null:
-        _stacks_constraint._on_item_modified(item)
+        _stacks_constraint._on_item_property_changed(item, property)
     if _grid_constraint != null:
-        _grid_constraint._on_item_modified(item)
+        _grid_constraint._on_item_property_changed(item, property)
+
+
+func _on_item_protoset_changed(item: InventoryItem) -> void:
+    if _weight_constraint != null:
+        _weight_constraint._on_item_protoset_changed(item)
+    if _stacks_constraint != null:
+        _stacks_constraint._on_item_protoset_changed(item)
+    if _grid_constraint != null:
+        _grid_constraint._on_item_protoset_changed(item)
+
+
+func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+    if _weight_constraint != null:
+        _weight_constraint._on_item_prototype_id_changed(item)
+    if _stacks_constraint != null:
+        _stacks_constraint._on_item_prototype_id_changed(item)
+    if _grid_constraint != null:
+        _grid_constraint._on_item_prototype_id_changed(item)
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:

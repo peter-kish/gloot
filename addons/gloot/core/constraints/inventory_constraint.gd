@@ -51,9 +51,9 @@ func _on_item_added(item: InventoryItem) -> void:
 func _on_item_removed(item: InventoryItem) -> void:
     pass
 
-    
+
 # Override this
-func _on_item_modified(item: InventoryItem) -> void:
+func _on_item_property_changed(item: InventoryItem, property: String) -> void:
     pass
 
 
@@ -63,5 +63,16 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
 
 
 # Override this
+func _on_item_protoset_changed(item: InventoryItem) -> void:
+    pass
+
+
+# Override this
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     pass
+
+
+# Override this
+func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+    pass
+    
