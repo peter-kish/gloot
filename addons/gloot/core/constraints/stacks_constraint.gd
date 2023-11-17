@@ -181,10 +181,26 @@ func split_stack_safe(item: InventoryItem, new_stack_size: int) -> InventoryItem
     assert(inventory != null, "inventory is null!")
     assert(inventory.has_item(item), "The inventory does not contain the given item!")
 
+    if !_can_split_stack(item, new_stack_size):
+        return null
+
     var new_item = split_stack(item, new_stack_size)
     if new_item:
         assert(inventory.add_item(new_item))
+        # Adding an item can result in the item being freed (e.g. when it's merged with another item stack)
+        if !is_instance_valid(new_item):
+            new_item = null
     return new_item
+
+
+func _can_split_stack(item: InventoryItem, new_stack_size: int) -> bool:
+    # The grid constraint could prevent us from splitting a stack
+    var grid_constraint := inventory.get_grid_constraint()
+    if grid_constraint:
+        var item_size := grid_constraint.get_item_size(item)
+        if !grid_constraint.find_free_space(item_size).success:
+            return false
+    return true
 
 
 static func join_stacks(

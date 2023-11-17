@@ -54,7 +54,7 @@ func _on_item_added(item: InventoryItem) -> void:
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    _item_map.clear_rect(get_item_rect(item))
+    _item_map.clear_rect(get_item_rect(item), item)
     _item_positions.erase(item)
 
     
