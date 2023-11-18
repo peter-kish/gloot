@@ -55,6 +55,9 @@ func _ready() -> void:
     )
 
     _label_stack_size = Label.new()
+    _label_stack_size.set_anchors_preset(PRESET_FULL_RECT)
+    _label_stack_size.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    _label_stack_size.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
     add_child(_label_stack_size)
 
     _update_stack_size_label()
