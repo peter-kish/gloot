@@ -77,6 +77,8 @@ func _on_line_edit_focus_exited(line_edit: LineEdit) -> void:
     if typeof(new_value) != typeof(value):
         line_edit.text = var_to_str(value)
         return
+    if new_value == value:
+        return
     value = new_value
     value_changed.emit()
 
@@ -91,6 +93,8 @@ func _create_color_picker() -> ColorPickerButton:
 
 
 func _on_color_picked(picker: ColorPickerButton) -> void:
+    if picker.color == value:
+        return
     value = picker.color
     value_changed.emit()
 
@@ -105,6 +109,8 @@ func _create_checkbox() -> CheckButton:
 
 
 func _on_checkbox(checkbox: CheckButton) -> void:
+    if checkbox.button_pressed == value:
+        return
     value = checkbox.button_pressed
     value_changed.emit()
 
@@ -112,111 +118,122 @@ func _on_checkbox(checkbox: CheckButton) -> void:
 func _create_v2_editor() -> Control:
     var values = [value.x, value.y]
     var titles = ["X", "Y"]
-    var v2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_v2_value_changed)
+    var v2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Vector2(editor.values[0], editor.values[1])
+    ))
     return v2_editor
 
 
 func _create_v2i_editor() -> Control:
     var values = [value.x, value.y]
     var titles = ["X", "Y"]
-    var v2_editor = _create_multiint_editor(2, enabled, values, titles, _on_v2_value_changed)
+    var v2_editor = _create_multiint_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Vector2i(editor.values[0], editor.values[1])
+    ))
     return v2_editor
-
-
-func _on_v2_value_changed(_idx: int, v2_editor: Control) -> void:
-    value.x = v2_editor.values[0]
-    value.y = v2_editor.values[1]
-    value_changed.emit()
 
 
 func _create_v3_editor() -> Control:
     var values = [value.x, value.y, value.z]
     var titles = ["X", "Y", "Z"]
-    var v3_editor = _create_multifloat_editor(3, enabled, values, titles, _on_v3_value_changed)
+    var v3_editor = _create_multifloat_editor(3, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Vector3(editor.values[0], editor.values[1], editor.values[2])
+    ))
     return v3_editor
 
 
 func _create_v3i_editor() -> Control:
     var values = [value.x, value.y, value.z]
     var titles = ["X", "Y", "Z"]
-    var v3_editor = _create_multiint_editor(3, enabled, values, titles, _on_v3_value_changed)
+    var v3_editor = _create_multiint_editor(3, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Vector3i(editor.values[0], editor.values[1], editor.values[2])
+    ))
     return v3_editor
-
-
-func _on_v3_value_changed(_idx: int, v3_editor: Control) -> void:
-    value.x = v3_editor.values[0]
-    value.y = v3_editor.values[1]
-    value.z = v3_editor.values[2]
-    value_changed.emit()
 
 
 func _create_r2_editor() -> Control:
     var values = [value.position.x, value.position.y, value.size.x, value.size.y]
     var titles = ["Position X", "Position Y", "Size X", "Size Y"]
-    var r2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_r2_value_changed)
+    var r2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Rect2(
+                editor.values[0],
+                editor.values[1],
+                editor.values[2],
+                editor.values[3])
+    ))
     return r2_editor
 
 
 func _create_r2i_editor() -> Control:
     var values = [value.position.x, value.position.y, value.size.x, value.size.y]
     var titles = ["Position X", "Position Y", "Size X", "Size Y"]
-    var r2_editor = _create_multiint_editor(2, enabled, values, titles, _on_r2_value_changed)
+    var r2_editor = _create_multiint_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Rect2i(
+                editor.values[0],
+                editor.values[1],
+                editor.values[2],
+                editor.values[3])
+    ))
     return r2_editor
-
-
-func _on_r2_value_changed(_idx: int, r2_editor: Control) -> void:
-    value.position.x = r2_editor.values[0]
-    value.position.y = r2_editor.values[1]
-    value.size.x = r2_editor.values[2]
-    value.size.y = r2_editor.values[3]
-    value_changed.emit()
 
 
 func _create_plane_editor() -> Control:
     var values = [value.x, value.y, value.z, value.d]
-    var titles = ["X", "Y", "Z", "D"]
-    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_plane_value_changed)
+    var titles = ["A", "B", "C", "D"]
+    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Plane(
+                editor.values[0],
+                editor.values[1],
+                editor.values[2],
+                editor.values[3])
+    ))
     return editor
-
-
-func _on_plane_value_changed(_idx: int, plane_editor: Control) -> void:
-    value.x = plane_editor.values[0]
-    value.y = plane_editor.values[1]
-    value.z = plane_editor.values[2]
-    value.d = plane_editor.values[3]
-    value_changed.emit()
 
 
 func _create_quat_editor() -> Control:
     var values = [value.x, value.y, value.z, value.w]
     var titles = ["X", "Y", "Z", "W"]
-    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_quat_value_changed)
+    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            return Quaternion(
+                editor.values[0],
+                editor.values[1],
+                editor.values[2],
+                editor.values[3])
+    ))
     return editor
-
-
-func _on_quat_value_changed(_idx: int, quat_editor: Control) -> void:
-    value.x = quat_editor.values[0]
-    value.y = quat_editor.values[1]
-    value.z = quat_editor.values[2]
-    value.d = quat_editor.values[3]
-    value_changed.emit()
 
 
 func _create_aabb_editor() -> Control:
     var values = [value.position.x, value.position.y, value.position.z, \
         value.size.x, value.size.y, value.size.z]
     var titles = ["Position X", "Position Y", "Position Z", "Size X", "Size Y", "Size Z"]
-    var editor = _create_multifloat_editor(3, enabled, values, titles, _on_aabb_value_changed)
+    var editor = _create_multifloat_editor(3, enabled, values, titles, _on_value_changed.bind(
+        func(editor: MultivalueEditor):
+            var result: AABB
+            result.position.x = editor.values[0]
+            result.position.y = editor.values[1]
+            result.position.z = editor.values[2]
+            result.size.x = editor.values[3]
+            result.size.y = editor.values[4]
+            result.size.z = editor.values[5]
+            return result
+    ))
     return editor
 
 
-func _on_aabb_value_changed(_idx: int, aabb_editor: Control) -> void:
-    value.position.x = aabb_editor.values[0]
-    value.position.y = aabb_editor.values[1]
-    value.position.z = aabb_editor.values[2]
-    value.size.x = aabb_editor.values[3]
-    value.size.y = aabb_editor.values[4]
-    value.size.z = aabb_editor.values[5]
+func _on_value_changed(_idx: int, v2_editor: Control, get_value: Callable) -> void:
+    var new_value = get_value.call(v2_editor)
+    if new_value == value:
+        return
+    value = new_value
     value_changed.emit()
 
 

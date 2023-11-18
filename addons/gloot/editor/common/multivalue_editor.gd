@@ -48,5 +48,7 @@ func _on_line_edit_focus_exited(line_edit: LineEdit, idx: int) -> void:
     if typeof(value) != type:
         line_edit.text = var_to_str(values[idx])
         return
+    if value == values[idx]:
+        return
     values[idx] = value
     value_changed.emit(idx)
