@@ -116,125 +116,108 @@ func _on_checkbox(checkbox: CheckButton) -> void:
 
 
 func _create_v2_editor() -> Control:
-    var values = [value.x, value.y]
-    var titles = ["X", "Y"]
-    var v2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Vector2(editor.values[0], editor.values[1])
-    ))
+    var values := [value.x, value.y]
+    var titles := ["X", "Y"]
+    var value_converter := func(values: Array):
+        return Vector2(values[0], values[1])
+    var v2_editor = _create_multifloat_editor(2, enabled, values, titles, value_converter)
     return v2_editor
 
 
 func _create_v2i_editor() -> Control:
-    var values = [value.x, value.y]
-    var titles = ["X", "Y"]
-    var v2_editor = _create_multiint_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Vector2i(editor.values[0], editor.values[1])
-    ))
+    var values := [value.x, value.y]
+    var titles := ["X", "Y"]
+    var value_converter := func(values: Array):
+        return Vector2i(values[0], values[1])
+    var v2_editor = _create_multiint_editor(2, enabled, values, titles, value_converter)
     return v2_editor
 
 
 func _create_v3_editor() -> Control:
-    var values = [value.x, value.y, value.z]
-    var titles = ["X", "Y", "Z"]
-    var v3_editor = _create_multifloat_editor(3, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Vector3(editor.values[0], editor.values[1], editor.values[2])
-    ))
+    var values := [value.x, value.y, value.z]
+    var titles := ["X", "Y", "Z"]
+    var value_converter := func(values: Array):
+        return Vector3(values[0], values[1], values[2])
+    var v3_editor = _create_multifloat_editor(3, enabled, values, titles, value_converter)
     return v3_editor
 
 
 func _create_v3i_editor() -> Control:
-    var values = [value.x, value.y, value.z]
-    var titles = ["X", "Y", "Z"]
-    var v3_editor = _create_multiint_editor(3, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Vector3i(editor.values[0], editor.values[1], editor.values[2])
-    ))
+    var values := [value.x, value.y, value.z]
+    var titles := ["X", "Y", "Z"]
+    var value_converter := func(values: Array):
+        return Vector3i(values[0], values[1], values[2])
+    var v3_editor = _create_multiint_editor(3, enabled, values, titles, value_converter)
     return v3_editor
 
 
 func _create_r2_editor() -> Control:
-    var values = [value.position.x, value.position.y, value.size.x, value.size.y]
-    var titles = ["Position X", "Position Y", "Size X", "Size Y"]
-    var r2_editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Rect2(
-                editor.values[0],
-                editor.values[1],
-                editor.values[2],
-                editor.values[3])
-    ))
+    var values := [value.position.x, value.position.y, value.size.x, value.size.y]
+    var titles := ["Position X", "Position Y", "Size X", "Size Y"]
+    var value_converter := func(values: Array):
+        return Rect2(
+            values[0],
+            values[1],
+            values[2],
+            values[3])
+    var r2_editor = _create_multifloat_editor(2, enabled, values, titles, value_converter)
     return r2_editor
 
 
 func _create_r2i_editor() -> Control:
-    var values = [value.position.x, value.position.y, value.size.x, value.size.y]
-    var titles = ["Position X", "Position Y", "Size X", "Size Y"]
-    var r2_editor = _create_multiint_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Rect2i(
-                editor.values[0],
-                editor.values[1],
-                editor.values[2],
-                editor.values[3])
-    ))
+    var values := [value.position.x, value.position.y, value.size.x, value.size.y]
+    var titles := ["Position X", "Position Y", "Size X", "Size Y"]
+    var value_converter := func(values: Array):
+        return Rect2i(
+            values[0],
+            values[1],
+            values[2],
+            values[3])
+    var r2_editor = _create_multiint_editor(2, enabled, values, titles, value_converter)
     return r2_editor
 
 
 func _create_plane_editor() -> Control:
-    var values = [value.x, value.y, value.z, value.d]
-    var titles = ["A", "B", "C", "D"]
-    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Plane(
-                editor.values[0],
-                editor.values[1],
-                editor.values[2],
-                editor.values[3])
-    ))
+    var values := [value.x, value.y, value.z, value.d]
+    var titles := ["A", "B", "C", "D"]
+    var value_converter := func(values: Array):
+        return Plane(
+            values[0],
+            values[1],
+            values[2],
+            values[3])
+    var editor = _create_multifloat_editor(2, enabled, values, titles, value_converter)
     return editor
 
 
 func _create_quat_editor() -> Control:
-    var values = [value.x, value.y, value.z, value.w]
-    var titles = ["X", "Y", "Z", "W"]
-    var editor = _create_multifloat_editor(2, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            return Quaternion(
-                editor.values[0],
-                editor.values[1],
-                editor.values[2],
-                editor.values[3])
-    ))
+    var values := [value.x, value.y, value.z, value.w]
+    var titles := ["X", "Y", "Z", "W"]
+    var value_converter := func(values: Array):
+        return Quaternion(
+            values[0],
+            values[1],
+            values[2],
+            values[3])
+    var editor = _create_multifloat_editor(2, enabled, values, titles, value_converter)
     return editor
 
 
 func _create_aabb_editor() -> Control:
-    var values = [value.position.x, value.position.y, value.position.z, \
+    var values := [value.position.x, value.position.y, value.position.z, \
         value.size.x, value.size.y, value.size.z]
-    var titles = ["Position X", "Position Y", "Position Z", "Size X", "Size Y", "Size Z"]
-    var editor = _create_multifloat_editor(3, enabled, values, titles, _on_value_changed.bind(
-        func(editor: MultivalueEditor):
-            var result: AABB
-            result.position.x = editor.values[0]
-            result.position.y = editor.values[1]
-            result.position.z = editor.values[2]
-            result.size.x = editor.values[3]
-            result.size.y = editor.values[4]
-            result.size.z = editor.values[5]
-            return result
-    ))
+    var titles := ["Position X", "Position Y", "Position Z", "Size X", "Size Y", "Size Z"]
+    var value_converter := func(values: Array):
+        var result: AABB
+        result.position.x = values[0]
+        result.position.y = values[1]
+        result.position.z = values[2]
+        result.size.x = values[3]
+        result.size.y = values[4]
+        result.size.z = values[5]
+        return result
+    var editor = _create_multifloat_editor(3, enabled, values, titles, value_converter)
     return editor
-
-
-func _on_value_changed(_idx: int, v2_editor: Control, get_value: Callable) -> void:
-    var new_value = get_value.call(v2_editor)
-    if new_value == value:
-        return
-    value = new_value
-    value_changed.emit()
 
 
 func _create_multifloat_editor(
@@ -242,8 +225,8 @@ func _create_multifloat_editor(
         enabled: bool,
         values: Array,
         titles: Array,
-        value_changed_handler: Callable) -> Control:
-    return _create_multivalue_editor(columns, enabled, TYPE_FLOAT, values, titles, value_changed_handler)
+        value_converter: Callable) -> Control:
+    return _create_multivalue_editor(columns, enabled, TYPE_FLOAT, values, titles, value_converter)
 
 
 func _create_multiint_editor(
@@ -251,8 +234,8 @@ func _create_multiint_editor(
         enabled: bool,
         values: Array,
         titles: Array,
-        value_changed_handler: Callable) -> Control:
-    return _create_multivalue_editor(columns, enabled, TYPE_INT, values, titles, value_changed_handler)
+        value_converter: Callable) -> Control:
+    return _create_multivalue_editor(columns, enabled, TYPE_INT, values, titles, value_converter)
 
     
 func _create_multivalue_editor(
@@ -261,7 +244,7 @@ func _create_multivalue_editor(
         type: int,
         values: Array,
         titles: Array,
-        value_changed_handler: Callable) -> Control:
+        value_converter: Callable) -> Control:
     var multivalue_editor = MultivalueEditor.new()
     multivalue_editor.columns = columns
     multivalue_editor.enabled = enabled
@@ -269,7 +252,13 @@ func _create_multivalue_editor(
     multivalue_editor.values = values
     multivalue_editor.titles = titles
     _expand_control(multivalue_editor)
-    multivalue_editor.value_changed.connect(value_changed_handler.bind(multivalue_editor))
+    multivalue_editor.value_changed.connect(func(_idx: int):
+        var new_value = value_converter.call(multivalue_editor.values)
+        if new_value == value:
+            return
+        value = new_value
+        value_changed.emit()
+    )
     return multivalue_editor
 
 
