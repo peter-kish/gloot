@@ -25,3 +25,5 @@ mono_crash.*.json
 addons/zylann.editor_debugger/*
 
 .vscode
+
+addons/zylann.editor_debugger
