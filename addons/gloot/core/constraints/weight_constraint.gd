@@ -144,21 +144,17 @@ func serialize() -> Dictionary:
     var result := {}
 
     result[KEY_CAPACITY] = capacity
-    # TODO: Check if this is needed
-    result[KEY_OCCUPIED_SPACE] = _occupied_space
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) ||\
-        !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
+    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT):
         return false
 
     reset()
     capacity = source[KEY_CAPACITY]
-    # TODO: Check if this is needed
-    _occupied_space = source[KEY_OCCUPIED_SPACE]
+    _calculate_occupied_space()
 
     return true
 

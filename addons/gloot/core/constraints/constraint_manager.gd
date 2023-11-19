@@ -219,8 +219,8 @@ func _sg_has_space_for(item: InventoryItem) -> bool:
 
 func enable_weight_constraint(capacity: float = 0.0) -> void:
     assert(!_weight_constraint_enabled, "Weight constraint is already enabled")
-    _weight_constraint.capacity = capacity
     _weight_constraint_enabled = true
+    _weight_constraint.capacity = capacity
     constraint_enabled.emit(Constraint.WEIGHT)
 
 
@@ -232,8 +232,8 @@ func enable_stacks_constraint() -> void:
 
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(!_grid_constraint_enabled, "Grid constraint is already enabled")
-    _grid_constraint.size = size
     _grid_constraint_enabled = true
+    _grid_constraint.size = size
     constraint_enabled.emit(Constraint.GRID)
 
 
