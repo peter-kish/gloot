@@ -47,7 +47,7 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         font = new_font
         _set_label_font(_capacity_label, font)
 
-@export var font_size: int : 
+@export var font_size: int = 16 : 
     get:
         return font_size
     set(new_font_size):
@@ -56,7 +56,7 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         font_size = new_font_size
         _set_label_font_size(_capacity_label, font_size)
 
-@export var font_outline_size: int : 
+@export var font_outline_size: int = 0 : 
     get:
         return font_outline_size
     set(new_font_outline_size):
@@ -65,7 +65,7 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         font_outline_size = new_font_outline_size
         _set_label_font_outline_size(_capacity_label, font_outline_size)
 
-@export var font_color: Color : 
+@export var font_color: Color = Color.WHITE : 
     get:
         return font_color
     set(new_font_color):
@@ -74,7 +74,7 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         font_color = new_font_color
         _set_label_font_color(_capacity_label, font_color)
 
-@export var font_outline_color: Color : 
+@export var font_outline_color: Color = Color.WHITE : 
     get:
         return font_outline_color
     set(new_font_outline_color):
