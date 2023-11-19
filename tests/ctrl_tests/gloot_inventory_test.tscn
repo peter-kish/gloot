@@ -1,0 +1,92 @@
+[gd_scene load_steps=8 format=3 uid="uid://b8wympd5lasfu"]
+
+[ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="1_cc2bv"]
+[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="1_ekglp"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_pqnv1"]
+[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="3_0q423"]
+[ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="3_tihgd"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="6_kj6w0"]
+[ext_resource type="Resource" uid="uid://c1fip2r65xx12" path="res://tests/data/item_definitions_stack.tres" id="7_bva1c"]
+
+[node name="gloot_inventory_test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 410.0
+offset_bottom = 504.0
+
+[node name="GlootInventory" type="ItemList" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 2
+item_0/text = "minimal_item"
+item_1/text = "item 2"
+item_1/icon = ExtResource("1_cc2bv")
+script = ExtResource("1_ekglp")
+inventory_path = NodePath("../../Inventory")
+
+[node name="GlootInventory2" type="ItemList" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 3
+item_0/text = "minimal_item"
+item_1/text = "stackable_item (x5)"
+item_1/icon = ExtResource("1_cc2bv")
+item_2/text = "big_item"
+item_2/icon = ExtResource("3_tihgd")
+script = ExtResource("1_ekglp")
+inventory_path = NodePath("../../InventoryStacked")
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("2_pqnv1")
+protoset = ExtResource("3_0q423")
+_serialized_format = {
+"constraints": {},
+"items": [{
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "minimal_item"
+}, {
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item2"
+}],
+"node_name": "Inventory",
+"protoset": "res://tests/data/item_definitions_basic.tres"
+}
+
+[node name="InventoryStacked" type="Node" parent="."]
+script = ExtResource("6_kj6w0")
+capacity = 30.0
+protoset = ExtResource("7_bva1c")
+_serialized_format = {
+"constraints": {
+"stacks_constraint": {},
+"weight_constraint": {
+"capacity": 30.0,
+"occupied_space": 6.0
+}
+},
+"items": [{
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "minimal_item"
+}, {
+"properties": {
+"stack_size": {
+"type": 3,
+"value": "5.0"
+}
+},
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "stackable_item"
+}, {
+"protoset": "res://tests/data/item_definitions_stack.tres",
+"prototype_id": "big_item"
+}],
+"node_name": "InventoryStacked",
+"protoset": "res://tests/data/item_definitions_stack.tres"
+}
