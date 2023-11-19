@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b8wympd5lasfu"]
+[gd_scene load_steps=13 format=3 uid="uid://b8wympd5lasfu"]
 
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="1_cc2bv"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="1_ekglp"]
@@ -16,12 +16,6 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgv5u"]
 bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ocxf6"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5clbk"]
-bg_color = Color(0.227451, 0.227451, 0.227451, 1)
 
 [node name="gloot_inventory_test" type="Control"]
 layout_mode = 3
@@ -76,10 +70,6 @@ custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 script = ExtResource("6_rmuq7")
 inventory_path = NodePath("../../InventoryStacked")
-background_style = SubResource("StyleBoxFlat_ocxf6")
-bar_style = SubResource("StyleBoxFlat_5clbk")
-font_size = 16
-font_color = Color(1, 1, 1, 1)
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_pqnv1")
