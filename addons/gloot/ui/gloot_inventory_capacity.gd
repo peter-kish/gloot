@@ -28,6 +28,16 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         if _capacity_bar != null:
             _capacity_bar.bar_style = new_bar_style
 
+@export var show_capacity_label = true :
+    get:
+        return show_capacity_label
+    set(new_show_capacity_label):
+        if new_show_capacity_label == show_capacity_label:
+            return
+        show_capacity_label = new_show_capacity_label
+        if _capacity_label != null:
+            _capacity_label.visible = show_capacity_label
+
 @export var font: Font : 
     get:
         return font
@@ -108,6 +118,7 @@ func _ready() -> void:
     _set_label_font_outline_size(_capacity_label, font_outline_size)
     _set_label_font_color(_capacity_label, font_color)
     _set_label_font_outline_color(_capacity_label, font_outline_color)
+    _capacity_label.visible = show_capacity_label
     add_child(_capacity_label)
 
     custom_minimum_size.y = _capacity_label.size.y
