@@ -79,6 +79,7 @@ func _connect_inventory_signals() -> void:
     inventory.item_property_changed.connect(_on_item_property_changed)
     if inventory.get_grid_constraint() != null:
         inventory.get_grid_constraint().item_moved.connect(_refresh_item)
+        inventory.get_grid_constraint().size_changed.connect(_refresh)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -91,10 +92,13 @@ func _disconnect_inventory_signals() -> void:
     inventory.item_property_changed.disconnect(_on_item_property_changed)
     if inventory.get_grid_constraint() != null:
         inventory.get_grid_constraint().item_moved.disconnect(_refresh_item)
+        inventory.get_grid_constraint().size_changed.disconnect(_refresh)
 
 
 func _refresh_item(item: InventoryItem) -> void:
     var index := inventory.get_item_index(item)
+    if get_child_count() <= index:
+        return
     get_children()[index].refresh(_get_item_ui_rect(item))
 
 

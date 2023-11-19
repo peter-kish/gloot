@@ -15,6 +15,9 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 var _weight_constraint: WeightConstraint = null
 var _stacks_constraint: StacksConstraint = null
 var _grid_constraint: GridConstraint = null
+var _weight_constraint_enabled := false
+var _stacks_constraint_enabled := false
+var _grid_constraint_enabled := false
 var inventory: Inventory = null :
     set(new_inventory):
         assert(new_inventory != null, "Can't set inventory to null!")
@@ -34,6 +37,9 @@ enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
 
 func _init(inventory_: Inventory) -> void:
     inventory = inventory_
+    _weight_constraint = WeightConstraint.new(inventory)
+    _stacks_constraint = StacksConstraint.new(inventory)
+    _grid_constraint = GridConstraint.new(inventory)
 
 
 func _on_item_added(item: InventoryItem) -> void:
@@ -43,47 +49,47 @@ func _on_item_added(item: InventoryItem) -> void:
     if !is_instance_valid(item):
         item = null
     
-    if _weight_constraint != null:
+    if _weight_constraint_enabled:
         _weight_constraint._on_item_added(item)
-    if _stacks_constraint != null:
+    if _stacks_constraint_enabled:
         _stacks_constraint._on_item_added(item)
-    if _grid_constraint != null:
+    if _grid_constraint_enabled:
         _grid_constraint._on_item_added(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    if _weight_constraint != null:
+    if _weight_constraint_enabled:
         _weight_constraint._on_item_removed(item)
-    if _stacks_constraint != null:
+    if _stacks_constraint_enabled:
         _stacks_constraint._on_item_removed(item)
-    if _grid_constraint != null:
+    if _grid_constraint_enabled:
         _grid_constraint._on_item_removed(item)
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if _weight_constraint != null:
+    if _weight_constraint_enabled:
         _weight_constraint._on_item_property_changed(item, property)
-    if _stacks_constraint != null:
+    if _stacks_constraint_enabled:
         _stacks_constraint._on_item_property_changed(item, property)
-    if _grid_constraint != null:
+    if _grid_constraint_enabled:
         _grid_constraint._on_item_property_changed(item, property)
 
 
 func _on_item_protoset_changed(item: InventoryItem) -> void:
-    if _weight_constraint != null:
+    if _weight_constraint_enabled:
         _weight_constraint._on_item_protoset_changed(item)
-    if _stacks_constraint != null:
+    if _stacks_constraint_enabled:
         _stacks_constraint._on_item_protoset_changed(item)
-    if _grid_constraint != null:
+    if _grid_constraint_enabled:
         _grid_constraint._on_item_protoset_changed(item)
 
 
 func _on_item_prototype_id_changed(item: InventoryItem) -> void:
-    if _weight_constraint != null:
+    if _weight_constraint_enabled:
         _weight_constraint._on_item_prototype_id_changed(item)
-    if _stacks_constraint != null:
+    if _stacks_constraint_enabled:
         _stacks_constraint._on_item_prototype_id_changed(item)
-    if _grid_constraint != null:
+    if _grid_constraint_enabled:
         _grid_constraint._on_item_prototype_id_changed(item)
 
 
@@ -125,25 +131,25 @@ func _enforce_constraints(item: InventoryItem) -> bool:
 
 
 func get_configuration() -> int:
-    if _weight_constraint && _stacks_constraint && _grid_constraint:
+    if _weight_constraint_enabled && _stacks_constraint_enabled && _grid_constraint_enabled:
         return Configuration.WSG
 
-    if _weight_constraint && _stacks_constraint:
+    if _weight_constraint_enabled && _stacks_constraint_enabled:
         return Configuration.WS
 
-    if _weight_constraint && _grid_constraint:
+    if _weight_constraint_enabled && _grid_constraint_enabled:
         return Configuration.WG
 
-    if _stacks_constraint && _grid_constraint:
+    if _stacks_constraint_enabled && _grid_constraint_enabled:
         return Configuration.SG
 
-    if _weight_constraint:
+    if _weight_constraint_enabled:
         return Configuration.W
 
-    if _stacks_constraint:
+    if _stacks_constraint_enabled:
         return Configuration.S
 
-    if _grid_constraint:
+    if _grid_constraint_enabled:
         return Configuration.G
 
     return Configuration.VANILLA
@@ -212,61 +218,67 @@ func _sg_has_space_for(item: InventoryItem) -> bool:
 
 
 func enable_weight_constraint(capacity: float = 0.0) -> void:
-    assert(_weight_constraint == null, "Weight constraint is already enabled")
-    _weight_constraint = WeightConstraint.new(inventory)
+    assert(!_weight_constraint_enabled, "Weight constraint is already enabled")
     _weight_constraint.capacity = capacity
+    _weight_constraint_enabled = true
     constraint_enabled.emit(Constraint.WEIGHT)
 
 
 func enable_stacks_constraint() -> void:
-    assert(_stacks_constraint == null, "Stacks constraint is already enabled")
-    _stacks_constraint = StacksConstraint.new(inventory)
+    assert(!_stacks_constraint_enabled, "Stacks constraint is already enabled")
+    _stacks_constraint_enabled = true
     constraint_enabled.emit(Constraint.STACKS)
 
 
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
-    assert(_grid_constraint == null, "Grid constraint is already enabled")
-    _grid_constraint = GridConstraint.new(inventory)
+    assert(!_grid_constraint_enabled, "Grid constraint is already enabled")
     _grid_constraint.size = size
+    _grid_constraint_enabled = true
     constraint_enabled.emit(Constraint.GRID)
 
 
 func disable_weight_constraint() -> void:
-    assert(_weight_constraint != null, "Weight constraint is already disabled")
-    _weight_constraint = null
+    assert(_weight_constraint_enabled, "Weight constraint is already disabled")
+    _weight_constraint_enabled = false
     constraint_disabled.emit(Constraint.WEIGHT)
 
 
 func disable_stacks_constraint() -> void:
-    assert(_stacks_constraint != null, "Stacks constraint is already disabled")
-    _stacks_constraint = null
+    assert(_stacks_constraint_enabled, "Stacks constraint is already disabled")
+    _stacks_constraint_enabled = false
     constraint_disabled.emit(Constraint.STACKS)
 
 
 func disable_grid_constraint() -> void:
-    assert(_grid_constraint != null, "Grid constraint is already disabled")
-    _grid_constraint = null
+    assert(_grid_constraint_enabled, "Grid constraint is already disabled")
+    _grid_constraint_enabled = false
     constraint_disabled.emit(Constraint.GRID)
 
 
 func get_weight_constraint() -> WeightConstraint:
-    return _weight_constraint
+    if _weight_constraint_enabled:
+        return _weight_constraint
+    return null
 
 
 func get_stacks_constraint() -> StacksConstraint:
-    return _stacks_constraint
+    if _stacks_constraint_enabled:
+        return _stacks_constraint
+    return null
 
 
 func get_grid_constraint() -> GridConstraint:
-    return _grid_constraint
+    if _grid_constraint_enabled:
+        return _grid_constraint
+    return null
 
 
 func reset() -> void:
-    if _weight_constraint:
+    if _weight_constraint_enabled:
         disable_weight_constraint()
-    if _stacks_constraint:
+    if _stacks_constraint_enabled:
         disable_stacks_constraint()
-    if _grid_constraint:
+    if _grid_constraint_enabled:
         disable_grid_constraint()
 
 

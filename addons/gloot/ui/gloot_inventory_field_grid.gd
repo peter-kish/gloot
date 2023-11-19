@@ -64,6 +64,8 @@ func _connect_inventory_signals() -> void:
         inventory.ready.connect(_refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.protoset_changed.connect(_refresh)
+    if inventory.get_grid_constraint() != null:
+        inventory.get_grid_constraint().size_changed.connect(_refresh)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -71,6 +73,8 @@ func _disconnect_inventory_signals() -> void:
         inventory.ready.disconnect(_refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.protoset_changed.disconnect(_refresh)
+    if inventory.get_grid_constraint() != null:
+        inventory.get_grid_constraint().size_changed.disconnect(_refresh)
 
 
 func _ready() -> void:

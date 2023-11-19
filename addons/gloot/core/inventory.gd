@@ -103,7 +103,9 @@ func _notification(what: int) -> void:
 
 
 func _on_constraint_enabled(constraint: int) -> void:
-    if constraint == ConstraintManager.Constraint.GRID:
+    if constraint != ConstraintManager.Constraint.GRID:
+        return
+    if _constraint_manager.get_grid_constraint().size_changed.is_connected(_update_serialized_format):
         _constraint_manager.get_grid_constraint().size_changed.connect(_update_serialized_format)
     constraint_enabled.emit(constraint)
 
