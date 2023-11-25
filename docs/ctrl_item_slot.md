@@ -10,6 +10,7 @@ A UI control representing an inventory slot (`ItemSlot`). Displays the texture o
 
 * `item_slot_path: NodePath` - Path to an `ItemSlot` node.
 * `default_item_icon: Texture` - The default icon that will be used for items with no `image` property.
+* `custom_icon_size: Vector2` - Custom icon size.
 * `item_texture_visible: bool` - The item texture is displayed if set to true.
 * `label_visible: bool` - The item name label is displayed if set to true.
 * `item_slot: ItemSlot` - The `ItemSlot` node linked to this control.
