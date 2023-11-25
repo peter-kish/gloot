@@ -19,7 +19,7 @@ extends Control
         if is_inside_tree():
             assert(node is ItemSlot)
             
-        self.item_slot = node
+        item_slot = node
         _refresh()
         update_configuration_warnings()
 @export var default_item_icon: Texture2D :
@@ -142,7 +142,7 @@ func _ready():
     var node: Node = get_node_or_null(item_slot_path)
     if is_inside_tree() && node:
         assert(node is ItemSlot)
-    self.item_slot = node
+    item_slot = node
 
     _refresh()
     if !Engine.is_editor_hint() && _gloot:

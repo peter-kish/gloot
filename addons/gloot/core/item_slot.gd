@@ -18,10 +18,8 @@ signal inventory_changed(inventory)
         if is_inside_tree() && node:
             assert(node is Inventory)
         
-        if node == null:
-            return
-        
-        self.inventory = node
+        equipped_item = -1
+        inventory = node
 
 @export var equipped_item: int = -1 :
     get:
@@ -29,18 +27,18 @@ signal inventory_changed(inventory)
     set(new_equipped_item):
         equipped_item = new_equipped_item
         if equipped_item < 0:
-            self.item = null
+            item = null
             return
         if inventory:
             var items = inventory.get_items()
             if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-                self.item = items[equipped_item]
+                item = items[equipped_item]
 
 var _inventory
 var inventory :
     get:
         if !_inventory && !inventory_path.is_empty():
-            self._inventory = get_node_or_null(inventory_path)
+            _inventory = get_node_or_null(inventory_path)
 
         return _inventory
     set(new_inv):
@@ -48,7 +46,6 @@ var inventory :
             return
 
         _disconnect_inventory_signals()
-        self.item = null
         _inventory = new_inv
         _connect_inventory_signals()
 
@@ -120,30 +117,30 @@ func can_hold_item(new_item: InventoryItem) -> bool:
 
 
 func _ready():
-    self.inventory = get_node_or_null(inventory_path)
+    inventory = get_node_or_null(inventory_path)
     if equipped_item >= 0 && inventory:
         var items = inventory.get_items()
         if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-            self.item = items[equipped_item]
+            item = items[equipped_item]
 
 
 func _on_inventory_predelete():
     inventory = null
-    self.item = null
+    equipped_item = -1
 
 
 func _on_item_removed(pItem: InventoryItem) -> void:
     if pItem == item:
-        self.item = null
+        equipped_item = -1
 
 
 func _on_item_predelete():
-    self.item = null
+    equipped_item = -1
 
 
 func reset():
-    self.inventory = null
-    self.item = null
+    inventory = null
+    equipped_item = -1
 
 
 func serialize() -> Dictionary:
