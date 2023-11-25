@@ -42,3 +42,4 @@ Basic inventory class. Supports basic inventory operations (adding, removing, tr
 * `item_modified(item: InventoryItem)` - Emitted when an item from the inventory has been modified.
 * `contents_changed()` - Emitted when the contents of the inventory have changed.
 * `protoset_changed()` - Emitted when the `item_protoset` property has been changed.
+* `predelete()` - Emitted before the engine deletes the inventory.
