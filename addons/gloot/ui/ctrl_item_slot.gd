@@ -30,15 +30,15 @@ extends Control
             return
         default_item_icon = new_default_item_icon
         _refresh()
-@export var custom_icon_size: Vector2 :
+@export var icon_scaling: Vector2 = Vector2.ONE :
     get:
-        return custom_icon_size
-    set(new_custom_icon_size):
-        if custom_icon_size == new_custom_icon_size:
+        return icon_scaling
+    set(new_icon_scaling):
+        if icon_scaling == new_icon_scaling:
             return
-        custom_icon_size = new_custom_icon_size
-        if _texture_rect:
-            _texture_rect.custom_minimum_size = custom_icon_size
+        icon_scaling = new_icon_scaling
+        if _texture_rect && _texture_rect.texture:
+            _texture_rect.custom_minimum_size = _texture_rect.texture.get_size() * icon_scaling
 @export var item_texture_visible: bool = true :
     get:
         return item_texture_visible
@@ -133,7 +133,6 @@ func _ready():
     _texture_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
     _texture_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
     _hbox_container.add_child(_texture_rect)
-    _texture_rect.resized.connect(func(): custom_icon_size = _texture_rect.size)
 
     _label = Label.new()
     _label.visible = label_visible
@@ -187,6 +186,7 @@ func _refresh() -> void:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _texture_rect:
         _texture_rect.texture = item.get_texture()
+        _texture_rect.custom_minimum_size = _texture_rect.texture.get_size() * icon_scaling
 
 
 func _clear() -> void:
