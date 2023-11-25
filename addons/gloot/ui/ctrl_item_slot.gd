@@ -127,6 +127,7 @@ func _ready():
     _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     _hbox_container.size_flags_vertical = SIZE_EXPAND_FILL
     add_child(_hbox_container)
+    _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
     _texture_rect = TextureRect.new()
     _texture_rect.visible = item_texture_visible
