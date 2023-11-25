@@ -7,27 +7,44 @@ extends Control
     get:
         return item_slot_path
     set(new_item_slot_path):
+        if item_slot_path == new_item_slot_path:
+            return
         item_slot_path = new_item_slot_path
         var node: Node = get_node_or_null(item_slot_path)
         
         if node == null:
+            _clear()
             return
 
         if is_inside_tree():
             assert(node is ItemSlot)
             
         self.item_slot = node
+        _refresh()
         update_configuration_warnings()
 @export var default_item_icon: Texture2D :
     get:
         return default_item_icon
     set(new_default_item_icon):
+        if default_item_icon == new_default_item_icon:
+            return
         default_item_icon = new_default_item_icon
         _refresh()
+@export var custom_icon_size: Vector2 :
+    get:
+        return custom_icon_size
+    set(new_custom_icon_size):
+        if custom_icon_size == new_custom_icon_size:
+            return
+        custom_icon_size = new_custom_icon_size
+        if _texture_rect:
+            _texture_rect.custom_minimum_size = custom_icon_size
 @export var item_texture_visible: bool = true :
     get:
         return item_texture_visible
     set(new_item_texture_visible):
+        if item_texture_visible == new_item_texture_visible:
+            return
         item_texture_visible = new_item_texture_visible
         if _texture_rect:
             _texture_rect.visible = item_texture_visible
@@ -35,6 +52,8 @@ extends Control
     get:
         return label_visible
     set(new_label_visible):
+        if label_visible == new_label_visible:
+            return
         label_visible = new_label_visible
         if _label:
             _label.visible = label_visible
@@ -111,7 +130,10 @@ func _ready():
 
     _texture_rect = TextureRect.new()
     _texture_rect.visible = item_texture_visible
+    _texture_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+    _texture_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
     _hbox_container.add_child(_texture_rect)
+    _texture_rect.resized.connect(func(): custom_icon_size = _texture_rect.size)
 
     _label = Label.new()
     _label.visible = label_visible
