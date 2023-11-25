@@ -5,6 +5,7 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
+signal predelete
 
 @export var protoset: Resource :
     get:
@@ -94,6 +95,8 @@ func _notification(what):
     elif what == NOTIFICATION_UNPARENTED:
         _on_item_removed(_inventory)
         _inventory = null
+    elif what == NOTIFICATION_PREDELETE:
+        predelete.emit()
 
 
 func _on_item_removed(obj: Object):

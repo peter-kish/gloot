@@ -66,11 +66,11 @@ var item: InventoryItem :
             return
 
         if item != null:
-            item.tree_exiting.disconnect(_on_item_tree_exiting)
+            item.predelete.disconnect(_on_item_predelete)
 
         item = new_item
         if item != null:
-            item.tree_exiting.connect(_on_item_tree_exiting)
+            item.predelete.connect(_on_item_predelete)
             item_set.emit(item)
         else:
             item_cleared.emit()
@@ -92,8 +92,8 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.tree_exiting.is_connected(_on_inventory_tree_exiting):
-        inventory.tree_exiting.connect(_on_inventory_tree_exiting)
+    if !inventory.predelete.is_connected(_on_inventory_predelete):
+        inventory.predelete.connect(_on_inventory_predelete)
     if !inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.connect(_on_item_removed)
 
@@ -102,8 +102,8 @@ func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.tree_exiting.is_connected(_on_inventory_tree_exiting):
-        inventory.tree_exiting.disconnect(_on_inventory_tree_exiting)
+    if inventory.predelete.is_connected(_on_inventory_predelete):
+        inventory.predelete.disconnect(_on_inventory_predelete)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
 
@@ -127,7 +127,7 @@ func _ready():
             self.item = items[equipped_item]
 
 
-func _on_inventory_tree_exiting():
+func _on_inventory_predelete():
     inventory = null
     self.item = null
 
@@ -137,7 +137,7 @@ func _on_item_removed(pItem: InventoryItem) -> void:
         self.item = null
 
 
-func _on_item_tree_exiting():
+func _on_item_predelete():
     self.item = null
 
 
