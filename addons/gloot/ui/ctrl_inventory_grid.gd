@@ -266,13 +266,23 @@ func _populate_list() -> void:
         
     for item in inventory.get_items():
         var ctrl_inventory_item = _ctrl_inventory_item_script.new()
-        ctrl_inventory_item.ctrl_inventory = self
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
         ctrl_inventory_item.grabbed.connect(_on_item_grab)
         ctrl_inventory_item.activated.connect(_on_item_activated)
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
+
+        if stretch_item_sprites:
+            ctrl_inventory_item.size = _get_streched_item_sprite_size(item)
+        else:
+            ctrl_inventory_item.size = ctrl_inventory_item.texture.get_size()
+
+        ctrl_inventory_item.position = _get_field_position(inventory.get_item_position(item))
+        if !stretch_item_sprites:
+            # Position the item centered when it's not streched
+            ctrl_inventory_item.position += _get_unstreched_sprite_offset(item)
+
         ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
@@ -318,6 +328,15 @@ func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
     sprite_size += (Vector2(item_size) - Vector2.ONE) * item_spacing
 
     return sprite_size
+
+
+func _get_unstreched_sprite_offset(item: InventoryItem) -> Vector2:
+    var texture = item.get_texture()
+    if texture == null:
+        texture = default_item_texture
+    if texture == null:
+        return Vector2.ZERO
+    return (_get_streched_item_sprite_size(item) - texture.get_size()) / 2
 
 
 func _on_item_activated(ctrl_inventory_item) -> void:

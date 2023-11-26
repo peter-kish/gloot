@@ -11,12 +11,8 @@ var item: InventoryItem :
         return item
     set(new_item):
         item = new_item
-        if item && ctrl_inventory:
-            var texture_path = item.get_property(CtrlInventory.KEY_IMAGE)
-            if texture_path:
-                texture = load(texture_path)
-            _refresh()
-var ctrl_inventory
+        if item:
+            texture = item.get_texture()
 var texture: Texture2D :
     get:
         return texture
@@ -37,32 +33,6 @@ var selection_bg_color: Color = Color.GRAY :
         queue_redraw()
 
 
-func _refresh() -> void:
-    _refresh_size()
-    _refresh_pos()
-
-
-func _refresh_size() -> void:
-    if ctrl_inventory.stretch_item_sprites:
-        size = ctrl_inventory._get_streched_item_sprite_size(item)
-    else:
-        size = texture.get_size()
-
-
-func _refresh_pos() -> void:
-    var item_pos: Vector2 = _get_item_position()
-
-    position = ctrl_inventory._get_field_position(item_pos)
-
-    if !ctrl_inventory.stretch_item_sprites:
-        # Position the item centered when it's not streched
-        position += _get_unstreched_sprite_offset()
-
-
-func _get_unstreched_sprite_offset() -> Vector2:
-    return (ctrl_inventory._get_streched_item_sprite_size(item) - texture.get_size()) / 2
-
-
 func _get_item_size() -> Vector2:
     if item && item.get_inventory():
         return item.get_inventory().get_item_size(item)
@@ -73,11 +43,6 @@ func _get_item_position() -> Vector2:
     if item && item.get_inventory():
         return item.get_inventory().get_item_position(item)
     return Vector2(0, 0)
-
-
-func _ready() -> void:
-    if item && ctrl_inventory:
-        _refresh()
 
 
 func _draw() -> void:
