@@ -6,6 +6,31 @@ signal item_set(item)
 signal item_cleared
 signal inventory_changed(inventory)
 
+class _ItemMap:
+    var _map: Dictionary
+
+
+    func map_item(item: InventoryItem, slot: ItemSlot) -> void:
+        if item == null || slot == null:
+            return
+        _map[item] = slot
+
+
+    func unmap_item(item: InventoryItem) -> void:
+        if item == null:
+            return
+        if _map.has(item):
+            _map.erase(item)
+
+
+    func remove_item_from_slot(item: InventoryItem) -> void:
+        assert(item != null)
+        if _map.has(item):
+            _map[item].item = null
+            unmap_item(item)
+
+
+static var _item_map := _ItemMap.new()
 
 @export var inventory_path: NodePath :
     get:
@@ -55,22 +80,24 @@ var item: InventoryItem :
     get:
         return item
     set(new_item):
-        assert(can_hold_item(new_item))
-        if inventory == null:
-            return
+        if new_item:
+            # Bind item
+            assert(can_hold_item(new_item), "ItemSlot can't hold that item!")
+            _disconnect_item_signals()
+            _item_map.remove_item_from_slot(new_item)
 
-        if new_item && !inventory.has_item(new_item):
-            return
-
-        if item != null:
-            item.predelete.disconnect(_on_item_predelete)
-
-        item = new_item
-        if item != null:
-            item.predelete.connect(_on_item_predelete)
+            item = new_item
+            _connect_item_signals()
+            _item_map.map_item(item, self)
             item_set.emit(item)
         else:
+            # Clear item
+            _disconnect_item_signals()
+            _item_map.unmap_item(item)
+
+            item = null
             item_cleared.emit()
+
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"
@@ -103,6 +130,18 @@ func _disconnect_inventory_signals() -> void:
         inventory.predelete.disconnect(_on_inventory_predelete)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
+
+
+func _connect_item_signals() -> void:
+    if !item:
+        return
+    item.predelete.connect(_on_item_predelete)
+
+
+func _disconnect_item_signals() -> void:
+    if !item:
+        return
+    item.predelete.disconnect(_on_item_predelete)
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:
