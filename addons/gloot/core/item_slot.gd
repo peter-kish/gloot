@@ -62,9 +62,6 @@ static var _item_map := _ItemMap.new()
 var _inventory
 var inventory :
     get:
-        if !_inventory && !inventory_path.is_empty():
-            _inventory = get_node_or_null(inventory_path)
-
         return _inventory
     set(new_inv):
         if new_inv == _inventory:
