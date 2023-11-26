@@ -71,6 +71,7 @@ var inventory :
             return
 
         _disconnect_inventory_signals()
+        item = null
         _inventory = new_inv
         _connect_inventory_signals()
 
