@@ -24,6 +24,8 @@ static var _grabbed_dragable: CtrlDragable = null
 static var _grab_offset: Vector2
 
 var drag_preview: Control
+var _preview_node := Node2D.new()
+var drag_z_index := 1
 
 
 static func grab(dragable: CtrlDragable) -> void:
@@ -72,15 +74,18 @@ func drag_start() -> void:
         return
 
     drag_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    add_child(drag_preview)
     drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
+    add_child(_preview_node)
+    _preview_node.add_child(drag_preview)
+    _preview_node.z_index = drag_z_index
 
 
 func drag_end() -> void:
     if drag_preview == null:
         return
 
-    remove_child(drag_preview)
+    _preview_node.remove_child(drag_preview)
+    remove_child(_preview_node)
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
 
 

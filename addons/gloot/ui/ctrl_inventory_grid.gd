@@ -264,6 +264,7 @@ func _populate_list() -> void:
         var ctrl_inventory_item = CtrlInventoryItemRect.new()
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
+        ctrl_inventory_item.drag_z_index = drag_sprite_z_index
         ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
