@@ -45,6 +45,19 @@ func _input(event: InputEvent) -> void:
         _drop_event = {zone = null}
 
 
+func activate() -> void:
+    mouse_filter = Control.MOUSE_FILTER_PASS
+
+
+func deactivate() -> void:
+    mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _mouse_inside = false
+
+
+func is_active() -> bool:
+    return (mouse_filter != Control.MOUSE_FILTER_IGNORE)
+
+
 func _ready() -> void:
     mouse_entered.connect(func(): _mouse_inside = true)
     mouse_exited.connect(func(): _mouse_inside = false)

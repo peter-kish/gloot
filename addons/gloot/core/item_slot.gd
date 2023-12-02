@@ -133,21 +133,23 @@ func _disconnect_inventory_signals() -> void:
 func _connect_item_signals() -> void:
     if !item:
         return
-    item.predelete.connect(_on_item_predelete)
+
+    if !item.predelete.is_connected(_on_item_predelete):
+        item.predelete.connect(_on_item_predelete)
 
 
 func _disconnect_item_signals() -> void:
     if !item:
         return
-    item.predelete.disconnect(_on_item_predelete)
+
+    if item.predelete.is_connected(_on_item_predelete):
+        item.predelete.disconnect(_on_item_predelete)
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:
     if new_item == null:
         return true
     if inventory == null:
-        return false
-    if !inventory.has_item(new_item):
         return false
 
     return true

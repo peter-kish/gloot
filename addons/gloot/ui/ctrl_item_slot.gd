@@ -144,12 +144,12 @@ func _ready():
 
     _ctrl_drop_zone = CtrlDropZone.new()
     _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
-    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _ctrl_drop_zone.size = size
     resized.connect(func(): _ctrl_drop_zone.size = size)
     CtrlDragable.dragable_grabbed.connect(_on_any_dragable_grabbed)
     CtrlDragable.dragable_dropped.connect(_on_any_dragable_dropped)
     add_child(_ctrl_drop_zone)
+    _ctrl_drop_zone.deactivate()
 
     _label = Label.new()
     _label.visible = label_visible
@@ -179,15 +179,22 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == item_slot.item:
         return
 
+    if item.get_inventory() == null:
+        if !item_slot.inventory.add_item(item):
+            return
+    elif item.get_inventory() != item_slot.inventory:
+        if !item.get_inventory().transfer(item, item_slot.inventory):
+            return
+
     item_slot.item = item
 
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
-    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_PASS
+    _ctrl_drop_zone.activate()
 
 
 func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
-    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _ctrl_drop_zone.deactivate()
     var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)
     if ctrl_inventory_item_rect.item_slot:
         ctrl_inventory_item_rect.item_slot.item = null
@@ -215,5 +222,5 @@ func _clear() -> void:
     if _label:
         _label.text = ""
     if _ctrl_inventory_item_rect:
-        _ctrl_inventory_item_rect.texture = null
+        _ctrl_inventory_item_rect.item = null
 

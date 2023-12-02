@@ -115,16 +115,16 @@ func _ready() -> void:
 
     _ctrl_drop_zone = CtrlDropZone.new()
     _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
-    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _ctrl_drop_zone.size = size
     resized.connect(func(): _ctrl_drop_zone.size = size)
     CtrlDragable.dragable_grabbed.connect(func(dragable: CtrlDragable, grab_position: Vector2):
-        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_PASS
+        _ctrl_drop_zone.activate()
     )
     CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
-        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        _ctrl_drop_zone.deactivate()
     )
     add_child(_ctrl_drop_zone)
+    _ctrl_drop_zone.deactivate()
 
     ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = ctrl_item_container.size)
 
