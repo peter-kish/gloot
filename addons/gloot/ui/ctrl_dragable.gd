@@ -10,6 +10,8 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 static var _grabbed_dragable: CtrlDragable = null
 static var _grab_offset: Vector2
 
+var drag_preview: Control
+
 
 static func grab(dragable: CtrlDragable) -> void:
     _grabbed_dragable = dragable
@@ -50,11 +52,25 @@ static func get_grab_offset() -> Vector2:
 
 
 func drag_start() -> void:
-    pass
+    if drag_preview == null:
+        return
+
+    drag_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(drag_preview)
+    drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
 
 
 func drag_end() -> void:
-    pass
+    if drag_preview == null:
+        return
+        
+    remove_child(drag_preview)
+    drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
+
+
+func _process(_delta) -> void:
+    if drag_preview:
+        drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
 
 
 func _gui_input(event: InputEvent) -> void:
