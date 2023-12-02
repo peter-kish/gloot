@@ -90,7 +90,7 @@ static func create_var(type: int):
         TYPE_RID:
             return RID()
         TYPE_OBJECT:
-            return Object()
+            return Object.new()
         TYPE_DICTIONARY:
             return {}
         TYPE_ARRAY:
