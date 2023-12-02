@@ -88,7 +88,6 @@ var inventory: InventoryGrid = null :
 var _ctrl_item_container: WeakRef = weakref(null)
 var _ctrl_drop_zone: CtrlDropZone
 var _selected_item: InventoryItem = null
-var _gloot: Node = null
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -100,8 +99,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 func _ready() -> void:
-    _gloot = _get_gloot()
-
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         var ctrl_item_container = _ctrl_item_container.get_ref()
@@ -135,14 +132,6 @@ func _ready() -> void:
         self.inventory = get_node_or_null(inventory_path)
 
     _refresh()
-
-
-func _get_gloot() -> Node:
-    # This is a "temporary" hack until a better solution is found!
-    # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
-    # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the singleton by name.
-    return get_tree().root.get_node_or_null("GLoot")
 
 
 func _connect_inventory_signals() -> void:
@@ -354,24 +343,6 @@ func _select(item: InventoryItem) -> void:
     selection_changed.emit()
 
 
-func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
-    var field_coords = get_field_coords(drop_position)
-    if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
-        _move_item(item, field_coords)
-    elif inventory is InventoryGridStacked:
-        _merge_item(item, field_coords)
-
-
-func _handle_item_drop(item: InventoryItem, drop_position: Vector2) -> void:
-    var global_grabbed_item_pos = drop_position + global_position
-    # Using WeakRefs for the item_dropped signals, as items might be freed at some point of dropping
-    # (when merging with other items)
-    var wr_item := weakref(item)
-    item_dropped.emit(wr_item, global_grabbed_item_pos)
-    if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.emit(wr_item, global_grabbed_item_pos)
-
-
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
     var item: InventoryItem = dragable.item
     if item == null:
@@ -382,8 +353,19 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
     if inventory.has_item(item):
         _handle_item_move(item, drop_position)
-        return
+    else:
+        _handle_item_transfer(item, drop_position)
 
+
+func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
+    var field_coords = get_field_coords(drop_position)
+    if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
+        _move_item(item, field_coords)
+    elif inventory is InventoryGridStacked:
+        _merge_item(item, field_coords)
+
+
+func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     var source_inventory: InventoryGrid = item.get_inventory()
     if source_inventory.item_protoset != inventory.item_protoset:
         return
@@ -403,7 +385,7 @@ func get_field_coords(local_pos: Vector2) -> Vector2i:
 
     # We also don't want the item spacing to disturb snapping to the closest field, so we add half
     # the spacing to the local coordinates.
-    var local_pos_ex = local_pos + Vector2(item_spacing, item_spacing) / 2
+    var local_pos_ex = local_pos + (Vector2(item_spacing, item_spacing) / 2) + (field_dimensions / 2)
 
     var x: int = local_pos_ex.x / (field_dimensions_ex.x)
     var y: int = local_pos_ex.y / (field_dimensions_ex.y)
@@ -414,11 +396,11 @@ func get_selected_inventory_item() -> InventoryItem:
     return _selected_item
 
 
-func _move_item(item: InventoryItem, position: Vector2i) -> void:
+func _move_item(item: InventoryItem, move_position: Vector2i) -> void:
     if Engine.is_editor_hint():
-        GlootUndoRedo.move_inventory_item(inventory, item, position)
+        GlootUndoRedo.move_inventory_item(inventory, item, move_position)
     else:
-        inventory.move_item_to(item, position)
+        inventory.move_item_to(item, move_position)
 
         
 func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:

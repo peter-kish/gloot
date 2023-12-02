@@ -2,6 +2,9 @@
 class_name CtrlItemSlot
 extends Control
 
+const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
+const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 @export var item_slot_path: NodePath :
     get:
@@ -70,9 +73,9 @@ var item_slot: ItemSlot :
         
         _refresh()
 var _hbox_container: HBoxContainer
-var _texture_rect: TextureRect
+var _texture_rect: CtrlInventoryRect
 var _label: Label
-var _gloot: Node = null
+var _ctrl_drop_zone: CtrlDropZone
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -116,8 +119,6 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 
 
 func _ready():
-    _gloot = _get_gloot()
-
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         if _hbox_container:
@@ -129,11 +130,24 @@ func _ready():
     add_child(_hbox_container)
     _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
-    _texture_rect = TextureRect.new()
+    _texture_rect = CtrlInventoryRect.new()
     _texture_rect.visible = item_texture_visible
     _texture_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
     _texture_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
     _hbox_container.add_child(_texture_rect)
+
+    _ctrl_drop_zone = CtrlDropZone.new()
+    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
+    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _ctrl_drop_zone.size = size
+    resized.connect(func(): _ctrl_drop_zone.size = size)
+    CtrlDragable.dragable_grabbed.connect(func(grab_position: Vector2):
+        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_PASS
+    )
+    CtrlDragable.dragable_dropped.connect(func(zone: CtrlDropZone, drop_position: Vector2):
+        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    )
+    add_child(_ctrl_drop_zone)
 
     _label = Label.new()
     _label.visible = label_visible
@@ -144,32 +158,26 @@ func _ready():
         assert(node is ItemSlot)
     item_slot = node
 
+    custom_minimum_size = _hbox_container.size
+    _hbox_container.resized.connect(func(): custom_minimum_size = _hbox_container.size)
+
     _refresh()
-    if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.connect(_on_item_dropped)
-
-
-func _get_gloot() -> Node:
-    # This is a "temporary" hack until a better solution is found!
-    # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
-    # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the singleton by name.
-    return get_tree().root.get_node_or_null("GLoot")
 
 
 func _get_singleton() -> Node:
     return null
 
 
-func _on_item_dropped(wr_item: WeakRef, global_drop_pos: Vector2) -> void:
-    var item: InventoryItem = wr_item.get_ref()
+func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
+    var item = (dragable as CtrlInventoryItemRect).item
+
     if !item:
         return
     if !item_slot:
         return
         
     var slot_rect = get_global_rect()
-    if slot_rect.has_point(get_global_mouse_position()) && item_slot.can_hold_item(item):
+    if item_slot.can_hold_item(item):
         item_slot.item = item
 
 
@@ -186,6 +194,7 @@ func _refresh() -> void:
     if _label:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _texture_rect:
+        _texture_rect.item = item
         _texture_rect.texture = item.get_texture()
         _texture_rect.custom_minimum_size = _texture_rect.texture.get_size() * icon_scaling
 

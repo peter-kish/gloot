@@ -220,14 +220,11 @@ func _highlight_rect(rect: Rect2i, style: StyleBox, queue_for_reset: bool) -> vo
 func _get_global_grabbed_item() -> InventoryItem:
     if CtrlDragable.get_grabbed_dragable() == null:
         return null
-    var grabbed_item: InventoryItem = (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
-    if !grabbed_item && _gloot:
-        grabbed_item = _gloot._grabbed_inventory_item
-    return grabbed_item
+    return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
 
 
 func _get_global_grabbed_item_global_pos() -> Vector2:
-    if _gloot && _gloot._grabbed_inventory_item:
-        return get_global_mouse_position() - _gloot._grab_offset + (field_dimensions / 2)
+    if CtrlDragable.get_grabbed_dragable():
+        return get_global_mouse_position() - CtrlDragable.get_grab_offset()
     return Vector2(-1, -1)
     

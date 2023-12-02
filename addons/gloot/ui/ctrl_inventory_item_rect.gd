@@ -17,6 +17,8 @@ var texture: Texture2D :
         return texture
     set(new_texture):
         texture = new_texture
+        if drag_preview != null:
+            drag_preview.texture = texture
         queue_redraw()
 var selected: bool = false :
     get:
@@ -49,6 +51,7 @@ func _ready() -> void:
     drag_preview.texture = texture
     drag_preview.size = size
     drag_preview.resized.connect(func(): drag_preview.size = size)
+
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, size)
