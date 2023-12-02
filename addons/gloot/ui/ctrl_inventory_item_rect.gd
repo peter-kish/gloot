@@ -32,6 +32,7 @@ var selection_bg_color: Color = Color.GRAY :
     set(new_selection_bg_color):
         selection_bg_color = new_selection_bg_color
         queue_redraw()
+var item_slot: ItemSlot
 
 
 func _get_item_size() -> Vector2:

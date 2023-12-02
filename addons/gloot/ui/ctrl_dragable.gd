@@ -34,7 +34,7 @@ static func grab(dragable: CtrlDragable) -> void:
 
     dragable.mouse_filter = Control.MOUSE_FILTER_IGNORE
     dragable.grabbed.emit(_grab_offset)
-    dragable_grabbed.emit(_grab_offset)
+    dragable_grabbed.emit(dragable, _grab_offset)
     dragable.drag_start()
 
 
@@ -58,7 +58,7 @@ static func _drop(zone: CtrlDropZone) -> void:
 
     grabbed_dragable.drag_end()
     grabbed_dragable.dropped.emit(zone, local_drop_position)
-    dragable_dropped.emit(zone, local_drop_position)
+    dragable_dropped.emit(grabbed_dragable, zone, local_drop_position)
 
 
 static func get_grabbed_dragable() -> CtrlDragable:
