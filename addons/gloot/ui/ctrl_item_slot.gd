@@ -158,8 +158,8 @@ func _ready():
         assert(node is ItemSlot)
     item_slot = node
 
-    custom_minimum_size = _hbox_container.size
-    _hbox_container.resized.connect(func(): custom_minimum_size = _hbox_container.size)
+    size = _hbox_container.size
+    _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
     _refresh()
 
@@ -177,8 +177,13 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
         return
         
     var slot_rect = get_global_rect()
-    if item_slot.can_hold_item(item):
-        item_slot.item = item
+    if !item_slot.can_hold_item(item):
+        return
+
+    if item == item_slot.item:
+        return
+
+    item_slot.item = item
 
 
 func _refresh() -> void:
