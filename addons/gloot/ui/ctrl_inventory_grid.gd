@@ -358,7 +358,7 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
-    var field_coords = get_field_coords(drop_position)
+    var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
         _move_item(item, field_coords)
     elif inventory is InventoryGridStacked:
@@ -370,7 +370,7 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     if source_inventory.item_protoset != inventory.item_protoset:
         return
 
-    var field_coords = get_field_coords(drop_position)
+    var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     source_inventory.transfer_to(item, inventory, field_coords)
 
 
@@ -385,7 +385,7 @@ func get_field_coords(local_pos: Vector2) -> Vector2i:
 
     # We also don't want the item spacing to disturb snapping to the closest field, so we add half
     # the spacing to the local coordinates.
-    var local_pos_ex = local_pos + (Vector2(item_spacing, item_spacing) / 2) + (field_dimensions / 2)
+    var local_pos_ex = local_pos + (Vector2(item_spacing, item_spacing) / 2)
 
     var x: int = local_pos_ex.x / (field_dimensions_ex.x)
     var y: int = local_pos_ex.y / (field_dimensions_ex.y)

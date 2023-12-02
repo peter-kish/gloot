@@ -144,7 +144,7 @@ func _input(event) -> void:
     
     var hovered_field_coords := Vector2i(-1, -1)
     if _is_hovering(get_global_mouse_position()):
-        hovered_field_coords = get_field_coords(get_global_mouse_position())
+        hovered_field_coords = get_field_coords(get_local_mouse_position())
 
     _reset_highlights()
     if !field_highlighted_style:
@@ -177,11 +177,11 @@ func _highlight_grabbed_item(style: StyleBox) -> bool:
     if !grabbed_item:
         return false
 
-    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_global_pos()
+    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
     if !_is_hovering(global_grabbed_item_pos):
         return false
 
-    var grabbed_item_coords := get_field_coords(global_grabbed_item_pos)
+    var grabbed_item_coords := get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
     var item_size := inventory.get_item_size(grabbed_item)
     var rect := Rect2i(grabbed_item_coords, item_size)
     _highlight_rect(rect, style, true)
@@ -223,8 +223,8 @@ func _get_global_grabbed_item() -> InventoryItem:
     return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
 
 
-func _get_global_grabbed_item_global_pos() -> Vector2:
+func _get_global_grabbed_item_local_pos() -> Vector2:
     if CtrlDragable.get_grabbed_dragable():
-        return get_global_mouse_position() - CtrlDragable.get_grab_offset()
+        return get_local_mouse_position() - CtrlDragable.get_grab_offset()
     return Vector2(-1, -1)
     
