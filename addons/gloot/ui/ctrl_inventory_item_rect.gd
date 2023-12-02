@@ -54,6 +54,8 @@ func _ready() -> void:
 
 
 func _draw() -> void:
+    if is_dragged():
+        return
     var rect = Rect2(Vector2.ZERO, size)
     _draw_selection(rect)
     _draw_texture(rect)

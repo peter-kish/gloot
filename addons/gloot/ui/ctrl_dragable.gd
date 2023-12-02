@@ -105,3 +105,7 @@ func _gui_input(event: InputEvent) -> void:
     if mb_event.is_pressed():
         grab(self)
 
+
+func is_dragged() -> bool:
+    return _grabbed_dragable == self
+
