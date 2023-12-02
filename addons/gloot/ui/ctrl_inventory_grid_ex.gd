@@ -137,8 +137,6 @@ func _on_inventory_resized() -> void:
 
 
 func _input(event) -> void:
-    super._input(event)
-    
     if !(event is InputEventMouseMotion):
         return
     if !inventory:
@@ -220,7 +218,9 @@ func _highlight_rect(rect: Rect2i, style: StyleBox, queue_for_reset: bool) -> vo
 
 
 func _get_global_grabbed_item() -> InventoryItem:
-    var grabbed_item: InventoryItem = get_grabbed_item()
+    if CtrlDragable.get_grabbed_dragable() == null:
+        return null
+    var grabbed_item: InventoryItem = (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
     if !grabbed_item && _gloot:
         grabbed_item = _gloot._grabbed_inventory_item
     return grabbed_item

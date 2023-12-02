@@ -1,9 +1,8 @@
 class_name CtrlInventoryItemRect
-extends Control
+extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
-signal grabbed(offset)
 signal activated
 
 var item: InventoryItem :
@@ -44,6 +43,12 @@ func _get_item_position() -> Vector2:
         return item.get_inventory().get_item_position(item)
     return Vector2(0, 0)
 
+
+func _ready() -> void:
+    drag_preview = TextureRect.new()
+    drag_preview.texture = texture
+    drag_preview.size = size
+    drag_preview.resized.connect(func(): drag_preview.size = size)
 
 func _draw() -> void:
     var rect = Rect2(Vector2.ZERO, size)
@@ -87,6 +92,7 @@ func _draw_stack_size(rect: Rect2):
 
 
 func _gui_input(event: InputEvent) -> void:
+    super._gui_input(event)
     if !(event is InputEventMouseButton):
         return
 
@@ -96,8 +102,4 @@ func _gui_input(event: InputEvent) -> void:
 
     if mb_event.double_click:
         if get_global_rect().has_point(get_global_mouse_position()):
-            activated.emit(self)
-    elif mb_event.is_pressed():
-        if get_global_rect().has_point(get_global_mouse_position()):
-            var offset: Vector2 = get_global_mouse_position() - get_global_rect().position
-            grabbed.emit(self, offset)
+            activated.emit()

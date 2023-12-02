@@ -9,6 +9,9 @@ signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
+const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     get:
@@ -82,11 +85,8 @@ var inventory: InventoryGrid = null :
         _connect_inventory_signals()
 
         _refresh()
-var _grabbed_ctrl_inventory_item = null
-var _grab_offset: Vector2
-var _ctrl_inventory_item_script = preload("ctrl_inventory_item_rect.gd")
-var _drag_sprite: WeakRef = weakref(null)
 var _ctrl_item_container: WeakRef = weakref(null)
+var _ctrl_drop_zone: CtrlDropZone
 var _selected_item: InventoryItem = null
 var _gloot: Node = null
 
@@ -107,8 +107,6 @@ func _ready() -> void:
         var ctrl_item_container = _ctrl_item_container.get_ref()
         if ctrl_item_container:
             ctrl_item_container.queue_free()
-        if _drag_sprite.get_ref():
-            _drag_sprite.get_ref().queue_free()
 
     var ctrl_item_container = Control.new()
     ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -118,19 +116,25 @@ func _ready() -> void:
     add_child(ctrl_item_container)
     _ctrl_item_container = weakref(ctrl_item_container)
 
-    var drag_sprite = Sprite2D.new()
-    drag_sprite.centered = false
-    drag_sprite.z_index = drag_sprite_z_index
-    drag_sprite.hide()
-    add_child(drag_sprite)
-    _drag_sprite = weakref(drag_sprite)
+    _ctrl_drop_zone = CtrlDropZone.new()
+    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
+    _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _ctrl_drop_zone.size = size
+    resized.connect(func(): _ctrl_drop_zone.size = size)
+    CtrlDragable.dragable_grabbed.connect(func(grab_position: Vector2):
+        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_PASS
+    )
+    CtrlDragable.dragable_dropped.connect(func(zone: CtrlDropZone, drop_position: Vector2):
+        _ctrl_drop_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    )
+    add_child(_ctrl_drop_zone)
+
+    ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = ctrl_item_container.size)
 
     if has_node(inventory_path):
         self.inventory = get_node_or_null(inventory_path)
 
     _refresh()
-    if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.connect(_on_item_dropped)
 
 
 func _get_gloot() -> Node:
@@ -187,12 +191,6 @@ func _refresh() -> void:
     _clear_list()
     _populate_list()
     queue_redraw()
-
-
-func _process(_delta) -> void:
-    var drag_sprite = _drag_sprite.get_ref()
-    if drag_sprite && drag_sprite.visible:
-        drag_sprite.global_position = get_global_mouse_position() - _grab_offset
 
 
 func _draw() -> void:
@@ -256,8 +254,6 @@ func _clear_list() -> void:
         ctrl_item_container.remove_child(ctrl_inventory_item)
         ctrl_inventory_item.queue_free()
 
-    _grabbed_ctrl_inventory_item = null
-
 
 func _populate_list() -> void:
     var ctrl_item_container = _ctrl_item_container.get_ref()
@@ -265,11 +261,12 @@ func _populate_list() -> void:
         return
         
     for item in inventory.get_items():
-        var ctrl_inventory_item = _ctrl_inventory_item_script.new()
+        var ctrl_inventory_item = CtrlInventoryItemRect.new()
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        ctrl_inventory_item.grabbed.connect(_on_item_grab)
-        ctrl_inventory_item.activated.connect(_on_item_activated)
+        ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
+        ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
+        ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
 
@@ -300,24 +297,16 @@ func _refresh_selection() -> void:
         ctrl_item.selection_bg_color = selection_color
 
 
-func _on_item_grab(ctrl_inventory_item, offset: Vector2) -> void:
+func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     _select(null)
-    _grabbed_ctrl_inventory_item = ctrl_inventory_item
-    _grabbed_ctrl_inventory_item.hide()
-    _grab_offset = offset
-    if _gloot:
-        _gloot._grabbed_inventory_item = get_grabbed_item()
-        _gloot._grab_offset = _grab_offset
-    var drag_sprite = _drag_sprite.get_ref()
-    if drag_sprite:
-        drag_sprite.texture = ctrl_inventory_item.texture
-        if drag_sprite.texture == null:
-            drag_sprite.texture = default_item_texture
-        if stretch_item_sprites:
-            var texture_size: Vector2 = drag_sprite.texture.get_size()
-            var streched_size: Vector2 = _get_streched_item_sprite_size(ctrl_inventory_item.item)
-            drag_sprite.scale = streched_size / texture_size
-        drag_sprite.show()
+
+
+func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+    var item = ctrl_inventory_item.item
+    # The item might have been freed in case the item stack has been moved and merged with another
+    # stack.
+    if is_instance_valid(item) and inventory.has_item(item):
+        _select(item)
 
 
 func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
@@ -339,14 +328,10 @@ func _get_unstreched_sprite_offset(item: InventoryItem) -> Vector2:
     return (_get_streched_item_sprite_size(item) - texture.get_size()) / 2
 
 
-func _on_item_activated(ctrl_inventory_item) -> void:
+func _on_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     var item = ctrl_inventory_item.item
     if !item:
         return
-
-    _grabbed_ctrl_inventory_item = null
-    if _drag_sprite.get_ref():
-        _drag_sprite.get_ref().hide()
 
     inventory_item_activated.emit(item)
 
@@ -368,56 +353,16 @@ func _select(item: InventoryItem) -> void:
     selection_changed.emit()
 
 
-# Using _input instead of _gui_input because _gui_input is only called for "mouse released"
-# (InputEventMouseButton.pressed==false) events if the same control previously triggered the "mouse
-# pressed" event (InputEventMouseButton.pressed==true).
-# This makes dragging items from one CtrlInventoryGrid to another impossible to implement with
-# _gui_input.
-func _input(event: InputEvent) -> void:
-    if !(event is InputEventMouseButton):
-        return
-
-    if !_grabbed_ctrl_inventory_item:
-        return
-
-    var mb_event: InputEventMouseButton = event
-    if mb_event.is_pressed() || mb_event.button_index != MOUSE_BUTTON_LEFT:
-        return
-
-    _handle_item_release(_grabbed_ctrl_inventory_item.item)
-
-
-func _handle_item_release(item: InventoryItem) -> void:
-    _grabbed_ctrl_inventory_item.show()
-
-    if _gloot:
-        _gloot._grabbed_inventory_item = null
-
-    var global_grabbed_item_pos := _get_grabbed_item_global_pos()
-    if _is_hovering(global_grabbed_item_pos):
-        _handle_item_move(item, global_grabbed_item_pos)
-    else:
-        _handle_item_drop(item, global_grabbed_item_pos)
-
-    # The item might have been freed in case the item stack has been moved and merged with another
-    # stack.
-    if is_instance_valid(item) and inventory.has_item(item):
-        _select(item)
-
-    _grabbed_ctrl_inventory_item = null
-    if _drag_sprite.get_ref():
-        _drag_sprite.get_ref().hide()
-
-
-func _handle_item_move(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
-    var field_coords = get_field_coords(global_grabbed_item_pos)
+func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
+    var field_coords = get_field_coords(drop_position)
     if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
         _move_item(item, field_coords)
     elif inventory is InventoryGridStacked:
         _merge_item(item, field_coords)
 
 
-func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) -> void:
+func _handle_item_drop(item: InventoryItem, drop_position: Vector2) -> void:
+    var global_grabbed_item_pos = drop_position + global_position
     # Using WeakRefs for the item_dropped signals, as items might be freed at some point of dropping
     # (when merging with other items)
     var wr_item := weakref(item)
@@ -426,26 +371,23 @@ func _handle_item_drop(item: InventoryItem, global_grabbed_item_pos: Vector2) ->
         _gloot.item_dropped.emit(wr_item, global_grabbed_item_pos)
 
 
-func _get_grabbed_item_global_pos() -> Vector2:
-    return get_global_mouse_position() - _grab_offset + (field_dimensions / 2)
-
-
-func _on_item_dropped(wr_item: WeakRef, global_drop_pos: Vector2) -> void:
-    var item: InventoryItem = wr_item.get_ref()
+func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
+    var item: InventoryItem = dragable.item
     if item == null:
         return
 
-    if !_is_hovering(global_drop_pos):
+    if !inventory:
         return
 
-    if !inventory:
+    if inventory.has_item(item):
+        _handle_item_move(item, drop_position)
         return
 
     var source_inventory: InventoryGrid = item.get_inventory()
     if source_inventory.item_protoset != inventory.item_protoset:
         return
 
-    var field_coords = get_field_coords(global_drop_pos)
+    var field_coords = get_field_coords(drop_position)
     source_inventory.transfer_to(item, inventory, field_coords)
 
 
@@ -453,9 +395,7 @@ func _is_hovering(global_pos: Vector2) -> bool:
     return get_global_rect().has_point(global_pos)
 
 
-func get_field_coords(global_pos: Vector2) -> Vector2i:
-    var local_pos = global_pos - get_global_rect().position
-
+func get_field_coords(local_pos: Vector2) -> Vector2i:
     # We have to consider the item spacing when calculating field coordinates, thus we expand the
     # size of each field by Vector2(item_spacing, item_spacing).
     var field_dimensions_ex = field_dimensions + Vector2(item_spacing, item_spacing)
@@ -500,13 +440,6 @@ func _get_field_position(field_coords: Vector2i) -> Vector2:
 
 func _get_global_field_position(field_coords: Vector2i) -> Vector2:
     return _get_field_position(field_coords) + global_position
-
-
-func get_grabbed_item() -> InventoryItem:
-    if _grabbed_ctrl_inventory_item:
-        return _grabbed_ctrl_inventory_item.item
-
-    return null
 
 
 func deselect_inventory_item() -> void:

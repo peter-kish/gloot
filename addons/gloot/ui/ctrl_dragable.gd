@@ -1,11 +1,24 @@
 @tool
 extends Control
 
-signal grabbed(position)
-signal dropped(zone, position)
-
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
+
+# Somewhat hacky way to do static signals:
+# https://stackoverflow.com/questions/77026156/how-to-write-a-static-event-emitter-in-gdscript/77026952#77026952
+
+static var dragable_grabbed: Signal = (func():
+    (CtrlDragable as Object).add_user_signal("dragable_grabbed")
+    return Signal(CtrlDragable, "dragable_grabbed")
+).call()
+
+static var dragable_dropped: Signal = (func():
+    (CtrlDragable as Object).add_user_signal("dragable_dropped")
+    return Signal(CtrlDragable, "dragable_dropped")
+).call()
+
+signal grabbed(position)
+signal dropped(zone, position)
 
 static var _grabbed_dragable: CtrlDragable = null
 static var _grab_offset: Vector2
@@ -17,7 +30,9 @@ static func grab(dragable: CtrlDragable) -> void:
     _grabbed_dragable = dragable
     _grab_offset = dragable.get_global_mouse_position() - dragable.global_position
 
+    dragable.mouse_filter = Control.MOUSE_FILTER_IGNORE
     dragable.grabbed.emit(_grab_offset)
+    dragable_grabbed.emit(_grab_offset)
     dragable.drag_start()
 
 
@@ -41,6 +56,7 @@ static func _drop(zone: CtrlDropZone) -> void:
 
     grabbed_dragable.drag_end()
     grabbed_dragable.dropped.emit(zone, local_drop_position)
+    dragable_dropped.emit(zone, local_drop_position)
 
 
 static func get_grabbed_dragable() -> CtrlDragable:
@@ -63,7 +79,7 @@ func drag_start() -> void:
 func drag_end() -> void:
     if drag_preview == null:
         return
-        
+
     remove_child(drag_preview)
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
 
@@ -83,5 +99,4 @@ func _gui_input(event: InputEvent) -> void:
 
     if mb_event.is_pressed():
         grab(self)
-        mouse_filter = Control.MOUSE_FILTER_IGNORE
 
