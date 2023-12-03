@@ -4,7 +4,7 @@
   <img src="images/gloot_logo_128x128.png" />
 </p>
 
-A universal inventory system for the Godot game engine (version 4.x and newer).
+A universal inventory system for the Godot game engine (version 4.2 and newer).
 > **NOTE**: The latest version of the plugin runs on Godot 4. The last Godot 3 compatible version is v2.1.4 and can be found on the `godot_3` branch. (see [Releases](https://github.com/peter-kish/gloot/releases)).
 
 ## Table of Contents
