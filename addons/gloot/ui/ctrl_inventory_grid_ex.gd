@@ -143,7 +143,7 @@ func _input(event) -> void:
         return
     
     var hovered_field_coords := Vector2i(-1, -1)
-    if _is_hovering(get_global_mouse_position()):
+    if _is_hovering(get_local_mouse_position()):
         hovered_field_coords = get_field_coords(get_local_mouse_position())
 
     _reset_highlights()
@@ -186,6 +186,10 @@ func _highlight_grabbed_item(style: StyleBox) -> bool:
     var rect := Rect2i(grabbed_item_coords, item_size)
     _highlight_rect(rect, style, true)
     return true
+
+
+func _is_hovering(local_pos: Vector2) -> bool:
+    return get_rect().has_point(local_pos)
 
 
 func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:

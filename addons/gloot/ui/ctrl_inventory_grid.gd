@@ -374,10 +374,6 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     source_inventory.transfer_to(item, inventory, field_coords)
 
 
-func _is_hovering(global_pos: Vector2) -> bool:
-    return get_global_rect().has_point(global_pos)
-
-
 func get_field_coords(local_pos: Vector2) -> Vector2i:
     # We have to consider the item spacing when calculating field coordinates, thus we expand the
     # size of each field by Vector2(item_spacing, item_spacing).
