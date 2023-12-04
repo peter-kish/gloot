@@ -59,11 +59,7 @@ func _exit_tree():
 
 func _notification(what):
     if what == NOTIFICATION_PREDELETE:
-        predelete.emit()
-        if _constraint_manager != null:
-            _constraint_manager.free()
-            _constraint_manager = null
-        
+        predelete.emit()        
 
 
 func _init() -> void:
