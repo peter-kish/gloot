@@ -9,6 +9,12 @@ var item: InventoryItem :
     get:
         return item
     set(new_item):
+        if item == new_item:
+            return
+
+        _disconnect_item_signals()
+        _connect_item_signals(new_item)
+
         item = new_item
         if item:
             texture = item.get_texture()
@@ -18,6 +24,8 @@ var texture: Texture2D :
     get:
         return texture
     set(new_texture):
+        if new_texture == texture:
+            return
         texture = new_texture
         if drag_preview != null:
             drag_preview.texture = texture
@@ -26,15 +34,43 @@ var selected: bool = false :
     get:
         return selected
     set(new_selected):
+        if new_selected == selected:
+            return
         selected = new_selected
         queue_redraw()
 var selection_bg_color: Color = Color.GRAY :
     get:
         return selection_bg_color
     set(new_selection_bg_color):
+        if new_selection_bg_color == selection_bg_color:
+            return
         selection_bg_color = new_selection_bg_color
         queue_redraw()
 var item_slot: ItemSlot
+
+
+func _connect_item_signals(new_item: InventoryItem) -> void:
+    if new_item == null:
+        return
+
+    if !new_item.protoset_changed.is_connected(queue_redraw):
+        new_item.protoset_changed.connect(queue_redraw)
+    if !new_item.prototype_id_changed.is_connected(queue_redraw):
+        new_item.prototype_id_changed.connect(queue_redraw)
+    if !new_item.properties_changed.is_connected(queue_redraw):
+        new_item.properties_changed.connect(queue_redraw)
+
+
+func _disconnect_item_signals() -> void:
+    if item == null:
+        return
+
+    if item.protoset_changed.is_connected(queue_redraw):
+        item.protoset_changed.disconnect(queue_redraw)
+    if item.prototype_id_changed.is_connected(queue_redraw):
+        item.prototype_id_changed.disconnect(queue_redraw)
+    if item.properties_changed.is_connected(queue_redraw):
+        item.properties_changed.disconnect(queue_redraw)
 
 
 func _get_item_size() -> Vector2:
