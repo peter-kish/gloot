@@ -140,6 +140,10 @@ func _ready():
     _ctrl_inventory_item_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
     _ctrl_inventory_item_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
     _ctrl_inventory_item_rect.item_slot = item_slot
+    _ctrl_inventory_item_rect.resized.connect(func():
+        custom_minimum_size = _ctrl_inventory_item_rect.size
+        size = _ctrl_inventory_item_rect.size
+    )
     _hbox_container.add_child(_ctrl_inventory_item_rect)
 
     _ctrl_drop_zone = CtrlDropZone.new()
@@ -192,7 +196,12 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
 
 func _on_drop_zone_mouse_entered() -> void:
-    CtrlInventoryItemRect.override_preview_size(_ctrl_inventory_item_rect.size)
+    if CtrlDragable._grabbed_dragable == null:
+        return
+    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
+    if _grabbed_ctrl == null || _grabbed_ctrl.texture == null:
+        return
+    CtrlInventoryItemRect.override_preview_size(_grabbed_ctrl.texture.get_size() * icon_scaling)
 
 
 func _on_drop_zone_mouse_exited() -> void:
@@ -206,7 +215,7 @@ func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
 func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
     _ctrl_drop_zone.deactivate()
 
-    # Unequip
+    # Unequip from other slots
     if zone == _ctrl_drop_zone:
         return
     var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)

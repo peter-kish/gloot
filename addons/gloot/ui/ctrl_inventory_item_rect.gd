@@ -27,6 +27,8 @@ var texture: Texture2D :
         if new_texture == texture:
             return
         texture = new_texture
+        if texture != null:
+            size = texture.get_size()
         if drag_preview != null:
             drag_preview.texture = texture
         queue_redraw()
