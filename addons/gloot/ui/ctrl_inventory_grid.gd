@@ -88,6 +88,7 @@ var inventory: InventoryGrid = null :
 var _ctrl_item_container: WeakRef = weakref(null)
 var _ctrl_drop_zone: CtrlDropZone
 var _selected_item: InventoryItem = null
+var _previous_preview_size: Vector2
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -123,6 +124,8 @@ func _ready() -> void:
     CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
         _ctrl_drop_zone.deactivate()
     )
+    _ctrl_drop_zone.mouse_entered.connect(_on_drop_zone_mouse_entered)
+    _ctrl_drop_zone.mouse_exited.connect(_on_drop_zone_mouse_exited)
     add_child(_ctrl_drop_zone)
     _ctrl_drop_zone.deactivate()
 
@@ -259,11 +262,7 @@ func _populate_list() -> void:
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
-
-        if stretch_item_sprites:
-            ctrl_inventory_item.size = _get_streched_item_sprite_size(item)
-        else:
-            ctrl_inventory_item.size = ctrl_inventory_item.texture.get_size()
+        ctrl_inventory_item.size = _get_item_sprite_size(item)
 
         ctrl_inventory_item.position = _get_field_position(inventory.get_item_position(item))
         if !stretch_item_sprites:
@@ -297,6 +296,13 @@ func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_it
     # stack.
     if is_instance_valid(item) and inventory.has_item(item):
         _select(item)
+
+
+func _get_item_sprite_size(item: InventoryItem) -> Vector2:
+    if stretch_item_sprites:
+        return _get_streched_item_sprite_size(item)
+    else:
+        return item.get_texture().get_size()
 
 
 func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
@@ -341,6 +347,25 @@ func _select(item: InventoryItem) -> void:
     _selected_item = item
     _refresh_selection()
     selection_changed.emit()
+
+
+func _on_drop_zone_mouse_entered() -> void:
+    if CtrlDragable._grabbed_dragable == null:
+        return
+    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
+    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
+        return
+    _previous_preview_size = _grabbed_ctrl.drag_preview.size
+    _grabbed_ctrl.drag_preview.size = _get_item_sprite_size(_grabbed_ctrl.item)
+
+
+func _on_drop_zone_mouse_exited() -> void:
+    if CtrlDragable._grabbed_dragable == null:
+        return
+    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
+    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
+        return
+    _grabbed_ctrl.drag_preview.size = _previous_preview_size
 
 
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:

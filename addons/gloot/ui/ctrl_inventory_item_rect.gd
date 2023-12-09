@@ -89,7 +89,11 @@ func _ready() -> void:
     drag_preview = TextureRect.new()
     drag_preview.texture = texture
     drag_preview.size = size
-    drag_preview.resized.connect(func(): drag_preview.size = size)
+
+
+func drag_start() -> void:
+    super.drag_start()
+    drag_preview.size = size
 
 
 func _draw() -> void:
