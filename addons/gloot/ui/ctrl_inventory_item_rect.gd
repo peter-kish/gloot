@@ -139,8 +139,6 @@ func _draw_texture(rect: Rect2):
     if texture:
         var src_rect: Rect2 = Rect2(0, 0, texture.get_width(), texture.get_height())
         draw_texture_rect_region(texture, rect, src_rect)
-    else:
-        draw_rect(rect, Color.WHITE, false)
 
 
 func _draw_stack_size(rect: Rect2):
