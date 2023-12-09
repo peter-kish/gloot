@@ -48,6 +48,7 @@ var selection_bg_color: Color = Color.GRAY :
         queue_redraw()
 var item_slot: ItemSlot
 static var _stored_preview_size: Vector2
+static var _stored_preview_offset: Vector2
 
 
 func _connect_item_signals(new_item: InventoryItem) -> void:
@@ -104,6 +105,8 @@ static func override_preview_size(s: Vector2) -> void:
     if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
         return
     _stored_preview_size = _grabbed_ctrl.drag_preview.size
+    _stored_preview_offset = CtrlDragable._grab_offset
+    CtrlDragable._grab_offset *= s/_grabbed_ctrl.drag_preview.size
     _grabbed_ctrl.drag_preview.size = s
 
 
@@ -114,6 +117,7 @@ static func restore_preview_size() -> void:
     if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
         return
     _grabbed_ctrl.drag_preview.size = _stored_preview_size
+    CtrlDragable._grab_offset = _stored_preview_offset
 
 
 func _draw() -> void:
