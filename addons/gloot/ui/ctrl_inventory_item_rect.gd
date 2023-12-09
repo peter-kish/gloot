@@ -29,8 +29,6 @@ var texture: Texture2D :
         texture = new_texture
         if texture != null:
             size = texture.get_size()
-        if drag_preview != null:
-            drag_preview.texture = texture
         queue_redraw()
 var selected: bool = false :
     get:
@@ -90,14 +88,15 @@ func _get_item_position() -> Vector2:
 
 
 func _ready() -> void:
-    drag_preview = TextureRect.new()
-    drag_preview.texture = texture
-    drag_preview.size = size
+    drag_preview = CtrlInventoryItemRect.new()
 
 
 func drag_start() -> void:
+    if drag_preview != null:
+        drag_preview.item = item
+        drag_preview.texture = texture
+        drag_preview.size = size
     super.drag_start()
-    drag_preview.size = size
 
 
 static func override_preview_size(s: Vector2) -> void:

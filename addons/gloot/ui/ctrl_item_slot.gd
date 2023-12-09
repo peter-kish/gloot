@@ -167,10 +167,6 @@ func _ready():
     _refresh()
 
 
-func _get_singleton() -> Node:
-    return null
-
-
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
     var item = (dragable as CtrlInventoryItemRect).item
 
