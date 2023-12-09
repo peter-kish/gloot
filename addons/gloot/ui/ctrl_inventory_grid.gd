@@ -88,7 +88,6 @@ var inventory: InventoryGrid = null :
 var _ctrl_item_container: WeakRef = weakref(null)
 var _ctrl_drop_zone: CtrlDropZone
 var _selected_item: InventoryItem = null
-var _previous_preview_size: Vector2
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -353,19 +352,13 @@ func _on_drop_zone_mouse_entered() -> void:
     if CtrlDragable._grabbed_dragable == null:
         return
     var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
+    if _grabbed_ctrl == null || _grabbed_ctrl.item == null:
         return
-    _previous_preview_size = _grabbed_ctrl.drag_preview.size
-    _grabbed_ctrl.drag_preview.size = _get_item_sprite_size(_grabbed_ctrl.item)
+    CtrlInventoryItemRect.override_preview_size(_get_item_sprite_size(_grabbed_ctrl.item))
 
 
 func _on_drop_zone_mouse_exited() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
-        return
-    _grabbed_ctrl.drag_preview.size = _previous_preview_size
+    CtrlInventoryItemRect.restore_preview_size()
 
 
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:

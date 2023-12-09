@@ -76,7 +76,6 @@ var _hbox_container: HBoxContainer
 var _ctrl_inventory_item_rect: CtrlInventoryRect
 var _label: Label
 var _ctrl_drop_zone: CtrlDropZone
-var _previous_preview_size: Vector2
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -193,22 +192,11 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
 
 func _on_drop_zone_mouse_entered() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
-        return
-    _previous_preview_size = _grabbed_ctrl.drag_preview.size
-    _grabbed_ctrl.drag_preview.size = _ctrl_inventory_item_rect.size
+    CtrlInventoryItemRect.override_preview_size(_ctrl_inventory_item_rect.size)
 
 
 func _on_drop_zone_mouse_exited() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl.item == null || _grabbed_ctrl.drag_preview == null:
-        return
-    _grabbed_ctrl.drag_preview.size = _previous_preview_size
+    CtrlInventoryItemRect.restore_preview_size()
 
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
