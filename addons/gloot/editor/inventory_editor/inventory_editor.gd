@@ -117,11 +117,7 @@ func _on_btn_remove() -> void:
 
 
 static func _select_node(node: Node) -> void:
-    var gloot = load("res://addons/gloot/gloot.gd")
-    assert(gloot.instance())
-    var editor_interface: EditorInterface = gloot.instance().get_editor_interface()
-    assert(editor_interface)
-    editor_interface.get_selection().clear()
-    editor_interface.get_selection().add_node(node)
-    editor_interface.edit_node(node)
+    EditorInterface.get_selection().clear()
+    EditorInterface.get_selection().add_node(node)
+    EditorInterface.edit_node(node)
 
