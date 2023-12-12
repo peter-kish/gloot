@@ -36,6 +36,8 @@ static var _item_map := _ItemMap.new()
     get:
         return inventory_path
     set(new_inv_path):
+        if inventory_path == new_inv_path:
+            return
         inventory_path = new_inv_path
         update_configuration_warnings()
         var node: Node = get_node_or_null(inventory_path)
@@ -50,6 +52,8 @@ static var _item_map := _ItemMap.new()
     get:
         return equipped_item
     set(new_equipped_item):
+        if new_equipped_item == equipped_item:
+            return
         equipped_item = new_equipped_item
         if equipped_item < 0:
             item = null
@@ -59,25 +63,33 @@ static var _item_map := _ItemMap.new()
             if equipped_item < items.size() && can_hold_item(items[equipped_item]):
                 item = items[equipped_item]
 
-var _inventory
 var inventory :
     get:
-        return _inventory
+        return inventory
     set(new_inv):
-        if new_inv == _inventory:
+        if new_inv == inventory:
             return
 
         _disconnect_inventory_signals()
         item = null
-        _inventory = new_inv
+        inventory = new_inv
         _connect_inventory_signals()
 
+        if inventory:
+            if inventory.is_inside_tree():
+                inventory_path = inventory.get_path()
+            else:
+                inventory.ready.connect(func(): inventory_path = inventory.get_path())
+        else:
+            inventory_path = NodePath()
         inventory_changed.emit(inventory)
         
 var item: InventoryItem :
     get:
         return item
     set(new_item):
+        if new_item == item:
+            return
         if new_item:
             # Bind item
             assert(can_hold_item(new_item), "ItemSlot can't hold that item!")
@@ -87,6 +99,7 @@ var item: InventoryItem :
             item = new_item
             _connect_item_signals()
             _item_map.map_item(item, self)
+            equipped_item = inventory.get_item_index(item)
             item_set.emit(item)
         else:
             # Clear item
@@ -94,6 +107,7 @@ var item: InventoryItem :
             _item_map.unmap_item(item)
 
             item = null
+            equipped_item = -1
             item_cleared.emit()
 
 
@@ -178,7 +192,6 @@ func _on_item_predelete():
 
 
 func reset():
-    inventory = null
     equipped_item = -1
 
 
@@ -186,29 +199,22 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     # TODO: Find a better way to serialize inventory and item references
-    if inventory:
-        result[KEY_INVENTORY] = inventory.get_instance_id()
-    if item:
-        result[KEY_ITEM] = item.get_instance_id()
+    if equipped_item > -1:
+        result[KEY_ITEM] = equipped_item
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_INT, TYPE_FLOAT]):
+    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_STRING, TYPE_NODE_PATH]):
         return false
     if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()
 
-    if source.has(KEY_INVENTORY):
-        inventory = instance_from_id(source[KEY_INVENTORY])
-        if inventory == null:
-            print("Warning: Node not found (%s)!" % source[KEY_INVENTORY])
-            return false
     if source.has(KEY_ITEM):
-        item = instance_from_id(source[KEY_ITEM])
+        equipped_item = source[KEY_ITEM]
         if item == null:
             print("Warning: Node not found (%s)!" % source[KEY_ITEM])
             return false

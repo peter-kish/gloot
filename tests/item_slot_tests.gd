@@ -54,7 +54,6 @@ func test_serialize() -> void:
     slot.item = item
     var item_slot_data = slot.serialize()
     slot.reset()
-    assert(slot.inventory == null)
     assert(slot.item == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.inventory == inventory1)
@@ -73,7 +72,6 @@ func test_serialize_json() -> void:
     item_slot_data = test_json_conv.data
 
     slot.reset()
-    assert(slot.inventory == null)
     assert(slot.item == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.inventory == inventory1)
