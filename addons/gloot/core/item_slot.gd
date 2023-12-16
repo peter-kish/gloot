@@ -40,10 +40,11 @@ static var _item_map := _ItemMap.new()
             return
         inventory_path = new_inv_path
         update_configuration_warnings()
-        var node: Node = get_node_or_null(inventory_path)
+        var node: Node = null
 
-        if is_inside_tree() && node:
-            assert(node is Inventory)
+        if is_inside_tree():
+            node = get_node_or_null(inventory_path)
+            assert(node == null || node is Inventory)
         
         equipped_item = -1
         inventory = node
@@ -75,13 +76,6 @@ var inventory :
         inventory = new_inv
         _connect_inventory_signals()
 
-        if inventory:
-            if inventory.is_inside_tree():
-                inventory_path = inventory.get_path()
-            else:
-                inventory.ready.connect(func(): inventory_path = inventory.get_path())
-        else:
-            inventory_path = NodePath()
         inventory_changed.emit(inventory)
         
 var item: InventoryItem :
