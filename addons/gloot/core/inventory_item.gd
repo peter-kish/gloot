@@ -7,6 +7,8 @@ signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
 signal predelete
+signal added_to_inventory(inventory)
+signal removed_from_inventory(inventory)
 
 @export var protoset: Resource :
     get:
@@ -102,11 +104,13 @@ func _notification(what):
 
 func _on_item_removed(obj: Object):
     if obj && obj.has_method("_on_item_removed"):
+        removed_from_inventory.emit(obj)
         obj._on_item_removed(self)
 
 
 func _on_item_added(obj: Object):
     if obj && obj.has_method("_on_item_added"):
+        added_to_inventory.emit(obj)
         obj._on_item_added(self)
 
 

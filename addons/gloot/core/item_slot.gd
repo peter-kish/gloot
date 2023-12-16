@@ -1,37 +1,8 @@
 @tool
-@icon("res://addons/gloot/images/icon_item_slot.svg")
-extends Node
+extends "res://addons/gloot/core/item_slot_base.gd"
 class_name ItemSlot
 
-signal item_set(item)
-signal item_cleared
 signal inventory_changed(inventory)
-
-class _ItemMap:
-    var _map: Dictionary
-
-
-    func map_item(item: InventoryItem, slot: ItemSlot) -> void:
-        if item == null || slot == null:
-            return
-        _map[item] = slot
-
-
-    func unmap_item(item: InventoryItem) -> void:
-        if item == null:
-            return
-        if _map.has(item):
-            _map.erase(item)
-
-
-    func remove_item_from_slot(item: InventoryItem) -> void:
-        assert(item != null)
-        if _map.has(item):
-            _map[item].item = null
-            unmap_item(item)
-
-
-static var _item_map := _ItemMap.new()
 
 @export var inventory_path: NodePath :
     get:
