@@ -35,14 +35,10 @@ func _enter_tree() -> void:
     inspector_plugin = preload("res://addons/gloot/editor/inventory_inspector_plugin.gd").new()
     add_inspector_plugin(inspector_plugin)
 
-    add_autoload_singleton("GLoot", "res://addons/gloot/gloot_autoload.gd")
-
     _add_settings()
 
 
 func _exit_tree() -> void:
-    remove_autoload_singleton("GLoot")
-
     remove_inspector_plugin(inspector_plugin)
 
     remove_custom_type("ItemProtoset")

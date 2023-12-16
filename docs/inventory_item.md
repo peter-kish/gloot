@@ -24,3 +24,10 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 * `get_title() -> String` - Helper function for retrieving the item title. It checks the `name` item property and uses it as the title, if available. Otherwise, `prototype_id` is returned as title.
 * `serialize() -> Dictionary` - Serializes the item into a dictionary.
 * `deserialize(source: Dictionary) -> bool` - Deserializes the item from a given dictionary.
+
+## Signals
+
+* `protoset_changed` - Emitted when the item protoset changes.
+* `prototype_id_changed` - Emitted when the item prototype ID changes.
+* `properties_changed` - Emitted when the item properties change.
+* `predelete()` - Emitted before the engine deletes the inventory.

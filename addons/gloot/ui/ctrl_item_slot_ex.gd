@@ -17,6 +17,14 @@ extends CtrlItemSlot
 var _background_panel: Panel
 
 
+func _ready():
+    super._ready()
+    resized.connect(func():
+        if _background_panel:
+            _background_panel.size = size
+    )
+
+
 func _refresh() -> void:
     super._refresh()
     _update_background()

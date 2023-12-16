@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 
 const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"

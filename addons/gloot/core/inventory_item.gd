@@ -5,6 +5,7 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
+signal predelete
 
 @export var protoset: Resource :
     get:
@@ -43,7 +44,7 @@ signal properties_changed
         properties_changed.emit()
         update_configuration_warnings()
 
-var _inventory: Node
+var _inventory: Inventory
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -94,6 +95,8 @@ func _notification(what):
     elif what == NOTIFICATION_UNPARENTED:
         _on_item_removed(_inventory)
         _inventory = null
+    elif what == NOTIFICATION_PREDELETE:
+        predelete.emit()
 
 
 func _on_item_removed(obj: Object):
@@ -106,7 +109,7 @@ func _on_item_added(obj: Object):
         obj._on_item_added(self)
 
 
-func get_inventory() -> Node:
+func get_inventory() -> Inventory:
     return _inventory
 
 

@@ -15,10 +15,6 @@ run/main_scene="res://tests/gloot_test.tscn"
 config/features=PackedStringArray("4.2")
 config/icon="res://images/gloot_logo_128x128.png"
 
-[autoload]
-
-GLoot="*res://addons/gloot/gloot_autoload.gd"
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gloot/plugin.cfg")

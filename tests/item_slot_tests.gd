@@ -8,7 +8,6 @@ var item: InventoryItem
 
 func init_suite():
     tests = [
-        "test_can_hold_item",
         "test_inventory_changed",
         "test_item_removed",
         "test_serialize",
@@ -30,14 +29,6 @@ func cleanup_test() -> void:
     free_inventory(inventory2)
     free_item(item)
     free_slot(slot)
-
-
-func test_can_hold_item() -> void:
-    assert(!slot.can_hold_item(item))
-    slot.inventory = inventory2
-    assert(!slot.can_hold_item(item))
-    slot.inventory = inventory1
-    assert(slot.can_hold_item(item))
     
 
 func test_inventory_changed() -> void:
@@ -63,7 +54,6 @@ func test_serialize() -> void:
     slot.item = item
     var item_slot_data = slot.serialize()
     slot.reset()
-    assert(slot.inventory == null)
     assert(slot.item == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.inventory == inventory1)
@@ -82,7 +72,6 @@ func test_serialize_json() -> void:
     item_slot_data = test_json_conv.data
 
     slot.reset()
-    assert(slot.inventory == null)
     assert(slot.item == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.inventory == inventory1)

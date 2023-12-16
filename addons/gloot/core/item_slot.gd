@@ -6,11 +6,38 @@ signal item_set(item)
 signal item_cleared
 signal inventory_changed(inventory)
 
+class _ItemMap:
+    var _map: Dictionary
+
+
+    func map_item(item: InventoryItem, slot: ItemSlot) -> void:
+        if item == null || slot == null:
+            return
+        _map[item] = slot
+
+
+    func unmap_item(item: InventoryItem) -> void:
+        if item == null:
+            return
+        if _map.has(item):
+            _map.erase(item)
+
+
+    func remove_item_from_slot(item: InventoryItem) -> void:
+        assert(item != null)
+        if _map.has(item):
+            _map[item].item = null
+            unmap_item(item)
+
+
+static var _item_map := _ItemMap.new()
 
 @export var inventory_path: NodePath :
     get:
         return inventory_path
     set(new_inv_path):
+        if inventory_path == new_inv_path:
+            return
         inventory_path = new_inv_path
         update_configuration_warnings()
         var node: Node = get_node_or_null(inventory_path)
@@ -18,62 +45,71 @@ signal inventory_changed(inventory)
         if is_inside_tree() && node:
             assert(node is Inventory)
         
-        if node == null:
-            return
-        
-        self.inventory = node
+        equipped_item = -1
+        inventory = node
 
 @export var equipped_item: int = -1 :
     get:
         return equipped_item
     set(new_equipped_item):
+        if new_equipped_item == equipped_item:
+            return
         equipped_item = new_equipped_item
         if equipped_item < 0:
-            self.item = null
+            item = null
             return
         if inventory:
             var items = inventory.get_items()
             if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-                self.item = items[equipped_item]
+                item = items[equipped_item]
 
-var _inventory
 var inventory :
     get:
-        if !_inventory && !inventory_path.is_empty():
-            self._inventory = get_node_or_null(inventory_path)
-
-        return _inventory
+        return inventory
     set(new_inv):
-        if new_inv == _inventory:
+        if new_inv == inventory:
             return
 
         _disconnect_inventory_signals()
-        self.item = null
-        _inventory = new_inv
+        item = null
+        inventory = new_inv
         _connect_inventory_signals()
 
+        if inventory:
+            if inventory.is_inside_tree():
+                inventory_path = inventory.get_path()
+            else:
+                inventory.ready.connect(func(): inventory_path = inventory.get_path())
+        else:
+            inventory_path = NodePath()
         inventory_changed.emit(inventory)
         
 var item: InventoryItem :
     get:
         return item
     set(new_item):
-        assert(can_hold_item(new_item))
-        if inventory == null:
+        if new_item == item:
             return
+        if new_item:
+            # Bind item
+            assert(can_hold_item(new_item), "ItemSlot can't hold that item!")
+            _disconnect_item_signals()
+            _item_map.remove_item_from_slot(new_item)
 
-        if new_item && !inventory.has_item(new_item):
-            return
-
-        if item != null:
-            item.tree_exiting.disconnect(_on_item_tree_exiting)
-
-        item = new_item
-        if item != null:
-            item.tree_exiting.connect(_on_item_tree_exiting)
+            item = new_item
+            _connect_item_signals()
+            _item_map.map_item(item, self)
+            equipped_item = inventory.get_item_index(item)
             item_set.emit(item)
         else:
+            # Clear item
+            _disconnect_item_signals()
+            _item_map.unmap_item(item)
+
+            item = null
+            equipped_item = -1
             item_cleared.emit()
+
 
 const KEY_INVENTORY: String = "inventory"
 const KEY_ITEM: String = "item"
@@ -92,8 +128,8 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.tree_exiting.is_connected(_on_inventory_tree_exiting):
-        inventory.tree_exiting.connect(_on_inventory_tree_exiting)
+    if !inventory.predelete.is_connected(_on_inventory_predelete):
+        inventory.predelete.connect(_on_inventory_predelete)
     if !inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.connect(_on_item_removed)
 
@@ -102,10 +138,26 @@ func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.tree_exiting.is_connected(_on_inventory_tree_exiting):
-        inventory.tree_exiting.disconnect(_on_inventory_tree_exiting)
+    if inventory.predelete.is_connected(_on_inventory_predelete):
+        inventory.predelete.disconnect(_on_inventory_predelete)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
+
+
+func _connect_item_signals() -> void:
+    if !item:
+        return
+
+    if !item.predelete.is_connected(_on_item_predelete):
+        item.predelete.connect(_on_item_predelete)
+
+
+func _disconnect_item_signals() -> void:
+    if !item:
+        return
+
+    if item.predelete.is_connected(_on_item_predelete):
+        item.predelete.disconnect(_on_item_predelete)
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:
@@ -113,66 +165,56 @@ func can_hold_item(new_item: InventoryItem) -> bool:
         return true
     if inventory == null:
         return false
-    if !inventory.has_item(new_item):
-        return false
 
     return true
 
 
 func _ready():
-    self.inventory = get_node_or_null(inventory_path)
+    inventory = get_node_or_null(inventory_path)
     if equipped_item >= 0 && inventory:
         var items = inventory.get_items()
         if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-            self.item = items[equipped_item]
+            item = items[equipped_item]
 
 
-func _on_inventory_tree_exiting():
+func _on_inventory_predelete():
     inventory = null
-    self.item = null
+    equipped_item = -1
 
 
 func _on_item_removed(pItem: InventoryItem) -> void:
     if pItem == item:
-        self.item = null
+        equipped_item = -1
 
 
-func _on_item_tree_exiting():
-    self.item = null
+func _on_item_predelete():
+    equipped_item = -1
 
 
 func reset():
-    self.inventory = null
-    self.item = null
+    equipped_item = -1
 
 
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     # TODO: Find a better way to serialize inventory and item references
-    if inventory:
-        result[KEY_INVENTORY] = inventory.get_instance_id()
-    if item:
-        result[KEY_ITEM] = item.get_instance_id()
+    if equipped_item > -1:
+        result[KEY_ITEM] = equipped_item
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_INT, TYPE_FLOAT]):
+    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_STRING, TYPE_NODE_PATH]):
         return false
     if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()
 
-    if source.has(KEY_INVENTORY):
-        inventory = instance_from_id(source[KEY_INVENTORY])
-        if inventory == null:
-            print("Warning: Node not found (%s)!" % source[KEY_INVENTORY])
-            return false
     if source.has(KEY_ITEM):
-        item = instance_from_id(source[KEY_ITEM])
+        equipped_item = source[KEY_ITEM]
         if item == null:
             print("Warning: Node not found (%s)!" % source[KEY_ITEM])
             return false

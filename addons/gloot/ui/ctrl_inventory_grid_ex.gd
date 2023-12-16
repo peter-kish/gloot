@@ -137,16 +137,14 @@ func _on_inventory_resized() -> void:
 
 
 func _input(event) -> void:
-    super._input(event)
-    
     if !(event is InputEventMouseMotion):
         return
     if !inventory:
         return
     
     var hovered_field_coords := Vector2i(-1, -1)
-    if _is_hovering(get_global_mouse_position()):
-        hovered_field_coords = get_field_coords(get_global_mouse_position())
+    if _is_hovering(get_local_mouse_position()):
+        hovered_field_coords = get_field_coords(get_local_mouse_position())
 
     _reset_highlights()
     if !field_highlighted_style:
@@ -179,15 +177,19 @@ func _highlight_grabbed_item(style: StyleBox) -> bool:
     if !grabbed_item:
         return false
 
-    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_global_pos()
+    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
     if !_is_hovering(global_grabbed_item_pos):
         return false
 
-    var grabbed_item_coords := get_field_coords(global_grabbed_item_pos)
+    var grabbed_item_coords := get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
     var item_size := inventory.get_item_size(grabbed_item)
     var rect := Rect2i(grabbed_item_coords, item_size)
     _highlight_rect(rect, style, true)
     return true
+
+
+func _is_hovering(local_pos: Vector2) -> bool:
+    return get_rect().has_point(local_pos)
 
 
 func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
@@ -220,14 +222,13 @@ func _highlight_rect(rect: Rect2i, style: StyleBox, queue_for_reset: bool) -> vo
 
 
 func _get_global_grabbed_item() -> InventoryItem:
-    var grabbed_item: InventoryItem = get_grabbed_item()
-    if !grabbed_item && _gloot:
-        grabbed_item = _gloot._grabbed_inventory_item
-    return grabbed_item
+    if CtrlDragable.get_grabbed_dragable() == null:
+        return null
+    return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
 
 
-func _get_global_grabbed_item_global_pos() -> Vector2:
-    if _gloot && _gloot._grabbed_inventory_item:
-        return get_global_mouse_position() - _gloot._grab_offset + (field_dimensions / 2)
+func _get_global_grabbed_item_local_pos() -> Vector2:
+    if CtrlDragable.get_grabbed_dragable():
+        return get_local_mouse_position() - CtrlDragable.get_grab_offset()
     return Vector2(-1, -1)
     

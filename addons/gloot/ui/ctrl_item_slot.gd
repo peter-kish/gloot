@@ -2,39 +2,61 @@
 class_name CtrlItemSlot
 extends Control
 
+const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
+const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 @export var item_slot_path: NodePath :
     get:
         return item_slot_path
     set(new_item_slot_path):
+        if item_slot_path == new_item_slot_path:
+            return
         item_slot_path = new_item_slot_path
         var node: Node = get_node_or_null(item_slot_path)
         
         if node == null:
+            _clear()
             return
 
         if is_inside_tree():
             assert(node is ItemSlot)
             
-        self.item_slot = node
+        item_slot = node
+        _refresh()
         update_configuration_warnings()
 @export var default_item_icon: Texture2D :
     get:
         return default_item_icon
     set(new_default_item_icon):
+        if default_item_icon == new_default_item_icon:
+            return
         default_item_icon = new_default_item_icon
         _refresh()
+@export var icon_scaling: Vector2 = Vector2.ONE :
+    get:
+        return icon_scaling
+    set(new_icon_scaling):
+        if icon_scaling == new_icon_scaling:
+            return
+        icon_scaling = new_icon_scaling
+        if _ctrl_inventory_item_rect && _ctrl_inventory_item_rect.texture:
+            _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 @export var item_texture_visible: bool = true :
     get:
         return item_texture_visible
     set(new_item_texture_visible):
+        if item_texture_visible == new_item_texture_visible:
+            return
         item_texture_visible = new_item_texture_visible
-        if _texture_rect:
-            _texture_rect.visible = item_texture_visible
+        if _ctrl_inventory_item_rect:
+            _ctrl_inventory_item_rect.visible = item_texture_visible
 @export var label_visible: bool = true :
     get:
         return label_visible
     set(new_label_visible):
+        if label_visible == new_label_visible:
+            return
         label_visible = new_label_visible
         if _label:
             _label.visible = label_visible
@@ -51,9 +73,9 @@ var item_slot: ItemSlot :
         
         _refresh()
 var _hbox_container: HBoxContainer
-var _texture_rect: TextureRect
+var _ctrl_inventory_item_rect: CtrlInventoryRect
 var _label: Label
-var _gloot: Node = null
+var _ctrl_drop_zone: CtrlDropZone
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -97,58 +119,104 @@ func _on_inventory_changed(_inventory: Inventory) -> void:
 
 
 func _ready():
-    _gloot = _get_gloot()
-
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
         if _hbox_container:
             _hbox_container.queue_free()
 
+    var node: Node = get_node_or_null(item_slot_path)
+    if is_inside_tree() && node:
+        assert(node is ItemSlot)
+    item_slot = node
+
     _hbox_container = HBoxContainer.new()
     _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     _hbox_container.size_flags_vertical = SIZE_EXPAND_FILL
     add_child(_hbox_container)
+    _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
-    _texture_rect = TextureRect.new()
-    _texture_rect.visible = item_texture_visible
-    _hbox_container.add_child(_texture_rect)
+    _ctrl_inventory_item_rect = CtrlInventoryRect.new()
+    _ctrl_inventory_item_rect.visible = item_texture_visible
+    _ctrl_inventory_item_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+    _ctrl_inventory_item_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+    _ctrl_inventory_item_rect.item_slot = item_slot
+    _ctrl_inventory_item_rect.resized.connect(func():
+        custom_minimum_size = _ctrl_inventory_item_rect.size
+        size = _ctrl_inventory_item_rect.size
+    )
+    _hbox_container.add_child(_ctrl_inventory_item_rect)
+
+    _ctrl_drop_zone = CtrlDropZone.new()
+    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
+    _ctrl_drop_zone.size = size
+    resized.connect(func(): _ctrl_drop_zone.size = size)
+    _ctrl_drop_zone.mouse_entered.connect(_on_drop_zone_mouse_entered)
+    _ctrl_drop_zone.mouse_exited.connect(_on_drop_zone_mouse_exited)
+    CtrlDragable.dragable_grabbed.connect(_on_any_dragable_grabbed)
+    CtrlDragable.dragable_dropped.connect(_on_any_dragable_dropped)
+    add_child(_ctrl_drop_zone)
+    _ctrl_drop_zone.deactivate()
 
     _label = Label.new()
     _label.visible = label_visible
     _hbox_container.add_child(_label)
 
-    var node: Node = get_node_or_null(item_slot_path)
-    if is_inside_tree() && node:
-        assert(node is ItemSlot)
-    self.item_slot = node
+    size = _hbox_container.size
+    _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
     _refresh()
-    if !Engine.is_editor_hint() && _gloot:
-        _gloot.item_dropped.connect(_on_item_dropped)
 
 
-func _get_gloot() -> Node:
-    # This is a "temporary" hack until a better solution is found!
-    # This is a tool script that is also executed inside the editor, where the "GLoot" singleton is
-    # not visible - leading to errors inside the editor.
-    # To work around that, we obtain the singleton by name.
-    return get_tree().root.get_node_or_null("GLoot")
+func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
+    var item = (dragable as CtrlInventoryItemRect).item
 
-
-func _get_singleton() -> Node:
-    return null
-
-
-func _on_item_dropped(wr_item: WeakRef, global_drop_pos: Vector2) -> void:
-    var item: InventoryItem = wr_item.get_ref()
     if !item:
         return
     if !item_slot:
         return
         
-    var slot_rect = get_global_rect()
-    if slot_rect.has_point(get_global_mouse_position()) && item_slot.can_hold_item(item):
-        item_slot.item = item
+    if !item_slot.can_hold_item(item):
+        return
+
+    if item == item_slot.item:
+        return
+
+    if item.get_inventory() == null:
+        if !item_slot.inventory.add_item(item):
+            return
+    elif item.get_inventory() != item_slot.inventory:
+        if !item.get_inventory().transfer(item, item_slot.inventory):
+            return
+
+    item_slot.item = item
+
+
+func _on_drop_zone_mouse_entered() -> void:
+    if CtrlDragable._grabbed_dragable == null:
+        return
+    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
+    if _grabbed_ctrl == null || _grabbed_ctrl.texture == null:
+        return
+    CtrlInventoryItemRect.override_preview_size(_grabbed_ctrl.texture.get_size() * icon_scaling)
+
+
+func _on_drop_zone_mouse_exited() -> void:
+    CtrlInventoryItemRect.restore_preview_size()
+
+
+func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
+    _ctrl_drop_zone.activate()
+
+
+func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
+    _ctrl_drop_zone.deactivate()
+
+    # Unequip from other slots
+    if zone == _ctrl_drop_zone || zone == null:
+        return
+    var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)
+    if ctrl_inventory_item_rect.item_slot:
+        ctrl_inventory_item_rect.item_slot.item = null
 
 
 func _refresh() -> void:
@@ -163,13 +231,15 @@ func _refresh() -> void:
     var item = item_slot.item
     if _label:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
-    if _texture_rect:
-        _texture_rect.texture = item.get_texture()
+    if _ctrl_inventory_item_rect:
+        _ctrl_inventory_item_rect.item = item
+        _ctrl_inventory_item_rect.texture = item.get_texture()
+        _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 
 
 func _clear() -> void:
     if _label:
         _label.text = ""
-    if _texture_rect:
-        _texture_rect.texture = null
+    if _ctrl_inventory_item_rect:
+        _ctrl_inventory_item_rect.item = null
 

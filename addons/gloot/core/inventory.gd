@@ -7,6 +7,7 @@ signal item_removed(item)
 signal item_modified(item)
 signal contents_changed
 signal protoset_changed
+signal predelete
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
@@ -58,10 +59,7 @@ func _exit_tree():
 
 func _notification(what):
     if what == NOTIFICATION_PREDELETE:
-        if _constraint_manager != null:
-            _constraint_manager.free()
-            _constraint_manager = null
-        
+        predelete.emit()        
 
 
 func _init() -> void:
