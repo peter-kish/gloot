@@ -44,7 +44,7 @@ signal predelete
         properties_changed.emit()
         update_configuration_warnings()
 
-var _inventory: Node
+var _inventory: Inventory
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -109,7 +109,7 @@ func _on_item_added(obj: Object):
         obj._on_item_added(self)
 
 
-func get_inventory() -> Node:
+func get_inventory() -> Inventory:
     return _inventory
 
 
