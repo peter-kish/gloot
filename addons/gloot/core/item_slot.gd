@@ -2,7 +2,7 @@
 extends "res://addons/gloot/core/item_slot_base.gd"
 class_name ItemSlot
 
-signal inventory_changed(inventory)
+signal inventory_changed
 
 @export var inventory_path: NodePath :
     get:
@@ -48,37 +48,9 @@ var inventory :
         inventory = new_inv
         _connect_inventory_signals()
 
-        inventory_changed.emit(inventory)
-        
-var item: InventoryItem :
-    get:
-        return item
-    set(new_item):
-        if new_item == item:
-            return
-        if new_item:
-            # Bind item
-            assert(can_hold_item(new_item), "ItemSlot can't hold that item!")
-            _disconnect_item_signals()
-            _item_map.remove_item_from_slot(new_item)
-
-            item = new_item
-            _connect_item_signals()
-            _item_map.map_item(item, self)
-            equipped_item = inventory.get_item_index(item)
-            item_set.emit(item)
-        else:
-            # Clear item
-            _disconnect_item_signals()
-            _item_map.unmap_item(item)
-
-            item = null
-            equipped_item = -1
-            item_cleared.emit()
-
+        inventory_changed.emit()
 
 const KEY_INVENTORY: String = "inventory"
-const KEY_ITEM: String = "item"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
@@ -108,22 +80,6 @@ func _disconnect_inventory_signals() -> void:
         inventory.predelete.disconnect(_on_inventory_predelete)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
-
-
-func _connect_item_signals() -> void:
-    if !item:
-        return
-
-    if !item.predelete.is_connected(_on_item_predelete):
-        item.predelete.connect(_on_item_predelete)
-
-
-func _disconnect_item_signals() -> void:
-    if !item:
-        return
-
-    if item.predelete.is_connected(_on_item_predelete):
-        item.predelete.disconnect(_on_item_predelete)
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:

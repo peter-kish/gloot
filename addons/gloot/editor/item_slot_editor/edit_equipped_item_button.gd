@@ -15,8 +15,8 @@ func _init():
 
 func _ready() -> void:
     var item_slot: ItemSlot = get_edited_object()
-    item_slot.inventory_changed.connect(func(inventory: Inventory): _refresh_option_button())
-    item_slot.item_set.connect(func(item: InventoryItem): _refresh_option_button())
+    item_slot.inventory_changed.connect(_refresh_option_button)
+    item_slot.item_set.connect(_refresh_option_button)
     item_slot.item_cleared.connect(_refresh_option_button)
     _refresh_option_button()
 
