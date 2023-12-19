@@ -1,6 +1,6 @@
 @tool
 extends ItemSlotBase
-class_name ItemSlot
+class_name ItemRefSlot
 
 signal inventory_changed
 

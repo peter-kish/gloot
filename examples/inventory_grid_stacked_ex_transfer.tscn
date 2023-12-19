@@ -9,7 +9,7 @@
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="7_6cshf"]
 [ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="8_8dj3i"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="9_cdjm1"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_wh3ty"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="10_wh3ty"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
 texture = ExtResource("3_lwfya")
@@ -152,7 +152,7 @@ layout_mode = 2
 script = ExtResource("6_wlx5u")
 slot_style = SubResource("7")
 slot_highlighted_style = SubResource("8")
-item_slot_path = NodePath("../../../../../ItemSlot")
+item_slot_path = NodePath("../../../../../ItemRefSlot")
 label_visible = false
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
@@ -212,7 +212,7 @@ properties = {
 "stack_size": 2
 }
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemRefSlot" type="Node" parent="."]
 script = ExtResource("10_wh3ty")
 inventory_path = NodePath("../InventoryGridStackedRight")
 

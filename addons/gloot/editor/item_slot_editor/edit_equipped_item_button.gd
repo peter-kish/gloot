@@ -14,7 +14,7 @@ func _init():
 
 
 func _ready() -> void:
-    var item_slot: ItemSlot = get_edited_object()
+    var item_slot: ItemRefSlot = get_edited_object()
     item_slot.inventory_changed.connect(_refresh_option_button)
     item_slot.item_set.connect(_refresh_option_button)
     item_slot.item_cleared.connect(_refresh_option_button)
@@ -37,7 +37,7 @@ func _populate_option_button() -> void:
     if !get_edited_object():
         return
 
-    var item_slot: ItemSlot = get_edited_object()
+    var item_slot: ItemRefSlot = get_edited_object()
     if !item_slot.inventory:
         return
 
@@ -58,7 +58,7 @@ func _on_item_selected(item_index: int) -> void:
         return
 
     updating = true
-    var item_slot: ItemSlot = get_edited_object()
+    var item_slot: ItemRefSlot = get_edited_object()
     var new_equipped_item = _option_button.get_item_metadata(item_index)
     if item_slot.equipped_item != new_equipped_item:
         GlootUndoRedo.set_item_slot_equipped_item(item_slot, new_equipped_item)

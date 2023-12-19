@@ -97,7 +97,7 @@ func _connect_item_slot_signals() -> void:
         item_slot.item_set.connect(_refresh)
     if !item_slot.item_cleared.is_connected(_refresh):
         item_slot.item_cleared.connect(_refresh)
-    if item_slot is ItemSlot:
+    if item_slot is ItemRefSlot:
         if !item_slot.inventory_changed.is_connected(_refresh):
             item_slot.inventory_changed.connect(_refresh)
 
@@ -110,7 +110,7 @@ func _disconnect_item_slot_signals() -> void:
         item_slot.item_set.disconnect(_refresh)
     if item_slot.item_cleared.is_connected(_refresh):
         item_slot.item_cleared.disconnect(_refresh)
-    if item_slot is ItemSlot:
+    if item_slot is ItemRefSlot:
         if item_slot.inventory_changed.is_connected(_refresh):
             item_slot.inventory_changed.disconnect(_refresh)
 
@@ -178,7 +178,7 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == item_slot.item:
         return
 
-    if item is ItemSlot:
+    if item is ItemRefSlot:
         if item.get_inventory() == null:
             if !item_slot.inventory.add_item(item):
                 return

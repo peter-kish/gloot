@@ -2,7 +2,7 @@ extends TestSuite
 
 var inventory1: Inventory
 var inventory2: Inventory
-var slot: ItemSlot
+var slot: ItemRefSlot
 var item: InventoryItem
 
 
@@ -21,7 +21,7 @@ func init_test() -> void:
     inventory2 = Inventory.new()
     inventory2.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
     item = inventory1.create_and_add_item("minimal_item");
-    slot = ItemSlot.new()
+    slot = ItemRefSlot.new()
 
 
 func cleanup_test() -> void:

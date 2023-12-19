@@ -46,7 +46,7 @@ var selection_bg_color: Color = Color.GRAY :
             return
         selection_bg_color = new_selection_bg_color
         queue_redraw()
-var item_slot: ItemSlot
+var item_slot: ItemSlotBase
 static var _stored_preview_size: Vector2
 static var _stored_preview_offset: Vector2
 

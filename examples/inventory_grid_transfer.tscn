@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="7"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="7"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 
 [node name="InventoryGridTransfer" type="Control"]
@@ -81,7 +81,7 @@ size_flags_horizontal = 0
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
-item_slot_path = NodePath("../../../../../ItemSlot")
+item_slot_path = NodePath("../../../../../ItemRefSlot")
 label_visible = false
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
@@ -131,7 +131,7 @@ properties = {
 "grid_position": Vector2i(0, 2)
 }
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemRefSlot" type="Node" parent="."]
 script = ExtResource("7")
 inventory_path = NodePath("../InventoryGridRight")
 

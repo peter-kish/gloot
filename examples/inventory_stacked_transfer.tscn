@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="7"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="7"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
 
 [node name="InventoryStackedTransfer" type="Control"]
@@ -56,7 +56,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
-item_slot_path = NodePath("../../../../ItemSlot")
+item_slot_path = NodePath("../../../../ItemRefSlot")
 default_item_icon = ExtResource("5")
 label_visible = false
 
@@ -142,6 +142,6 @@ properties = {
 "stack_size": 4.0
 }
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemRefSlot" type="Node" parent="."]
 script = ExtResource("7")
 inventory_path = NodePath("../InventoryStackedLeft")

@@ -100,7 +100,7 @@ static func _set_item_properties(inventory: Inventory, item_index: int, new_prop
     inventory.get_items()[item_index].properties = new_properties.duplicate()
 
 
-static func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
+static func set_item_slot_equipped_item(item_slot: ItemSlotBase, new_equipped_item: int) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
 
     undo_redo_manager.create_action("Set equipped_item")
