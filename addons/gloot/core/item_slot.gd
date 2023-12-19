@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/gloot/core/item_slot_base.gd"
+extends ItemSlotBase
 class_name ItemSlot
 
 signal inventory_changed
@@ -97,6 +97,14 @@ func _ready():
         var items = inventory.get_items()
         if equipped_item < items.size() && can_hold_item(items[equipped_item]):
             item = items[equipped_item]
+
+
+func _on_item_set() -> void:
+    equipped_item = inventory.get_item_index(item)
+
+
+func _on_item_cleared() -> void:
+    equipped_item = -1
 
 
 func _on_inventory_predelete():

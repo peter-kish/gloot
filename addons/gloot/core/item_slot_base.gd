@@ -1,9 +1,9 @@
 extends Node
+class_name ItemSlotBase
 
 signal item_set
 signal item_cleared
 
-const ItemSlotBase = preload("res://addons/gloot/core/item_slot_base.gd")
 const KEY_ITEM: String = "item"
 
 var item: InventoryItem :
@@ -21,6 +21,7 @@ var item: InventoryItem :
             item = new_item
             _connect_item_signals()
             _item_map.map_item(item, self)
+            _on_item_set()
             item_set.emit()
         else:
             # Clear item
@@ -28,6 +29,7 @@ var item: InventoryItem :
             _item_map.unmap_item(item)
 
             item = null
+            _on_item_cleared()
             item_cleared.emit()
 
 
@@ -81,4 +83,14 @@ func _disconnect_item_signals() -> void:
 
 # Override this
 func _on_item_predelete():
+    pass
+
+
+# Override this
+func _on_item_set():
+    pass
+
+
+# Override this
+func _on_item_cleared():
     pass

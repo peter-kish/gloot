@@ -1,5 +1,5 @@
 @tool
-extends "res://addons/gloot/core/item_slot_base.gd"
+extends ItemSlotBase
 class_name ItemOwningSlot
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
@@ -28,10 +28,6 @@ func can_hold_item(new_item: InventoryItem) -> bool:
         return false
 
     return true
-
-
-func _ready() -> void:
-    item_set.connect(_on_item_set)
 
 
 func _on_item_set() -> void:
