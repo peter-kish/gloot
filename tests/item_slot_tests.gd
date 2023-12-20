@@ -3,8 +3,8 @@ extends TestSuite
 const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
 const TEST_PROTOTYPE_ID = "minimal_item"
 
-var slot: ItemOwningSlot
-var slot2: ItemOwningSlot
+var slot: ItemSlot
+var slot2: ItemSlot
 var item: InventoryItem
 var inventory: Inventory
 
@@ -28,8 +28,8 @@ func init_test() -> void:
     item.prototype_id = TEST_PROTOTYPE_ID
     inventory = Inventory.new()
     inventory.item_protoset = TEST_PROTOSET
-    slot = ItemOwningSlot.new()
-    slot2 = ItemOwningSlot.new()
+    slot = ItemSlot.new()
+    slot2 = ItemSlot.new()
 
 
 func cleanup_test() -> void:

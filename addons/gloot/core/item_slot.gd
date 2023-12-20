@@ -1,6 +1,6 @@
 @tool
 extends ItemSlotBase
-class_name ItemOwningSlot
+class_name ItemSlot
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 

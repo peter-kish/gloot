@@ -14,7 +14,7 @@ var item: InventoryItem :
             return
         if new_item:
             # Bind item
-            assert(can_hold_item(new_item), "ItemOwningSlot can't hold that item!")
+            assert(can_hold_item(new_item), "Item slot can't hold that item!")
             _disconnect_item_signals()
             _item_map.remove_item_from_slot(new_item)
 
