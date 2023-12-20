@@ -87,31 +87,40 @@ func reset_properties() -> void:
 
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
-        if !(get_parent() is Inventory):
-            _inventory = null
-            return
-        _inventory = get_parent()
-        var inv_item_protoset = get_parent().get("item_protoset")
-        if inv_item_protoset:
-            protoset = inv_item_protoset
-        _on_item_added(get_parent())
+        _on_parented(get_parent())
     elif what == NOTIFICATION_UNPARENTED:
-        _on_item_removed(_inventory)
-        _inventory = null
+        _on_unparented()
     elif what == NOTIFICATION_PREDELETE:
         predelete.emit()
 
 
-func _on_item_removed(obj: Object):
-    if obj && obj.has_method("_on_item_removed"):
-        removed_from_inventory.emit(obj)
-        obj._on_item_removed(self)
+func _on_parented(parent: Node) -> void:
+    if parent is Inventory:
+        _on_added_to_inventory(parent as Inventory)
+    else:
+        _inventory = null
 
 
-func _on_item_added(obj: Object):
-    if obj && obj.has_method("_on_item_added"):
-        added_to_inventory.emit(obj)
-        obj._on_item_added(self)
+func _on_added_to_inventory(inventory: Inventory) -> void:
+    assert(inventory != null)
+    _inventory = inventory
+    if _inventory.item_protoset:
+        protoset = _inventory.item_protoset
+    
+    added_to_inventory.emit(_inventory)
+    _inventory._on_item_added(self)
+
+
+func _on_unparented() -> void:
+    if _inventory:
+        _on_removed_from_inventory(_inventory)
+    _inventory = null
+
+
+func _on_removed_from_inventory(inventory: Inventory):
+    if inventory:
+        removed_from_inventory.emit(inventory)
+        inventory._on_item_removed(self)
 
 
 func get_inventory() -> Inventory:
