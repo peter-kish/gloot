@@ -37,6 +37,8 @@ var item: InventoryItem :
                 if new_item.get_parent():
                     new_item.get_parent().remove_child(new_item)
                 add_child(new_item)
+                if Engine.is_editor_hint():
+                    new_item.owner = get_tree().edited_scene_root
 
             item = new_item
             _connect_item_signals()
