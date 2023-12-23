@@ -45,6 +45,12 @@ var item: InventoryItem :
             assert(can_hold_item(new_item), "Item slot can't hold that item!")
             _disconnect_item_signals()
             _item_map.remove_item_from_slot(new_item)
+            reset()
+
+            if new_item.get_parent() != self && !new_item._busy_adding_removing:
+                if new_item.get_parent():
+                    new_item.get_parent().remove_child(new_item)
+                add_child(new_item)
 
             item = new_item
             _connect_item_signals()
@@ -55,6 +61,9 @@ var item: InventoryItem :
             # Clear item
             _disconnect_item_signals()
             _item_map.unmap_item(item)
+
+            if item.get_parent() == self && !item._busy_adding_removing:
+                remove_child(item)
 
             item = null
             item_cleared.emit()

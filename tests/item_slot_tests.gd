@@ -6,6 +6,7 @@ const TEST_PROTOTYPE_ID = "minimal_item"
 var slot: ItemSlot
 var slot2: ItemSlot
 var item: InventoryItem
+var item2: InventoryItem
 var inventory: Inventory
 
 
@@ -26,6 +27,9 @@ func init_test() -> void:
     item = InventoryItem.new()
     item.protoset = TEST_PROTOSET
     item.prototype_id = TEST_PROTOTYPE_ID
+    item2 = InventoryItem.new()
+    item2.protoset = TEST_PROTOSET
+    item2.prototype_id = TEST_PROTOTYPE_ID
     inventory = Inventory.new()
     inventory.item_protoset = TEST_PROTOSET
     slot = ItemSlot.new()
@@ -38,6 +42,7 @@ func cleanup_test() -> void:
     if slot2.item:
         slot2.item.free()
     free_item(item)
+    free_item(item2)
     free_inventory(inventory)
     free_slot(slot)
     free_slot(slot2)
@@ -47,6 +52,20 @@ func test_set_item() -> void:
     assert(slot.item == null)
     slot.item = item
     assert(slot.item == item)
+    assert(item.get_parent() == slot)
+    assert(slot.get_child_count() == 1)
+
+    slot.item = item2
+    assert(slot.item == item2)
+    assert(item2.get_parent() == slot)
+    assert(slot.get_child_count() == 1)
+    assert(item.get_parent() == null)
+
+    slot.item = null
+    assert(slot.item == null)
+    assert(item2.get_parent() == null)
+    assert(item.get_parent() == null)
+    assert(slot.get_child_count() == 0)
 
 
 func test_delete_item() -> void:
@@ -59,6 +78,8 @@ func test_add_item_to_inventory() -> void:
     slot.item = item
     inventory.add_item(item)
     assert(slot.item == null)
+    slot.item = item
+    assert(!inventory.has_item(item))
 
 
 func test_set_item_in_two_slots() -> void:

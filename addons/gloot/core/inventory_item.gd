@@ -48,6 +48,7 @@ signal removed_from_inventory(inventory)
         update_configuration_warnings()
 
 var _inventory: Inventory
+var _busy_adding_removing: bool = false
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -87,9 +88,13 @@ func reset_properties() -> void:
 
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
+        _busy_adding_removing = true
         _on_parented(get_parent())
+        _busy_adding_removing = false
     elif what == NOTIFICATION_UNPARENTED:
+        _busy_adding_removing = true
         _on_unparented()
+        _busy_adding_removing = false
     elif what == NOTIFICATION_PREDELETE:
         predelete.emit()
 
@@ -99,6 +104,9 @@ func _on_parented(parent: Node) -> void:
         _on_added_to_inventory(parent as Inventory)
     else:
         _inventory = null
+
+    if parent is ItemSlot:
+        _on_added_to_item_slot(parent as ItemSlot)
 
 
 func _on_added_to_inventory(inventory: Inventory) -> void:
@@ -116,11 +124,20 @@ func _on_unparented() -> void:
         _on_removed_from_inventory(_inventory)
     _inventory = null
 
+    if ItemSlot._item_map._map.has(self):
+        var item_slot = ItemSlot._item_map._map[self]
+        if item_slot is ItemSlot:
+            (item_slot as ItemSlot).item = null
 
-func _on_removed_from_inventory(inventory: Inventory):
+
+func _on_removed_from_inventory(inventory: Inventory) -> void:
     if inventory:
         removed_from_inventory.emit(inventory)
         inventory._on_item_removed(self)
+
+
+func _on_added_to_item_slot(item_slot: ItemSlot) -> void:
+    item_slot.item = self
 
 
 func get_inventory() -> Inventory:
