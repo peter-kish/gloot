@@ -48,6 +48,8 @@ signal removed_from_inventory(inventory)
         update_configuration_warnings()
 
 var _inventory: Inventory
+var _item_slot: ItemSlot
+# TODO: Try to get rid of this:
 var _busy_adding_removing: bool = false
 
 const KEY_PROTOSET: String = "protoset"
@@ -107,6 +109,8 @@ func _on_parented(parent: Node) -> void:
 
     if parent is ItemSlot:
         _on_added_to_item_slot(parent as ItemSlot)
+    else:
+        _item_slot = null
 
 
 func _on_added_to_inventory(inventory: Inventory) -> void:
@@ -124,10 +128,8 @@ func _on_unparented() -> void:
         _on_removed_from_inventory(_inventory)
     _inventory = null
 
-    if ItemSlot._item_map._map.has(self):
-        var item_slot = ItemSlot._item_map._map[self]
-        if item_slot is ItemSlot:
-            (item_slot as ItemSlot).item = null
+    if _item_slot:
+        _item_slot.item = null
 
 
 func _on_removed_from_inventory(inventory: Inventory) -> void:
@@ -138,6 +140,7 @@ func _on_removed_from_inventory(inventory: Inventory) -> void:
 
 func _on_added_to_item_slot(item_slot: ItemSlot) -> void:
     item_slot.item = self
+    _item_slot = item_slot
 
 
 func get_inventory() -> Inventory:
