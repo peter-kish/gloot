@@ -18,8 +18,6 @@ var item: InventoryItem :
             # Bind item
             assert(can_hold_item(new_item), "Item slot can't hold that item!")
             _disconnect_item_signals()
-            if new_item._item_slot:
-                new_item._item_slot.item = null
             reset()
 
             if new_item.get_parent() != self && !new_item._busy_adding_removing:
@@ -28,14 +26,12 @@ var item: InventoryItem :
                 add_child(new_item)
 
             item = new_item
-            new_item._item_slot = self
             _connect_item_signals()
             _on_item_set()
             item_set.emit()
         else:
             # Clear item
             _disconnect_item_signals()
-            item._item_slot = null
 
             if item.get_parent() == self && !item._busy_adding_removing:
                 remove_child(item)

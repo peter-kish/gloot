@@ -9,6 +9,8 @@ signal properties_changed
 signal predelete
 signal added_to_inventory(inventory)
 signal removed_from_inventory(inventory)
+signal equipped_in_slot(item_slot)
+signal removed_from_slot(item_slot)
 
 @export var protoset: Resource :
     get:
@@ -108,9 +110,9 @@ func _on_parented(parent: Node) -> void:
         _inventory = null
 
     if parent is ItemSlot:
-        _on_added_to_item_slot(parent as ItemSlot)
+        _link_to_slot(parent as ItemSlot)
     else:
-        _item_slot = null
+        _unlink_from_slot()
 
 
 func _on_added_to_inventory(inventory: Inventory) -> void:
@@ -128,8 +130,7 @@ func _on_unparented() -> void:
         _on_removed_from_inventory(_inventory)
     _inventory = null
 
-    if _item_slot:
-        _item_slot.item = null
+    _unlink_from_slot()
 
 
 func _on_removed_from_inventory(inventory: Inventory) -> void:
@@ -138,9 +139,22 @@ func _on_removed_from_inventory(inventory: Inventory) -> void:
         inventory._on_item_removed(self)
 
 
-func _on_added_to_item_slot(item_slot: ItemSlot) -> void:
+func _link_to_slot(item_slot: ItemSlot) -> void:
+    if item_slot == null:
+        _unlink_from_slot()
+        return
     item_slot.item = self
     _item_slot = item_slot
+    equipped_in_slot.emit(item_slot)
+
+
+func _unlink_from_slot() -> void:
+    if _item_slot == null:
+        return
+    _item_slot.item = null
+    var temp_slot := _item_slot
+    _item_slot = null
+    removed_from_slot.emit(temp_slot)
 
 
 func get_inventory() -> Inventory:
