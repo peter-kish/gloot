@@ -4,13 +4,11 @@ const EditProtosetButton = preload("res://addons/gloot/editor/protoset_editor/ed
 const InventoryInspector = preload("res://addons/gloot/editor/inventory_editor/inventory_inspector.tscn")
 const EditPropertiesButton = preload("res://addons/gloot/editor/item_editor/edit_properties_button.gd")
 const EditPrototypeIdButton = preload("res://addons/gloot/editor/item_editor/edit_prototype_id_button.gd")
-const EditEquippedItemButton = preload("res://addons/gloot/editor/item_slot_editor/edit_equipped_item_button.gd")
 
 
 func _can_handle(object: Object) -> bool:
     return (object is Inventory) || \
             (object is InventoryItem) || \
-            (object is ItemRefSlot) || \
             (object is ItemProtoset)
 
 
@@ -37,9 +35,6 @@ func _parse_property(object: Object,
         return true
     if (object is InventoryItem) && name == "prototype_id":
         add_property_editor(name, EditPrototypeIdButton.new())
-        return true
-    if (object is ItemRefSlot) && name == "equipped_item":
-        add_property_editor(name, EditEquippedItemButton.new())
         return true
     return false
 
