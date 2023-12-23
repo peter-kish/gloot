@@ -9,7 +9,7 @@ extends Control
 @onready var btn_unequip: Button = $VBoxContainer/HBoxContainer3/BtnUnequip
 @onready var ctrl_inventory_left: CtrlInventoryStacked = $VBoxContainer/HBoxContainer/CtrlInventoryStackedLeft
 @onready var ctrl_inventory_right: CtrlInventoryStacked = $VBoxContainer/HBoxContainer/CtrlInventoryStackedRight
-@onready var slot: ItemSlotBase = $ItemSlot
+@onready var slot: ItemSlot = $ItemSlot
 
 
 func _ready() -> void:

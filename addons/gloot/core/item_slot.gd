@@ -1,23 +1,82 @@
 @tool
-extends ItemSlotBase
 class_name ItemSlot
+extends Node
+
+signal item_set
+signal item_cleared
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
+const KEY_ITEM: String = "item"
+
+class _ItemMap:
+    var _map: Dictionary
+
+
+    func map_item(item: InventoryItem, slot: ItemSlot) -> void:
+        if item == null || slot == null:
+            return
+        _map[item] = slot
+
+
+    func unmap_item(item: InventoryItem) -> void:
+        if item == null:
+            return
+        if _map.has(item):
+            _map.erase(item)
+
+
+    func remove_item_from_slot(item: InventoryItem) -> void:
+        assert(item != null)
+        if _map.has(item):
+            _map[item].item = null
+            unmap_item(item)
+
+
+static var _item_map := _ItemMap.new()
+
+var item: InventoryItem :
+    get:
+        return item
+    set(new_item):
+        if new_item == item:
+            return
+        if new_item:
+            # Bind item
+            assert(can_hold_item(new_item), "Item slot can't hold that item!")
+            _disconnect_item_signals()
+            _item_map.remove_item_from_slot(new_item)
+
+            item = new_item
+            _connect_item_signals()
+            _item_map.map_item(item, self)
+            _on_item_set()
+            item_set.emit()
+        else:
+            # Clear item
+            _disconnect_item_signals()
+            _item_map.unmap_item(item)
+
+            item = null
+            item_cleared.emit()
 
 
 func _connect_item_signals() -> void:
-    super._connect_item_signals()
     if !item:
         return
+
+    if !item.predelete.is_connected(_on_item_predelete):
+        item.predelete.connect(_on_item_predelete)
 
     if !item.added_to_inventory.is_connected(_on_item_added_to_inventory):
         item.added_to_inventory.connect(_on_item_added_to_inventory)
 
 
 func _disconnect_item_signals() -> void:
-    super._disconnect_item_signals()
     if !item:
         return
+
+    if item.predelete.is_connected(_on_item_predelete):
+        item.predelete.disconnect(_on_item_predelete)
 
     if item.added_to_inventory.is_connected(_on_item_added_to_inventory):
         item.added_to_inventory.disconnect(_on_item_added_to_inventory)
