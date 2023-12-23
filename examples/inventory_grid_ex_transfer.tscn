@@ -191,3 +191,4 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_mbp7e")
+item_protoset = ExtResource("1")

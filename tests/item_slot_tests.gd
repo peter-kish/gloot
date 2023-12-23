@@ -33,7 +33,9 @@ func init_test() -> void:
     inventory = Inventory.new()
     inventory.item_protoset = TEST_PROTOSET
     slot = ItemSlot.new()
+    slot.item_protoset = TEST_PROTOSET
     slot2 = ItemSlot.new()
+    slot2.item_protoset = TEST_PROTOSET
 
 
 func cleanup_test() -> void:

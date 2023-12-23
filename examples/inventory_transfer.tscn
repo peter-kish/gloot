@@ -120,3 +120,4 @@ prototype_id = "item2"
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_v60ia")
+item_protoset = ExtResource("3")

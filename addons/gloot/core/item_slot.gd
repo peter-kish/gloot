@@ -4,9 +4,22 @@ extends Node
 
 signal item_set
 signal item_cleared
+signal protoset_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
+
+@export var item_protoset: ItemProtoset:
+    get:
+        return item_protoset
+    set(new_item_protoset):
+        if new_item_protoset == item_protoset:
+            return
+        if item:
+            item = null
+        item_protoset = new_item_protoset
+        protoset_changed.emit()
+        update_configuration_warnings()
 
 var item: InventoryItem :
     get:
@@ -63,7 +76,10 @@ func _disconnect_item_signals() -> void:
 
 
 func can_hold_item(new_item: InventoryItem) -> bool:
+    assert(item_protoset != null, "Item protoset not set!")
     if new_item == null:
+        return false
+    if item_protoset != new_item.protoset:
         return false
 
     return true

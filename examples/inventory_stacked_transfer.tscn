@@ -144,3 +144,4 @@ properties = {
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_worre")
+item_protoset = ExtResource("3")
