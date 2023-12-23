@@ -217,8 +217,13 @@ func _refresh() -> void:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _ctrl_inventory_item_rect:
         _ctrl_inventory_item_rect.item = item
-        _ctrl_inventory_item_rect.texture = item.get_texture()
-        _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
+        if item.get_texture():
+            _ctrl_inventory_item_rect.texture = item.get_texture()
+        else:
+            _ctrl_inventory_item_rect.texture = default_item_icon
+
+        if _ctrl_inventory_item_rect.texture:
+            _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 
 
 func _clear() -> void:
