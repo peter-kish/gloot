@@ -93,20 +93,20 @@ func _connect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if !item_slot.item_set.is_connected(_refresh):
-        item_slot.item_set.connect(_refresh)
-    if !item_slot.item_cleared.is_connected(_refresh):
-        item_slot.item_cleared.connect(_refresh)
+    if !item_slot.item_equipped.is_connected(_refresh):
+        item_slot.item_equipped.connect(_refresh)
+    if !item_slot.cleared.is_connected(_refresh):
+        item_slot.cleared.connect(_refresh)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if item_slot.item_set.is_connected(_refresh):
-        item_slot.item_set.disconnect(_refresh)
-    if item_slot.item_cleared.is_connected(_refresh):
-        item_slot.item_cleared.disconnect(_refresh)
+    if item_slot.item_equipped.is_connected(_refresh):
+        item_slot.item_equipped.disconnect(_refresh)
+    if item_slot.cleared.is_connected(_refresh):
+        item_slot.cleared.disconnect(_refresh)
 
 
 func _ready():
@@ -169,10 +169,10 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if !item_slot.can_hold_item(item):
         return
 
-    if item == item_slot.item:
+    if item == item_slot.get_item():
         return
 
-    item_slot.item = item
+    item_slot.equip(item)
 
 
 func _on_drop_zone_mouse_entered() -> void:
@@ -200,7 +200,7 @@ func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_p
         return
     var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)
     if ctrl_inventory_item_rect.item_slot:
-        ctrl_inventory_item_rect.item_slot.item = null
+        ctrl_inventory_item_rect.item_slot.clear()
 
 
 func _refresh() -> void:
@@ -209,10 +209,10 @@ func _refresh() -> void:
     if item_slot == null:
         return
     
-    if item_slot.item == null:
+    if item_slot.get_item() == null:
         return
 
-    var item = item_slot.item
+    var item = item_slot.get_item()
     if _label:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _ctrl_inventory_item_rect:

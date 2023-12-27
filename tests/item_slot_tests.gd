@@ -12,10 +12,10 @@ var inventory: Inventory
 
 func init_suite():
     tests = [
-        "test_set_item",
+        "test_equip_item",
         "test_delete_item",
         "test_add_item_to_inventory",
-        "test_set_item_in_two_slots",
+        "test_equip_item_in_two_slots",
         "test_can_hold_item",
         "test_reset",
         "test_serialize",
@@ -39,10 +39,6 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    if slot.item:
-        slot.item.free()
-    if slot2.item:
-        slot2.item.free()
     free_item(item)
     free_item(item2)
     free_inventory(inventory)
@@ -50,45 +46,45 @@ func cleanup_test() -> void:
     free_slot(slot2)
 
 
-func test_set_item() -> void:
-    assert(slot.item == null)
-    slot.item = item
-    assert(slot.item == item)
+func test_equip_item() -> void:
+    assert(slot.get_item() == null)
+    slot.equip(item)
+    assert(slot.get_item() == item)
     assert(item.get_parent() == slot)
     assert(slot.get_child_count() == 1)
 
-    slot.item = item2
-    assert(slot.item == item2)
+    slot.equip(item2)
+    assert(slot.get_item() == item2)
     assert(item2.get_parent() == slot)
     assert(slot.get_child_count() == 1)
     assert(item.get_parent() == null)
 
-    slot.item = null
-    assert(slot.item == null)
+    slot.clear()
+    assert(slot.get_item() == null)
     assert(item2.get_parent() == null)
     assert(item.get_parent() == null)
     assert(slot.get_child_count() == 0)
 
 
 func test_delete_item() -> void:
-    slot.item = item
+    slot.equip(item)
     item.free()
-    assert(slot.item == null)
+    assert(slot.get_item() == null)
 
 
 func test_add_item_to_inventory() -> void:
-    slot.item = item
+    slot.equip(item)
     inventory.add_item(item)
-    assert(slot.item == null)
-    slot.item = item
+    assert(slot.get_item() == null)
+    slot.equip(item)
     assert(!inventory.has_item(item))
 
 
-func test_set_item_in_two_slots() -> void:
-    slot.item = item
-    slot2.item = item
-    assert(slot.item == null)
-    assert(slot2.item == item)
+func test_equip_item_in_two_slots() -> void:
+    slot.equip(item)
+    slot2.equip(item)
+    assert(slot.get_item() == null)
+    assert(slot2.get_item() == item)
 
 
 func test_can_hold_item() -> void:
@@ -97,24 +93,25 @@ func test_can_hold_item() -> void:
 
 
 func test_reset() -> void:
-    slot.item = item
+    slot.equip(item)
     slot.reset()
-    assert(slot.item == null)
+    assert(slot.get_item() == null)
 
 
 func test_serialize() -> void:
-    slot.item = item
+    slot.equip(item)
     var item_slot_data = slot.serialize()
+    slot.get_item().queue_free()
     slot.reset()
-    assert(slot.item == null)
+    assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.item.protoset == item.protoset)
-    assert(slot.item.prototype_id == item.prototype_id)
-    assert(slot.item.properties == item.properties)
+    assert(slot.get_item().protoset == item.protoset)
+    assert(slot.get_item().prototype_id == item.prototype_id)
+    assert(slot.get_item().properties == item.properties)
 
 
 func test_serialize_json() -> void:
-    slot.item = item
+    slot.equip(item)
     var item_slot_data = slot.serialize()
 
     # To and from JSON serialization
@@ -123,9 +120,10 @@ func test_serialize_json() -> void:
     assert(test_json_conv.parse(json_string) == OK)
     item_slot_data = test_json_conv.data
 
+    slot.get_item().queue_free()
     slot.reset()
-    assert(slot.item == null)
+    assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.item.protoset == item.protoset)
-    assert(slot.item.prototype_id == item.prototype_id)
-    assert(slot.item.properties == item.properties)
+    assert(slot.get_item().protoset == item.protoset)
+    assert(slot.get_item().prototype_id == item.prototype_id)
+    assert(slot.get_item().properties == item.properties)

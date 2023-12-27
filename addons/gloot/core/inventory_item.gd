@@ -140,20 +140,17 @@ func _on_removed_from_inventory(inventory: Inventory) -> void:
 
 
 func _link_to_slot(item_slot: ItemSlot) -> void:
-    if item_slot == null:
-        _unlink_from_slot()
-        return
-    item_slot.item = self
     _item_slot = item_slot
+    _item_slot._on_item_added(self)
     equipped_in_slot.emit(item_slot)
 
 
 func _unlink_from_slot() -> void:
     if _item_slot == null:
         return
-    _item_slot.item = null
     var temp_slot := _item_slot
     _item_slot = null
+    temp_slot._on_item_removed()
     removed_from_slot.emit(temp_slot)
 
 

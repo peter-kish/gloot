@@ -66,5 +66,5 @@ func _on_btn_split(ctrl_inventory: CtrlInventoryGrid) -> void:
 
 
 func _on_btn_unequip() -> void:
-    ctrl_slot.item_slot.item = null
+    ctrl_slot.item_slot.clear()
 
