@@ -20,7 +20,9 @@ const KEY_ITEM: String = "item"
         item_protoset = new_item_protoset
         protoset_changed.emit()
         update_configuration_warnings()
+@export var remember_source_inventory := true
 
+var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem
 
 
@@ -33,6 +35,8 @@ func equip(item: InventoryItem) -> bool:
 
     if get_item() != null:
         clear()
+
+    _wr_source_inventory = weakref(item.get_inventory())
 
     if item.get_parent():
         item.get_parent().remove_child(item)
@@ -51,8 +55,22 @@ func _on_item_added(item: InventoryItem) -> void:
 func clear() -> bool:
     if get_item() == null:
         return false
+
+    if _restore_item_to_source_inventory():
+        return true
+            
     remove_child(get_item())
     return true
+
+
+func _restore_item_to_source_inventory() -> bool:
+    if !remember_source_inventory:
+        return false
+    var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
+    if inventory != null:
+        if inventory.add_item(get_item()):
+            return true
+    return false
 
 
 func _on_item_removed() -> void:
