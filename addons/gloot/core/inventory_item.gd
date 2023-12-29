@@ -6,7 +6,6 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
-signal predelete
 signal added_to_inventory(inventory)
 signal removed_from_inventory(inventory)
 signal equipped_in_slot(item_slot)
@@ -51,8 +50,6 @@ signal removed_from_slot(item_slot)
 
 var _inventory: Inventory
 var _item_slot: ItemSlot
-# TODO: Try to get rid of this:
-var _busy_adding_removing: bool = false
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -92,15 +89,9 @@ func reset_properties() -> void:
 
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
-        _busy_adding_removing = true
         _on_parented(get_parent())
-        _busy_adding_removing = false
     elif what == NOTIFICATION_UNPARENTED:
-        _busy_adding_removing = true
         _on_unparented()
-        _busy_adding_removing = false
-    elif what == NOTIFICATION_PREDELETE:
-        predelete.emit()
 
 
 func _on_parented(parent: Node) -> void:
