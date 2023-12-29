@@ -89,9 +89,9 @@ func _on_prototype_id_picked(index: int) -> void:
     
 
 func _on_btn_edit() -> void:
-    if item_slot.item != null:
+    if item_slot.get_item() != null:
         # Call it deferred, so that the control can clean up
-        call_deferred("_select_node", item_slot.item)
+        call_deferred("_select_node", item_slot.get_item())
 
 
 func _on_btn_clear() -> void:
