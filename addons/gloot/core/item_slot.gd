@@ -54,12 +54,12 @@ func _on_item_added(item: InventoryItem) -> void:
 func clear(restore_item_to_source_inventory: bool = true) -> bool:
     if get_item() == null:
         return false
-
-    if !restore_item_to_source_inventory:
-        remove_child(get_item())
+        
+    if restore_item_to_source_inventory && _restore_item_to_source_inventory():
         return true
-
-    return _restore_item_to_source_inventory()
+        
+    remove_child(get_item())
+    return true
 
 
 func _restore_item_to_source_inventory() -> bool:
@@ -90,7 +90,7 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 
 func reset():
-    _item = null
+    clear()
 
 
 func serialize() -> Dictionary:
@@ -109,10 +109,10 @@ func deserialize(source: Dictionary) -> bool:
     reset()
 
     if source.has(KEY_ITEM):
-        var temp_item := InventoryItem.new()
-        if !temp_item.deserialize(source[KEY_ITEM]):
+        var item := InventoryItem.new()
+        if !item.deserialize(source[KEY_ITEM]):
             return false
-        _item = temp_item
+        equip(item)
 
     return true
 
