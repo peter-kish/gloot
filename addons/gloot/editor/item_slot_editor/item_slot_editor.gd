@@ -16,6 +16,7 @@ var item_slot: ItemSlot :
     set(new_item_slot):
         disconnect_item_slot_signals()
         item_slot = new_item_slot
+        ctrl_item_slot.item_slot = item_slot
         connect_item_slot_signals()
 
         _refresh()
