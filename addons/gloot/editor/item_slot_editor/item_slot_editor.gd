@@ -85,7 +85,7 @@ func _on_prototype_id_picked(index: int) -> void:
         item_slot.get_item().queue_free()
     item.protoset = item_slot.item_protoset
     item.prototype_id = prototype_id
-    item_slot.equip(item)
+    GlootUndoRedo.equip_item_in_item_slot(item_slot, item)
     
 
 func _on_btn_edit() -> void:
@@ -97,7 +97,7 @@ func _on_btn_edit() -> void:
 func _on_btn_clear() -> void:
     if item_slot.get_item() != null:
         item_slot.get_item().queue_free()
-        item_slot.clear()
+        GlootUndoRedo.clear_item_slot(item_slot)
 
 
 static func _select_node(node: Node) -> void:
