@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_item_slot.svg")
 class_name ItemSlot
 extends Node
 
