@@ -47,7 +47,7 @@ A universal inventory system for the Godot game engine (version 4.2 and newer).
 
 ### Item Slots
 
-* ![](addons/gloot/images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
+* ![](addons/gloot/images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Can hold one inventory item.
 
 ### UI Controls
 

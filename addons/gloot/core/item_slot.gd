@@ -52,18 +52,18 @@ func _on_item_added(item: InventoryItem) -> void:
     item_equipped.emit()
 
 
-func clear(restore_item_to_source_inventory: bool = true) -> bool:
+func clear(return_item_to_source_inventory: bool = true) -> bool:
     if get_item() == null:
         return false
         
-    if restore_item_to_source_inventory && _restore_item_to_source_inventory():
+    if return_item_to_source_inventory && _return_item_to_source_inventory():
         return true
         
     remove_child(get_item())
     return true
 
 
-func _restore_item_to_source_inventory() -> bool:
+func _return_item_to_source_inventory() -> bool:
     var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
     if inventory != null:
         if inventory.add_item(get_item()):
