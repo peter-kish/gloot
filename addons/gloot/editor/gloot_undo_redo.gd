@@ -203,6 +203,17 @@ static func remove_prototype(protoset: ItemProtoset, id: String) -> void:
     undo_redo_manager.commit_action()
 
 
+static func duplicate_prototype(protoset: ItemProtoset, id: String) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+
+    var old_prototypes = _prototypes_deep_copy(protoset)
+
+    undo_redo_manager.create_action("Duplicate Prototype")
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_prototypes", protoset, old_prototypes)
+    undo_redo_manager.add_do_method(protoset, "duplicate_prototype", id)
+    undo_redo_manager.commit_action()
+
+
 static func _prototypes_deep_copy(protoset: ItemProtoset) -> Dictionary:
     var result = protoset._prototypes.duplicate()
     for prototype_id in result.keys():
