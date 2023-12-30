@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_inventory_stacked.svg")
 extends Inventory
 class_name InventoryStacked
 

@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_ctrl_item_slot.svg")
 class_name CtrlItemSlotEx
 extends CtrlItemSlot
 
