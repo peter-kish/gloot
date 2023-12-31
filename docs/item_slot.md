@@ -12,12 +12,14 @@ Holds an inventory item.
 
 ## Methods
 
-* `equip(item: InventoryItem) -> bool` - Equips the given inventory item in the slot.
-* `clear(return_item_to_source_inventory: bool = true) -> bool` - Clears the item slot. By default, the slot will remember the inventory from which the item came from and it will try to place the item back into that inventory when the slot is cleared. To avoid this, set the `restore_item_to_source_inventory` parameter to `false`. Note that the item slot does not free the item after the slot is cleared, regardless if it has been returned to the source inventory, or not.
-* `can_hold_item(new_item: InventoryItem) -> bool` - Checks if the slot can hold the given item.
-* `reset()` - Resets the item slot (i.e. clears it).
+* `equip(item: InventoryItem, return_item_to_source_inventory: bool) -> bool` - Equips the given inventory item in the slot. If the slot already contains an item, `clear(return_item_to_source_inventory)` will be called first. Returns `false` if the `clear` call fails, the slot can't hold, or already holds the given item. Returns `true` otherwise.
+* `clear(return_item_to_source_inventory: bool) -> bool` - Clears the item slot. If `return_item_to_source_inventory` is `true`, the method will try to return the item to its original inventory. Returns `false` if the item can't be returned, or if the slot is already empty.
+    > Note: this method will not free the item if `return_item_to_source_inventory` is `false`.
+* `can_hold_item(new_item: InventoryItem) -> bool` - Checks if the slot can hold the given item, i.e. the item has the same protoset as the slot and is not `null`. This method can be overridden to implement item slots that can only hold specific items.
+* `reset()` - Clears the item slot and queues the contained item (if any) for deletion.
 * `serialize() -> Dictionary` - Serializes the item slot into a dictionary.
-* `deserialize(source: Dictionary) -> bool` - Loads the item slot data from the given dictionary.
+* `deserialize(source: Dictionary) -> bool` - Loads the item slot data from the given dictionary. 
+    > Note: If the slot contains an item prior to deserialization, it will be queued for deletion.
 
 ## Signals
 

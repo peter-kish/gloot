@@ -26,15 +26,15 @@ var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem
 
 
-func equip(item: InventoryItem) -> bool:
+func equip(item: InventoryItem, return_item_to_source_inventory: bool = true) -> bool:
     if !can_hold_item(item):
         return false
 
     if item.get_parent() == self:
         return false
 
-    if get_item() != null:
-        clear()
+    if get_item() != null && !clear(return_item_to_source_inventory):
+        return false
 
     _wr_source_inventory = weakref(item.get_inventory())
 
@@ -56,8 +56,8 @@ func clear(return_item_to_source_inventory: bool = true) -> bool:
     if get_item() == null:
         return false
         
-    if return_item_to_source_inventory && _return_item_to_source_inventory():
-        return true
+    if return_item_to_source_inventory:
+        return _return_item_to_source_inventory()
         
     remove_child(get_item())
     return true

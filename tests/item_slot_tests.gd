@@ -15,6 +15,7 @@ func init_suite():
         "test_equip_item",
         "test_delete_item",
         "test_add_item_to_inventory",
+        "test_return_item_to_source_inventory",
         "test_equip_item_in_two_slots",
         "test_can_hold_item",
         "test_reset",
@@ -32,6 +33,8 @@ func init_test() -> void:
     item2.prototype_id = TEST_PROTOTYPE_ID
     inventory = Inventory.new()
     inventory.item_protoset = TEST_PROTOSET
+    inventory.add_item(item)
+    inventory.add_item(item2)
     slot = ItemSlot.new()
     slot.item_protoset = TEST_PROTOSET
     slot2 = ItemSlot.new()
@@ -48,41 +51,59 @@ func cleanup_test() -> void:
 
 func test_equip_item() -> void:
     assert(slot.get_item() == null)
-    slot.equip(item)
+    assert(slot.equip(item))
     assert(slot.get_item() == item)
     assert(item.get_parent() == slot)
     assert(slot.get_child_count() == 1)
 
-    slot.equip(item2)
+    assert(slot.equip(item2))
     assert(slot.get_item() == item2)
     assert(item2.get_parent() == slot)
     assert(slot.get_child_count() == 1)
-    assert(item.get_parent() == null)
 
     slot.clear()
     assert(slot.get_item() == null)
-    assert(item2.get_parent() == null)
-    assert(item.get_parent() == null)
     assert(slot.get_child_count() == 0)
 
 
 func test_delete_item() -> void:
-    slot.equip(item)
+    assert(slot.equip(item))
     item.free()
     assert(slot.get_item() == null)
 
 
 func test_add_item_to_inventory() -> void:
-    slot.equip(item)
-    inventory.add_item(item)
+    assert(slot.equip(item))
+    assert(inventory.add_item(item))
     assert(slot.get_item() == null)
-    slot.equip(item)
+    assert(slot.equip(item))
+    assert(!inventory.has_item(item))
+
+
+func test_return_item_to_source_inventory() -> void:
+    assert(slot.equip(item))
+    assert(!inventory.has_item(item))
+    assert(slot.clear())
+    assert(inventory.has_item(item))
+
+    assert(slot.equip(item))
+    assert(slot.clear(false))
+    assert(!inventory.has_item(item))
+
+    assert(inventory.add_item(item))
+    assert(slot.equip(item))
+    assert(slot.equip(item2))
+    assert(inventory.has_item(item))
+
+    assert(inventory.add_item(item2))
+    assert(slot.equip(item))
+    assert(slot.equip(item2, false))
     assert(!inventory.has_item(item))
 
 
 func test_equip_item_in_two_slots() -> void:
-    slot.equip(item)
-    slot2.equip(item)
+    assert(slot.equip(item))
+    assert(slot2.equip(item))
     assert(slot.get_item() == null)
     assert(slot2.get_item() == item)
 
@@ -93,13 +114,13 @@ func test_can_hold_item() -> void:
 
 
 func test_reset() -> void:
-    slot.equip(item)
+    assert(slot.equip(item))
     slot.reset()
     assert(slot.get_item() == null)
 
 
 func test_serialize() -> void:
-    slot.equip(item)
+    assert(slot.equip(item))
     var item_slot_data = slot.serialize()
     slot.get_item().queue_free()
     slot.reset()
@@ -111,7 +132,7 @@ func test_serialize() -> void:
 
 
 func test_serialize_json() -> void:
-    slot.equip(item)
+    assert(slot.equip(item))
     var item_slot_data = slot.serialize()
 
     # To and from JSON serialization
