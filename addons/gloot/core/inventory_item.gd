@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_item.svg")
 extends Node
 class_name InventoryItem
 

@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_inventory_grid.svg")
 extends Inventory
 class_name InventoryGrid
 

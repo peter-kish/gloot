@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_item_protoset.svg")
 class_name ItemProtoset
 extends Resource
 
