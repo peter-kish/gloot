@@ -8,6 +8,8 @@
 * [`InventoryStacked`](./inventory_stacked.md)
 * [`InventoryGrid`](./inventory_grid.md)
 * [`InventoryGridStacked`](./inventory_grid_stacked.md)
+* [`ItemSlotBase`](./item_slot_base.md)
+* [`ItemRefSlot`](./item_ref_slot.md)
 * [`ItemSlot`](./item_slot.md)
 * [`CtrlInventory`](./ctrl_inventory.md)
 * [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md)

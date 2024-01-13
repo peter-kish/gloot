@@ -121,7 +121,6 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 func reset() -> void:
     clear()
-    _set_inventory(null)
 
 
 func serialize() -> Dictionary:
@@ -138,7 +137,7 @@ func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, false, KEY_ITEM_INDEX, [TYPE_INT, TYPE_FLOAT]):
         return false
 
-    clear()
+    reset()
 
     if source.has(KEY_ITEM_INDEX):
         var item_index: int = source[KEY_ITEM_INDEX]
