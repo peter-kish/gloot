@@ -3,8 +3,11 @@
 class_name ItemRefSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
+signal inventory_changed
+
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM_INDEX: String = "item_index"
+const EMPTY_SLOT = -1
 
 @export var inventory_path: NodePath :
     get:
@@ -18,12 +21,24 @@ const KEY_ITEM_INDEX: String = "item_index"
 
 var _wr_item: WeakRef = weakref(null)
 var _wr_inventory: WeakRef = weakref(null)
+@export var _equipped_item: int = EMPTY_SLOT :
+    get = _get_equipped_item_index, set = _set_equipped_item_index
 var inventory: Inventory = null :
     get = _get_inventory, set = _set_inventory
 
 
+func _get_equipped_item_index() -> int:
+    return _equipped_item
+
+
+func _set_equipped_item_index(new_value: int) -> void:
+    _equipped_item = new_value
+    equip_by_index(new_value)
+
+
 func _ready() -> void:
     _set_inventory_from_path(inventory_path)
+    equip_by_index(_equipped_item)
 
 
 func _set_inventory_from_path(path: NodePath) -> bool:
@@ -52,6 +67,7 @@ func _set_inventory(inventory: Inventory) -> void:
 
     clear()
     _wr_inventory = weakref(inventory)
+    inventory_changed.emit()
 
     if _get_inventory() != null:
         _connect_inventory_signals()
@@ -92,8 +108,19 @@ func equip(item: InventoryItem) -> bool:
         return false
 
     _wr_item = weakref(item)
+    _equipped_item = _get_inventory().get_item_index(item)
     item_equipped.emit()
     return true
+
+
+func equip_by_index(index: int) -> bool:
+    if _get_inventory() == null:
+        return false
+    if index < 0:
+        return false
+    if index >= _get_inventory().get_item_count():
+        return false
+    return equip(_get_inventory().get_items()[index])
 
 
 func clear() -> bool:
@@ -101,6 +128,7 @@ func clear() -> bool:
         return false
         
     _wr_item = weakref(null)
+    _equipped_item = EMPTY_SLOT
     cleared.emit()
     return true
 

@@ -100,7 +100,7 @@ static func _set_item_properties(inventory: Inventory, item_index: int, new_prop
     inventory.get_items()[item_index].properties = new_properties.duplicate()
 
 
-static func equip_item_in_item_slot(item_slot: ItemSlot, item: InventoryItem) -> void:
+static func equip_item_in_item_slot(item_slot: ItemSlotBase, item: InventoryItem) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
     
     var old_slot_state := item_slot.serialize()
@@ -114,7 +114,7 @@ static func equip_item_in_item_slot(item_slot: ItemSlot, item: InventoryItem) ->
     undo_redo_manager.commit_action()
 
 
-static func clear_item_slot(item_slot: ItemSlot) -> void:
+static func clear_item_slot(item_slot: ItemSlotBase) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
 
     var old_slot_state := item_slot.serialize()
@@ -128,7 +128,7 @@ static func clear_item_slot(item_slot: ItemSlot) -> void:
     undo_redo_manager.commit_action()
 
 
-static func _set_item_slot(item_slot: ItemSlot, item_slot_data: Dictionary) -> void:
+static func _set_item_slot(item_slot: ItemSlotBase, item_slot_data: Dictionary) -> void:
     item_slot.deserialize(item_slot_data)
 
 

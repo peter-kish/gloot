@@ -6,7 +6,6 @@ extends Control
 const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
-const ItemSlot = preload("res://addons/gloot/core/item_slot.gd")
 
 
 @export var item_slot_path: NodePath :
@@ -23,7 +22,7 @@ const ItemSlot = preload("res://addons/gloot/core/item_slot.gd")
             return
 
         if is_inside_tree():
-            assert(node is ItemSlot)
+            assert(node is ItemSlotBase)
             
         item_slot = node
         _refresh()
@@ -63,7 +62,7 @@ const ItemSlot = preload("res://addons/gloot/core/item_slot.gd")
         label_visible = new_label_visible
         if _label:
             _label.visible = label_visible
-var item_slot: ItemSlot :
+var item_slot: ItemSlotBase :
     get:
         return item_slot
     set(new_item_slot):
@@ -85,7 +84,7 @@ func _get_configuration_warnings() -> PackedStringArray:
     if item_slot_path.is_empty():
         return PackedStringArray([
             "This node is not linked to an item slot, so it can't display any content.\n" + \
-            "Set the item_slot_path property to point to an ItemSlot node."])
+            "Set the item_slot_path property to point to an ItemSlotBase node."])
     return PackedStringArray()
 
 
@@ -117,7 +116,7 @@ func _ready():
 
     var node: Node = get_node_or_null(item_slot_path)
     if is_inside_tree() && node:
-        assert(node is ItemSlot)
+        assert(node is ItemSlotBase)
     item_slot = node
 
     _hbox_container = HBoxContainer.new()
