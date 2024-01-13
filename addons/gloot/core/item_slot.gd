@@ -91,7 +91,9 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 
 func reset():
-    clear()
+    if _item:
+        _item.queue_free()
+    clear(false)
 
 
 func serialize() -> Dictionary:
