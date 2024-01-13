@@ -86,19 +86,23 @@ func test_return_item_to_source_inventory() -> void:
     assert(slot.clear())
     assert(inventory.has_item(item))
 
+    slot.remember_source_inventory = false
     assert(slot.equip(item))
-    assert(slot.clear(false))
+    assert(slot.clear())
     assert(!inventory.has_item(item))
+    slot.remember_source_inventory = true
 
     assert(inventory.add_item(item))
     assert(slot.equip(item))
     assert(slot.equip(item2))
     assert(inventory.has_item(item))
 
+    slot.remember_source_inventory = false
     assert(inventory.add_item(item2))
     assert(slot.equip(item))
-    assert(slot.equip(item2, false))
+    assert(slot.equip(item2))
     assert(!inventory.has_item(item))
+    slot.remember_source_inventory = true
 
 
 func test_equip_item_in_two_slots() -> void:

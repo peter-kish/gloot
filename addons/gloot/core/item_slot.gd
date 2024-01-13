@@ -1,10 +1,8 @@
 @tool
 @icon("res://addons/gloot/images/icon_item_slot.svg")
 class_name ItemSlot
-extends Node
+extends "res://addons/gloot/core/item_slot_base.gd"
 
-signal item_equipped
-signal cleared
 signal protoset_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
@@ -21,19 +19,20 @@ const KEY_ITEM: String = "item"
         item_protoset = new_item_protoset
         protoset_changed.emit()
         update_configuration_warnings()
+@export var remember_source_inventory: bool = true
 
 var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem
 
 
-func equip(item: InventoryItem, return_item_to_source_inventory: bool = true) -> bool:
+func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false
 
     if item.get_parent() == self:
         return false
 
-    if get_item() != null && !clear(return_item_to_source_inventory):
+    if get_item() != null && !clear():
         return false
 
     _wr_source_inventory = weakref(item.get_inventory())
@@ -52,11 +51,15 @@ func _on_item_added(item: InventoryItem) -> void:
     item_equipped.emit()
 
 
-func clear(return_item_to_source_inventory: bool = true) -> bool:
+func clear() -> bool:
+    return _clear_impl(remember_source_inventory)
+
+
+func _clear_impl(return_item: bool) -> bool:
     if get_item() == null:
         return false
         
-    if return_item_to_source_inventory:
+    if return_item:
         return _return_item_to_source_inventory()
         
     remove_child(get_item())
@@ -90,10 +93,10 @@ func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 
-func reset():
+func reset() -> void:
     if _item:
         _item.queue_free()
-    clear(false)
+    _clear_impl(false)
 
 
 func serialize() -> Dictionary:

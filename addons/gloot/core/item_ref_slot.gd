@@ -1,10 +1,7 @@
 @tool
 @icon("res://addons/gloot/images/icon_item_slot.svg")
 class_name ItemRefSlot
-extends Node
-
-signal item_equipped
-signal cleared
+extends "res://addons/gloot/core/item_slot_base.gd"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM_INDEX: String = "item_index"
@@ -21,7 +18,8 @@ const KEY_ITEM_INDEX: String = "item_index"
 
 var _wr_item: WeakRef = weakref(null)
 var _wr_inventory: WeakRef = weakref(null)
-var inventory: Inventory : get = _get_inventory, set = _set_inventory
+var inventory: Inventory = null :
+    get = _get_inventory, set = _set_inventory
 
 
 func _ready() -> void:
@@ -121,7 +119,7 @@ func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 
-func reset():
+func reset() -> void:
     clear()
     _set_inventory(null)
 
