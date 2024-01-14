@@ -60,7 +60,7 @@ func _clear_impl(return_item: bool) -> bool:
         return false
         
     if return_item:
-        return _return_item_to_source_inventory()
+        _return_item_to_source_inventory()
         
     remove_child(get_item())
     return true
@@ -76,6 +76,7 @@ func _return_item_to_source_inventory() -> bool:
 
 func _on_item_removed() -> void:
     _item = null
+    _wr_source_inventory = weakref(null)
     cleared.emit()
 
 
