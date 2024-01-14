@@ -1,4 +1,4 @@
-# `ItemSlot`
+# `ItemRefSlot`
 
 Inherits: [ItemSlotBase](./item_slot_base.md)
 
