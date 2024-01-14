@@ -25,6 +25,13 @@ var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem
 
 
+func _get_configuration_warnings() -> PackedStringArray:
+    if item_protoset == null:
+        return PackedStringArray([
+                "This item slot has no protoset. Set the 'item_protoset' field to be able to equip items."])
+    return PackedStringArray()
+
+
 func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false

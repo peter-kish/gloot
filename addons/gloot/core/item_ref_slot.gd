@@ -27,6 +27,14 @@ var inventory: Inventory = null :
     get = _get_inventory, set = _set_inventory
 
 
+func _get_configuration_warnings() -> PackedStringArray:
+    if inventory_path.is_empty():
+        return PackedStringArray([
+                "Inventory path not set! Inventory path needs to point to an inventory node, so " +\
+                "items from that inventory can be equipped in the slot."])
+    return PackedStringArray()
+
+
 func _get_equipped_item_index() -> int:
     return _equipped_item
 
