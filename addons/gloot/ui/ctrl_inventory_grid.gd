@@ -386,11 +386,14 @@ func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
 
 func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     var source_inventory: InventoryGrid = item.get_inventory()
-    if source_inventory.item_protoset != inventory.item_protoset:
-        return
-
+    
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
-    source_inventory.transfer_to(item, inventory, field_coords)
+    if source_inventory != null:
+        if source_inventory.item_protoset != inventory.item_protoset:
+            return
+        source_inventory.transfer_to(item, inventory, field_coords)
+    else:
+        inventory.add_item_at(item, field_coords)
 
 
 func get_field_coords(local_pos: Vector2) -> Vector2i:

@@ -47,7 +47,8 @@ A universal inventory system for the Godot game engine (version 4.2 and newer).
 
 ### Item Slots
 
-* ![](addons/gloot/images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Holds a reference to a given item from a given inventory. The slot can be cleared or bound to one item at a time. In case the item is removed from the inventory or the slot is bound to a different inventory, the slot is automatically cleared.
+* ![](addons/gloot/images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Can hold one inventory item.
+* ![](addons/gloot/images/icon_item_ref_slot.svg "ItemSlot icon") [`ItemRefSlot`](docs/item_ref_slot.md) - Can hold a reference to an item.
 
 ### UI Controls
 
@@ -65,7 +66,7 @@ User interfaces are usually unique for each project, but it often helps to have 
 * ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGridEx icon") [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) - Similar to [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) but with extended options for customization.
 
 ![](images/screenshots/ss_inventory_grid_ex.png "CtrlInventoryGridEx")
-* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlot icon") [`CtrlItemSlot`](docs/ctrl_item_slot.md) - UI control representing an ([`ItemSlot`](docs/item_slot.md)).
+* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlot icon") [`CtrlItemSlot`](docs/ctrl_item_slot.md) - UI control representing an [`ItemSlot`](docs/item_slot.md) or an [`ItemRefSlot`](docs/item_ref_slot.md).
 * ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlotEx icon") [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md) - Similar to [`CtrlItemSlot`](docs/ctrl_item_slot.md) but with extended options for customization.
 
 ## Installation

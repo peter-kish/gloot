@@ -8,7 +8,6 @@ signal item_removed(item)
 signal item_modified(item)
 signal contents_changed
 signal protoset_changed
-signal predelete
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
@@ -18,6 +17,7 @@ const ConstraintManager = preload("res://addons/gloot/core/constraints/constrain
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
             return
+        # TODO: Maybe the inventory should be cleared here?
         if not _items.is_empty():
             return
         item_protoset = new_item_protoset
@@ -55,12 +55,7 @@ func _enter_tree():
 
 
 func _exit_tree():
-    _items.clear()
-
-
-func _notification(what):
-    if what == NOTIFICATION_PREDELETE:
-        predelete.emit()        
+    _items.clear()  
 
 
 func _init() -> void:

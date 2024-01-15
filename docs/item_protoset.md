@@ -15,6 +15,7 @@ A resource type holding a set of inventory item prototypes in JSON format.
 * `parse(json: String)` - Parses the given json string and generates a new `prototypes` dictionary.
 * `add_prototype(id: String) -> void` - Adds a prototype with the given ID.
 * `remove_prototype(id: String) -> void` - Removes the prototype with the given ID.
+* `duplicate_prototype(id: String) -> void` - Duplicates the prototype with the given ID.
 * `rename_prototype(id: String, new_id: String) -> void` - Renames the prototype with the given ID to a new ID.
 * `get_prototype(id: String) -> Dictionary` - Returns the prototype with the given ID.
 * `has_prototype(id: String) -> bool` - Checks if a prototype with the given ID exists.

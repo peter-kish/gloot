@@ -100,13 +100,36 @@ static func _set_item_properties(inventory: Inventory, item_index: int, new_prop
     inventory.get_items()[item_index].properties = new_properties.duplicate()
 
 
-static func set_item_slot_equipped_item(item_slot: ItemSlot, new_equipped_item: int) -> void:
+static func equip_item_in_item_slot(item_slot: ItemSlotBase, item: InventoryItem) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+    
+    var old_slot_state := item_slot.serialize()
+    if !item_slot.equip(item):
+        return
+    var new_slot_state := item_slot.serialize()
+        
+    undo_redo_manager.create_action("Equip Inventory Item")
+    undo_redo_manager.add_do_method(GlootUndoRedo, "_set_item_slot", item_slot, new_slot_state)
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_slot", item_slot, old_slot_state)
+    undo_redo_manager.commit_action()
+
+
+static func clear_item_slot(item_slot: ItemSlotBase) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
 
-    undo_redo_manager.create_action("Set equipped_item")
-    undo_redo_manager.add_undo_property(item_slot, "equipped_item", item_slot.equipped_item)
-    undo_redo_manager.add_do_property(item_slot, "equipped_item", new_equipped_item)
+    var old_slot_state := item_slot.serialize()
+    if !item_slot.clear():
+        return
+    var new_slot_state := item_slot.serialize()
+
+    undo_redo_manager.create_action("Clear Inventory Item")
+    undo_redo_manager.add_do_method(GlootUndoRedo, "_set_item_slot", item_slot, new_slot_state)
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_slot", item_slot, old_slot_state)
     undo_redo_manager.commit_action()
+
+
+static func _set_item_slot(item_slot: ItemSlotBase, item_slot_data: Dictionary) -> void:
+    item_slot.deserialize(item_slot_data)
 
 
 static func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, to: Vector2i) -> void:
@@ -177,6 +200,17 @@ static func remove_prototype(protoset: ItemProtoset, id: String) -> void:
     undo_redo_manager.create_action("Remove Prototype")
     undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_prototypes", protoset, old_prototypes)
     undo_redo_manager.add_do_method(protoset, "remove_prototype", id)
+    undo_redo_manager.commit_action()
+
+
+static func duplicate_prototype(protoset: ItemProtoset, id: String) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+
+    var old_prototypes = _prototypes_deep_copy(protoset)
+
+    undo_redo_manager.create_action("Duplicate Prototype")
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_prototypes", protoset, old_prototypes)
+    undo_redo_manager.add_do_method(protoset, "duplicate_prototype", id)
     undo_redo_manager.commit_action()
 
 

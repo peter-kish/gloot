@@ -102,7 +102,11 @@ func free_item(item) -> void:
 
 # Free the given item slot, if valid
 func free_slot(slot) -> void:
-    _free_if_valid(slot)
+    if !is_node_valid(slot):
+        return
+    if slot.get_item() != null:
+        slot.get_item().free()
+    slot.free()
 
 
 func _free_if_valid(node) -> void:

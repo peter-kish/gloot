@@ -7,6 +7,7 @@ const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rec
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
+
 @export var item_slot_path: NodePath :
     get:
         return item_slot_path
@@ -21,7 +22,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
             return
 
         if is_inside_tree():
-            assert(node is ItemSlot)
+            assert(node is ItemSlotBase)
             
         item_slot = node
         _refresh()
@@ -61,7 +62,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         label_visible = new_label_visible
         if _label:
             _label.visible = label_visible
-var item_slot: ItemSlot :
+var item_slot: ItemSlotBase :
     get:
         return item_slot
     set(new_item_slot):
@@ -83,7 +84,7 @@ func _get_configuration_warnings() -> PackedStringArray:
     if item_slot_path.is_empty():
         return PackedStringArray([
             "This node is not linked to an item slot, so it can't display any content.\n" + \
-            "Set the item_slot_path property to point to an ItemSlot node."])
+            "Set the item_slot_path property to point to an ItemSlotBase node."])
     return PackedStringArray()
 
 
@@ -91,32 +92,20 @@ func _connect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if !item_slot.item_set.is_connected(_on_item_set):
-        item_slot.item_set.connect(_on_item_set)
-    if !item_slot.item_cleared.is_connected(_refresh):
-        item_slot.item_cleared.connect(_refresh)
-    if !item_slot.inventory_changed.is_connected(_on_inventory_changed):
-        item_slot.inventory_changed.connect(_on_inventory_changed)
+    if !item_slot.item_equipped.is_connected(_refresh):
+        item_slot.item_equipped.connect(_refresh)
+    if !item_slot.cleared.is_connected(_refresh):
+        item_slot.cleared.connect(_refresh)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !item_slot:
         return
 
-    if item_slot.item_set.is_connected(_on_item_set):
-        item_slot.item_set.disconnect(_on_item_set)
-    if item_slot.item_cleared.is_connected(_refresh):
-        item_slot.item_cleared.disconnect(_refresh)
-    if item_slot.inventory_changed.is_connected(_on_inventory_changed):
-        item_slot.inventory_changed.disconnect(_on_inventory_changed)
-
-
-func _on_item_set(_item: InventoryItem) -> void:
-    _refresh()
-
-
-func _on_inventory_changed(_inventory: Inventory) -> void:
-    _refresh()
+    if item_slot.item_equipped.is_connected(_refresh):
+        item_slot.item_equipped.disconnect(_refresh)
+    if item_slot.cleared.is_connected(_refresh):
+        item_slot.cleared.disconnect(_refresh)
 
 
 func _ready():
@@ -127,7 +116,7 @@ func _ready():
 
     var node: Node = get_node_or_null(item_slot_path)
     if is_inside_tree() && node:
-        assert(node is ItemSlot)
+        assert(node is ItemSlotBase)
     item_slot = node
 
     _hbox_container = HBoxContainer.new()
@@ -179,17 +168,10 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if !item_slot.can_hold_item(item):
         return
 
-    if item == item_slot.item:
+    if item == item_slot.get_item():
         return
 
-    if item.get_inventory() == null:
-        if !item_slot.inventory.add_item(item):
-            return
-    elif item.get_inventory() != item_slot.inventory:
-        if !item.get_inventory().transfer(item, item_slot.inventory):
-            return
-
-    item_slot.item = item
+    item_slot.equip(item)
 
 
 func _on_drop_zone_mouse_entered() -> void:
@@ -217,7 +199,7 @@ func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_p
         return
     var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)
     if ctrl_inventory_item_rect.item_slot:
-        ctrl_inventory_item_rect.item_slot.item = null
+        ctrl_inventory_item_rect.item_slot.clear()
 
 
 func _refresh() -> void:
@@ -226,16 +208,21 @@ func _refresh() -> void:
     if item_slot == null:
         return
     
-    if item_slot.item == null:
+    if item_slot.get_item() == null:
         return
 
-    var item = item_slot.item
+    var item = item_slot.get_item()
     if _label:
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
     if _ctrl_inventory_item_rect:
         _ctrl_inventory_item_rect.item = item
-        _ctrl_inventory_item_rect.texture = item.get_texture()
-        _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
+        if item.get_texture():
+            _ctrl_inventory_item_rect.texture = item.get_texture()
+        else:
+            _ctrl_inventory_item_rect.texture = default_item_icon
+
+        if _ctrl_inventory_item_rect.texture:
+            _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 
 
 func _clear() -> void:

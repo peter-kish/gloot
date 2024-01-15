@@ -8,6 +8,7 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var property_editor = $"%PropertyEditor"
 @onready var txt_prototype_id = $"%TxtPrototypeName"
 @onready var btn_add_prototype = $"%BtnAddPrototype"
+@onready var btn_duplicate_prototype = $"%BtnDuplicatePrototype"
 @onready var btn_remove_prototype = $"%BtnRemovePrototype"
 @onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
@@ -29,10 +30,12 @@ func _ready() -> void:
     txt_prototype_id.text_changed.connect(_on_prototype_id_changed)
     txt_prototype_id.text_submitted.connect(_on_prototype_id_entered)
     btn_add_prototype.pressed.connect(_on_btn_add_prototype)
+    btn_duplicate_prototype.pressed.connect(_on_btn_duplicate_prototype)
     btn_rename_prototype.pressed.connect(_on_btn_rename_prototype)
     btn_remove_prototype.pressed.connect(_on_btn_remove_prototype)
 
     btn_add_prototype.icon = EditorIcons.get_icon("Add")
+    btn_duplicate_prototype.icon = EditorIcons.get_icon("Duplicate")
     btn_rename_prototype.icon = EditorIcons.get_icon("Edit")
     btn_remove_prototype.icon = EditorIcons.get_icon("Remove")
     prototype_filter.filter_icon = EditorIcons.get_icon("Search")
@@ -48,6 +51,7 @@ func _refresh() -> void:
     _refresh_btn_add_prototype()
     _refresh_btn_rename_prototype()
     _refresh_btn_remove_prototype()
+    _refresh_btn_duplicate_prototype()
     _inspect_prototype_id(selected_prototype_id)
 
 
@@ -77,6 +81,10 @@ func _refresh_btn_remove_prototype() -> void:
     btn_remove_prototype.disabled = prototype_filter.get_selected_text().is_empty()
 
 
+func _refresh_btn_duplicate_prototype() -> void:
+    btn_duplicate_prototype.disabled = prototype_filter.get_selected_text().is_empty()
+
+
 func _on_protoset_changed() -> void:
     _refresh()
 
@@ -85,6 +93,7 @@ func _on_prototype_selected(index: int) -> void:
     selected_prototype_id = prototype_filter.values[index]
     _inspect_prototype_id(selected_prototype_id)
     _refresh_btn_remove_prototype()
+    _refresh_btn_duplicate_prototype()
 
 
 func _inspect_prototype_id(prototype_id: String) -> void:
@@ -137,6 +146,10 @@ func _on_prototype_id_entered(prototype_id: String) -> void:
 
 func _on_btn_add_prototype() -> void:
     _add_prototype_id(txt_prototype_id.text)
+
+
+func _on_btn_duplicate_prototype() -> void:
+    GlootUndoRedo.duplicate_prototype(protoset, selected_prototype_id)
 
 
 func _on_btn_rename_prototype() -> void:

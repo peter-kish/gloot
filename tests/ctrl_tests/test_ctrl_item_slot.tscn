@@ -3,7 +3,7 @@
 [ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="3"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="4"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="6"]
 

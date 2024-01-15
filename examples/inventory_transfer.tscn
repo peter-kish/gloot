@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="7"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_item.gd" id="8"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
 [node name="InventoryTransfer" type="Control"]
 layout_mode = 3
@@ -119,5 +119,5 @@ protoset = ExtResource("3")
 prototype_id = "item2"
 
 [node name="ItemSlot" type="Node" parent="."]
-script = ExtResource("7")
-inventory_path = NodePath("../Inventory")
+script = ExtResource("8_v60ia")
+item_protoset = ExtResource("3")

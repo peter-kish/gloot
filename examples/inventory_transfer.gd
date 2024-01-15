@@ -36,12 +36,16 @@ func _on_rtol_pressed() -> void:
 
 
 func _on_equip_pressed() -> void:
+    if slot.get_item() != null:
+        return
     var item: InventoryItem = ctrl_inventory_left.get_selected_inventory_item()
     if item == null:
         return
 
-    slot.item = item
+    slot.equip(item)
 
 
 func _on_unequip_pressed() -> void:
-    slot.item = null
+    if slot.get_item() != null:
+        inventory_left.add_item(slot.item)
+        slot.clear()

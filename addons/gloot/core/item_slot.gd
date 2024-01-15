@@ -1,218 +1,132 @@
 @tool
 @icon("res://addons/gloot/images/icon_item_slot.svg")
-extends Node
 class_name ItemSlot
+extends "res://addons/gloot/core/item_slot_base.gd"
 
-signal item_set(item)
-signal item_cleared
-signal inventory_changed(inventory)
+signal protoset_changed
 
-class _ItemMap:
-    var _map: Dictionary
-
-
-    func map_item(item: InventoryItem, slot: ItemSlot) -> void:
-        if item == null || slot == null:
-            return
-        _map[item] = slot
-
-
-    func unmap_item(item: InventoryItem) -> void:
-        if item == null:
-            return
-        if _map.has(item):
-            _map.erase(item)
-
-
-    func remove_item_from_slot(item: InventoryItem) -> void:
-        assert(item != null)
-        if _map.has(item):
-            _map[item].item = null
-            unmap_item(item)
-
-
-static var _item_map := _ItemMap.new()
-
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        if inventory_path == new_inv_path:
-            return
-        inventory_path = new_inv_path
-        update_configuration_warnings()
-        var node: Node = null
-
-        if is_inside_tree():
-            node = get_node_or_null(inventory_path)
-            assert(node == null || node is Inventory)
-        
-        equipped_item = -1
-        inventory = node
-
-@export var equipped_item: int = -1 :
-    get:
-        return equipped_item
-    set(new_equipped_item):
-        if new_equipped_item == equipped_item:
-            return
-        equipped_item = new_equipped_item
-        if equipped_item < 0:
-            item = null
-            return
-        if inventory:
-            var items = inventory.get_items()
-            if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-                item = items[equipped_item]
-
-var inventory :
-    get:
-        return inventory
-    set(new_inv):
-        if new_inv == inventory:
-            return
-
-        _disconnect_inventory_signals()
-        item = null
-        inventory = new_inv
-        _connect_inventory_signals()
-
-        inventory_changed.emit(inventory)
-        
-var item: InventoryItem :
-    get:
-        return item
-    set(new_item):
-        if new_item == item:
-            return
-        if new_item:
-            # Bind item
-            assert(can_hold_item(new_item), "ItemSlot can't hold that item!")
-            _disconnect_item_signals()
-            _item_map.remove_item_from_slot(new_item)
-
-            item = new_item
-            _connect_item_signals()
-            _item_map.map_item(item, self)
-            equipped_item = inventory.get_item_index(item)
-            item_set.emit(item)
-        else:
-            # Clear item
-            _disconnect_item_signals()
-            _item_map.unmap_item(item)
-
-            item = null
-            equipped_item = -1
-            item_cleared.emit()
-
-
-const KEY_INVENTORY: String = "inventory"
-const KEY_ITEM: String = "item"
 const Verify = preload("res://addons/gloot/core/verify.gd")
+const KEY_ITEM: String = "item"
+
+@export var item_protoset: ItemProtoset:
+    get:
+        return item_protoset
+    set(new_item_protoset):
+        if new_item_protoset == item_protoset:
+            return
+        if _item:
+            _item = null
+        item_protoset = new_item_protoset
+        protoset_changed.emit()
+        update_configuration_warnings()
+@export var remember_source_inventory: bool = true
+
+var _wr_source_inventory: WeakRef = weakref(null)
+var _item: InventoryItem
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if inventory_path.is_empty():
+    if item_protoset == null:
         return PackedStringArray([
-                "Inventory path not set! Inventory path needs to point to an inventory node, so " +\
-                "items from that inventory can be equipped in the slot."])
+                "This item slot has no protoset. Set the 'item_protoset' field to be able to equip items."])
     return PackedStringArray()
 
 
-func _connect_inventory_signals() -> void:
-    if !inventory:
-        return
+func equip(item: InventoryItem) -> bool:
+    if !can_hold_item(item):
+        return false
 
-    if !inventory.predelete.is_connected(_on_inventory_predelete):
-        inventory.predelete.connect(_on_inventory_predelete)
-    if !inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.connect(_on_item_removed)
+    if item.get_parent() == self:
+        return false
 
+    if get_item() != null && !clear():
+        return false
 
-func _disconnect_inventory_signals() -> void:
-    if !inventory:
-        return
+    _wr_source_inventory = weakref(item.get_inventory())
 
-    if inventory.predelete.is_connected(_on_inventory_predelete):
-        inventory.predelete.disconnect(_on_inventory_predelete)
-    if inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.disconnect(_on_item_removed)
+    if item.get_parent():
+        item.get_parent().remove_child(item)
 
-
-func _connect_item_signals() -> void:
-    if !item:
-        return
-
-    if !item.predelete.is_connected(_on_item_predelete):
-        item.predelete.connect(_on_item_predelete)
+    add_child(item)
+    if Engine.is_editor_hint():
+        item.owner = get_tree().edited_scene_root
+    return true
 
 
-func _disconnect_item_signals() -> void:
-    if !item:
-        return
-
-    if item.predelete.is_connected(_on_item_predelete):
-        item.predelete.disconnect(_on_item_predelete)
+func _on_item_added(item: InventoryItem) -> void:
+    _item = item
+    item_equipped.emit()
 
 
-func can_hold_item(new_item: InventoryItem) -> bool:
-    if new_item == null:
-        return true
-    if inventory == null:
+func clear() -> bool:
+    return _clear_impl(remember_source_inventory)
+
+
+func _clear_impl(return_item: bool) -> bool:
+    if get_item() == null:
+        return false
+        
+    if return_item:
+        _return_item_to_source_inventory()
+        
+    remove_child(get_item())
+    return true
+
+
+func _return_item_to_source_inventory() -> bool:
+    var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
+    if inventory != null:
+        if inventory.add_item(get_item()):
+            return true
+    return false
+
+
+func _on_item_removed() -> void:
+    _item = null
+    _wr_source_inventory = weakref(null)
+    cleared.emit()
+
+
+func get_item() -> InventoryItem:
+    return _item
+
+
+func can_hold_item(item: InventoryItem) -> bool:
+    assert(item_protoset != null, "Item protoset not set!")
+    if item == null:
+        return false
+    if item_protoset != item.protoset:
         return false
 
     return true
 
 
-func _ready():
-    inventory = get_node_or_null(inventory_path)
-    if equipped_item >= 0 && inventory:
-        var items = inventory.get_items()
-        if equipped_item < items.size() && can_hold_item(items[equipped_item]):
-            item = items[equipped_item]
-
-
-func _on_inventory_predelete():
-    inventory = null
-    equipped_item = -1
-
-
-func _on_item_removed(pItem: InventoryItem) -> void:
-    if pItem == item:
-        equipped_item = -1
-
-
-func _on_item_predelete():
-    equipped_item = -1
-
-
-func reset():
-    equipped_item = -1
+func reset() -> void:
+    if _item:
+        _item.queue_free()
+    _clear_impl(false)
 
 
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    # TODO: Find a better way to serialize inventory and item references
-    if equipped_item > -1:
-        result[KEY_ITEM] = equipped_item
+    if _item != null:
+        result[KEY_ITEM] = _item.serialize()
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_INVENTORY, [TYPE_STRING, TYPE_NODE_PATH]):
-        return false
-    if !Verify.dict(source, false, KEY_ITEM, [TYPE_INT, TYPE_FLOAT]):
+    if !Verify.dict(source, false, KEY_ITEM, [TYPE_DICTIONARY]):
         return false
 
     reset()
 
     if source.has(KEY_ITEM):
-        equipped_item = source[KEY_ITEM]
-        if item == null:
-            print("Warning: Node not found (%s)!" % source[KEY_ITEM])
+        var item := InventoryItem.new()
+        if !item.deserialize(source[KEY_ITEM]):
             return false
+        equip(item)
 
     return true
 

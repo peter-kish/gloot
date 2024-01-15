@@ -32,12 +32,12 @@ func parse(json: String) -> void:
     assert(parse_result is Array, "JSON file must contain an array!")
 
     for prototype in parse_result:
-        assert(prototype is Dictionary, "Item definition must be a dictionary!")
-        assert(prototype.has(KEY_ID), "Item definition must have an '%s' property!" % KEY_ID)
+        assert(prototype is Dictionary, "Item prototype must be a dictionary!")
+        assert(prototype.has(KEY_ID), "Item prototype must have an '%s' property!" % KEY_ID)
         assert(prototype[KEY_ID] is String, "'%s' property must be a string!" % KEY_ID)
 
         var id = prototype[KEY_ID]
-        assert(!_prototypes.has(id), "Item definition ID '%s' already in use!")
+        assert(!_prototypes.has(id), "Item prototype ID '%s' already in use!" % id)
         _prototypes[id] = prototype
         _unstringify_prototype(_prototypes[id])
 
@@ -95,6 +95,16 @@ func add_prototype(id: String) -> void:
 func remove_prototype(id: String) -> void:
     assert(has_prototype(id), "No prototype for ID")
     _prototypes.erase(id)
+    _update_json_data()
+    _save()
+
+
+func duplicate_prototype(id: String) -> void:
+    assert(has_prototype(id), "No prototype for ID")
+    var new_id = "%s_duplicate" % id
+    var new_dict = _prototypes[id].duplicate()
+    new_dict[KEY_ID] = new_id
+    _prototypes[new_id] = new_dict
     _update_json_data()
     _save()
 

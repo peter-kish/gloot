@@ -6,7 +6,10 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
-signal predelete
+signal added_to_inventory(inventory)
+signal removed_from_inventory(inventory)
+signal equipped_in_slot(item_slot)
+signal removed_from_slot(item_slot)
 
 @export var protoset: Resource :
     get:
@@ -46,6 +49,7 @@ signal predelete
         update_configuration_warnings()
 
 var _inventory: Inventory
+var _item_slot: ItemSlot
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
@@ -85,29 +89,60 @@ func reset_properties() -> void:
 
 func _notification(what):
     if what == NOTIFICATION_PARENTED:
-        if !(get_parent() is Inventory):
-            _inventory = null
-            return
-        _inventory = get_parent()
-        var inv_item_protoset = get_parent().get("item_protoset")
-        if inv_item_protoset:
-            protoset = inv_item_protoset
-        _on_item_added(get_parent())
+        _on_parented(get_parent())
     elif what == NOTIFICATION_UNPARENTED:
-        _on_item_removed(_inventory)
+        _on_unparented()
+
+
+func _on_parented(parent: Node) -> void:
+    if parent is Inventory:
+        _on_added_to_inventory(parent as Inventory)
+    else:
         _inventory = null
-    elif what == NOTIFICATION_PREDELETE:
-        predelete.emit()
+
+    if parent is ItemSlot:
+        _link_to_slot(parent as ItemSlot)
+    else:
+        _unlink_from_slot()
 
 
-func _on_item_removed(obj: Object):
-    if obj && obj.has_method("_on_item_removed"):
-        obj._on_item_removed(self)
+func _on_added_to_inventory(inventory: Inventory) -> void:
+    assert(inventory != null)
+    _inventory = inventory
+    if _inventory.item_protoset:
+        protoset = _inventory.item_protoset
+    
+    added_to_inventory.emit(_inventory)
+    _inventory._on_item_added(self)
 
 
-func _on_item_added(obj: Object):
-    if obj && obj.has_method("_on_item_added"):
-        obj._on_item_added(self)
+func _on_unparented() -> void:
+    if _inventory:
+        _on_removed_from_inventory(_inventory)
+    _inventory = null
+
+    _unlink_from_slot()
+
+
+func _on_removed_from_inventory(inventory: Inventory) -> void:
+    if inventory:
+        removed_from_inventory.emit(inventory)
+        inventory._on_item_removed(self)
+
+
+func _link_to_slot(item_slot: ItemSlot) -> void:
+    _item_slot = item_slot
+    _item_slot._on_item_added(self)
+    equipped_in_slot.emit(item_slot)
+
+
+func _unlink_from_slot() -> void:
+    if _item_slot == null:
+        return
+    var temp_slot := _item_slot
+    _item_slot = null
+    temp_slot._on_item_removed()
+    removed_from_slot.emit(temp_slot)
 
 
 func get_inventory() -> Inventory:
