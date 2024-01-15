@@ -1,5 +1,5 @@
 @tool
-@icon("res://addons/gloot/images/icon_item_slot.svg")
+@icon("res://addons/gloot/images/icon_item_ref_slot.svg")
 class_name ItemRefSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
