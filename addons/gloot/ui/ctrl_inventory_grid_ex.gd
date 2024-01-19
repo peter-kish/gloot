@@ -49,6 +49,7 @@ func _dequeue_highlight():
 
 func _refresh() -> void:
     super._refresh()
+    _refresh_field_background_grid()
 
 
 func _refresh_selection() -> void:
