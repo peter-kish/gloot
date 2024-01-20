@@ -24,8 +24,17 @@ static var _grabbed_dragable: CtrlDragable = null
 static var _grab_offset: Vector2
 
 var drag_preview: Control
-var _preview_node := Node2D.new()
+var _preview_node: Node2D
 var drag_z_index := 1
+
+
+func _init() -> void:
+    _preview_node = Node2D.new()
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE && (_preview_node != null):
+        _preview_node.free()
 
 
 static func grab(dragable: CtrlDragable) -> void:

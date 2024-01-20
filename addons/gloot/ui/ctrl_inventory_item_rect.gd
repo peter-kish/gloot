@@ -91,6 +91,11 @@ func _ready() -> void:
     drag_preview = CtrlInventoryItemRect.new()
 
 
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE && (drag_preview != null):
+        drag_preview.free()
+
+
 func drag_start() -> void:
     if drag_preview != null:
         drag_preview.item = item
