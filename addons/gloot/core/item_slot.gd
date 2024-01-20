@@ -22,7 +22,36 @@ const KEY_ITEM: String = "item"
 @export var remember_source_inventory: bool = true
 
 var _wr_source_inventory: WeakRef = weakref(null)
-var _item: InventoryItem
+var _item: InventoryItem :
+    get:
+        return _item
+    set(new_item):
+        _item = new_item
+var _serialized_format: Dictionary = {} :
+    get:
+        return _serialized_format
+    set(new_serialized_format):
+        _serialized_format = new_serialized_format
+
+
+func _get_property_list():
+    return [
+        {
+            "name": "_serialized_format",
+            "type": TYPE_DICTIONARY,
+            "usage": PROPERTY_USAGE_STORAGE
+        },
+    ]
+
+
+func _update_serialized_format() -> void:
+    if Engine.is_editor_hint():
+        _serialized_format = serialize()
+
+
+func _ready() -> void:
+    if !_serialized_format.is_empty():
+        deserialize(_serialized_format)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -36,26 +65,21 @@ func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false
 
-    if item.get_parent() == self:
-        return false
-
     if get_item() != null && !clear():
         return false
 
     _wr_source_inventory = weakref(item.get_inventory())
 
-    if item.get_parent():
-        item.get_parent().remove_child(item)
+    if item.get_item_slot() != null:
+        item.get_item_slot().clear()
+    if item.get_inventory() != null:
+        item.get_inventory().remove_item(item)
 
-    add_child(item)
-    if Engine.is_editor_hint():
-        item.owner = get_tree().edited_scene_root
-    return true
-
-
-func _on_item_added(item: InventoryItem) -> void:
     _item = item
+    _item._item_slot = self
     item_equipped.emit()
+    _update_serialized_format()
+    return true
 
 
 func clear() -> bool:
@@ -66,25 +90,23 @@ func _clear_impl(return_item: bool) -> bool:
     if get_item() == null:
         return false
         
+    var temp_item = _item
+    _item._item_slot = null
+    _item = null
     if return_item:
-        _return_item_to_source_inventory()
-        
-    remove_child(get_item())
+        _return_item_to_source_inventory(temp_item)
+    _wr_source_inventory = weakref(null)
+    cleared.emit()
+    _update_serialized_format()
     return true
 
 
-func _return_item_to_source_inventory() -> bool:
+func _return_item_to_source_inventory(item: InventoryItem) -> bool:
     var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
     if inventory != null:
-        if inventory.add_item(get_item()):
+        if inventory.add_item(item):
             return true
     return false
-
-
-func _on_item_removed() -> void:
-    _item = null
-    _wr_source_inventory = weakref(null)
-    cleared.emit()
 
 
 func get_item() -> InventoryItem:
@@ -103,7 +125,8 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 func reset() -> void:
     if _item:
-        _item.queue_free()
+        _item.free()
+    _item = null
     _clear_impl(false)
 
 
