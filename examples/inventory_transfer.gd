@@ -47,5 +47,5 @@ func _on_equip_pressed() -> void:
 
 func _on_unequip_pressed() -> void:
     if slot.get_item() != null:
-        inventory_left.add_item(slot.item)
+        inventory_left.add_item(slot.get_item())
         slot.clear()

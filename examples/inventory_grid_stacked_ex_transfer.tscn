@@ -175,7 +175,6 @@ _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"0": "Vector2i(0, 0)",
 "1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
@@ -213,7 +212,6 @@ _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"0": "Vector2i(0, 0)",
 "1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
@@ -252,4 +250,5 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_lyc83")
+protoset = ExtResource("8_8dj3i")
 _serialized_format = {}

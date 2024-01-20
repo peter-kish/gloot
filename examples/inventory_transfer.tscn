@@ -123,4 +123,5 @@ _serialized_format = {
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_v60ia")
+protoset = ExtResource("3")
 _serialized_format = {}
