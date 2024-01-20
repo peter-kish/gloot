@@ -27,9 +27,9 @@ func connect_item_slot_signals():
     item_slot.item_equipped.connect(_refresh)
     item_slot.cleared.connect(_refresh)
 
-    if !item_slot.item_protoset:
+    if !item_slot.protoset:
         return
-    item_slot.item_protoset.changed.connect(_refresh)
+    item_slot.protoset.changed.connect(_refresh)
     item_slot.protoset_changed.connect(_refresh)
 
 
@@ -40,9 +40,9 @@ func disconnect_item_slot_signals():
     item_slot.item_equipped.disconnect(_refresh)
     item_slot.cleared.disconnect(_refresh)
 
-    if !item_slot.item_protoset:
+    if !item_slot.protoset:
         return
-    item_slot.item_protoset.changed.disconnect(_refresh)
+    item_slot.protoset.changed.disconnect(_refresh)
     item_slot.protoset_changed.disconnect(_refresh)
 
 
@@ -51,9 +51,9 @@ func init(item_slot_: ItemSlot) -> void:
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || item_slot == null || item_slot.item_protoset == null:
+    if !is_inside_tree() || item_slot == null || item_slot.protoset == null:
         return
-    prototype_id_filter.set_values(item_slot.item_protoset._prototypes.keys())
+    prototype_id_filter.set_values(item_slot.protoset._prototypes.keys())
 
 
 func _ready() -> void:
@@ -82,7 +82,7 @@ func _on_prototype_id_picked(index: int) -> void:
     var item := InventoryItem.new()
     if item_slot.get_item() != null:
         item_slot.get_item().queue_free()
-    item.protoset = item_slot.item_protoset
+    item.protoset = item_slot.protoset
     item.prototype_id = prototype_id
     GlootUndoRedo.equip_item_in_item_slot(item_slot, item)
     

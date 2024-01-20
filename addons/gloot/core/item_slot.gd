@@ -8,13 +8,13 @@ signal protoset_changed
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
-@export var item_protoset: ItemProtoset:
-    set(new_item_protoset):
-        if new_item_protoset == item_protoset:
+@export var protoset: ItemProtoset:
+    set(new_protoset):
+        if new_protoset == protoset:
             return
         if _item:
             _item = null
-        item_protoset = new_item_protoset
+        protoset = new_protoset
         protoset_changed.emit()
         update_configuration_warnings()
 @export var remember_source_inventory: bool = true
@@ -24,9 +24,9 @@ var _item: InventoryItem
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if item_protoset == null:
+    if protoset == null:
         return PackedStringArray([
-                "This item slot has no protoset. Set the 'item_protoset' field to be able to equip items."])
+                "This item slot has no protoset. Set the 'protoset' field to be able to equip items."])
     return PackedStringArray()
 
 
@@ -90,10 +90,10 @@ func get_item() -> InventoryItem:
 
 
 func can_hold_item(item: InventoryItem) -> bool:
-    assert(item_protoset != null, "Item protoset not set!")
+    assert(protoset != null, "Item protoset not set!")
     if item == null:
         return false
-    if item_protoset != item.protoset:
+    if protoset != item.protoset:
         return false
 
     return true
