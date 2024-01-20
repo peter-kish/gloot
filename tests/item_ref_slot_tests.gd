@@ -17,9 +17,9 @@ func init_suite():
 
 func init_test() -> void:
     inventory1 = Inventory.new()
-    inventory1.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory1.protoset = preload("res://tests/data/item_definitions_basic.tres")
     inventory2 = Inventory.new()
-    inventory2.item_protoset = preload("res://tests/data/item_definitions_basic.tres")
+    inventory2.protoset = preload("res://tests/data/item_definitions_basic.tres")
     item = inventory1.create_and_add_item("minimal_item");
     slot = ItemRefSlot.new()
 
