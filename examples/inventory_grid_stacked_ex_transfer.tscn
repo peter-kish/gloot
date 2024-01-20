@@ -248,4 +248,4 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_lyc83")
-item_protoset = ExtResource("8_8dj3i")
+_serialized_format = {}

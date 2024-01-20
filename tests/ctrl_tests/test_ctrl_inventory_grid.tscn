@@ -31,8 +31,7 @@ _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"0": "Vector2i(0, 2)",
-"1": "Vector2i(0, 0)"
+"0": "Vector2i(0, 2)"
 },
 "size": "Vector2i(5, 5)"
 }

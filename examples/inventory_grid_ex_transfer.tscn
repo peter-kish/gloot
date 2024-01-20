@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot_ex.gd" id="6"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="7"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="9"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="10"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_mbp7e"]
@@ -153,7 +152,6 @@ _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"0": "Vector2i(0, 0)",
 "1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
@@ -178,7 +176,6 @@ _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"0": "Vector2i(0, 0)",
 "1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
@@ -203,4 +200,5 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_mbp7e")
-item_protoset = ExtResource("1")
+protoset = ExtResource("1")
+_serialized_format = {}

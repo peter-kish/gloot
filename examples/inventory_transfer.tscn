@@ -94,7 +94,6 @@ script = ExtResource("2")
 protoset = ExtResource("3")
 _serialized_format = {
 "constraints": {},
-"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"
@@ -102,7 +101,8 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item2"
 }],
-"node_name": "Inventory"
+"node_name": "Inventory",
+"protoset": "res://tests/data/item_definitions_basic.tres"
 }
 
 [node name="Inventory2" type="Node" parent="."]
@@ -110,7 +110,6 @@ script = ExtResource("2")
 protoset = ExtResource("3")
 _serialized_format = {
 "constraints": {},
-"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"
@@ -118,9 +117,10 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item2"
 }],
-"node_name": "Inventory2"
+"node_name": "Inventory2",
+"protoset": "res://tests/data/item_definitions_basic.tres"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_v60ia")
-item_protoset = ExtResource("3")
+_serialized_format = {}

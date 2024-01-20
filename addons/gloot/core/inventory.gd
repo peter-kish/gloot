@@ -96,17 +96,14 @@ func _init() -> void:
     _constraint_manager.constraint_disabled.connect(func(constraint: int): constraint_disabled.emit(constraint))
 
 
-func _notification(what: int) -> void:
-    if what == NOTIFICATION_PREDELETE:
-        _constraint_manager.free()
-        _constraint_manager = null
-
-
 func _on_constraint_enabled(constraint: int) -> void:
     if constraint != ConstraintManager.Constraint.GRID:
         return
-    if _constraint_manager.get_grid_constraint().size_changed.is_connected(_update_serialized_format):
-        _constraint_manager.get_grid_constraint().size_changed.connect(_update_serialized_format)
+    var grid_constraint := _constraint_manager.get_grid_constraint()
+    if !grid_constraint.size_changed.is_connected(_update_serialized_format):
+        grid_constraint.size_changed.connect(_update_serialized_format)
+    if !grid_constraint.item_moved.is_connected(_on_item_moved):
+        grid_constraint.item_moved.connect(_on_item_moved)
     constraint_enabled.emit(constraint)
 
 
@@ -189,6 +186,8 @@ func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
 
+    if item.get_item_slot() != null:
+        item.get_item_slot().clear()
     if item.get_inventory() != null:
         item.get_inventory().remove_item(item)
 
@@ -254,6 +253,7 @@ func _can_remove_item(item: InventoryItem) -> bool:
 func remove_all_items() -> void:
     while _items.size() > 0:
         remove_item(_items[0])
+    # TODO: Check if this is neccessary:
     _update_serialized_format()
 
 
@@ -296,7 +296,6 @@ func enable_stacks_constraint() -> void:
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(_constraint_manager != null, "Missing constraint manager!")
     _constraint_manager.enable_grid_constraint(size)
-    _constraint_manager.get_grid_constraint().item_moved.connect(_on_item_moved)
 
 
 func disable_weight_constraint(capacity: float = 0) -> void:

@@ -53,17 +53,14 @@ func test_equip_item() -> void:
     assert(slot.get_item() == null)
     assert(slot.equip(item))
     assert(slot.get_item() == item)
-    assert(item.get_parent() == slot)
-    assert(slot.get_child_count() == 1)
+    assert(item.get_item_slot() == slot)
 
     assert(slot.equip(item2))
     assert(slot.get_item() == item2)
-    assert(item2.get_parent() == slot)
-    assert(slot.get_child_count() == 1)
+    assert(item2.get_item_slot() == slot)
 
     slot.clear()
     assert(slot.get_item() == null)
-    assert(slot.get_child_count() == 0)
 
 
 func test_delete_item() -> void:
@@ -130,18 +127,25 @@ func test_reset() -> void:
 
 func test_serialize() -> void:
     assert(slot.equip(item))
+    var expected_protoset := item.protoset
+    var expected_prototype_id := item.prototype_id
+    var expected_properties := item.get_properties()
+
     var item_slot_data = slot.serialize()
-    slot.get_item().queue_free()
     slot.reset()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().protoset == item.protoset)
-    assert(slot.get_item().prototype_id == item.prototype_id)
-    assert(slot.get_item().properties == item.properties)
+    assert(slot.get_item().protoset == expected_protoset)
+    assert(slot.get_item().prototype_id == expected_prototype_id)
+    assert(slot.get_item().get_properties() == expected_properties)
 
 
 func test_serialize_json() -> void:
     assert(slot.equip(item))
+    var expected_protoset := item.protoset
+    var expected_prototype_id := item.prototype_id
+    var expected_properties := item.get_properties()
+
     var item_slot_data = slot.serialize()
 
     # To and from JSON serialization
@@ -150,10 +154,9 @@ func test_serialize_json() -> void:
     assert(test_json_conv.parse(json_string) == OK)
     item_slot_data = test_json_conv.data
 
-    slot.get_item().queue_free()
     slot.reset()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().protoset == item.protoset)
-    assert(slot.get_item().prototype_id == item.prototype_id)
-    assert(slot.get_item().properties == item.properties)
+    assert(slot.get_item().protoset == expected_protoset)
+    assert(slot.get_item().prototype_id == expected_prototype_id)
+    assert(slot.get_item().get_properties() == expected_properties)

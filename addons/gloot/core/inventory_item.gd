@@ -96,37 +96,10 @@ func duplicate() -> InventoryItem:
 
 func _notification(what):
     if what == NOTIFICATION_PREDELETE:
+        if _item_slot != null:
+            _item_slot.clear()
         if _inventory != null:
             _inventory.remove_item(self)
-
-
-func _on_unparented() -> void:
-    if _inventory:
-        _on_removed_from_inventory(_inventory)
-    _inventory = null
-
-    _unlink_from_slot()
-
-
-func _on_removed_from_inventory(inventory: Inventory) -> void:
-    if inventory:
-        removed_from_inventory.emit(inventory)
-        inventory._on_item_removed(self)
-
-
-func _link_to_slot(item_slot: ItemSlot) -> void:
-    _item_slot = item_slot
-    _item_slot._on_item_added(self)
-    equipped_in_slot.emit(item_slot)
-
-
-func _unlink_from_slot() -> void:
-    if _item_slot == null:
-        return
-    var temp_slot := _item_slot
-    _item_slot = null
-    temp_slot._on_item_removed()
-    removed_from_slot.emit(temp_slot)
 
 
 func get_inventory() -> Inventory:

@@ -93,11 +93,9 @@ _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
 "weight_constraint": {
-"capacity": 50.0,
-"occupied_space": 31.0
+"capacity": 50.0
 }
 },
-"protoset": "res://tests/data/item_definitions_stack.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "minimal_item"
@@ -111,7 +109,8 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "limited_stackable_item"
 }],
-"node_name": "InventoryStackedLeft"
+"node_name": "InventoryStackedLeft",
+"protoset": "res://tests/data/item_definitions_stack.tres"
 }
 
 [node name="InventoryStackedRight" type="Node" parent="."]
@@ -122,11 +121,9 @@ _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
 "weight_constraint": {
-"capacity": 50.0,
-"occupied_space": 31.0
+"capacity": 50.0
 }
 },
-"protoset": "res://tests/data/item_definitions_stack.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "minimal_item"
@@ -140,9 +137,10 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "limited_stackable_item"
 }],
-"node_name": "InventoryStackedRight"
+"node_name": "InventoryStackedRight",
+"protoset": "res://tests/data/item_definitions_stack.tres"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_worre")
-item_protoset = ExtResource("3")
+_serialized_format = {}
