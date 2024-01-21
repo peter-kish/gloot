@@ -36,7 +36,7 @@ func _parse_property(object: Object,
         hint_string: String,
         usage: int,
         wide: bool) -> bool:
-    if (object is ItemRefSlot) && name == "equipped_item":
+    if (object is ItemRefSlot) && name == "_equipped_item":
         add_property_editor(name, ItemRefSlotButton.new())
         return true
     return false
