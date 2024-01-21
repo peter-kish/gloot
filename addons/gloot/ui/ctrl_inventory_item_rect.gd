@@ -59,8 +59,8 @@ func _connect_item_signals(new_item: InventoryItem) -> void:
         new_item.protoset_changed.connect(queue_redraw)
     if !new_item.prototype_id_changed.is_connected(queue_redraw):
         new_item.prototype_id_changed.connect(queue_redraw)
-    if !new_item.properties_changed.is_connected(queue_redraw):
-        new_item.properties_changed.connect(queue_redraw)
+    if !new_item.property_changed.is_connected(_on_property_changed):
+        new_item.property_changed.connect(_on_property_changed)
 
 
 func _disconnect_item_signals() -> void:
@@ -71,8 +71,12 @@ func _disconnect_item_signals() -> void:
         item.protoset_changed.disconnect(queue_redraw)
     if item.prototype_id_changed.is_connected(queue_redraw):
         item.prototype_id_changed.disconnect(queue_redraw)
-    if item.properties_changed.is_connected(queue_redraw):
-        item.properties_changed.disconnect(queue_redraw)
+    if item.property_changed.is_connected(_on_property_changed):
+        item.property_changed.disconnect(_on_property_changed)
+
+
+func _on_property_changed(_property: String) -> void:
+    queue_redraw()
 
 
 func _get_item_size() -> Vector2:
