@@ -20,6 +20,7 @@ var inventory: Inventory :
 
         _refresh()
 var _inventory_control: Control
+var _inventory_container: Control
 var _properties_editor: Window
 
 
@@ -58,44 +59,43 @@ func _refresh() -> void:
         return
         
     # Remove the inventory control, if present
-    if _inventory_control:
-        scroll_container.remove_child(_inventory_control)
-        _inventory_control.queue_free()
-        _inventory_control = null
+    if _inventory_container:
+        scroll_container.remove_child(_inventory_container)
+        _inventory_container.queue_free()
+        _inventory_container = null
 
     # Create the appropriate inventory control and populate it
-    _inventory_control = _create_inventory_control()
-    scroll_container.add_child(_inventory_control)
+    _inventory_container = _create_inventory_container()
+    scroll_container.add_child(_inventory_container)
 
     # Set prototype_id_filter values
     prototype_id_filter.set_values(inventory.protoset._prototypes.keys())
 
 
-func _create_inventory_control() -> Control:
+func _create_inventory_container() -> Control:
     var vbox_container: Control = VBoxContainer.new()
     vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
-    var inventory_control: Control = null
     var capacity_control: GlootInventoryCapacity = null
 
     if inventory.get_grid_constraint() != null:
-        inventory_control = GlootInventoryGrid.new()
-        inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
-        inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
+        _inventory_control = GlootInventoryGrid.new()
+        _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
+        _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
     else:
-        inventory_control = GlootInventory.new()
-    inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
-    inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
-    inventory_control.inventory = inventory
-    inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
-    inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
+        _inventory_control = GlootInventory.new()
+    _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
+    _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
+    _inventory_control.inventory = inventory
+    _inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
+    _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
 
     if inventory.get_weight_constraint() != null:
         capacity_control = GlootInventoryCapacity.new()
         capacity_control.inventory = inventory
 
-    if inventory_control:
-        vbox_container.add_child(inventory_control)
+    if _inventory_control:
+        vbox_container.add_child(_inventory_control)
     if capacity_control:
         vbox_container.add_child(capacity_control)
 
