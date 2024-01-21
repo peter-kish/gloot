@@ -37,7 +37,6 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    free_item(item)
     free_inventory(inventory)
 
 
@@ -126,8 +125,6 @@ func test_create_and_add_item_at() -> void:
 
         if inventory.has_item(new_item):
             inventory.remove_item(new_item)
-        if new_item != null:
-            new_item.free()
 
 
 func test_get_items_under() -> void:
@@ -149,7 +146,6 @@ func test_get_items_under() -> void:
 
         for new_item in new_items:
             inventory.remove_item(new_item)
-            new_item.free()
 
 
 func test_move_item_to() -> void:
@@ -169,7 +165,6 @@ func test_move_item_to() -> void:
         assert((grid_constraint.get_item_position(new_item) == data.input) == data.expected)
 
         inventory.remove_item(new_item)
-        new_item.free()
 
 
 func test_transfer_to() -> void:
@@ -228,9 +223,6 @@ func test_sort() -> void:
     inventory.remove_item(item1)
     inventory.remove_item(item2)
     inventory.remove_item(item3)
-    item1.free()
-    item2.free()
-    item3.free()
 
 
 func test_get_space_for() -> void:
@@ -260,7 +252,6 @@ func test_get_space_for() -> void:
         assert(grid_constraint.get_space_for(item).eq(data.expected))
 
     inventory.remove_item(item2)
-    free_item(item2)
 
 
 func test_serialize() -> void:

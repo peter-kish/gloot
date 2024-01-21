@@ -35,10 +35,6 @@ func cleanup_test() -> void:
     free_inventory(inventory_3x3)
     free_inventory(inventory_3x3_2)
 
-    free_item(item_1x1)
-    free_item(item_2x2)
-    free_item(item_2x2_2)
-
 
 func test_has_place_for() -> void:
     # Empty inventory
@@ -67,7 +63,7 @@ func test_add_item_automerge() -> void:
     # Inventory containing 2x2 item
     assert(inventory_3x3.add_item_automerge(item_2x2_2))
     assert(inventory_3x3.get_item_count() == 1)
-    assert(!is_node_valid(item_2x2_2))
+    assert(!inventory_3x3.has_item(item_2x2_2));
 
     item_2x2_2 = InventoryItem.new()
     item_2x2_2.protoset = TEST_PROTOSET
@@ -130,7 +126,7 @@ func test_automerge() -> void:
     assert(InventoryGridStacked.set_item_stack_size(item_2x2_2, 2))
     assert(inventory_3x3_2.transfer_automerge(item_2x2_2, inventory_3x3))
     assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
-    assert(!is_node_valid(item_2x2_2))
+    assert(!inventory_3x3_2.has_item(item_2x2_2))
 
 
 func test_autosplitmerge() -> void:

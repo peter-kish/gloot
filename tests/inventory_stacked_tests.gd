@@ -19,7 +19,6 @@ func init_suite() -> void:
         "test_change_capacity",
         "test_unlimited_capacity",
         "test_invalid_capacity",
-        "test_contents_changed_signal",
         "test_stack_split_join",
         "test_automerge",
         "test_automerge_custom_dst_properties",
@@ -49,13 +48,6 @@ func init_test() -> void:
 func cleanup_test() -> void:
     free_inventory(inventory)
     free_inventory(inventory_2)
-
-    free_item(item)
-    free_item(big_item)
-    free_item(stackable_item)
-    free_item(stackable_item_2)
-    free_item(limited_stackable_item)
-    free_item(limited_stackable_item_2)
 
 
 func test_space() -> void:
@@ -92,17 +84,6 @@ func test_invalid_capacity() -> void:
     assert(inventory.add_item(big_item))
     inventory.capacity = 19
     assert(inventory.capacity == 21)
-
-
-func test_contents_changed_signal() -> void:
-    # These checks cause some warnings:
-    #
-    # assert(inventory.add_item(item))
-    # assert(inventory.occupied_space == 1.0)
-    # item.queue_free()
-    # await inventory.contents_changed
-    # assert(inventory.occupied_space == 0.0)
-    pass
 
 
 func test_stack_split_join() -> void:

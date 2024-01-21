@@ -39,10 +39,6 @@ func cleanup_test() -> void:
     free_inventory(inventory_3x3)
     free_inventory(inventory_3x3_2)
 
-    free_item(item_1x1)
-    free_item(item_2x2)
-    free_item(item_2x2_2)
-
 
 func test_add_item() -> void:
     assert(inventory_3x3.add_item(item_1x1))

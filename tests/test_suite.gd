@@ -92,20 +92,12 @@ func clear_inventory(inventory: Inventory) -> void:
     while inventory.get_item_count() > 0:
         var item = inventory.get_items()[0]
         assert(inventory.remove_item(item))
-        item.free()
-
-
-# Free the given inventory item, if valid
-func free_item(item) -> void:
-    _free_if_valid(item)
 
 
 # Free the given item slot, if valid
 func free_slot(slot) -> void:
     if !is_node_valid(slot):
         return
-    if slot.get_item() != null:
-        slot.get_item().free()
     slot.free()
 
 

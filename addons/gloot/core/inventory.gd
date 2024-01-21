@@ -212,7 +212,6 @@ func create_and_add_item(prototype_id: String) -> InventoryItem:
     if add_item(item):
         return item
     else:
-        item.free()
         return null
 
 
@@ -331,7 +330,6 @@ func clear() -> void:
     while _items.size() > 0:
         var item = _items[0]
         remove_item(item)
-        item.free()
     _update_serialized_format()
 
 
