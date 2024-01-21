@@ -48,8 +48,6 @@ static func set_item_stack_size(item: InventoryItem, stack_size: int) -> bool:
         var inventory: Inventory = item.get_inventory()
         if inventory != null:
             inventory.remove_item(item)
-        item.free()
-        return true
     item.set_property(KEY_STACK_SIZE, stack_size)
     return true
 
@@ -327,7 +325,6 @@ func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> It
     var single_item: InventoryItem = item.duplicate()
     assert(set_item_stack_size(single_item, 1))
     var count := inventory._constraint_manager.get_space_for(single_item)
-    single_item.free()
     return count
 
 

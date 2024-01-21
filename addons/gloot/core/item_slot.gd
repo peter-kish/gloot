@@ -122,8 +122,6 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 
 func reset() -> void:
-    if _item:
-        _item.free()
     _item = null
     _clear_impl(false)
 

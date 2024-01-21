@@ -1,6 +1,6 @@
 @tool
 @icon("res://addons/gloot/images/icon_item.svg")
-extends Object
+extends RefCounted
 class_name InventoryItem
 
 signal protoset_changed
@@ -92,14 +92,6 @@ func duplicate() -> InventoryItem:
     result.prototype_id = prototype_id
     result._properties = _properties.duplicate()
     return result
-
-
-func _notification(what):
-    if what == NOTIFICATION_PREDELETE:
-        if _item_slot != null:
-            _item_slot.clear()
-        if _inventory != null:
-            _inventory.remove_item(self)
 
 
 func get_inventory() -> Inventory:

@@ -27,7 +27,6 @@ func init_test() -> void:
 func cleanup_test() -> void:
     free_inventory(inventory1)
     free_inventory(inventory2)
-    free_item(item)
     free_slot(slot)
     
 

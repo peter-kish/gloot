@@ -41,8 +41,6 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    free_item(item)
-    free_item(item_2)
     free_inventory(inventory)
 
 
@@ -76,8 +74,7 @@ func test_set_item_stack_size() -> void:
 
     inventory.add_item(item)
     assert(StacksConstraint.set_item_stack_size(item, 0))
-    assert(inventory.get_item_count() == 0)
-    assert(!is_node_valid(item))
+    assert(!inventory.has_item(item))
 
 
 func test_items_mergable() -> void:
@@ -115,7 +112,7 @@ func test_add_item_automerge_full() -> void:
     stacks_constraint.add_item_automerge(item_2)
     assert(inventory.get_item_count() == 1)
     assert(StacksConstraint.get_item_stack_size(item) == 2)
-    assert(!is_node_valid(item_2))
+    assert(!inventory.has_item(item_2))
 
 
 func test_add_item_automerge_fail() -> void:
@@ -124,7 +121,7 @@ func test_add_item_automerge_fail() -> void:
     assert(inventory.get_item_count() == 2)
     assert(StacksConstraint.get_item_stack_size(item) == 5)
     assert(StacksConstraint.get_item_stack_size(item_2) == 5)
-    assert(is_node_valid(item_2))
+    assert(inventory.has_item(item_2))
 
 
 func test_add_item_automerge_partial() -> void:
@@ -134,14 +131,13 @@ func test_add_item_automerge_partial() -> void:
     assert(inventory.get_item_count() == 2)
     assert(StacksConstraint.get_item_stack_size(item) == 5)
     assert(StacksConstraint.get_item_stack_size(item_2) == 3)
-    assert(is_node_valid(item_2))
+    assert(inventory.has_item(item_2))
 
 
 func test_split_stack() -> void:
     var new_item = StacksConstraint.split_stack(item, 3)
     assert(StacksConstraint.get_item_stack_size(item) == 2)
     assert(StacksConstraint.get_item_stack_size(new_item) == 3)
-    new_item.free()
 
 
 func test_stacks_joinable() -> void:
@@ -167,7 +163,8 @@ func test_join_stacks() -> void:
     assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(StacksConstraint.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 1)
-    assert(!is_node_valid(item_2))
+    assert(StacksConstraint.get_item_stack_size(item) == 2)
+    assert(StacksConstraint.get_item_stack_size(item_2) == 0)
 
 
 func test_join_stacks_autosplit() -> void:

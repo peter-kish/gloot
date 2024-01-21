@@ -29,7 +29,6 @@ func init_test() -> void:
 func cleanup_test() -> void:
     free_inventory(inventory1)
     free_inventory(inventory2)
-    free_item(item)
 
 
 func test_size() -> void:
@@ -80,7 +79,6 @@ func test_serialize() -> void:
     var inventory_data = inventory1.serialize()
     inventory1.reset()
     assert(inventory1.get_items().is_empty())
-    assert(!is_instance_valid(item))
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_item_count() == 1)
 
@@ -96,7 +94,6 @@ func test_serialize_json() -> void:
 
     inventory1.reset()
     assert(inventory1.get_items().is_empty())
-    assert(!is_instance_valid(item))
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_item_count() == 1)
 

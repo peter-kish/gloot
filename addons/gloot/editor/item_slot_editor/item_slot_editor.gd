@@ -80,8 +80,6 @@ func _apply_editor_settings() -> void:
 func _on_prototype_id_picked(index: int) -> void:
     var prototype_id = prototype_id_filter.values[index]
     var item := InventoryItem.new()
-    if item_slot.get_item() != null:
-        item_slot.get_item().free()
     item.protoset = item_slot.protoset
     item.prototype_id = prototype_id
     GlootUndoRedo.equip_item_in_item_slot(item_slot, item)
@@ -95,7 +93,6 @@ func _on_btn_edit() -> void:
 
 func _on_btn_clear() -> void:
     if item_slot.get_item() != null:
-        item_slot.get_item().free()
         GlootUndoRedo.clear_item_slot(item_slot)
 
 

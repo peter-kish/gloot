@@ -13,7 +13,6 @@ var inventory: Inventory
 func init_suite():
     tests = [
         "test_equip_item",
-        "test_delete_item",
         "test_add_item_to_inventory",
         "test_return_item_to_source_inventory",
         "test_equip_item_in_two_slots",
@@ -42,8 +41,6 @@ func init_test() -> void:
 
 
 func cleanup_test() -> void:
-    free_item(item)
-    free_item(item2)
     free_inventory(inventory)
     free_slot(slot)
     free_slot(slot2)
@@ -60,12 +57,6 @@ func test_equip_item() -> void:
     assert(item2.get_item_slot() == slot)
 
     slot.clear()
-    assert(slot.get_item() == null)
-
-
-func test_delete_item() -> void:
-    assert(slot.equip(item))
-    item.free()
     assert(slot.get_item() == null)
 
 

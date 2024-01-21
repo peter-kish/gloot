@@ -31,7 +31,6 @@ func init_test() -> void:
 
 func cleanup_test() -> void:
     free_inventory(inventory)
-    free_item(item)
 
 
 func test_init() -> void:
@@ -62,7 +61,6 @@ func test_occupied_space() -> void:
     # Check if occupied_space is updated on item_removed
     inventory.remove_item(item)
     assert(weight_constraint.occupied_space == 0.0)
-    free_item(item)
 
 
 func test_get_free_space() -> void:
