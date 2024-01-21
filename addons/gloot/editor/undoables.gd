@@ -70,3 +70,25 @@ static func exec_item_undoable(item: InventoryItem, action_name: String, callabl
 static func _set_item(item: InventoryItem, data: Dictionary) -> void:
     item.deserialize(data)
 
+
+static func exec_slot_undoable(slot: ItemSlotBase, action_name: String, callable: Callable) -> bool:
+    var undo_redo_manager = _get_undo_redo_manager()
+    if undo_redo_manager == null:
+        return callable.call()
+
+    var old_slot_state := slot.serialize()
+    var result: bool = callable.call()
+    if !result:
+        return false
+    var new_slot_state := slot.serialize()
+
+    undo_redo_manager.create_action(action_name)
+    undo_redo_manager.add_do_method(Undoables, "_set_slot", slot, new_slot_state)
+    undo_redo_manager.add_undo_method(Undoables, "_set_slot", slot, old_slot_state)
+    undo_redo_manager.commit_action()
+
+    return true
+
+
+static func _set_slot(slot: ItemSlotBase, data: Dictionary) -> void:
+    slot.deserialize(data)

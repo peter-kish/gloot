@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 
 @onready var hsplit_container = $HSplitContainer
@@ -82,7 +82,9 @@ func _on_prototype_id_picked(index: int) -> void:
     var item := InventoryItem.new()
     item.protoset = item_slot.protoset
     item.prototype_id = prototype_id
-    GlootUndoRedo.equip_item_in_item_slot(item_slot, item)
+    Undoables.exec_slot_undoable(item_slot, "Equip item", func():
+        return item_slot.equip(item)
+    )
     
 
 func _on_btn_edit() -> void:
@@ -93,7 +95,9 @@ func _on_btn_edit() -> void:
 
 func _on_btn_clear() -> void:
     if item_slot.get_item() != null:
-        GlootUndoRedo.clear_item_slot(item_slot)
+        Undoables.exec_slot_undoable(item_slot, "Clear slot", func():
+            return item_slot.clear()
+        )
 
 
 static func _select_node(node: Node) -> void:
