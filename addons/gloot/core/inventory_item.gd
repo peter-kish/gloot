@@ -6,10 +6,6 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
-signal added_to_inventory(inventory)
-signal removed_from_inventory(inventory)
-signal equipped_in_slot(item_slot)
-signal removed_from_slot(item_slot)
 
 @export var protoset: ItemProtoset :
     set(new_protoset):
