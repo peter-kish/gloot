@@ -1,6 +1,6 @@
 extends EditorProperty
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
 var updating: bool = false
 var _option_button: OptionButton
@@ -61,7 +61,11 @@ func _on_item_selected(item_index: int) -> void:
     var selected_item: InventoryItem = _option_button.get_item_metadata(item_index)
     if item_ref_slot.get_item() != selected_item:
         if selected_item == null:
-            GlootUndoRedo.clear_item_slot(item_ref_slot)
+            Undoables.exec_slot_undoable(item_ref_slot, "Clear slot", func():
+                return item_ref_slot.clear()
+            )
         else:
-            GlootUndoRedo.equip_item_in_item_slot(item_ref_slot, selected_item)
+            Undoables.exec_slot_undoable(item_ref_slot, "Equip item", func():
+                return item_ref_slot.equip(selected_item)
+            )
     updating = false
