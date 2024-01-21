@@ -3,6 +3,8 @@ extends Control
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
+const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
+const POPUP_SIZE = Vector2i(800, 300)
 
 @onready var hsplit_container = $HSplitContainer
 @onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
@@ -18,6 +20,8 @@ var item_slot: ItemSlot :
         connect_item_slot_signals()
 
         _refresh()
+
+var _properties_editor: Window
 
 
 func connect_item_slot_signals():
@@ -88,9 +92,13 @@ func _on_prototype_id_picked(index: int) -> void:
     
 
 func _on_btn_edit() -> void:
-    if item_slot.get_item() != null:
-        # Call it deferred, so that the control can clean up
-        call_deferred("_select_node", item_slot.get_item())
+    if item_slot.get_item() == null:
+        return
+    if _properties_editor == null:
+        _properties_editor = PropertiesEditor.instantiate()
+        add_child(_properties_editor)
+    _properties_editor.item = item_slot.get_item()
+    _properties_editor.popup_centered(POPUP_SIZE)
 
 
 func _on_btn_clear() -> void:

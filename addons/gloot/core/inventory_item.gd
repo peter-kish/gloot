@@ -5,7 +5,7 @@ class_name InventoryItem
 
 signal protoset_changed
 signal prototype_id_changed
-signal properties_changed
+signal property_changed(property_name)
 
 @export var protoset: ItemProtoset :
     set(new_protoset):
@@ -200,16 +200,16 @@ func set_property(property_name: String, value) -> void:
     if protoset && protoset.has_item_property(prototype_id, property_name):
         if protoset.get_item_property(prototype_id, property_name) == value && _properties.has(property_name):
             _properties.erase(property_name)
-            properties_changed.emit(property_name)
+            property_changed.emit(property_name)
             return
 
     if value == null:
         if _properties.has(property_name):
             _properties.erase(property_name)
-            properties_changed.emit(property_name)
+            property_changed.emit(property_name)
     else:
         _properties[property_name] = value
-        properties_changed.emit(property_name)
+        property_changed.emit(property_name)
 
 
 func clear_property(property_name: String) -> void:

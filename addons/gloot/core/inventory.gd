@@ -143,8 +143,8 @@ func _connect_item_signals(item: InventoryItem) -> void:
         item.protoset_changed.connect(_on_item_protoset_changed.bind(item))
     if !item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
         item.prototype_id_changed.connect(_on_item_prototype_id_changed.bind(item))
-    if !item.properties_changed.is_connected(_on_item_property_changed):
-        item.properties_changed.connect(_on_item_property_changed.bind(item))
+    if !item.property_changed.is_connected(_on_item_property_changed):
+        item.property_changed.connect(_on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
@@ -152,8 +152,8 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
         item.protoset_changed.disconnect(_on_item_protoset_changed)
     if item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
         item.prototype_id_changed.disconnect(_on_item_prototype_id_changed)
-    if item.properties_changed.is_connected(_on_item_property_changed):
-        item.properties_changed.disconnect(_on_item_property_changed)
+    if item.property_changed.is_connected(_on_item_property_changed):
+        item.property_changed.disconnect(_on_item_property_changed)
 
 
 func _on_item_property_changed(property: String, item: InventoryItem) -> void:
