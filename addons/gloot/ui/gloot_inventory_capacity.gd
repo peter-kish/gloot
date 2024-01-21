@@ -102,3 +102,5 @@ func _ready() -> void:
         _progress_bar.size = size
         _label.size.x = size.x
     )
+
+    _refresh()
