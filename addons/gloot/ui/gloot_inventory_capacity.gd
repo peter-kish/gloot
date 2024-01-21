@@ -2,9 +2,6 @@
 class_name  GlootInventoryCapacity
 extends Control
 
-const GLootCapacityBar = preload("res://addons/gloot/ui/gloot_inventory_capacity_bar.gd")
-const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capacity_label.gd")
-
 @export var inventory_path: NodePath :
     get:
         return inventory_path
@@ -12,76 +9,15 @@ const GLootCapacityLabel = preload("res://addons/gloot/ui/gloot_inventory_capaci
         inventory_path = new_inv_path
         inventory = get_node_or_null(inventory_path)
 
-@export var background_style: StyleBox :
+@export var show_label = true :
     get:
-        return background_style
-    set(new_background_style):
-        background_style = new_background_style
-        if _capacity_bar != null:
-            _capacity_bar.background_style = new_background_style
-        
-@export var bar_style: StyleBox :
-    get:
-        return bar_style
-    set(new_bar_style):
-        bar_style = new_bar_style
-        if _capacity_bar != null:
-            _capacity_bar.bar_style = new_bar_style
-
-@export var show_capacity_label = true :
-    get:
-        return show_capacity_label
-    set(new_show_capacity_label):
-        if new_show_capacity_label == show_capacity_label:
+        return show_label
+    set(new_show_label):
+        if new_show_label == show_label:
             return
-        show_capacity_label = new_show_capacity_label
-        if _capacity_label != null:
-            _capacity_label.visible = show_capacity_label
-
-@export var font: Font : 
-    get:
-        return font
-    set(new_font):
-        if new_font == font:
-            return
-        font = new_font
-        _set_label_font(_capacity_label, font)
-
-@export var font_size: int = 16 : 
-    get:
-        return font_size
-    set(new_font_size):
-        if new_font_size == font_size || new_font_size <= 0:
-            return
-        font_size = new_font_size
-        _set_label_font_size(_capacity_label, font_size)
-
-@export var font_outline_size: int = 0 : 
-    get:
-        return font_outline_size
-    set(new_font_outline_size):
-        if new_font_outline_size == font_outline_size || new_font_outline_size < 0:
-            return
-        font_outline_size = new_font_outline_size
-        _set_label_font_outline_size(_capacity_label, font_outline_size)
-
-@export var font_color: Color = Color.WHITE : 
-    get:
-        return font_color
-    set(new_font_color):
-        if new_font_color == font_color:
-            return
-        font_color = new_font_color
-        _set_label_font_color(_capacity_label, font_color)
-
-@export var font_outline_color: Color = Color.WHITE : 
-    get:
-        return font_outline_color
-    set(new_font_outline_color):
-        if new_font_outline_color == font_outline_color:
-            return
-        font_outline_color = new_font_outline_color
-        _set_label_font_outline_color(_capacity_label, font_outline_color)
+        show_label = new_show_label
+        if _label != null:
+            _label.visible = show_label
 
 var inventory: Inventory = null :
     get:
@@ -90,88 +26,79 @@ var inventory: Inventory = null :
         if inventory == new_inventory:
             return
 
+        if inventory != null:
+            _disconnect_inventory_signals()
         inventory = new_inventory
-        if _capacity_bar != null:
-            _capacity_bar.inventory = inventory
-        if _capacity_label != null:
-            _capacity_label.inventory = inventory
+        if inventory != null:
+            _connect_inventory_signals()
 
-var _capacity_bar: GLootCapacityBar
-var _capacity_label: GLootCapacityLabel
+var _progress_bar: ProgressBar
+var _label: Label
+
+
+func _connect_inventory_signals() -> void:
+    if !inventory.is_node_ready():
+        inventory.ready.connect(_refresh)
+    inventory.contents_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
+    if inventory.get_weight_constraint():
+        inventory.get_weight_constraint().capacity_changed.connect(_refresh)
+        inventory.get_weight_constraint().occupied_space_changed.connect(_refresh)
+
+
+func _disconnect_inventory_signals() -> void:
+    if inventory.ready.is_connected(_refresh):
+        inventory.ready.disconnect(_refresh)
+    inventory.contents_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
+    if inventory.get_weight_constraint():
+        inventory.get_weight_constraint().capacity_changed.disconnect(_refresh)
+        inventory.get_weight_constraint().occupied_space_changed.disconnect(_refresh)
+
+
+func _refresh() -> void:
+    _label.text = ""
+    _progress_bar.min_value = 0
+    _progress_bar.max_value = 1
+    if inventory == null || !inventory.is_node_ready():
+        return
+
+    var weight_constraint := inventory.get_weight_constraint()
+    if weight_constraint == null:
+        return
+
+    _progress_bar.max_value = weight_constraint.capacity
+
+    if weight_constraint.has_unlimited_capacity():
+        _label.text = "%s/INF" % str(weight_constraint.occupied_space)
+        _progress_bar.value = 0
+    else:
+        _label.text = "%s/%s" % [str(weight_constraint.occupied_space), str(weight_constraint.capacity)]
+        _progress_bar.value = weight_constraint.occupied_space
 
 
 func _ready() -> void:
     if !inventory_path.is_empty():
         inventory = get_node_or_null(inventory_path)
 
-    _capacity_bar = GLootCapacityBar.new()
-    _capacity_bar.inventory = inventory
-    _capacity_bar.background_style = background_style
-    _capacity_bar.bar_style = bar_style
-    add_child(_capacity_bar)
+    _progress_bar = ProgressBar.new()
+    _progress_bar.show_percentage = false
+    add_child(_progress_bar)
 
-    _capacity_label = GLootCapacityLabel.new()
-    _capacity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    _capacity_label.inventory = inventory
-    _set_label_font(_capacity_label, font)
-    _set_label_font_size(_capacity_label, font_size)
-    _set_label_font_outline_size(_capacity_label, font_outline_size)
-    _set_label_font_color(_capacity_label, font_color)
-    _set_label_font_outline_color(_capacity_label, font_outline_color)
-    _capacity_label.visible = show_capacity_label
-    add_child(_capacity_label)
+    _label = Label.new()
+    _label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    _label.visible = show_label
+    add_child(_label)
 
-    custom_minimum_size.y = _capacity_label.size.y
-    size.y = _capacity_label.size.y
-    _capacity_label.size.x = size.x
-    _capacity_bar.size = size
-    _capacity_label.resized.connect(func():
-        custom_minimum_size.y = _capacity_label.size.y
-        size.y = _capacity_label.size.y
+    custom_minimum_size.y = _label.size.y
+    size.y = _label.size.y
+    _label.size.x = size.x
+    _progress_bar.size = size
+    _label.resized.connect(func():
+        custom_minimum_size.y = _label.size.y
+        size.y = _label.size.y
     )
     resized.connect(func():
-        _capacity_bar.size = size
-        _capacity_label.size.x = size.x
+        _progress_bar.size = size
+        _label.size.x = size.x
     )
-
-
-func _set_label_font(label: Label, font: Font) -> void:
-    if label == null:
-        return
-    label.remove_theme_font_override("font")
-    if font != null:
-        label.add_theme_font_override("font", font)
-    # Reset vertical label size
-    label.size.y = 0
-
-
-func _set_label_font_size(label: Label, font_size: int) -> void:
-    if label == null:
-        return
-    label.remove_theme_font_size_override("font_size")
-    label.add_theme_font_size_override("font_size", font_size)
-    # Reset vertical label size
-    label.size.y = 0
-
-
-func _set_label_font_outline_size(label: Label, font_outline_size: int) -> void:
-    if label == null:
-        return
-    label.remove_theme_constant_override("outline_size")
-    label.add_theme_constant_override("outline_size", font_outline_size)
-    # Reset vertical label size
-    label.size.y = 0
-
-
-func _set_label_font_color(label, font_color) -> void:
-    if label == null:
-        return
-    label.remove_theme_color_override("font_color")
-    label.add_theme_color_override("font_color", font_color)
-
-
-func _set_label_font_outline_color(label, font_outline_color) -> void:
-    if label == null:
-        return
-    label.remove_theme_color_override("font_outline_color")
-    label.add_theme_color_override("font_outline_color", font_color)
