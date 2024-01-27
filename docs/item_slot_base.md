@@ -10,6 +10,7 @@ Base class for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.
 
 * `equip(item: InventoryItem) -> bool` - Equips the given inventory item in the slot. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
 * `clear() -> bool` - Clears the item slot. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
+* `get_item() -> InventoryItem` - Returns the equipped item. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
 * `can_hold_item(new_item: InventoryItem) -> bool` - Checks if the slot can hold the given item. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
 * `reset()` - Clears the item slot. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
 * `serialize() -> Dictionary` - Serializes the item slot into a dictionary. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.
