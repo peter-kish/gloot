@@ -2,6 +2,7 @@ class_name CtrlInventoryItemRect
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 signal activated
 
@@ -86,15 +87,11 @@ func _ready() -> void:
     _selection_rect = ColorRect.new()
     _texture_rect = TextureRect.new()
     _stack_size_label = Label.new()
+    _stack_size_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    _stack_size_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
     add_child(_selection_rect)
     add_child(_texture_rect)
     add_child(_stack_size_label)
-
-    resized.connect(func():
-        _selection_rect.size = size
-        _texture_rect.size = size
-        _stack_size_label.size = size
-    )
 
     _refresh()
 
@@ -109,8 +106,15 @@ func _update_selection() -> void:
 func _update_texture() -> void:
     if _texture_rect == null:
         return
+    if GridConstraint.is_item_rotated(item):
+        _texture_rect.size = Vector2(size.y, size.x)
+        _texture_rect.position = Vector2(0, _texture_rect.size.x)
+        _texture_rect.rotation = -PI/2
+    else:
+        _texture_rect.size = size
+        _texture_rect.position = Vector2.ZERO
+        _texture_rect.rotation = 0
     _texture_rect.texture = texture
-    _texture_rect.size = size
 
 
 func _update_stack_size() -> void:
