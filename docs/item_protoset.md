@@ -19,4 +19,5 @@ A resource type holding a set of inventory item prototypes in JSON format.
 * `rename_prototype(id: String, new_id: String) -> void` - Renames the prototype with the given ID to a new ID.
 * `get_prototype(id: String) -> Dictionary` - Returns the prototype with the given ID.
 * `has_prototype(id: String) -> bool` - Checks if a prototype with the given ID exists.
-* `get_item_property(id: String, property_name: String, default_value)` - Returns the value of the property with the given name from the prototype with the given ID. In case the value can not be found, the default value is returned.
+* `get_prototype_property(id: String, property_name: String, default_value)` - Returns the value of the property with the given name from the prototype with the given ID. In case the value can not be found, the default value is returned.
+* `prototype_has_property(id: String, property_name: String) -> bool` - Checks if the given item prototype has the given property. 

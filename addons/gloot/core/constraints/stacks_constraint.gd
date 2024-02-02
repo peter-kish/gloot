@@ -58,12 +58,12 @@ static func set_item_max_stack_size(item: InventoryItem, max_stack_size: int) ->
 
 static func get_prototype_stack_size(protoset: ItemProtoset, prototype_id: String) -> int:
     assert(protoset != null, "protoset is null!")
-    return protoset.get_item_property(prototype_id, KEY_STACK_SIZE, 1.0)
+    return protoset.get_prototype_property(prototype_id, KEY_STACK_SIZE, 1.0)
 
 
 static func get_prototype_max_stack_size(protoset: ItemProtoset, prototype_id: String) -> int:
     assert(protoset != null, "protoset is null!")
-    return protoset.get_item_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
+    return protoset.get_prototype_property(prototype_id, KEY_MAX_STACK_SIZE, 1.0)
 
 
 func get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:

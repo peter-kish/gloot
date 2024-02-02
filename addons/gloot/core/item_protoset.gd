@@ -130,10 +130,17 @@ func has_prototype(id: String) -> bool:
     return _prototypes.has(id)
 
 
-func get_item_property(id: String, property_name: String, default_value = null) -> Variant:
+func get_prototype_property(id: String, property_name: String, default_value = null) -> Variant:
     if has_prototype(id):
         var prototype = get_prototype(id)
         if !prototype.is_empty() && prototype.has(property_name):
             return prototype[property_name]
     
     return default_value
+
+
+func prototype_has_property(id: String, property_name: String) -> bool:
+    if has_prototype(id):
+        return get_prototype(id).has(property_name)
+    
+    return false

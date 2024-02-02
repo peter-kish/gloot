@@ -150,10 +150,20 @@ func get_inventory() -> Inventory:
 
 
 func get_property(property_name: String, default_value = null) -> Variant:
+    # Note: The protoset editor still doesn't support arrays and dictionaries,
+    # but those can still be added via JSON definitions or via code.
     if properties.has(property_name):
-        return properties[property_name]
-    if protoset:
-        return protoset.get_item_property(prototype_id, property_name, default_value)
+        var value = properties[property_name]
+        if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
+            return value.duplicate()
+        return value
+
+    if protoset && protoset.prototype_has_property(prototype_id, property_name):
+        var value = protoset.get_prototype_property(prototype_id, property_name, default_value)
+        if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
+            return value.duplicate()
+        return value
+
     return default_value
 
 
