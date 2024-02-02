@@ -19,7 +19,6 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 * `set_property(property_name: String, value) -> void` - Sets the property with the given name for this item.
 * `clear_property(property_name: String) -> void` - Clears the property with the given name for this item.
 * `reset() -> void` - Resets all properties to default values.
-* `reset_properties() -> void` - Resets all item properties to the default values (erases properties that have no default values in the protoset).
 * `get_texture() -> Texture` - Helper function for retrieving the item texture. It checks the `image` item property and loads it as a texture, if available.
 * `get_title() -> String` - Helper function for retrieving the item title. It checks the `name` item property and uses it as the title, if available. Otherwise, `prototype_id` is returned as title.
 * `serialize() -> Dictionary` - Serializes the item into a dictionary.

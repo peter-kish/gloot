@@ -11,21 +11,26 @@ signal removed_from_inventory(inventory)
 signal equipped_in_slot(item_slot)
 signal removed_from_slot(item_slot)
 
-@export var protoset: Resource :
+@export var protoset: ItemProtoset :
     get:
         return protoset
     set(new_protoset):
         if new_protoset == protoset:
             return
 
-        # Reset the prototype ID (pick the first prototype from the protoset)
-        prototype_id = ""
-        if new_protoset && new_protoset._prototypes && new_protoset._prototypes.keys().size() > 0:
-            self.prototype_id = new_protoset._prototypes.keys()[0]
+        if _inventory != null:
+            return
 
-        new_protoset.changed.connect(func(): update_configuration_warnings())
-
+        _disconnect_protoset_signals()
         protoset = new_protoset
+        _connect_protoset_signals()
+
+        # Reset the prototype ID (pick the first prototype from the protoset)
+        if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
+            prototype_id = protoset._prototypes.keys()[0]
+        else:
+            prototype_id = ""
+
         protoset_changed.emit()
         update_configuration_warnings()
 
@@ -35,8 +40,12 @@ signal removed_from_slot(item_slot)
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
             return
-        reset_properties()
+        if protoset == null && !new_prototype_id.is_empty():
+            return
+        if (protoset != null) && (!protoset.has_prototype(new_prototype_id)):
+            return
         prototype_id = new_prototype_id
+        _reset_properties()
         update_configuration_warnings()
         prototype_id_changed.emit()
 
@@ -63,6 +72,21 @@ const KEY_NAME: String = "name"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
+func _connect_protoset_signals() -> void:
+    if protoset == null:
+        return
+    protoset.changed.connect(_on_protoset_changed)
+
+
+func _disconnect_protoset_signals() -> void:
+    if protoset == null:
+        return
+    protoset.changed.disconnect(_on_protoset_changed)
+
+
+func _on_protoset_changed() -> void:
+    update_configuration_warnings()
+
 
 func _get_configuration_warnings() -> PackedStringArray:
     if !protoset:
@@ -74,7 +98,7 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
-func reset_properties() -> void:
+func _reset_properties() -> void:
     if !protoset || prototype_id.is_empty():
         properties = {}
         return
