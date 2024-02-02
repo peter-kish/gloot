@@ -12,8 +12,6 @@ signal equipped_in_slot(item_slot)
 signal removed_from_slot(item_slot)
 
 @export var protoset: ItemProtoset :
-    get:
-        return protoset
     set(new_protoset):
         if new_protoset == protoset:
             return
@@ -35,8 +33,6 @@ signal removed_from_slot(item_slot)
         update_configuration_warnings()
 
 @export var prototype_id: String :
-    get:
-        return prototype_id
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
             return
@@ -50,8 +46,6 @@ signal removed_from_slot(item_slot)
         prototype_id_changed.emit()
 
 @export var properties: Dictionary :
-    get:
-        return properties
     set(new_properties):
         properties = new_properties
         properties_changed.emit()

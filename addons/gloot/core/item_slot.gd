@@ -9,8 +9,6 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
 @export var item_protoset: ItemProtoset:
-    get:
-        return item_protoset
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
             return

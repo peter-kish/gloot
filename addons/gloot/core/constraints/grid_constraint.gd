@@ -17,8 +17,6 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 var _item_map := ItemMap.new(Vector2i.ZERO)
 
 @export var size: Vector2i = DEFAULT_SIZE :
-    get:
-        return size
     set(new_size):
         assert(inventory, "Inventory not set!")
         assert(new_size.x > 0, "Inventory width must be positive!")

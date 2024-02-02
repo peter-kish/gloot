@@ -11,8 +11,6 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
 @onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory :
-    get:
-        return inventory
     set(new_inventory):
         disconnect_inventory_signals()
         inventory = new_inventory

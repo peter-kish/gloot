@@ -13,8 +13,6 @@ var _weight_constraint: WeightConstraint = null
 var _stacks_constraint: StacksConstraint = null
 var _grid_constraint: GridConstraint = null
 var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         assert(new_inventory != null, "Can't set inventory to null!")
         assert(inventory == null, "Inventory already set!")

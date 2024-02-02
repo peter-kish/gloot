@@ -4,15 +4,11 @@ class_name CtrlInventoryStacked
 extends CtrlInventory
 
 @export var progress_bar_visible: bool = true :
-    get:
-        return progress_bar_visible
     set(new_progress_bar_visible):
         progress_bar_visible = new_progress_bar_visible
         if _progress_bar:
             _progress_bar.visible = progress_bar_visible
 @export var label_visible: bool = true :
-    get:
-        return label_visible
     set(new_label_visible):
         label_visible = new_label_visible
         if _label:

@@ -9,8 +9,6 @@ const POPUP_MARGIN = 10
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _choice_filter: Control = $"MarginContainer/ChoiceFilter"
 var item: InventoryItem = null :
-    get:
-        return item
     set(new_item):
         if new_item == null:
             return

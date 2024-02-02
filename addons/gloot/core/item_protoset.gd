@@ -6,8 +6,6 @@ extends Resource
 const KEY_ID: String = "id"
 
 @export_multiline var json_data :
-    get:
-        return json_data
     set(new_json_data):
         json_data = new_json_data
         if !json_data.is_empty():
@@ -15,8 +13,6 @@ const KEY_ID: String = "id"
         _save()
 
 var _prototypes: Dictionary = {} :
-    get:
-        return _prototypes
     set(new_prototypes):
         _prototypes = new_prototypes
         _update_json_data()

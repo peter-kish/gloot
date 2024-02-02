@@ -6,8 +6,6 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
 signal activated
 
 var item: InventoryItem :
-    get:
-        return item
     set(new_item):
         if item == new_item:
             return
@@ -21,8 +19,6 @@ var item: InventoryItem :
         else:
             texture = null
 var texture: Texture2D :
-    get:
-        return texture
     set(new_texture):
         if new_texture == texture:
             return
@@ -31,16 +27,12 @@ var texture: Texture2D :
             size = texture.get_size()
         queue_redraw()
 var selected: bool = false :
-    get:
-        return selected
     set(new_selected):
         if new_selected == selected:
             return
         selected = new_selected
         queue_redraw()
 var selection_bg_color: Color = Color.GRAY :
-    get:
-        return selection_bg_color
     set(new_selection_bg_color):
         if new_selection_bg_color == selection_bg_color:
             return

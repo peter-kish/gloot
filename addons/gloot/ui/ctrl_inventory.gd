@@ -6,8 +6,6 @@ extends Control
 signal inventory_item_activated(item)
 
 @export var inventory_path: NodePath :
-    get:
-        return inventory_path
     set(new_inv_path):
         inventory_path = new_inv_path
         var node: Node = get_node_or_null(inventory_path)
@@ -24,8 +22,6 @@ signal inventory_item_activated(item)
 
 @export var default_item_icon: Texture2D
 var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if new_inventory == inventory:
             return

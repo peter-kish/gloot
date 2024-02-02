@@ -12,8 +12,6 @@ signal protoset_changed
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
 @export var item_protoset: ItemProtoset:
-    get:
-        return item_protoset
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
             return

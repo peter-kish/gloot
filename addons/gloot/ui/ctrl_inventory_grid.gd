@@ -15,38 +15,26 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
-    get:
-        return field_dimensions
     set(new_field_dimensions):
         field_dimensions = new_field_dimensions
         _refresh_grid_container()
 @export var item_spacing: int = 0 :
-    get:
-        return item_spacing
     set(new_item_spacing):
         item_spacing = new_item_spacing
         _refresh()
 @export var draw_grid: bool = true :
-    get:
-        return draw_grid
     set(new_draw_grid):
         draw_grid = new_draw_grid
         _refresh()
 @export var grid_color: Color = Color.BLACK :
-    get:
-        return grid_color
     set(new_grid_color):
         grid_color = new_grid_color
         _refresh()
 @export var draw_selections: bool = false :
-    get:
-        return draw_selections
     set(new_draw_selections):
         draw_selections = new_draw_selections
 @export var selection_color: Color = Color.GRAY
 @export var inventory_path: NodePath :
-    get:
-        return inventory_path
     set(new_inv_path):
         inventory_path = new_inv_path
         var node: Node = get_node_or_null(inventory_path)
@@ -60,21 +48,15 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         self.inventory = node
         update_configuration_warnings()
 @export var default_item_texture: Texture2D :
-    get:
-        return default_item_texture
     set(new_default_item_texture):
         default_item_texture = new_default_item_texture
         _refresh()
 @export var stretch_item_sprites: bool = true :
-    get:
-        return stretch_item_sprites
     set(new_stretch_item_sprites):
         stretch_item_sprites = new_stretch_item_sprites
         _refresh()
 @export var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return

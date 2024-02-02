@@ -4,14 +4,10 @@ signal value_changed(value_index)
 
 
 var values: Array = [] :
-    get:
-        return values
     set(new_values):
         assert(!is_inside_tree(), "Can't set values once the node is inside a tree")
         values = new_values
 var titles: Array = [] :
-    get:
-        return titles
     set(new_titles):
         assert(!is_inside_tree(), "Can't set titles once the node is inside a tree")
         titles = new_titles
