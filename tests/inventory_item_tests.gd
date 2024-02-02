@@ -10,6 +10,7 @@ func init_suite() -> void:
         "test_get_inventory",
         "test_get_property",
         "test_set_property",
+        "test_references",
         "test_clear_property",
         "test_reset",
         "test_get_texture",
@@ -44,6 +45,29 @@ func test_get_property() -> void:
 func test_set_property() -> void:
     item.set_property("name", "Bob")
     assert(item.get_property("name") == "Bob")
+
+
+func test_references() -> void:
+    var protoset := ItemProtoset.new()
+    protoset.add_prototype("containing_dict")
+    protoset.set_prototype_property("containing_dict", "dictionary", {
+        "foo": "bar",
+        "baz": 42
+    })
+
+    inventory.remove_item(item)
+    item.protoset = protoset
+    var dict: Dictionary = item.get_property("dictionary")
+    assert(dict != null)
+    assert(dict.has("foo"))
+    assert(dict["foo"] == "bar")
+    assert(dict.has("baz"))
+    assert(dict["baz"] == 42)
+    dict["baz"] = 43
+    assert(item.get_property("dictionary")["baz"] == 42)
+    item.set_property("dictionary", dict)
+    assert(item.get_property("dictionary")["baz"] == 43)
+    
 
 
 func test_clear_property() -> void:
