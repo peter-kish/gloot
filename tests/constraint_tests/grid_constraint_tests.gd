@@ -98,9 +98,12 @@ func test_item_rotation() -> void:
     assert(grid_constraint.set_item_size(item, Vector2i(2, 1)))
     assert(grid_constraint.get_item_rect(item) == Rect2i(0, 0, 2, 1))
     assert(!GridConstraint.is_item_rotated(item))
+    assert(!GridConstraint.is_item_rotation_positive(item))
     GridConstraint.set_item_rotation(item, true)
     assert(GridConstraint.is_item_rotated(item))
     assert(grid_constraint.get_item_rect(item) == Rect2i(0, 0, 1, 2))
+    GridConstraint.set_item_rotation_direction(item, true)
+    assert(GridConstraint.is_item_rotation_positive(item))
 
 
 func test_add_item_at() -> void:

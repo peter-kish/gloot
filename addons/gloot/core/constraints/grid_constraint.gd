@@ -12,6 +12,7 @@ const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
 const KEY_ROTATED: String = "rotated"
+const KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
@@ -97,6 +98,10 @@ static func is_item_rotated(item: InventoryItem) -> bool:
     return item.get_property(KEY_ROTATED, false)
 
 
+static func is_item_rotation_positive(item: InventoryItem) -> bool:
+    return item.get_property(KEY_POSITIVE_ROTATION, false)
+
+
 # TODO: Consider making a static "unsafe" version of this
 func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if new_size.x < 1 || new_size.y < 1:
@@ -116,6 +121,13 @@ static func set_item_rotation(item: InventoryItem, rotated: bool) -> void:
         item.set_property(KEY_ROTATED, true)
     else:
         item.clear_property(KEY_ROTATED)
+
+
+static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
+    if positive:
+        item.set_property(KEY_POSITIVE_ROTATION, true)
+    else:
+        item.clear_property(KEY_POSITIVE_ROTATION)
 
 
 func get_item_rect(item: InventoryItem) -> Rect2i:
