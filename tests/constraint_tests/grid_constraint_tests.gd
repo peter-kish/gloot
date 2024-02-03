@@ -16,6 +16,7 @@ func init_suite():
         "test_item_position",
         "test_item_size",
         "test_item_rect",
+        "test_item_rotation",
         "test_add_item_at",
         "test_create_and_add_item_at",
         "test_get_items_under",
@@ -91,6 +92,15 @@ func test_item_rect() -> void:
     for data in test_data:
         assert(grid_constraint.set_item_rect(item, data.input) == data.expected.return_value)
         assert(grid_constraint.get_item_rect(item) == data.expected.rect)
+
+
+func test_item_rotation() -> void:
+    assert(grid_constraint.set_item_size(item, Vector2i(2, 1)))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(0, 0, 2, 1))
+    assert(!GridConstraint.is_item_rotated(item))
+    GridConstraint.set_item_rotation(item, true)
+    assert(GridConstraint.is_item_rotated(item))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(0, 0, 1, 2))
 
 
 func test_add_item_at() -> void:

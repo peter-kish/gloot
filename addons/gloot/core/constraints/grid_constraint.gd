@@ -111,6 +111,13 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     return true
 
 
+static func set_item_rotation(item: InventoryItem, rotated: bool) -> void:
+    if rotated:
+        item.set_property(KEY_ROTATED, true)
+    else:
+        item.clear_property(KEY_ROTATED)
+
+
 func get_item_rect(item: InventoryItem) -> Rect2i:
     var item_pos := get_item_position(item)
     var item_size := get_item_size(item)
