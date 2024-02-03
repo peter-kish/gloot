@@ -89,6 +89,11 @@ func drag_end() -> void:
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
 
 
+func _notification(what) -> void:
+    if what == NOTIFICATION_PREDELETE && _preview_node:
+        _preview_node.queue_free()
+
+
 func _process(_delta) -> void:
     if drag_preview:
         drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
