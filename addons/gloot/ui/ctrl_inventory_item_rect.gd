@@ -107,7 +107,7 @@ func _update_selection() -> void:
 
 
 func _update_texture() -> void:
-    if _texture_rect == null:
+    if _texture_rect == null || item == null:
         return
     if GridConstraint.is_item_rotated(item):
         _texture_rect.size = Vector2(size.y, size.x)
@@ -121,7 +121,7 @@ func _update_texture() -> void:
 
 
 func _update_stack_size() -> void:
-    if _stack_size_label == null:
+    if _stack_size_label == null || item == null:
         return
     var stack_size: int = StacksConstraint.get_item_stack_size(item)
     if stack_size <= 1:
