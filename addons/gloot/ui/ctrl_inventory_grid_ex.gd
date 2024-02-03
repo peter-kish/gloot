@@ -69,7 +69,7 @@ func _refresh_field_background_grid() -> void:
 
 
 func _create_field_background_grid() -> void:
-    if !inventory:
+    if !inventory || _field_background_grid != null:
         return
 
     _field_background_grid = Control.new()
@@ -89,6 +89,8 @@ func _create_field_background_grid() -> void:
 
 
 func _create_selection_panel() -> void:
+    if _selection_panel != null:
+        return
     _selection_panel = Panel.new()
     add_child(_selection_panel);
     move_child(_selection_panel, get_child_count() - 1)
