@@ -85,8 +85,11 @@ func _ready() -> void:
     drag_preview = CtrlInventoryItemRect.new()
 
     _selection_rect = ColorRect.new()
+    _selection_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _texture_rect = TextureRect.new()
+    _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _stack_size_label = Label.new()
+    _stack_size_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _stack_size_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
     _stack_size_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
     add_child(_selection_rect)

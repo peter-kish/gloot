@@ -75,7 +75,7 @@ func drag_start() -> void:
 
     drag_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
     drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
-    add_child(_preview_node)
+    get_tree().root.add_child(_preview_node)
     _preview_node.add_child(drag_preview)
     _preview_node.z_index = drag_z_index
 
@@ -85,7 +85,7 @@ func drag_end() -> void:
         return
 
     _preview_node.remove_child(drag_preview)
-    remove_child(_preview_node)
+    _preview_node.get_parent().remove_child(_preview_node)
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
 
 
