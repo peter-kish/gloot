@@ -8,11 +8,15 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 # https://stackoverflow.com/questions/77026156/how-to-write-a-static-event-emitter-in-gdscript/77026952#77026952
 
 static var dragable_grabbed: Signal = (func():
+    if (CtrlDragable as Object).has_user_signal("dragable_grabbed"):
+        return (CtrlDragable as Object).dragable_grabbed
     (CtrlDragable as Object).add_user_signal("dragable_grabbed")
     return Signal(CtrlDragable, "dragable_grabbed")
 ).call()
 
 static var dragable_dropped: Signal = (func():
+    if (CtrlDragable as Object).has_user_signal("dragable_dropped"):
+        return (CtrlDragable as Object).dragable_dropped
     (CtrlDragable as Object).add_user_signal("dragable_dropped")
     return Signal(CtrlDragable, "dragable_dropped")
 ).call()
