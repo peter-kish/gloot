@@ -96,6 +96,12 @@ func _ready() -> void:
     add_child(_texture_rect)
     add_child(_stack_size_label)
 
+    resized.connect(func():
+        _selection_rect.size = size
+        _texture_rect.size = size
+        _stack_size_label.size = size
+    )
+
     _refresh()
 
 func _update_selection() -> void:
