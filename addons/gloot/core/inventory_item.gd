@@ -195,7 +195,9 @@ func set_property(property_name: String, value) -> void:
 
 
 func clear_property(property_name: String) -> void:
-    properties.erase(property_name)
+    if properties.has(property_name):
+        properties.erase(property_name)
+        properties_changed.emit()
 
 
 func reset() -> void:
