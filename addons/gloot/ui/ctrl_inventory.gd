@@ -4,10 +4,9 @@ class_name CtrlInventory
 extends Control
 
 signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 
 @export var inventory_path: NodePath :
-    get:
-        return inventory_path
     set(new_inv_path):
         inventory_path = new_inv_path
         var node: Node = get_node_or_null(inventory_path)
@@ -24,8 +23,6 @@ signal inventory_item_activated(item)
 
 @export var default_item_icon: Texture2D
 var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if new_inventory == inventory:
             return
@@ -67,6 +64,7 @@ func _ready():
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
     _item_list.item_activated.connect(_on_list_item_activated)
+    _item_list.item_clicked.connect(_on_list_item_clicked)
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
@@ -97,6 +95,11 @@ func _disconnect_inventory_signals() -> void:
 
 func _on_list_item_activated(index: int) -> void:
     inventory_item_activated.emit(_get_inventory_item(index))
+
+
+func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
+    if mouse_button_index == MOUSE_BUTTON_RIGHT:
+        inventory_item_context_activated.emit(_get_inventory_item(index))
 
 
 func _on_item_modified(_item: InventoryItem) -> void:

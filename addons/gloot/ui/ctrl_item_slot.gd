@@ -9,8 +9,6 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 
 @export var item_slot_path: NodePath :
-    get:
-        return item_slot_path
     set(new_item_slot_path):
         if item_slot_path == new_item_slot_path:
             return
@@ -28,16 +26,12 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         _refresh()
         update_configuration_warnings()
 @export var default_item_icon: Texture2D :
-    get:
-        return default_item_icon
     set(new_default_item_icon):
         if default_item_icon == new_default_item_icon:
             return
         default_item_icon = new_default_item_icon
         _refresh()
 @export var icon_scaling: Vector2 = Vector2.ONE :
-    get:
-        return icon_scaling
     set(new_icon_scaling):
         if icon_scaling == new_icon_scaling:
             return
@@ -45,8 +39,6 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         if _ctrl_inventory_item_rect && _ctrl_inventory_item_rect.texture:
             _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 @export var item_texture_visible: bool = true :
-    get:
-        return item_texture_visible
     set(new_item_texture_visible):
         if item_texture_visible == new_item_texture_visible:
             return
@@ -54,8 +46,6 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         if _ctrl_inventory_item_rect:
             _ctrl_inventory_item_rect.visible = item_texture_visible
 @export var label_visible: bool = true :
-    get:
-        return label_visible
     set(new_label_visible):
         if label_visible == new_label_visible:
             return
@@ -63,8 +53,6 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         if _label:
             _label.visible = label_visible
 var item_slot: ItemSlotBase :
-    get:
-        return item_slot
     set(new_item_slot):
         if new_item_slot == item_slot:
             return
@@ -218,8 +206,6 @@ func _refresh() -> void:
         _ctrl_inventory_item_rect.item = item
         if item.get_texture():
             _ctrl_inventory_item_rect.texture = item.get_texture()
-        else:
-            _ctrl_inventory_item_rect.texture = default_item_icon
 
         if _ctrl_inventory_item_rect.texture:
             _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
@@ -230,4 +216,5 @@ func _clear() -> void:
         _label.text = ""
     if _ctrl_inventory_item_rect:
         _ctrl_inventory_item_rect.item = null
+        _ctrl_inventory_item_rect.texture = default_item_icon
 

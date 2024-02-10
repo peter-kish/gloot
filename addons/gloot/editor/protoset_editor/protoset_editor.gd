@@ -13,8 +13,6 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
 var protoset: ItemProtoset :
-    get:
-        return protoset
     set(new_protoset):
         protoset = new_protoset
         if protoset:

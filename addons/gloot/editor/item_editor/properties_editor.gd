@@ -12,8 +12,6 @@ var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRI
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"
 var item: InventoryItem = null :
-    get:
-        return item
     set(new_item):
         if new_item == null:
             return

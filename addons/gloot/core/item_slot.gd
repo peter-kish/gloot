@@ -9,8 +9,6 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
 @export var item_protoset: ItemProtoset:
-    get:
-        return item_protoset
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
             return
@@ -68,6 +66,7 @@ func _clear_impl(return_item: bool) -> bool:
         
     if return_item:
         _return_item_to_source_inventory()
+        return true
         
     remove_child(get_item())
     return true

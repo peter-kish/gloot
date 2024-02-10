@@ -36,6 +36,30 @@ func get_item_rect(item: InventoryItem) -> Rect2i:
     return _constraint_manager.get_grid_constraint().get_item_rect(item)
 
 
+func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
+    return _constraint_manager.get_grid_constraint().set_item_rotation(item, rotated)
+
+
+func rotate_item(item: InventoryItem) -> bool:
+    return _constraint_manager.get_grid_constraint().rotate_item(item)
+
+
+func is_item_rotated(item: InventoryItem) -> bool:
+    return _constraint_manager.get_grid_constraint().is_item_rotated(item)
+
+
+func can_rotate_item(item: InventoryItem) -> bool:
+    return _constraint_manager.get_grid_constraint().can_rotate_item(item)
+
+
+func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
+    _constraint_manager.set_item_rotation_direction(item, positive)
+
+
+func is_item_rotation_positive(item: InventoryItem) -> bool:
+    return _constraint_manager.get_grid_constraint().is_item_rotation_positive(item)
+
+
 func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().add_item_at(item, position)
 

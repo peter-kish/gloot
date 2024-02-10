@@ -8,11 +8,15 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 # https://stackoverflow.com/questions/77026156/how-to-write-a-static-event-emitter-in-gdscript/77026952#77026952
 
 static var dragable_grabbed: Signal = (func():
+    if (CtrlDragable as Object).has_user_signal("dragable_grabbed"):
+        return (CtrlDragable as Object).dragable_grabbed
     (CtrlDragable as Object).add_user_signal("dragable_grabbed")
     return Signal(CtrlDragable, "dragable_grabbed")
 ).call()
 
 static var dragable_dropped: Signal = (func():
+    if (CtrlDragable as Object).has_user_signal("dragable_dropped"):
+        return (CtrlDragable as Object).dragable_dropped
     (CtrlDragable as Object).add_user_signal("dragable_dropped")
     return Signal(CtrlDragable, "dragable_dropped")
 ).call()
@@ -75,7 +79,7 @@ func drag_start() -> void:
 
     drag_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
     drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
-    add_child(_preview_node)
+    get_viewport().add_child(_preview_node)
     _preview_node.add_child(drag_preview)
     _preview_node.z_index = drag_z_index
 
@@ -85,8 +89,13 @@ func drag_end() -> void:
         return
 
     _preview_node.remove_child(drag_preview)
-    remove_child(_preview_node)
+    _preview_node.get_parent().remove_child(_preview_node)
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
+
+
+func _notification(what) -> void:
+    if what == NOTIFICATION_PREDELETE && _preview_node:
+        _preview_node.queue_free()
 
 
 func _process(_delta) -> void:

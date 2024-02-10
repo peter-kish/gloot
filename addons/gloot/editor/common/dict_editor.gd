@@ -33,32 +33,22 @@ const supported_types: Array[int] = [
 @onready var btn_add = $VBoxContainer/HBoxContainer/BtnAdd
 
 @export var dictionary: Dictionary :
-    get:
-        return dictionary
     set(new_dictionary):
         dictionary = new_dictionary
         refresh()
 @export var color_map: Dictionary :
-    get:
-        return color_map
     set(new_color_map):
         color_map = new_color_map
         refresh()
 @export var remove_button_map: Dictionary :
-    get:
-        return remove_button_map
     set(new_remove_button_map):
         remove_button_map = new_remove_button_map
         refresh()
 @export var immutable_keys: Array[String] :
-    get:
-        return immutable_keys
     set(new_immutable_keys):
         immutable_keys = new_immutable_keys
         refresh()
 @export var default_color: Color = Color.WHITE :
-    get:
-        return default_color
     set(new_default_color):
         default_color = new_default_color
         refresh()

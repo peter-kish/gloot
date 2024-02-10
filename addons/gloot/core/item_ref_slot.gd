@@ -10,8 +10,6 @@ const KEY_ITEM_INDEX: String = "item_index"
 const EMPTY_SLOT = -1
 
 @export var inventory_path: NodePath :
-    get:
-        return inventory_path
     set(new_inv_path):
         if inventory_path == new_inv_path:
             return
@@ -21,8 +19,7 @@ const EMPTY_SLOT = -1
 
 var _wr_item: WeakRef = weakref(null)
 var _wr_inventory: WeakRef = weakref(null)
-@export var _equipped_item: int = EMPTY_SLOT :
-    get = _get_equipped_item_index, set = _set_equipped_item_index
+@export var _equipped_item: int = EMPTY_SLOT : set = _set_equipped_item_index
 var inventory: Inventory = null :
     get = _get_inventory, set = _set_inventory
 
@@ -33,10 +30,6 @@ func _get_configuration_warnings() -> PackedStringArray:
                 "Inventory path not set! Inventory path needs to point to an inventory node, so " +\
                 "items from that inventory can be equipped in the slot."])
     return PackedStringArray()
-
-
-func _get_equipped_item_index() -> int:
-    return _equipped_item
 
 
 func _set_equipped_item_index(new_value: int) -> void:

@@ -29,10 +29,12 @@ An array of these `Item Prototype`s are utilized inside an [`Item Protoset (JSON
 * `weight: float` - Defines the unit weight of the item. Has the value of 1.0 if not defined. NOTE: The total weight of an item is defined as its unit weight multiplied by its stack size.
 * `width: int` - Defines the width of the item. Has the value of 1 if not defined.
 * `height: int` - Defines the height of the item. Has the value of 1 if not defined.
+* `rotated: bool` - Defines whether the item is rotated. Has the value of false if not defined.
+* `positive_rotation: bool` - Defines whether the item rotates by positive or negative 90 degrees. Has the value of false if not defined.
 
 The following properties will be used by [`CtrlInventory`](./ctrl_inventory.md): `['image', 'name']`
-The following properties will be used by [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md): `['image', 'name', 'stack_size', 'weight']`
-The following properties will be used by [`CtrlInventoryGrid`](./ctrl_inventory_grid.md): `['image', 'width', 'height']`
+The following properties will be used by [`CtrlInventoryStacked`](./ctrl_inventory_stacked.md): `['image', 'name', 'stack_size', 'max_stack_size', 'weight']`
+The following properties will be used by [`CtrlInventoryGrid`](./ctrl_inventory_grid.md): `['image', 'width', 'height', 'rotated', 'positive_rotation']`
 
 In addition to the properties listed above, you can add any bespoke properties for your project's specific needs. See [`InventoryItem`](./inventory_item.md) for usage.
 

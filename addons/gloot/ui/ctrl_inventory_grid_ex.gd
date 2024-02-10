@@ -6,26 +6,18 @@ extends CtrlInventoryGrid
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 @export var field_style: StyleBox :
-    get:
-        return field_style
     set(new_field_style):
         field_style = new_field_style
         _refresh()
 @export var field_highlighted_style: StyleBox :
-    get:
-        return field_highlighted_style
     set(new_field_highlighted_style):
         field_highlighted_style = new_field_highlighted_style
         _refresh()
 @export var field_selected_style: StyleBox :
-    get:
-        return field_selected_style
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _refresh()
 @export var selection_style: StyleBox :
-    get:
-        return selection_style
     set(new_selection_style):
         selection_style = new_selection_style
         _refresh()
@@ -77,7 +69,7 @@ func _refresh_field_background_grid() -> void:
 
 
 func _create_field_background_grid() -> void:
-    if !inventory:
+    if !inventory || _field_background_grid != null:
         return
 
     _field_background_grid = Control.new()
@@ -97,6 +89,8 @@ func _create_field_background_grid() -> void:
 
 
 func _create_selection_panel() -> void:
+    if _selection_panel != null:
+        return
     _selection_panel = Panel.new()
     add_child(_selection_panel);
     move_child(_selection_panel, get_child_count() - 1)

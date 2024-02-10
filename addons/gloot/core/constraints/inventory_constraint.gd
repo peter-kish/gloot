@@ -1,8 +1,6 @@
 extends Object
 
 var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         assert(new_inventory != null, "Can't set inventory to null!")
         assert(inventory == null, "Inventory already set!")

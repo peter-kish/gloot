@@ -5,8 +5,6 @@ signal value_changed
 const MultivalueEditor = preload("res://addons/gloot/editor/common/multivalue_editor.gd")
 
 var value :
-    get:
-        return value
     set(new_value):
         value = new_value
         call_deferred("_refresh")

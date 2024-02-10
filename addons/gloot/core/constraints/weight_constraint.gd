@@ -12,8 +12,6 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
 
 
 var capacity: float :
-    get:
-        return capacity
     set(new_capacity):
         if new_capacity < 0.0:
             new_capacity = 0.0
