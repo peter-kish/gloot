@@ -6,6 +6,7 @@ extends Control
 signal item_dropped(item, offset)
 signal selection_changed
 signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -242,6 +243,7 @@ func _populate_list() -> void:
         ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
+        ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
         ctrl_inventory_item.size = _get_item_sprite_size(item)
@@ -312,6 +314,14 @@ func _on_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
         return
 
     inventory_item_activated.emit(item)
+
+
+func _on_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+    var item = ctrl_inventory_item.item
+    if !item:
+        return
+
+    inventory_item_context_activated.emit(item)
 
 
 func _on_item_mouse_entered(ctrl_inventory_item) -> void:

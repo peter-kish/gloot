@@ -73,6 +73,7 @@ func _refresh() -> void:
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
     _inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
+    _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
 
     scroll_container.add_child(_inventory_control)
 
@@ -82,6 +83,10 @@ func _refresh() -> void:
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
     GlootUndoRedo.remove_inventory_item(inventory, item)
+
+
+func _on_inventory_item_context_activated(item: InventoryItem) -> void:
+    GlootUndoRedo.rotate_inventory_item(inventory, item)
 
 
 func _ready() -> void:

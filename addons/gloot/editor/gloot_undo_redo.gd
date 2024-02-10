@@ -146,10 +146,31 @@ static func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, t
     undo_redo_manager.commit_action()
 
 
+static func rotate_inventory_item(inventory: InventoryGrid, item: InventoryItem) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+
+    if !inventory.can_rotate_item(item):
+        return
+
+    var old_rotation := inventory.is_item_rotated(item)
+    var item_index := inventory.get_item_index(item)
+
+    undo_redo_manager.create_action("Rotate Inventory Item")
+    undo_redo_manager.add_do_method(GlootUndoRedo, "_set_item_rotation", inventory, item_index, !old_rotation)
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_rotation", inventory, item_index, old_rotation)
+    undo_redo_manager.commit_action()
+
+
 static func _move_item(inventory: InventoryGrid, item_index: int, to: Vector2i) -> void:
     assert(item_index >= 0 && item_index < inventory.get_item_count())
     var item = inventory.get_items()[item_index]
     inventory.move_item_to(item, to)
+
+
+static func _set_item_rotation(inventory: InventoryGrid, item_index: int, rotation: bool) -> void:
+    assert(item_index >= 0 && item_index < inventory.get_item_count())
+    var item = inventory.get_items()[item_index]
+    inventory.set_item_rotation(item, rotation)
 
 
 static func join_inventory_items(
