@@ -206,8 +206,6 @@ func _refresh() -> void:
         _ctrl_inventory_item_rect.item = item
         if item.get_texture():
             _ctrl_inventory_item_rect.texture = item.get_texture()
-        else:
-            _ctrl_inventory_item_rect.texture = default_item_icon
 
         if _ctrl_inventory_item_rect.texture:
             _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
@@ -218,4 +216,5 @@ func _clear() -> void:
         _label.text = ""
     if _ctrl_inventory_item_rect:
         _ctrl_inventory_item_rect.item = null
+        _ctrl_inventory_item_rect.texture = default_item_icon
 
