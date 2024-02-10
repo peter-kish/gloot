@@ -116,11 +116,22 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     return true
 
 
-static func set_item_rotation(item: InventoryItem, rotated: bool) -> void:
+func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
+    if is_item_rotated(item) == rotated:
+        return false
+    if !can_rotate_item(item):
+        return false
+
     if rotated:
         item.set_property(KEY_ROTATED, true)
     else:
         item.clear_property(KEY_ROTATED)
+
+    return true
+
+
+func rotate_item(item: InventoryItem) -> bool:
+    return set_item_rotation(item, !is_item_rotated(item))
 
 
 static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
@@ -128,6 +139,14 @@ static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> 
         item.set_property(KEY_POSITIVE_ROTATION, true)
     else:
         item.clear_property(KEY_POSITIVE_ROTATION)
+
+
+func can_rotate_item(item: InventoryItem) -> bool:
+    var rotated_rect := get_item_rect(item)
+    var temp := rotated_rect.size.x
+    rotated_rect.size.x = rotated_rect.size.y
+    rotated_rect.size.y = temp
+    return rect_free(rotated_rect, item)
 
 
 func get_item_rect(item: InventoryItem) -> Rect2i:
