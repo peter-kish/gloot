@@ -16,6 +16,7 @@ func init_suite():
         "test_item_position",
         "test_item_size",
         "test_item_rect",
+        "test_item_rotation",
         "test_add_item_at",
         "test_create_and_add_item_at",
         "test_get_items_under",
@@ -91,6 +92,45 @@ func test_item_rect() -> void:
     for data in test_data:
         assert(grid_constraint.set_item_rect(item, data.input) == data.expected.return_value)
         assert(grid_constraint.get_item_rect(item) == data.expected.rect)
+
+
+func test_item_rotation() -> void:
+    const ITEM_SIZE := Vector2i(2, 1)
+    const ROTATED_ITEM_SIZE := Vector2i(1, 2)
+    inventory.add_item(item)
+    assert(grid_constraint.set_item_size(item, ITEM_SIZE))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ITEM_SIZE))
+
+    # Test default rotation
+    assert(!GridConstraint.is_item_rotated(item))
+    assert(!GridConstraint.is_item_rotation_positive(item))
+
+    # Test set rotation
+    grid_constraint.set_item_rotation(item, true)
+    assert(GridConstraint.is_item_rotated(item))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ROTATED_ITEM_SIZE))
+
+    # Test rotation
+    assert(grid_constraint.rotate_item(item))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ITEM_SIZE))
+    assert(grid_constraint.rotate_item(item))
+    assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ROTATED_ITEM_SIZE))
+
+    # Test rotation direction
+    GridConstraint.set_item_rotation_direction(item, true)
+    assert(GridConstraint.is_item_rotation_positive(item))
+
+    # Test obstructed rotation
+    grid_constraint.set_item_rotation(item, false)
+    assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ITEM_SIZE))
+    var new_item = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE, Vector2(0, 1))
+    assert(new_item != null)
+    assert(!grid_constraint.can_rotate_item(item))
+    assert(!grid_constraint.set_item_rotation(item, true))
+    assert(!grid_constraint.rotate_item(item))
+
+    inventory.remove_item(new_item)
+    new_item.free()
 
 
 func test_add_item_at() -> void:

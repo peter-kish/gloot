@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://6ij3qlnr0qr3"]
+[gd_scene load_steps=16 format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
 [ext_resource type="Script" path="res://tests/item_count_test.gd" id="2_e28iq"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://tests/inventory_tests.gd" id="6"]
 [ext_resource type="Script" path="res://tests/constraint_tests/constraint_manager_tests.gd" id="6_xg0v1"]
 [ext_resource type="Script" path="res://tests/inventory_grid_stacked_tests.gd" id="8_btq38"]
+[ext_resource type="Script" path="res://tests/inventory_item_tests.gd" id="10_sgu71"]
 [ext_resource type="Script" path="res://tests/verification_test.gd" id="14"]
 [ext_resource type="Script" path="res://tests/item_ref_slot_tests.gd" id="14_4hmdq"]
 [ext_resource type="Script" path="res://tests/item_slot_tests.gd" id="14_3213w"]
@@ -41,6 +42,9 @@ script = ExtResource("2")
 
 [node name="InventoryTests" type="Node" parent="."]
 script = ExtResource("6")
+
+[node name="InventoryItemTests" type="Node" parent="."]
+script = ExtResource("10_sgu71")
 
 [node name="InventoryStackedTests" type="Node" parent="."]
 script = ExtResource("3")

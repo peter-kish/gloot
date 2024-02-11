@@ -23,3 +23,4 @@ A UI control representing a basic `Inventory`. Displays a list of items in the i
 ## Signals
 
 * `inventory_item_activated(InventoryItem)` - Emitted when an `InventoryItem` is activated (i.e. double clicked).
+* `inventory_item_context_activated(InventoryItem)` - Emitted when the context menu of an `InventoryItem` is activated (i.e. right clicked).

@@ -4,14 +4,10 @@ class_name CtrlItemSlotEx
 extends CtrlItemSlot
 
 @export var slot_style: StyleBox :
-    get:
-        return slot_style
     set(new_slot_style):
         slot_style = new_slot_style
         _refresh()
 @export var slot_highlighted_style: StyleBox :
-    get:
-        return slot_highlighted_style
     set(new_slot_highlighted_style):
         slot_highlighted_style = new_slot_highlighted_style
         _refresh()

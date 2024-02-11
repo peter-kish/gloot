@@ -2,8 +2,6 @@
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
 @export var texture: Texture2D :
-    get:
-        return texture
     set(new_texture):
         if texture == new_texture:
             return

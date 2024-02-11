@@ -3,8 +3,6 @@ class_name ItemCount
 const Inf: int = -1
 
 @export var count: int = 0 :
-    get:
-        return count
     set(new_count):
         if new_count < 0:
             new_count = -1

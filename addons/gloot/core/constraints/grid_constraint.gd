@@ -11,14 +11,14 @@ const ItemMap = preload("res://addons/gloot/core/constraints/item_map.gd")
 const KEY_WIDTH: String = "width"
 const KEY_HEIGHT: String = "height"
 const KEY_SIZE: String = "size"
+const KEY_ROTATED: String = "rotated"
+const KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 var _item_map := ItemMap.new(Vector2i.ZERO)
 
 @export var size: Vector2i = DEFAULT_SIZE :
-    get:
-        return size
     set(new_size):
         assert(inventory, "Inventory not set!")
         assert(new_size.x > 0, "Inventory width must be positive!")
@@ -84,13 +84,22 @@ func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:
-    var item_width: int = item.get_property(KEY_WIDTH, 1)
-    var item_height: int = item.get_property(KEY_HEIGHT, 1)
-    if item.get_property("rotated", false):
-        var temp = item_width
-        item_width = item_height
-        item_height = temp
-    return Vector2i(item_width, item_height)
+    var result: Vector2i
+    if is_item_rotated(item):
+        result.x = item.get_property(KEY_HEIGHT, 1)
+        result.y = item.get_property(KEY_WIDTH, 1)
+    else:
+        result.x = item.get_property(KEY_WIDTH, 1)
+        result.y = item.get_property(KEY_HEIGHT, 1)
+    return result
+
+
+static func is_item_rotated(item: InventoryItem) -> bool:
+    return item.get_property(KEY_ROTATED, false)
+
+
+static func is_item_rotation_positive(item: InventoryItem) -> bool:
+    return item.get_property(KEY_POSITIVE_ROTATION, false)
 
 
 # TODO: Consider making a static "unsafe" version of this
@@ -105,6 +114,39 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     item.set_property(KEY_WIDTH, new_size.x)
     item.set_property(KEY_HEIGHT, new_size.y)
     return true
+
+
+func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
+    if is_item_rotated(item) == rotated:
+        return false
+    if !can_rotate_item(item):
+        return false
+
+    if rotated:
+        item.set_property(KEY_ROTATED, true)
+    else:
+        item.clear_property(KEY_ROTATED)
+
+    return true
+
+
+func rotate_item(item: InventoryItem) -> bool:
+    return set_item_rotation(item, !is_item_rotated(item))
+
+
+static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
+    if positive:
+        item.set_property(KEY_POSITIVE_ROTATION, true)
+    else:
+        item.clear_property(KEY_POSITIVE_ROTATION)
+
+
+func can_rotate_item(item: InventoryItem) -> bool:
+    var rotated_rect := get_item_rect(item)
+    var temp := rotated_rect.size.x
+    rotated_rect.size.x = rotated_rect.size.y
+    rotated_rect.size.y = temp
+    return rect_free(rotated_rect, item)
 
 
 func get_item_rect(item: InventoryItem) -> Rect2i:
@@ -126,8 +168,8 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
 func _get_prototype_size(prototype_id: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
     assert(inventory.item_protoset != null, "Inventory protoset is null!")
-    var width: int = inventory.item_protoset.get_item_property(prototype_id, KEY_WIDTH, 1)
-    var height: int = inventory.item_protoset.get_item_property(prototype_id, KEY_HEIGHT, 1)
+    var width: int = inventory.item_protoset.get_prototype_property(prototype_id, KEY_WIDTH, 1)
+    var height: int = inventory.item_protoset.get_prototype_property(prototype_id, KEY_HEIGHT, 1)
     return Vector2i(width, height)
 
 

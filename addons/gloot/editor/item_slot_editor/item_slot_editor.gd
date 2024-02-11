@@ -11,8 +11,6 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var ctrl_item_slot = $HSplitContainer/VBoxContainer/CtrlItemSlot
 
 var item_slot: ItemSlot :
-    get:
-        return item_slot
     set(new_item_slot):
         disconnect_item_slot_signals()
         item_slot = new_item_slot

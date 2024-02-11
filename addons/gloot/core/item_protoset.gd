@@ -6,8 +6,6 @@ extends Resource
 const KEY_ID: String = "id"
 
 @export_multiline var json_data :
-    get:
-        return json_data
     set(new_json_data):
         json_data = new_json_data
         if !json_data.is_empty():
@@ -15,8 +13,6 @@ const KEY_ID: String = "id"
         _save()
 
 var _prototypes: Dictionary = {} :
-    get:
-        return _prototypes
     set(new_prototypes):
         _prototypes = new_prototypes
         _update_json_data()
@@ -81,7 +77,7 @@ func _save() -> void:
 
 
 func get_prototype(id: StringName) -> Variant:
-    assert(has_prototype(id), "No prototype")
+    assert(has_prototype(id), "No prototype with ID: %s" % id)
     return _prototypes[id]
 
 
@@ -93,14 +89,14 @@ func add_prototype(id: String) -> void:
 
 
 func remove_prototype(id: String) -> void:
-    assert(has_prototype(id), "No prototype for ID")
+    assert(has_prototype(id), "No prototype with ID: %s" % id)
     _prototypes.erase(id)
     _update_json_data()
     _save()
 
 
 func duplicate_prototype(id: String) -> void:
-    assert(has_prototype(id), "No prototype for ID")
+    assert(has_prototype(id), "No prototype with ID: %s" % id)
     var new_id = "%s_duplicate" % id
     var new_dict = _prototypes[id].duplicate()
     new_dict[KEY_ID] = new_id
@@ -110,7 +106,7 @@ func duplicate_prototype(id: String) -> void:
 
 
 func rename_prototype(id: String, new_id: String) -> void:
-    assert(has_prototype(id), "No prototype for ID")
+    assert(has_prototype(id), "No prototype with ID: %s" % id)
     assert(!has_prototype(new_id), "Prototype with ID already exists")
     add_prototype(new_id)
     _prototypes[new_id] = _prototypes[id].duplicate()
@@ -130,10 +126,23 @@ func has_prototype(id: String) -> bool:
     return _prototypes.has(id)
 
 
-func get_item_property(id: String, property_name: String, default_value = null) -> Variant:
+func set_prototype_property(id: String, property_name: String, value) -> void:
+    assert(has_prototype(id), "No prototype with ID: %s" % id)
+    var prototype = get_prototype(id)
+    prototype[property_name] = value
+
+
+func get_prototype_property(id: String, property_name: String, default_value = null) -> Variant:
     if has_prototype(id):
         var prototype = get_prototype(id)
         if !prototype.is_empty() && prototype.has(property_name):
             return prototype[property_name]
     
     return default_value
+
+
+func prototype_has_property(id: String, property_name: String) -> bool:
+    if has_prototype(id):
+        return get_prototype(id).has(property_name)
+    
+    return false

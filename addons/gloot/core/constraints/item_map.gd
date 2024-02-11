@@ -21,17 +21,26 @@ func resize(size: Vector2i) -> void:
 
 
 func fill_rect(rect: Rect2i, value) -> void:
+    assert(value != null, "Can't fill with null!")
+    _fill_rect_unsafe(rect, value)
+
+
+func _fill_rect_unsafe(rect: Rect2i, value) -> void:
     for x in range(rect.size.x):
         for y in range(rect.size.y):
             var map_coords := Vector2i(rect.position.x + x, rect.position.y + y)
             if !contains(map_coords):
                 continue
-            map[map_coords.x][map_coords.y] = value
-            _free_fields -= 1
+            if map[map_coords.x][map_coords.y] != value:
+                if value == null:
+                    _free_fields += 1
+                else:
+                    _free_fields -= 1
+                map[map_coords.x][map_coords.y] = value
 
 
 func clear_rect(rect: Rect2i) -> void:
-    fill_rect(rect, null)
+    _fill_rect_unsafe(rect, null)
 
 
 func print() -> void:
