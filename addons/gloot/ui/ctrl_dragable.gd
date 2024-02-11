@@ -89,7 +89,7 @@ func drag_end() -> void:
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
 
 
-func _process(_delta) -> void:
+func _physics_process(_delta:float) -> void:
     if drag_preview:
         drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
 
