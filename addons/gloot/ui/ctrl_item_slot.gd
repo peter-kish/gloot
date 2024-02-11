@@ -226,8 +226,8 @@ func _refresh() -> void:
 
 
 func _clear() -> void:
-    if _label:
+    if _label != null:
         _label.text = ""
-    if _ctrl_inventory_item_rect:
+    if _ctrl_inventory_item_rect !=null:
         _ctrl_inventory_item_rect.item = null
 
