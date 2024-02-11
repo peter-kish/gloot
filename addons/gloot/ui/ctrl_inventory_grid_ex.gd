@@ -67,7 +67,7 @@ func _refresh_selection() -> void:
 
 
 func _refresh_field_background_grid() -> void:
-    if _field_background_grid !=null:
+    if _field_background_grid != null:
         remove_child(_field_background_grid)
         _field_background_grid.queue_free()
         _field_background_grid = null
