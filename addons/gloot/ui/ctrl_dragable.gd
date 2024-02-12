@@ -98,7 +98,7 @@ func _notification(what) -> void:
         _preview_node.queue_free()
 
 
-func _process(_delta) -> void:
+func _physics_process(_delta) -> void:
     if drag_preview:
         drag_preview.global_position = get_global_mouse_position() - get_grab_offset()
 

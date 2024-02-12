@@ -212,9 +212,9 @@ func _refresh() -> void:
 
 
 func _clear() -> void:
-    if _label:
-        _label.text = ""
-    if _ctrl_inventory_item_rect:
-        _ctrl_inventory_item_rect.item = null
-        _ctrl_inventory_item_rect.texture = default_item_icon
+    if _label == null || _ctrl_inventory_item_rect == null:
+        return
+    _label.text = ""
+    _ctrl_inventory_item_rect.item = null
+    _ctrl_inventory_item_rect.texture = default_item_icon
 
