@@ -59,7 +59,7 @@ func _connect_item_signals(new_item: InventoryItem) -> void:
 
 
 func _disconnect_item_signals() -> void:
-    if item == null:
+    if !is_instance_valid(item):
         return
 
     if item.protoset_changed.is_connected(_refresh):
@@ -70,14 +70,8 @@ func _disconnect_item_signals() -> void:
         item.properties_changed.disconnect(_refresh)
 
 
-func _get_item_size() -> Vector2:
-    if item && item.get_inventory():
-        return item.get_inventory().get_item_size(item)
-    return Vector2(1, 1)
-
-
 func _get_item_position() -> Vector2:
-    if item && item.get_inventory():
+    if is_instance_valid(item) && item.get_inventory():
         return item.get_inventory().get_item_position(item)
     return Vector2(0, 0)
 
@@ -89,6 +83,7 @@ func _ready() -> void:
     _selection_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _texture_rect = TextureRect.new()
     _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
     _stack_size_label = Label.new()
     _stack_size_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _stack_size_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -106,7 +101,7 @@ func _ready() -> void:
     _refresh()
 
 func _update_selection() -> void:
-    if _selection_rect == null:
+    if !is_instance_valid(_selection_rect):
         return
     _selection_rect.visible = selected
     _selection_rect.color = selection_bg_color
@@ -114,12 +109,10 @@ func _update_selection() -> void:
 
 
 func _update_texture() -> void:
-    if _texture_rect == null:
+    if !is_instance_valid(_texture_rect):
         return
     _texture_rect.texture = texture
-    if item == null:
-        return
-    if GridConstraint.is_item_rotated(item):
+    if is_instance_valid(item) && GridConstraint.is_item_rotated(item):
         _texture_rect.size = Vector2(size.y, size.x)
         if GridConstraint.is_item_rotation_positive(item):
             _texture_rect.position = Vector2(_texture_rect.size.y, 0)
@@ -135,9 +128,9 @@ func _update_texture() -> void:
 
 
 func _update_stack_size() -> void:
-    if _stack_size_label == null:
+    if !is_instance_valid(_stack_size_label):
         return
-    if item == null:
+    if !is_instance_valid(item):
         _stack_size_label.text = ""
         return
     var stack_size: int = StacksConstraint.get_item_stack_size(item)

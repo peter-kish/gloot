@@ -17,7 +17,7 @@ var _background_panel: Panel
 func _ready():
     super._ready()
     resized.connect(func():
-        if _background_panel:
+        if is_instance_valid(_background_panel):
             _background_panel.size = size
     )
 
@@ -28,7 +28,7 @@ func _refresh() -> void:
 
 
 func _update_background() -> void:
-    if !_background_panel:
+    if !is_instance_valid(_background_panel):
         _background_panel = Panel.new()
         add_child(_background_panel)
         move_child(_background_panel, 0)

@@ -46,7 +46,7 @@ func _refresh() -> void:
 
 func _refresh_selection() -> void:
     super._refresh_selection()
-    if !_selection_panel:
+    if !is_instance_valid(_selection_panel):
         return
     _selection_panel.visible = (_selected_item != null) && (selection_style != null)
     if _selected_item:
@@ -59,7 +59,7 @@ func _refresh_selection() -> void:
 
 
 func _refresh_field_background_grid() -> void:
-    if _field_background_grid:
+    if is_instance_valid(_field_background_grid):
         remove_child(_field_background_grid)
         _field_background_grid.queue_free()
         _field_background_grid = null
@@ -69,7 +69,7 @@ func _refresh_field_background_grid() -> void:
 
 
 func _create_field_background_grid() -> void:
-    if !inventory || _field_background_grid != null:
+    if !is_instance_valid(inventory) || is_instance_valid(_field_background_grid):
         return
 
     _field_background_grid = Control.new()
@@ -89,7 +89,7 @@ func _create_field_background_grid() -> void:
 
 
 func _create_selection_panel() -> void:
-    if _selection_panel != null:
+    if !is_instance_valid(_selection_panel):
         return
     _selection_panel = Panel.new()
     add_child(_selection_panel);
@@ -116,7 +116,7 @@ func _ready() -> void:
 
 
 func _on_selection_changed() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
     if !field_selected_style:
         return
@@ -135,7 +135,7 @@ func _on_inventory_resized() -> void:
 func _input(event) -> void:
     if !(event is InputEventMouseMotion):
         return
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
     
     var hovered_field_coords := Vector2i(-1, -1)

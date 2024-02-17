@@ -63,10 +63,10 @@ func _disconnect_inventory_signals() -> void:
 
 func _refresh():
     super._refresh()
-    if _label:
+    if is_instance_valid(_label):
         _label.visible = label_visible
         _label.text = "%d/%d" % [inventory.occupied_space, inventory.capacity]
-    if _progress_bar:
+    if is_instance_valid(_progress_bar):
         _progress_bar.visible = progress_bar_visible
         _progress_bar.min_value = 0
         _progress_bar.max_value = inventory.capacity

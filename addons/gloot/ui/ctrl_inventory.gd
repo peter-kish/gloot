@@ -17,7 +17,7 @@ signal inventory_item_context_activated(item)
         if is_inside_tree():
             assert(node is Inventory)
             
-        self.inventory = node
+        inventory = node
         update_configuration_warnings()
 
 
@@ -50,7 +50,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _ready():
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if _vbox_container:
+        if is_instance_valid(_vbox_container):
             _vbox_container.queue_free()
 
     _vbox_container = VBoxContainer.new()
@@ -68,13 +68,13 @@ func _ready():
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
-        self.inventory = get_node(inventory_path)
+        inventory = get_node(inventory_path)
 
     _refresh()
 
 
 func _connect_inventory_signals() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     if !inventory.contents_changed.is_connected(_refresh):
@@ -84,7 +84,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     if inventory.contents_changed.is_connected(_refresh):
@@ -113,12 +113,12 @@ func _refresh() -> void:
 
 
 func _clear_list() -> void:
-    if _item_list:
+    if is_instance_valid(_item_list):
         _item_list.clear()
 
 
 func _populate_list() -> void:
-    if inventory == null:
+    if !is_instance_valid(inventory):
         return
 
     for item in inventory.get_items():

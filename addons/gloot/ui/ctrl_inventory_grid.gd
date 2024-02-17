@@ -18,7 +18,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         field_dimensions = new_field_dimensions
-        _refresh_grid_container()
+        _refresh()
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         item_spacing = new_item_spacing
@@ -46,7 +46,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         if is_inside_tree():
             assert(node is InventoryGrid)
             
-        self.inventory = node
+        inventory = node
         update_configuration_warnings()
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
@@ -69,8 +69,8 @@ var inventory: InventoryGrid = null :
         _connect_inventory_signals()
 
         _refresh()
-var _ctrl_item_container: WeakRef = weakref(null)
-var _ctrl_drop_zone: CtrlDropZone
+var _ctrl_item_container: Control = null
+var _ctrl_drop_zone: CtrlDropZone = null
 var _selected_item: InventoryItem = null
 
 
@@ -85,17 +85,15 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _ready() -> void:
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        var ctrl_item_container = _ctrl_item_container.get_ref()
-        if ctrl_item_container:
-            ctrl_item_container.queue_free()
+        if is_instance_valid(_ctrl_item_container):
+            _ctrl_item_container.queue_free()
 
-    var ctrl_item_container = Control.new()
-    ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
-    ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
-    ctrl_item_container.anchor_right = 1.0
-    ctrl_item_container.anchor_bottom = 1.0
-    add_child(ctrl_item_container)
-    _ctrl_item_container = weakref(ctrl_item_container)
+    _ctrl_item_container = Control.new()
+    _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
+    _ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
+    _ctrl_item_container.anchor_right = 1.0
+    _ctrl_item_container.anchor_bottom = 1.0
+    add_child(_ctrl_item_container)
 
     _ctrl_drop_zone = CtrlDropZone.new()
     _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
@@ -112,16 +110,16 @@ func _ready() -> void:
     add_child(_ctrl_drop_zone)
     _ctrl_drop_zone.deactivate()
 
-    ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = ctrl_item_container.size)
+    _ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = _ctrl_item_container.size)
 
     if has_node(inventory_path):
-        self.inventory = get_node_or_null(inventory_path)
+        inventory = get_node_or_null(inventory_path)
 
     _refresh()
 
 
 func _connect_inventory_signals() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     if !inventory.contents_changed.is_connected(_refresh):
@@ -135,7 +133,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     if inventory.contents_changed.is_connected(_refresh):
@@ -169,7 +167,7 @@ func _refresh() -> void:
 
 
 func _draw() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
     if draw_grid:
         _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions, item_spacing)
@@ -213,7 +211,7 @@ func _get_inventory_size_px() -> Vector2:
 
 
 func _refresh_grid_container() -> void:
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     custom_minimum_size = _get_inventory_size_px()
@@ -221,18 +219,16 @@ func _refresh_grid_container() -> void:
 
 
 func _clear_list() -> void:
-    var ctrl_item_container = _ctrl_item_container.get_ref()
-    if !ctrl_item_container:
+    if !is_instance_valid(_ctrl_item_container):
         return
 
-    for ctrl_inventory_item in ctrl_item_container.get_children():
-        ctrl_item_container.remove_child(ctrl_inventory_item)
+    for ctrl_inventory_item in _ctrl_item_container.get_children():
+        _ctrl_item_container.remove_child(ctrl_inventory_item)
         ctrl_inventory_item.queue_free()
 
 
 func _populate_list() -> void:
-    var ctrl_item_container = _ctrl_item_container.get_ref()
-    if inventory == null || ctrl_item_container == null:
+    if !is_instance_valid(inventory) || !is_instance_valid(_ctrl_item_container):
         return
         
     for item in inventory.get_items():
@@ -253,7 +249,7 @@ func _populate_list() -> void:
             # Position the item centered when it's not streched
             ctrl_inventory_item.position += _get_unstreched_sprite_offset(item)
 
-        ctrl_item_container.add_child(ctrl_inventory_item)
+        _ctrl_item_container.add_child(ctrl_inventory_item)
 
     _refresh_selection()
 
@@ -262,10 +258,10 @@ func _refresh_selection() -> void:
     if !draw_selections:
         return
 
-    if !_ctrl_item_container.get_ref():
+    if !is_instance_valid(_ctrl_item_container):
         return
 
-    for ctrl_item in _ctrl_item_container.get_ref().get_children():
+    for ctrl_item in _ctrl_item_container.get_children():
         ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
         ctrl_item.selection_bg_color = selection_color
 
@@ -359,7 +355,7 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == null:
         return
 
-    if !inventory:
+    if !is_instance_valid(inventory):
         return
 
     if inventory.has_item(item):
