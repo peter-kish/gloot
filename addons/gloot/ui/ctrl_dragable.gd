@@ -78,7 +78,7 @@ static func get_grab_offset() -> Vector2:
 
 
 func drag_start() -> void:
-    if drag_preview == null:
+    if !is_instance_valid(drag_preview):
         return
 
     drag_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -94,7 +94,7 @@ func _get_global_preview_position() -> Vector2:
 
 
 func drag_end() -> void:
-    if drag_preview == null:
+    if !is_instance_valid(drag_preview):
         return
 
     _preview_canvas_layer.remove_child(drag_preview)
@@ -103,12 +103,12 @@ func drag_end() -> void:
 
 
 func _notification(what) -> void:
-    if what == NOTIFICATION_PREDELETE && _preview_canvas_layer:
+    if what == NOTIFICATION_PREDELETE && is_instance_valid(_preview_canvas_layer):
         _preview_canvas_layer.queue_free()
 
 
 func _process(_delta) -> void:
-    if drag_preview:
+    if is_instance_valid(drag_preview):
         drag_preview.global_position = _get_global_preview_position()
 
 

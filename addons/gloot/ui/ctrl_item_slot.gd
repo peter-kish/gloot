@@ -50,7 +50,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         if label_visible == new_label_visible:
             return
         label_visible = new_label_visible
-        if _label:
+        if is_instance_valid(_label):
             _label.visible = label_visible
 var item_slot: ItemSlotBase :
     set(new_item_slot):
@@ -77,7 +77,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 func _connect_item_slot_signals() -> void:
-    if !item_slot:
+    if !is_instance_valid(item_slot):
         return
 
     if !item_slot.item_equipped.is_connected(_refresh):
@@ -87,7 +87,7 @@ func _connect_item_slot_signals() -> void:
 
 
 func _disconnect_item_slot_signals() -> void:
-    if !item_slot:
+    if !is_instance_valid(item_slot):
         return
 
     if item_slot.item_equipped.is_connected(_refresh):
@@ -99,7 +99,7 @@ func _disconnect_item_slot_signals() -> void:
 func _ready():
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if _hbox_container:
+        if is_instance_valid(_hbox_container):
             _hbox_container.queue_free()
 
     var node: Node = get_node_or_null(item_slot_path)
@@ -150,7 +150,7 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
     if !item:
         return
-    if !item_slot:
+    if !is_instance_valid(item_slot):
         return
         
     if !item_slot.can_hold_item(item):
@@ -193,16 +193,16 @@ func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_p
 func _refresh() -> void:
     _clear()
 
-    if item_slot == null:
+    if !is_instance_valid(item_slot):
         return
     
     if item_slot.get_item() == null:
         return
 
     var item = item_slot.get_item()
-    if _label:
+    if is_instance_valid(_label):
         _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
-    if _ctrl_inventory_item_rect:
+    if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = item
         if item.get_texture():
             _ctrl_inventory_item_rect.texture = item.get_texture()
@@ -212,9 +212,9 @@ func _refresh() -> void:
 
 
 func _clear() -> void:
-    if _label:
+    if is_instance_valid(_label):
         _label.text = ""
-    if _ctrl_inventory_item_rect:
+    if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = null
         _ctrl_inventory_item_rect.texture = default_item_icon
 
