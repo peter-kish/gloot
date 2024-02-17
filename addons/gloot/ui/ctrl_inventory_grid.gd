@@ -18,7 +18,7 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         field_dimensions = new_field_dimensions
-        _refresh_grid_container()
+        _refresh()
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         item_spacing = new_item_spacing
