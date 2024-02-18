@@ -105,8 +105,6 @@ func _ready() -> void:
     CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
         _ctrl_drop_zone.deactivate()
     )
-    _ctrl_drop_zone.mouse_entered.connect(_on_drop_zone_mouse_entered)
-    _ctrl_drop_zone.mouse_exited.connect(_on_drop_zone_mouse_exited)
     add_child(_ctrl_drop_zone)
     _ctrl_drop_zone.deactivate()
 
@@ -335,19 +333,6 @@ func _select(item: InventoryItem) -> void:
     _selected_item = item
     _refresh_selection()
     selection_changed.emit()
-
-
-func _on_drop_zone_mouse_entered() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl == null || _grabbed_ctrl.item == null:
-        return
-    CtrlInventoryItemRect.override_preview_size(_get_item_sprite_size(_grabbed_ctrl.item))
-
-
-func _on_drop_zone_mouse_exited() -> void:
-    CtrlInventoryItemRect.restore_preview_size()
 
 
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
