@@ -104,6 +104,11 @@ func test_return_item_to_source_inventory() -> void:
     assert(!inventory.has_item(item))
     slot.remember_source_inventory = true
 
+    assert(slot.equip(item))
+    assert(slot.clear())
+    assert(slot.get_item() == null)
+    assert(!inventory.has_item(item))
+
 
 func test_equip_item_in_two_slots() -> void:
     assert(slot.equip(item))
