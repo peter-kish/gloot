@@ -34,7 +34,7 @@ func _ready():
     _label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
     _progress_bar.add_child(_label)
 
-    _refresh()
+    _queue_refresh()
 
 
 func _connect_inventory_signals() -> void:
@@ -43,10 +43,10 @@ func _connect_inventory_signals() -> void:
 
     super._connect_inventory_signals()
 
-    if !inventory.capacity_changed.is_connected(_refresh):
-        inventory.capacity_changed.connect(_refresh)
-    if !inventory.occupied_space_changed.is_connected(_refresh):
-        inventory.occupied_space_changed.connect(_refresh)
+    if !inventory.capacity_changed.is_connected(_queue_refresh):
+        inventory.capacity_changed.connect(_queue_refresh)
+    if !inventory.occupied_space_changed.is_connected(_queue_refresh):
+        inventory.occupied_space_changed.connect(_queue_refresh)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -55,10 +55,10 @@ func _disconnect_inventory_signals() -> void:
 
     super._disconnect_inventory_signals()
 
-    if !inventory.capacity_changed.is_connected(_refresh):
-        inventory.capacity_changed.disconnect(_refresh)
-    if !inventory.occupied_space_changed.is_connected(_refresh):
-        inventory.occupied_space_changed.disconnect(_refresh)
+    if !inventory.capacity_changed.is_connected(_queue_refresh):
+        inventory.capacity_changed.disconnect(_queue_refresh)
+    if !inventory.occupied_space_changed.is_connected(_queue_refresh):
+        inventory.occupied_space_changed.disconnect(_queue_refresh)
 
 
 func _refresh():
