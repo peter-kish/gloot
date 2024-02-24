@@ -31,19 +31,12 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
             return
         default_item_icon = new_default_item_icon
         _refresh()
-@export var icon_scaling: Vector2 = Vector2.ONE :
-    set(new_icon_scaling):
-        if icon_scaling == new_icon_scaling:
-            return
-        icon_scaling = new_icon_scaling
-        if _ctrl_inventory_item_rect && _ctrl_inventory_item_rect.texture:
-            _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 @export var item_texture_visible: bool = true :
     set(new_item_texture_visible):
         if item_texture_visible == new_item_texture_visible:
             return
         item_texture_visible = new_item_texture_visible
-        if _ctrl_inventory_item_rect:
+        if is_instance_valid(_ctrl_inventory_item_rect):
             _ctrl_inventory_item_rect.visible = item_texture_visible
 @export var label_visible: bool = true :
     set(new_label_visible):
@@ -52,6 +45,43 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         label_visible = new_label_visible
         if is_instance_valid(_label):
             _label.visible = label_visible
+@export_group("Icon Behavior", "icon_")
+@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
+    set(new_icon_stretch_mode):
+        if icon_stretch_mode == new_icon_stretch_mode:
+            return
+        icon_stretch_mode = new_icon_stretch_mode
+        if is_instance_valid(_ctrl_inventory_item_rect):
+            _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
+@export_group("Text Behavior", "label_")
+@export var label_horizontal_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER :
+    set(new_label_horizontal_alignment):
+        if label_horizontal_alignment == new_label_horizontal_alignment:
+            return
+        label_horizontal_alignment = new_label_horizontal_alignment
+        if is_instance_valid(_label):
+            _label.horizontal_alignment = label_horizontal_alignment
+@export var label_vertical_alignment: VerticalAlignment = VERTICAL_ALIGNMENT_CENTER :
+    set(new_label_vertical_alignment):
+        if label_vertical_alignment == new_label_vertical_alignment:
+            return
+        label_vertical_alignment = new_label_vertical_alignment
+        if is_instance_valid(_label):
+            _label.vertical_alignment = label_vertical_alignment
+@export var label_text_overrun_behavior: TextServer.OverrunBehavior :
+    set(new_label_text_overrun_behavior):
+        if label_text_overrun_behavior == new_label_text_overrun_behavior:
+            return
+        label_text_overrun_behavior = new_label_text_overrun_behavior
+        if is_instance_valid(_label):
+            _label.text_overrun_behavior = label_text_overrun_behavior
+@export var label_clip_text: bool :
+    set(new_label_clip_text):
+        if label_clip_text == new_label_clip_text:
+            return
+        label_clip_text = new_label_clip_text
+        if is_instance_valid(_label):
+            _label.clip_text = label_clip_text
 var item_slot: ItemSlotBase :
     set(new_item_slot):
         if new_item_slot == item_slot:
@@ -115,21 +145,16 @@ func _ready():
 
     _ctrl_inventory_item_rect = CtrlInventoryRect.new()
     _ctrl_inventory_item_rect.visible = item_texture_visible
-    _ctrl_inventory_item_rect.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-    _ctrl_inventory_item_rect.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+    _ctrl_inventory_item_rect.size_flags_horizontal = SIZE_EXPAND_FILL
+    _ctrl_inventory_item_rect.size_flags_vertical = SIZE_EXPAND_FILL
     _ctrl_inventory_item_rect.item_slot = item_slot
-    _ctrl_inventory_item_rect.resized.connect(func():
-        custom_minimum_size = _ctrl_inventory_item_rect.size
-        size = _ctrl_inventory_item_rect.size
-    )
+    _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
     _hbox_container.add_child(_ctrl_inventory_item_rect)
 
     _ctrl_drop_zone = CtrlDropZone.new()
     _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
     _ctrl_drop_zone.size = size
     resized.connect(func(): _ctrl_drop_zone.size = size)
-    _ctrl_drop_zone.mouse_entered.connect(_on_drop_zone_mouse_entered)
-    _ctrl_drop_zone.mouse_exited.connect(_on_drop_zone_mouse_exited)
     CtrlDragable.dragable_grabbed.connect(_on_any_dragable_grabbed)
     CtrlDragable.dragable_dropped.connect(_on_any_dragable_dropped)
     add_child(_ctrl_drop_zone)
@@ -137,10 +162,18 @@ func _ready():
 
     _label = Label.new()
     _label.visible = label_visible
+    _label.size_flags_horizontal = SIZE_EXPAND_FILL
+    _label.size_flags_vertical = SIZE_EXPAND_FILL
+    _label.horizontal_alignment = label_horizontal_alignment
+    _label.vertical_alignment = label_vertical_alignment
+    _label.text_overrun_behavior = label_text_overrun_behavior
+    _label.clip_text = label_clip_text
     _hbox_container.add_child(_label)
 
-    size = _hbox_container.size
-    _hbox_container.resized.connect(func(): size = _hbox_container.size)
+    _hbox_container.size = size
+    resized.connect(func():
+        _hbox_container.size = size
+    )
 
     _refresh()
 
@@ -160,19 +193,6 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
         return
 
     item_slot.equip(item)
-
-
-func _on_drop_zone_mouse_entered() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl == null || _grabbed_ctrl.texture == null:
-        return
-    CtrlInventoryItemRect.override_preview_size(_grabbed_ctrl.texture.get_size() * icon_scaling)
-
-
-func _on_drop_zone_mouse_exited() -> void:
-    CtrlInventoryItemRect.restore_preview_size()
 
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
@@ -206,9 +226,6 @@ func _refresh() -> void:
         _ctrl_inventory_item_rect.item = item
         if item.get_texture():
             _ctrl_inventory_item_rect.texture = item.get_texture()
-
-        if _ctrl_inventory_item_rect.texture:
-            _ctrl_inventory_item_rect.custom_minimum_size = _ctrl_inventory_item_rect.texture.get_size() * icon_scaling
 
 
 func _clear() -> void:

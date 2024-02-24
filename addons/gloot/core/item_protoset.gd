@@ -46,8 +46,18 @@ func _to_json() -> String:
     for prototype in result:
         _stringify_prototype(prototype)
 
-    # TODO: Add plugin settings for this
-    return JSON.stringify(result, "    ")
+    var indent = "\t"
+    if ProjectSettings.get_setting("gloot/JSON_serialization/indent_using_spaces", true):
+        indent = ""
+        for i in ProjectSettings.get_setting("gloot/JSON_serialization/indent_size", 4):
+            indent += " "
+    
+    return JSON.stringify(
+        result,
+        indent,
+        ProjectSettings.get_setting("gloot/JSON_serialization/sort_keys", true),
+        ProjectSettings.get_setting("gloot/JSON_serialization/full_precision", false),
+    )
 
 
 func _stringify_prototype(prototype: Dictionary) -> void:

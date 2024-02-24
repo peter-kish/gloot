@@ -31,9 +31,10 @@ var inventory: Inventory = null :
         inventory = new_inventory
         _connect_inventory_signals()
 
-        _refresh()
+        _queue_refresh()
 var _vbox_container: VBoxContainer
 var _item_list: ItemList
+var _refresh_queued: bool = false
 
 const KEY_IMAGE = "image"
 const KEY_NAME = "name"
@@ -70,15 +71,15 @@ func _ready():
     if has_node(inventory_path):
         inventory = get_node(inventory_path)
 
-    _refresh()
+    _queue_refresh()
 
 
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if !inventory.contents_changed.is_connected(_refresh):
-        inventory.contents_changed.connect(_refresh)
+    if !inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_modified.is_connected(_on_item_modified):
         inventory.item_modified.connect(_on_item_modified)
 
@@ -87,8 +88,8 @@ func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if inventory.contents_changed.is_connected(_refresh):
-        inventory.contents_changed.disconnect(_refresh)
+    if inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_modified.is_connected(_on_item_modified):
         inventory.item_modified.disconnect(_on_item_modified)
 
@@ -103,7 +104,17 @@ func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index:
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
-    _refresh()
+    _queue_refresh()
+
+
+func _process(_delta) -> void:
+    if _refresh_queued:
+        _refresh()
+        _refresh_queued = false
+
+
+func _queue_refresh() -> void:
+    _refresh_queued = true
 
 
 func _refresh() -> void:

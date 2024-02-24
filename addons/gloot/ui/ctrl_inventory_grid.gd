@@ -18,19 +18,19 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         field_dimensions = new_field_dimensions
-        _refresh()
+        _queue_refresh()
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         item_spacing = new_item_spacing
-        _refresh()
+        _queue_refresh()
 @export var draw_grid: bool = true :
     set(new_draw_grid):
         draw_grid = new_draw_grid
-        _refresh()
+        _queue_refresh()
 @export var grid_color: Color = Color.BLACK :
     set(new_grid_color):
         grid_color = new_grid_color
-        _refresh()
+        _queue_refresh()
 @export var draw_selections: bool = false :
     set(new_draw_selections):
         draw_selections = new_draw_selections
@@ -51,11 +51,11 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         default_item_texture = new_default_item_texture
-        _refresh()
+        _queue_refresh()
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
         stretch_item_sprites = new_stretch_item_sprites
-        _refresh()
+        _queue_refresh()
 @export var drag_sprite_z_index: int = 1
 var inventory: InventoryGrid = null :
     set(new_inventory):
@@ -68,10 +68,11 @@ var inventory: InventoryGrid = null :
         inventory = new_inventory
         _connect_inventory_signals()
 
-        _refresh()
+        _queue_refresh()
 var _ctrl_item_container: Control = null
 var _ctrl_drop_zone: CtrlDropZone = null
 var _selected_item: InventoryItem = null
+var _refresh_queued: bool = false
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -105,8 +106,6 @@ func _ready() -> void:
     CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
         _ctrl_drop_zone.deactivate()
     )
-    _ctrl_drop_zone.mouse_entered.connect(_on_drop_zone_mouse_entered)
-    _ctrl_drop_zone.mouse_exited.connect(_on_drop_zone_mouse_exited)
     add_child(_ctrl_drop_zone)
     _ctrl_drop_zone.deactivate()
 
@@ -115,15 +114,15 @@ func _ready() -> void:
     if has_node(inventory_path):
         inventory = get_node_or_null(inventory_path)
 
-    _refresh()
+    _queue_refresh()
 
 
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if !inventory.contents_changed.is_connected(_refresh):
-        inventory.contents_changed.connect(_refresh)
+    if !inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_modified.is_connected(_on_item_modified):
         inventory.item_modified.connect(_on_item_modified)
     if !inventory.size_changed.is_connected(_on_inventory_resized):
@@ -136,8 +135,8 @@ func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if inventory.contents_changed.is_connected(_refresh):
-        inventory.contents_changed.disconnect(_refresh)
+    if inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_modified.is_connected(_on_item_modified):
         inventory.item_modified.disconnect(_on_item_modified)
     if inventory.size_changed.is_connected(_on_inventory_resized):
@@ -147,16 +146,26 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_item_modified(_item: InventoryItem) -> void:
-    _refresh()
+    _queue_refresh()
 
 
 func _on_inventory_resized() -> void:
-    _refresh()
+    _queue_refresh()
 
 
 func _on_item_removed(_item: InventoryItem) -> void:
     if _item == _selected_item:
         _select(null)
+
+
+func _process(_delta) -> void:
+    if _refresh_queued:
+        _refresh()
+        _refresh_queued = false
+
+
+func _queue_refresh() -> void:
+    _refresh_queued = true
 
 
 func _refresh() -> void:
@@ -335,19 +344,6 @@ func _select(item: InventoryItem) -> void:
     _selected_item = item
     _refresh_selection()
     selection_changed.emit()
-
-
-func _on_drop_zone_mouse_entered() -> void:
-    if CtrlDragable._grabbed_dragable == null:
-        return
-    var _grabbed_ctrl := (CtrlDragable._grabbed_dragable as CtrlInventoryItemRect)
-    if _grabbed_ctrl == null || _grabbed_ctrl.item == null:
-        return
-    CtrlInventoryItemRect.override_preview_size(_get_item_sprite_size(_grabbed_ctrl.item))
-
-
-func _on_drop_zone_mouse_exited() -> void:
-    CtrlInventoryItemRect.restore_preview_size()
 
 
 func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
