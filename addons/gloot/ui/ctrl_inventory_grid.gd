@@ -57,10 +57,30 @@ class GridControl extends Control:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
-@export var draw_grid: bool = true
-@export var grid_color: Color = Color.BLACK
-@export var draw_selections: bool = false
-@export var selection_color: Color = Color.GRAY
+@export var draw_grid: bool = true :
+    set(new_draw_grid):
+        if new_draw_grid == draw_grid:
+            return
+        draw_grid = new_draw_grid
+        _queue_refresh()
+@export var grid_color: Color = Color.BLACK :
+    set(new_grid_color):
+        if(new_grid_color == grid_color):
+            return
+        grid_color = new_grid_color
+        _queue_refresh()
+@export var draw_selections: bool = false :
+    set(new_draw_selections):
+        if new_draw_selections == draw_selections:
+            return
+        draw_selections = new_draw_selections
+        _queue_refresh()
+@export var selection_color: Color = Color.GRAY :
+    set(new_selection_color):
+        if(new_selection_color == selection_color):
+            return
+        selection_color = new_selection_color
+        _queue_refresh()
 @export var inventory_path: NodePath :
     set(new_inv_path):
         if new_inv_path == inventory_path:
@@ -97,11 +117,12 @@ var inventory: InventoryGrid = null :
 
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.inventory = inventory
-        if is_instance_valid(_ctrl_grid):
-            _ctrl_grid.dimensions = _get_inventory_dimensions()
+        _queue_refresh()
 
 var _ctrl_grid: GridControl = null
+var _ctrl_selection: ColorRect = null
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
+var _refresh_queued: bool = false
 
 
 func _connect_inventory_signals() -> void:
@@ -119,7 +140,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_inventory_resized() -> void:
-    _ctrl_grid.dimensions = _get_inventory_dimensions()
+    _queue_refresh()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -147,16 +168,51 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
+    _ctrl_inventory_grid_basic.selection_changed.connect(_queue_refresh)
 
     _ctrl_grid = GridControl.new(grid_color, _get_inventory_dimensions())
     _ctrl_grid.color = grid_color
     _ctrl_grid.dimensions = _get_inventory_dimensions()
     _ctrl_grid.name = "CtrlGrid"
 
+    _ctrl_selection = ColorRect.new()
+    _ctrl_selection.color = selection_color
+    _ctrl_selection.hide()
+
     add_child(_ctrl_grid)
+    add_child(_ctrl_selection)
     add_child(_ctrl_inventory_grid_basic)
 
     _update_size()
+    _queue_refresh()
+
+
+func _process(_delta) -> void:
+    if _refresh_queued:
+        _refresh()
+        _refresh_queued = false
+
+
+func _refresh() -> void:
+    if is_instance_valid(_ctrl_grid):
+        _ctrl_grid.dimensions = _get_inventory_dimensions()
+        _ctrl_grid.color = grid_color
+        _ctrl_grid.visible = draw_grid
+    else:
+        _ctrl_grid.hide()
+
+    if is_instance_valid(_ctrl_selection) && is_instance_valid(_ctrl_inventory_grid_basic):
+        var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
+        _ctrl_selection.position = r.position
+        _ctrl_selection.size = r.size
+        _ctrl_selection.color = selection_color
+        _ctrl_selection.visible = draw_selections && _ctrl_inventory_grid_basic.get_selected_inventory_item()
+    else:
+        _ctrl_selection.hide()
+
+
+func _queue_refresh() -> void:
+    _refresh_queued = true
 
 
 func _get_inventory_dimensions() -> Vector2i:

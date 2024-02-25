@@ -349,3 +349,12 @@ func deselect_inventory_item() -> void:
 func select_inventory_item(item: InventoryItem) -> void:
     _select(item)
 
+
+func get_item_rect(item: InventoryItem) -> Rect2:
+    if !is_instance_valid(item):
+        return Rect2()
+    return Rect2(
+        _get_field_position(inventory.get_item_position(item)),
+        _get_item_sprite_size(item)
+    )
+
