@@ -177,20 +177,6 @@ func _refresh_selection_panel() -> void:
     _selection_panel.size = r.size
 
 
-# func _create_selection_panel() -> void:
-#     if !is_instance_valid(_selection_panel):
-#         return
-#     _selection_panel = Panel.new()
-#     var selected_item = _ctrl_inventory_grid_basic.get_selected_inventory_item()
-#     add_child(_selection_panel);
-#     move_child(_selection_panel, get_child_count() - 1)
-#     _set_panel_style(_selection_panel, selection_style)
-#     _selection_panel.visible = (selected_item != null) && (selection_style != null)
-#     _selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-#     _selection_panel.mouse_entered.connect(func(): item_mouse_entered.emit(selected_item))
-#     _selection_panel.mouse_exited.connect(func(): item_mouse_exited.emit(selected_item))
-
-
 func _refresh_field_background_grid() -> void:
     if is_instance_valid(_field_background_grid):
         while _field_background_grid.get_child_count() > 0:
@@ -281,52 +267,35 @@ func _on_inventory_resized() -> void:
     _refresh_field_background_grid()
 
 
-# func _input(event) -> void:
-#     if !(event is InputEventMouseMotion):
-#         return
-#     if !is_instance_valid(inventory):
-#         return
+func _input(event) -> void:
+    if !(event is InputEventMouseMotion):
+        return
+    if !is_instance_valid(inventory):
+        return
     
-#     var hovered_field_coords := Vector2i(-1, -1)
-#     if _is_hovering(get_local_mouse_position()):
-#         hovered_field_coords = _ctrl_inventory_grid_basic.get_field_coords(get_local_mouse_position())
-
-#     # _reset_highlights()
-#     if !field_highlighted_style:
-#         return
-#     if _highlight_grabbed_item(field_highlighted_style):
-#         return
-#     _highlight_hovered_fields(hovered_field_coords, field_highlighted_style)
+    if !field_highlighted_style:
+        return
+    _highlight_grabbed_item(field_highlighted_style)
 
 
-# func _highlight_hovered_fields(field_coords: Vector2i, style: StyleBox) -> void:
-#     if !style || !Verify.vector_positive(field_coords):
-#         return
+func _highlight_grabbed_item(style: StyleBox):
+    var grabbed_item: InventoryItem = _get_global_grabbed_item()
+    if !grabbed_item:
+        return
 
-#     if _set_item_background(inventory.get_item_at(field_coords), style):
-#         return
+    var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
+    if !_is_hovering(global_grabbed_item_pos):
+        return
 
-#     _highlight_field(field_coords, style)
-
-
-# func _highlight_grabbed_item(style: StyleBox) -> bool:
-#     var grabbed_item: InventoryItem = _get_global_grabbed_item()
-#     if !grabbed_item:
-#         return false
-
-#     var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
-#     if !_is_hovering(global_grabbed_item_pos):
-#         return false
-
-#     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
-#     var item_size := inventory.get_item_size(grabbed_item)
-#     var rect := Rect2i(grabbed_item_coords, item_size)
-#     _set_rect_background(rect, style, true)
-#     return true
+    var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
+    var item_size := inventory.get_item_size(grabbed_item)
+    var rect := Rect2i(grabbed_item_coords, item_size)
+    _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+    _set_rect_background(rect, style, PriorityPanel.StylePriority.LOW)
 
 
-# func _is_hovering(local_pos: Vector2) -> bool:
-#     return get_rect().has_point(local_pos)
+func _is_hovering(local_pos: Vector2) -> bool:
+    return get_rect().has_point(local_pos)
 
 
 func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
@@ -337,15 +306,6 @@ func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -
     return true
 
 
-# func _highlight_field(field_coords: Vector2i, style: StyleBox) -> void:
-#     var selected_item := _ctrl_inventory_grid_basic.get_selected_inventory_item()
-#     if selected_item && inventory.get_item_rect(selected_item).has_point(field_coords):
-#         # Don't highlight selected fields (done in _on_selection_changed())
-#         return
-
-#     _set_rect_background(Rect2i(field_coords, Vector2i.ONE), style, true)
-
-
 func _set_rect_background(rect: Rect2i, style: StyleBox, priority: int) -> void:
     var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
     for i in range(rect.position.x, h_range):
@@ -354,16 +314,21 @@ func _set_rect_background(rect: Rect2i, style: StyleBox, priority: int) -> void:
             _field_backgrounds[i][j].set_style(style, priority)
 
 
-# func _get_global_grabbed_item() -> InventoryItem:
-#     if CtrlDragable.get_grabbed_dragable() == null:
-#         return null
-#     return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
+func _fill_background(style: StyleBox, priority: int) -> void:
+    for panel in _field_background_grid.get_children():
+        panel.set_style(style, priority)
 
 
-# func _get_global_grabbed_item_local_pos() -> Vector2:
-#     if CtrlDragable.get_grabbed_dragable():
-#         return get_local_mouse_position() - CtrlDragable.get_grab_offset()
-#     return Vector2(-1, -1)
+func _get_global_grabbed_item() -> InventoryItem:
+    if CtrlDragable.get_grabbed_dragable() == null:
+        return null
+    return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
+
+
+func _get_global_grabbed_item_local_pos() -> Vector2:
+    if CtrlDragable.get_grabbed_dragable():
+        return get_local_mouse_position() - CtrlDragable.get_grab_offset()
+    return Vector2(-1, -1)
 
 
 func get_selected_inventory_item() -> InventoryItem:
