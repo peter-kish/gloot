@@ -82,8 +82,11 @@ func _ready() -> void:
         if is_instance_valid(_ctrl_item_container):
             _ctrl_item_container.queue_free()
 
+    mouse_filter = Control.MOUSE_FILTER_IGNORE
+
     _ctrl_item_container = Control.new()
     _ctrl_item_container.size = size
+    _ctrl_item_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
     resized.connect(func(): _ctrl_item_container.size = size)
     add_child(_ctrl_item_container)
 

@@ -156,6 +156,8 @@ func _ready() -> void:
         # Clean up, in case it is duplicated in the editor
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.queue_free()
+            _ctrl_grid.queue_free()
+            _ctrl_selection.queue_free()
 
     if has_node(inventory_path):
         inventory = get_node_or_null(inventory_path)
@@ -235,4 +237,10 @@ func _get_inventory() -> InventoryGrid:
     if !is_instance_valid(_ctrl_inventory_grid_basic.inventory):
         return null
     return _ctrl_inventory_grid_basic.inventory
+
+
+func get_selected_inventory_item() -> InventoryItem:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return null
+    return _ctrl_inventory_grid_basic.get_selected_inventory_item()
 
