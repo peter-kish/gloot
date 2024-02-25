@@ -199,7 +199,6 @@ func _populate_list() -> void:
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
         ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
-        ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
@@ -216,14 +215,6 @@ func _populate_list() -> void:
 
 func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     _select(null)
-
-
-func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    var item = ctrl_inventory_item.item
-    # The item might have been freed in case the item stack has been moved and merged with another
-    # stack.
-    if is_instance_valid(item) and inventory.has_item(item):
-        _select(item)
 
 
 func _get_item_sprite_size(item: InventoryItem) -> Vector2:
@@ -280,6 +271,8 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
         _handle_item_move(item, drop_position)
     else:
         _handle_item_transfer(item, drop_position)
+
+    _select(item)
 
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:

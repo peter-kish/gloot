@@ -232,6 +232,10 @@ func _ready() -> void:
     _selection_panel.set_style(selection_style)
     add_child(_selection_panel)
 
+    CtrlDragable.dragable_dropped.connect(func(_grabbed_dragable, _zone, _local_drop_position):
+        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+    )
+
     _update_size()
     _queue_refresh()
 
@@ -285,6 +289,7 @@ func _highlight_grabbed_item(style: StyleBox):
 
     var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
     if !_is_hovering(global_grabbed_item_pos):
+        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
         return
 
     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
