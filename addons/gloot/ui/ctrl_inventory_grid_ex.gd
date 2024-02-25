@@ -3,6 +3,16 @@
 class_name CtrlInventoryGridEx
 extends CtrlInventoryGrid
 
+# highlight hovered fields
+#   on field hover
+# highlight hovered items
+#   on item hover
+# highlight selections
+#   on item select
+
+# highlight grabbed item
+#   on mouse motion & grabbed item
+
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 @export var field_style: StyleBox :
