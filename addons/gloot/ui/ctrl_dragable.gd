@@ -34,6 +34,7 @@ static var _grab_offset: Vector2
 var drag_preview: Control
 var _preview_canvas_layer := CanvasLayer.new()
 var drag_z_index := 1
+var enabled: bool = true
 
 
 static func grab(dragable: CtrlDragable) -> void:
@@ -113,6 +114,9 @@ func _process(_delta) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+    if !enabled:
+        return
+        
     if !(event is InputEventMouseButton):
         return
 
@@ -122,6 +126,14 @@ func _gui_input(event: InputEvent) -> void:
 
     if mb_event.is_pressed():
         grab(self)
+
+
+func activate() -> void:
+    enabled = true
+
+
+func deactivate() -> void:
+    enabled = false
 
 
 func is_dragged() -> bool:
