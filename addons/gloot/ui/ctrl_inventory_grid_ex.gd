@@ -3,16 +3,6 @@
 class_name CtrlInventoryGridEx
 extends Control
 
-# highlight hovered fields
-#   on field hover
-# highlight hovered items
-#   on item hover
-# highlight selections
-#   on item select
-
-# highlight grabbed item
-#   on mouse motion & grabbed item
-
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -21,35 +11,51 @@ const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_gri
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 
-class CustomizablePanel extends Panel:
+class PriorityPanel extends Panel:
+    enum StylePriority {HIGH = 0, MEDIUM = 1, LOW = 2}
+
     var regular_style: StyleBox
     var hover_style: StyleBox
-    var persistent_style: StyleBox :
-        set(new_persistent_style):
-            if new_persistent_style == persistent_style:
-                return
-            persistent_style = new_persistent_style
-            _set_style(persistent_style)
+    var _styles: Array[StyleBox] = [null, null, null]
 
 
-    func _init(regular_style_: StyleBox, hover_style_: StyleBox):
+    func _init(regular_style_: StyleBox, hover_style_: StyleBox) -> void:
         regular_style = regular_style_
         hover_style = hover_style_
 
 
-    func _ready():
-        _set_style(regular_style)
+    func _ready() -> void:
+        set_style(regular_style)
         mouse_entered.connect(func():
-            if persistent_style == null:
-                _set_style(hover_style)
+            set_style(hover_style)
         )
         mouse_exited.connect(func():
-            if persistent_style == null:
-                _set_style(regular_style)
+            set_style(regular_style)
         )
 
 
-    func _set_style(style: StyleBox):
+    func set_style(style: StyleBox, priority: int = StylePriority.LOW) -> void:
+        if priority > 2 || priority < 0:
+            return
+        if _styles[priority] == style:
+            return
+
+        _styles[priority] = style
+
+        for i in range(0, 3):
+            if _styles[i] != null:
+                _set_panel_style(_styles[i])
+                return
+
+
+    func _set_panel_style(style: StyleBox) -> void:
+        remove_theme_stylebox_override("panel")
+        if style != null:
+            add_theme_stylebox_override("panel", style)
+
+
+class SelectionPanel extends Panel:
+    func set_style(style: StyleBox) -> void:
         remove_theme_stylebox_override("panel")
         if style != null:
             add_theme_stylebox_override("panel", style)
@@ -124,7 +130,7 @@ var inventory: InventoryGrid = null :
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
 var _field_background_grid: Control
 var _field_backgrounds: Array
-var _selection_panel: Panel
+var _selection_panel: SelectionPanel
 var _refresh_queued: bool = false
 
 
@@ -150,24 +156,25 @@ func _process(_delta) -> void:
 
 func _refresh() -> void:
     _refresh_field_background_grid()
+    _refresh_selection_panel()
 
 
 func _queue_refresh() -> void:
     _refresh_queued = true
 
 
-# func _refresh_selection_panel() -> void:
-#     if !is_instance_valid(_selection_panel):
-#         return
-#     var selected_item = _ctrl_inventory_grid_basic.get_selected_inventory_item()
-#     _selection_panel.visible = (selected_item != null) && (selection_style != null)
-#     if !selected_item:
-#         return
-#     move_child(_selection_panel, get_child_count() - 1)
+func _refresh_selection_panel() -> void:
+    if !is_instance_valid(_selection_panel):
+        return
+    _selection_panel.set_style(selection_style)
+    var selected_item = _ctrl_inventory_grid_basic.get_selected_inventory_item()
+    _selection_panel.visible = (selected_item != null) && (selection_style != null)
+    if !selected_item:
+        return
 
-#     var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
-#     _selection_panel.position = r.position
-#     _selection_panel.size = r.size
+    var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
+    _selection_panel.position = r.position
+    _selection_panel.size = r.size
 
 
 # func _create_selection_panel() -> void:
@@ -197,18 +204,12 @@ func _refresh_field_background_grid() -> void:
     for i in range(inventory.size.x):
         _field_backgrounds.append([])
         for j in range(inventory.size.y):
-            var field_panel: CustomizablePanel = CustomizablePanel.new(field_style, field_highlighted_style)
+            var field_panel: PriorityPanel = PriorityPanel.new(field_style, field_highlighted_style)
             field_panel.visible = (field_style != null)
             field_panel.size = field_dimensions
             field_panel.position = _ctrl_inventory_grid_basic._get_field_position(Vector2i(i, j))
             _field_background_grid.add_child(field_panel)
             _field_backgrounds[i].append(field_panel)
-
-
-# func _set_panel_style(panel: Panel, style: StyleBox) -> void:
-#     panel.remove_theme_stylebox_override("panel")
-#     if style != null:
-#         panel.add_theme_stylebox_override("panel", style)
 
 
 func _ready() -> void:
@@ -221,9 +222,8 @@ func _ready() -> void:
     if has_node(inventory_path):
         inventory = get_node_or_null(inventory_path)
 
-    # _create_selection_panel()
     _field_background_grid = Control.new()
-    _field_background_grid.name = "Field Backgrounds"
+    _field_background_grid.name = "FieldBackgrounds"
     add_child(_field_background_grid)
 
     _ctrl_inventory_grid_basic = CtrlInventoryGridBasic.new()
@@ -234,8 +234,17 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
+    _ctrl_inventory_grid_basic.item_mouse_entered.connect(_on_item_mouse_entered)
+    _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)
     _ctrl_inventory_grid_basic.selection_changed.connect(_on_selection_changed)
     add_child(_ctrl_inventory_grid_basic)
+
+    _selection_panel = SelectionPanel.new()
+    _selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _selection_panel.hide()
+    _selection_panel.name = "SelectionPanel"
+    _selection_panel.set_style(selection_style)
+    add_child(_selection_panel)
 
     _update_size()
     _queue_refresh()
@@ -246,16 +255,26 @@ func _update_size() -> void:
     size = _ctrl_inventory_grid_basic.size
 
 
+func _on_item_mouse_entered(item: InventoryItem) -> void:
+    _set_item_background(item, field_highlighted_style, PriorityPanel.StylePriority.MEDIUM)
+
+
+func _on_item_mouse_exited(item: InventoryItem) -> void:
+    _set_item_background(item, null, PriorityPanel.StylePriority.MEDIUM)
+
+
 func _on_selection_changed() -> void:
     if !is_instance_valid(inventory):
         return
+    _refresh_selection_panel()
+
     if !field_selected_style:
         return
-    # for item in inventory.get_items():
-    #     if item == _ctrl_inventory_grid_basic.get_selected_inventory_item():
-    #         _queue_highlight(inventory.get_item_rect(item), field_selected_style)
-    #     else:
-    #         _queue_highlight(inventory.get_item_rect(item), field_style)
+    for item in inventory.get_items():
+        if item == _ctrl_inventory_grid_basic.get_selected_inventory_item():
+            _set_item_background(item, field_selected_style, PriorityPanel.StylePriority.HIGH)
+        else:
+            _set_item_background(item, null, PriorityPanel.StylePriority.HIGH)
 
 
 func _on_inventory_resized() -> void:
@@ -284,7 +303,7 @@ func _on_inventory_resized() -> void:
 #     if !style || !Verify.vector_positive(field_coords):
 #         return
 
-#     if _highlight_item(inventory.get_item_at(field_coords), style):
+#     if _set_item_background(inventory.get_item_at(field_coords), style):
 #         return
 
 #     _highlight_field(field_coords, style)
@@ -302,7 +321,7 @@ func _on_inventory_resized() -> void:
 #     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
 #     var item_size := inventory.get_item_size(grabbed_item)
 #     var rect := Rect2i(grabbed_item_coords, item_size)
-#     _highlight_rect(rect, style, true)
+#     _set_rect_background(rect, style, true)
 #     return true
 
 
@@ -310,15 +329,12 @@ func _on_inventory_resized() -> void:
 #     return get_rect().has_point(local_pos)
 
 
-# func _highlight_item(item: InventoryItem, style: StyleBox) -> bool:
-#     if !item || !style:
-#         return false
-#     if item == _ctrl_inventory_grid_basic.get_selected_inventory_item():
-#         # Don't highlight the selected item (done in _on_selection_changed())
-#         return false
+func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
+    if !item:
+        return false
 
-#     _highlight_rect(inventory.get_item_rect(item), style, true)
-#     return true
+    _set_rect_background(inventory.get_item_rect(item), style, priority)
+    return true
 
 
 # func _highlight_field(field_coords: Vector2i, style: StyleBox) -> void:
@@ -327,17 +343,15 @@ func _on_inventory_resized() -> void:
 #         # Don't highlight selected fields (done in _on_selection_changed())
 #         return
 
-#     _highlight_rect(Rect2i(field_coords, Vector2i.ONE), style, true)
+#     _set_rect_background(Rect2i(field_coords, Vector2i.ONE), style, true)
 
 
-# func _highlight_rect(rect: Rect2i, style: StyleBox, queue_for_reset: bool) -> void:
-#     var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
-#     for i in range(rect.position.x, h_range):
-#         var v_range = min(rect.size.y + rect.position.y, inventory.size.y)
-#         for j in range(rect.position.y, v_range):
-#             _set_panel_style(_field_backgrounds[i][j], style)
-#     if queue_for_reset:
-#         _queue_highlight(rect, field_style)
+func _set_rect_background(rect: Rect2i, style: StyleBox, priority: int) -> void:
+    var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
+    for i in range(rect.position.x, h_range):
+        var v_range = min(rect.size.y + rect.position.y, inventory.size.y)
+        for j in range(rect.position.y, v_range):
+            _field_backgrounds[i][j].set_style(style, priority)
 
 
 # func _get_global_grabbed_item() -> InventoryItem:

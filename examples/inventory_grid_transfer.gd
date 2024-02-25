@@ -37,7 +37,7 @@ func _input(event: InputEvent) -> void:
     lbl_info.set_global_position(get_global_mouse_position() + info_offset)
 
 
-func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:
+func _on_btn_sort(ctrl_inventory) -> void:
     if !ctrl_inventory.inventory.sort():
         print("Warning: InventoryGrid.sort() returned false!")
 
