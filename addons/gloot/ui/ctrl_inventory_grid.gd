@@ -47,6 +47,31 @@ class GridControl extends Control:
             draw_line(from, to, color)
         
 
+@export var inventory_path: NodePath :
+    set(new_inv_path):
+        if new_inv_path == inventory_path:
+            return
+        inventory_path = new_inv_path
+        var node: Node = get_node_or_null(inventory_path)
+
+        if node == null:
+            return
+
+        if is_inside_tree():
+            assert(node is InventoryGrid)
+            
+        inventory = node
+        update_configuration_warnings()
+@export var default_item_texture: Texture2D :
+    set(new_default_item_texture):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
+        default_item_texture = new_default_item_texture
+@export var stretch_item_sprites: bool = true :
+    set(new_stretch_item_sprites):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
+        stretch_item_sprites = new_stretch_item_sprites
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
@@ -81,31 +106,7 @@ class GridControl extends Control:
             return
         selection_color = new_selection_color
         _queue_refresh()
-@export var inventory_path: NodePath :
-    set(new_inv_path):
-        if new_inv_path == inventory_path:
-            return
-        inventory_path = new_inv_path
-        var node: Node = get_node_or_null(inventory_path)
 
-        if node == null:
-            return
-
-        if is_inside_tree():
-            assert(node is InventoryGrid)
-            
-        inventory = node
-        update_configuration_warnings()
-@export var default_item_texture: Texture2D :
-    set(new_default_item_texture):
-        if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
-        default_item_texture = new_default_item_texture
-@export var stretch_item_sprites: bool = true :
-    set(new_stretch_item_sprites):
-        if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
-        stretch_item_sprites = new_stretch_item_sprites
 var inventory: InventoryGrid = null :
     set(new_inventory):
         if inventory == new_inventory:
