@@ -81,12 +81,11 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("3")
+inventory_path = NodePath("../../../../../InventoryGridLeft")
+default_item_texture = ExtResource("5")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
 selection_style = SubResource("5")
-draw_grid = false
-inventory_path = NodePath("../../../../../InventoryGridLeft")
-default_item_texture = ExtResource("5")
 
 [node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -104,12 +103,11 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("3")
+inventory_path = NodePath("../../../../../InventoryGridRight")
+default_item_texture = ExtResource("5")
 field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
 selection_style = SubResource("6")
-draw_grid = false
-inventory_path = NodePath("../../../../../InventoryGridRight")
-default_item_texture = ExtResource("5")
 
 [node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2

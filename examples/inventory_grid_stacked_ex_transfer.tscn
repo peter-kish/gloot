@@ -82,13 +82,11 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
+inventory_path = NodePath("../../../../../InventoryGridStackedLeft")
+default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
 selection_style = SubResource("5")
-draw_grid = false
-selection_color = Color(0.745098, 0.745098, 0.745098, 1)
-inventory_path = NodePath("../../../../../InventoryGridStackedLeft")
-default_item_texture = ExtResource("5_igoy6")
 
 [node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -114,13 +112,11 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
+inventory_path = NodePath("../../../../../InventoryGridStackedRight")
+default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
 selection_style = SubResource("6")
-draw_grid = false
-selection_color = Color(0.745098, 0.745098, 0.745098, 1)
-inventory_path = NodePath("../../../../../InventoryGridStackedRight")
-default_item_texture = ExtResource("5_igoy6")
 
 [node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
 unique_name_in_owner = true
