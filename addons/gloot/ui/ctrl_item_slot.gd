@@ -202,13 +202,6 @@ func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
 func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
     _ctrl_drop_zone.deactivate()
 
-    # Unequip from other slots
-    if zone == _ctrl_drop_zone || zone == null:
-        return
-    var ctrl_inventory_item_rect := (dragable as CtrlInventoryItemRect)
-    if ctrl_inventory_item_rect.item_slot:
-        ctrl_inventory_item_rect.item_slot.clear()
-
 
 func _refresh() -> void:
     _clear()
