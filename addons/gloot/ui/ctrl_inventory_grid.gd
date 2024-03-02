@@ -107,7 +107,6 @@ func _ready() -> void:
         _ctrl_drop_zone.deactivate()
     )
     add_child(_ctrl_drop_zone)
-    _ctrl_drop_zone.deactivate()
 
     _ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = _ctrl_item_container.size)
 
@@ -169,6 +168,7 @@ func _queue_refresh() -> void:
 
 
 func _refresh() -> void:
+    _ctrl_drop_zone.deactivate()
     _refresh_grid_container()
     _clear_list()
     _populate_list()
