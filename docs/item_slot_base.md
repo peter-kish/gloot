@@ -19,4 +19,4 @@ Base class for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.
 ## Signals
 
 * `item_equipped()` - Emitted when an item is placed in the slot.
-* `item_cleared()` - Emitted when the slot is cleared.
+* `cleared()` - Emitted when the slot is cleared.

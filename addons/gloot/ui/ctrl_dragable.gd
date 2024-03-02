@@ -34,11 +34,12 @@ static var _grab_offset: Vector2
 var drag_preview: Control
 var _preview_canvas_layer := CanvasLayer.new()
 var drag_z_index := 1
+var enabled: bool = true
 
 
 static func grab(dragable: CtrlDragable) -> void:
     _grabbed_dragable = dragable
-    _grab_offset = dragable.get_global_mouse_position() - dragable.global_position
+    _grab_offset = dragable.get_grab_position()
 
     dragable.mouse_filter = Control.MOUSE_FILTER_IGNORE
     dragable.grabbed.emit(_grab_offset)
@@ -56,14 +57,13 @@ static func release_on(zone: CtrlDropZone) -> void:
 
 static func _drop(zone: CtrlDropZone) -> void:
     var grabbed_dragable := _grabbed_dragable
-    var grab_offset := _grab_offset
-    _grabbed_dragable = null
-    _grab_offset = Vector2.ZERO
     grabbed_dragable.mouse_filter = Control.MOUSE_FILTER_PASS
     var local_drop_position := Vector2.ZERO
     if zone != null:
-        local_drop_position = zone.get_local_mouse_position() - grab_offset
+        local_drop_position = zone.get_drop_position()
 
+    _grabbed_dragable = null
+    _grab_offset = Vector2.ZERO
     grabbed_dragable.drag_end()
     grabbed_dragable.dropped.emit(zone, local_drop_position)
     dragable_dropped.emit(grabbed_dragable, zone, local_drop_position)
@@ -75,6 +75,10 @@ static func get_grabbed_dragable() -> CtrlDragable:
 
 static func get_grab_offset() -> Vector2:
     return _grab_offset
+
+
+func get_grab_position() -> Vector2:
+    return get_local_mouse_position() * get_global_transform().get_scale()
 
 
 func drag_start() -> void:
@@ -90,7 +94,7 @@ func drag_start() -> void:
 
 
 func _get_global_preview_position() -> Vector2:
-    return get_global_transform_with_canvas().origin + get_local_mouse_position() - get_grab_offset()
+    return get_global_mouse_position() - _grab_offset
 
 
 func drag_end() -> void:
@@ -109,10 +113,14 @@ func _notification(what) -> void:
 
 func _process(_delta) -> void:
     if is_instance_valid(drag_preview):
+        drag_preview.scale = get_global_transform().get_scale()
         drag_preview.global_position = _get_global_preview_position()
 
 
 func _gui_input(event: InputEvent) -> void:
+    if !enabled:
+        return
+        
     if !(event is InputEventMouseButton):
         return
 
@@ -122,6 +130,14 @@ func _gui_input(event: InputEvent) -> void:
 
     if mb_event.is_pressed():
         grab(self)
+
+
+func activate() -> void:
+    enabled = true
+
+
+func deactivate() -> void:
+    enabled = false
 
 
 func is_dragged() -> bool:

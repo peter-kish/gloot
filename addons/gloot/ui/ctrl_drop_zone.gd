@@ -19,10 +19,7 @@ func _process(_delta) -> void:
     else:
         if _drop_event.zone != self:
             return
-        _drop_event.zone.dragable_dropped.emit(
-            CtrlDragable.get_grabbed_dragable(),
-            get_local_mouse_position() - CtrlDragable.get_grab_offset()
-        )
+        _drop_event.zone.dragable_dropped.emit(CtrlDragable.get_grabbed_dragable(), get_drop_position())
         CtrlDragable.release_on(self)
 
     _drop_event = {}
@@ -43,6 +40,10 @@ func _input(event: InputEvent) -> void:
         _drop_event = {zone = self}
     elif _drop_event.is_empty():
         _drop_event = {zone = null}
+
+
+func get_drop_position() -> Vector2:
+    return get_local_mouse_position() - (CtrlDragable.get_grab_offset() / get_global_transform().get_scale())
 
 
 func activate() -> void:

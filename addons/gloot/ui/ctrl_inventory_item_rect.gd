@@ -18,8 +18,10 @@ var item: InventoryItem :
         item = new_item
         if item:
             texture = item.get_texture()
+            activate()
         else:
             texture = null
+            deactivate()
 var texture: Texture2D :
     set(new_texture):
         if new_texture == texture:
@@ -105,6 +107,9 @@ func _ready() -> void:
         _texture_rect.size = size
         _stack_size_label.size = size
     )
+
+    if item == null:
+        deactivate()
 
     _refresh()
 
