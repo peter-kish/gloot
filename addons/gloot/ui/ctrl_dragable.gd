@@ -61,12 +61,18 @@ static func _drop(zone: CtrlDropZone) -> void:
     var local_drop_position := Vector2.ZERO
     if zone != null:
         local_drop_position = zone.get_drop_position()
+    else:
+        local_drop_position = _grabbed_dragable.get_drop_position()
 
     _grabbed_dragable = null
     _grab_offset = Vector2.ZERO
     grabbed_dragable.drag_end()
     grabbed_dragable.dropped.emit(zone, local_drop_position)
     dragable_dropped.emit(grabbed_dragable, zone, local_drop_position)
+
+
+func get_drop_position() -> Vector2:
+    return get_local_mouse_position() - (get_grab_offset() / get_global_transform().get_scale())
 
 
 static func get_grabbed_dragable() -> CtrlDragable:

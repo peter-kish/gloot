@@ -284,6 +284,8 @@ func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_it
     # The item might have been freed in case the item stack has been moved and merged with another
     # stack.
     if is_instance_valid(item) and inventory.has_item(item):
+        if zone == null:
+            item_dropped.emit(item, drop_position + ctrl_inventory_item.position)
         _select(item)
 
 
@@ -339,6 +341,9 @@ func _on_item_mouse_exited(ctrl_inventory_item) -> void:
 
 func _select(item: InventoryItem) -> void:
     if item == _selected_item:
+        return
+
+    if !inventory.has_item(item):
         return
 
     _selected_item = item
