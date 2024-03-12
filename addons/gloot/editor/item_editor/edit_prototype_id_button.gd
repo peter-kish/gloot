@@ -63,6 +63,11 @@ func update_property() -> void:
 func _refresh_button() -> void:
     var item: InventoryItem = get_edited_object()
     _btn_prototype_id.text = item.prototype_id
+    _btn_prototype_id.disabled = false
+    if item.protoset == null:
+        _btn_prototype_id.disabled = true
+        return
+        
     if !item.protoset.has_prototype(item.prototype_id):
         _btn_prototype_id.add_theme_color_override("font_color", COLOR_INVALID)
         _btn_prototype_id.add_theme_color_override("font_color_hover", COLOR_INVALID)
