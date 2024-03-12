@@ -16,7 +16,7 @@ signal removed_from_slot(item_slot)
         if new_protoset == protoset:
             return
 
-        if _inventory != null:
+        if (_inventory != null) && (new_protoset != _inventory.item_protoset):
             return
 
         _disconnect_protoset_signals()
@@ -51,7 +51,13 @@ signal removed_from_slot(item_slot)
         properties_changed.emit()
         update_configuration_warnings()
 
-var _inventory: Inventory
+var _inventory: Inventory :
+    set(new_inventory):
+        if new_inventory == _inventory:
+            return
+        _inventory = new_inventory
+        if _inventory:
+            protoset = _inventory.item_protoset
 var _item_slot: ItemSlot
 
 const KEY_PROTOSET: String = "protoset"
@@ -127,8 +133,6 @@ func _on_parented(parent: Node) -> void:
 func _on_added_to_inventory(inventory: Inventory) -> void:
     assert(inventory != null)
     _inventory = inventory
-    if _inventory.item_protoset:
-        protoset = _inventory.item_protoset
     
     added_to_inventory.emit(_inventory)
     _inventory._on_item_added(self)
