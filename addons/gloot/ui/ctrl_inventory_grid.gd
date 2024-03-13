@@ -129,6 +129,8 @@ var _refresh_queued: bool = false
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
+    if !inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.connect(_queue_refresh)
     if !inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.connect(_on_inventory_resized)
 
@@ -136,6 +138,8 @@ func _connect_inventory_signals() -> void:
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
+    if inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.disconnect(_on_inventory_resized)
 
