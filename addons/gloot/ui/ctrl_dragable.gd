@@ -35,6 +35,7 @@ var drag_preview: Control
 var _preview_canvas_layer := CanvasLayer.new()
 var drag_z_index := 1
 var enabled: bool = true
+var _show_queued := false
 
 
 static func grab(dragable: CtrlDragable) -> void:
@@ -97,6 +98,7 @@ func drag_start() -> void:
     _preview_canvas_layer.add_child(drag_preview)
     # Make sure the preview is drawn above the embedded windows
     _preview_canvas_layer.layer = EMBEDDED_WINDOWS_LAYER + 1
+    hide()
 
 
 func _get_global_preview_position() -> Vector2:
@@ -110,6 +112,12 @@ func drag_end() -> void:
     _preview_canvas_layer.remove_child(drag_preview)
     _preview_canvas_layer.get_parent().remove_child(_preview_canvas_layer)
     drag_preview.mouse_filter = Control.MOUSE_FILTER_PASS
+    # HACK: Queue the show() call for later to avoid glitching
+    _queue_show()
+
+
+func _queue_show() -> void:
+    _show_queued = true
 
 
 func _notification(what) -> void:
@@ -121,6 +129,9 @@ func _process(_delta) -> void:
     if is_instance_valid(drag_preview):
         drag_preview.scale = get_global_transform().get_scale()
         drag_preview.global_position = _get_global_preview_position()
+    if _show_queued:
+        _show_queued = false
+        show()
 
 
 func _gui_input(event: InputEvent) -> void:
