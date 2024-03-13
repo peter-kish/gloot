@@ -2,8 +2,8 @@ extends Control
 
 const info_offset: Vector2 = Vector2(20, 0)
 
-@onready var ctrl_inventory_left: CtrlInventoryGrid = $"%CtrlInventoryGridLeft"
-@onready var ctrl_inventory_right: CtrlInventoryGrid = $"%CtrlInventoryGridRight"
+@onready var ctrl_inventory_left := $"%CtrlInventoryGridLeft"
+@onready var ctrl_inventory_right := $"%CtrlInventoryGridRight"
 @onready var btn_sort_left: Button = $"%BtnSortLeft"
 @onready var btn_sort_right: Button = $"%BtnSortRight"
 @onready var btn_split_left: Button = $"%BtnSplitLeft"
@@ -41,18 +41,18 @@ func _input(event: InputEvent) -> void:
     lbl_info.set_global_position(get_global_mouse_position() + info_offset)
 
 
-func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:
+func _on_btn_sort(ctrl_inventory) -> void:
     if !ctrl_inventory.inventory.sort():
         print("Warning: InventoryGrid.sort() returned false!")
 
 
-func _on_btn_split(ctrl_inventory: CtrlInventoryGrid) -> void:
+func _on_btn_split(ctrl_inventory) -> void:
     var inventory_stacked := (ctrl_inventory.inventory as InventoryGridStacked)
     if inventory_stacked == null:
         print("Warning: inventory is not InventoryGridStacked!")
         return
 
-    var selected_item := ctrl_inventory.get_selected_inventory_item()
+    var selected_item = ctrl_inventory.get_selected_inventory_item()
     if selected_item == null:
         return
 
