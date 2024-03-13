@@ -265,7 +265,7 @@ func _select(item: InventoryItem) -> void:
     if item == _selected_item:
         return
 
-    if !inventory.has_item(item):
+    if (item != null) && !inventory.has_item(item):
         return
 
     _selected_item = item
