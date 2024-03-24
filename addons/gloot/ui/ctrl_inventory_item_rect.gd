@@ -22,6 +22,7 @@ var item: InventoryItem :
         else:
             texture = null
             deactivate()
+        _update_stack_size()
 var texture: Texture2D :
     set(new_texture):
         if new_texture == texture:
