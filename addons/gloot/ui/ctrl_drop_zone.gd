@@ -43,6 +43,9 @@ func _input(event: InputEvent) -> void:
 
 
 func get_drop_position() -> Vector2:
+    # This check prevents some assertions when get_local_mouse_position() is called while get_viewport() is null.
+    if get_viewport() == null:
+        return Vector2.ZERO
     return get_local_mouse_position() - (CtrlDragable.get_grab_offset() / get_global_transform().get_scale())
 
 

@@ -354,7 +354,7 @@ func _swap_items(item: InventoryItem, position: Vector2i) -> void:
         return
 
     if Engine.is_editor_hint():
-        GlootUndoRedo.swap_inventory_items(inventory, item, item2)
+        GlootUndoRedo.swap_inventory_items(item, item2)
     else:
         (inventory as InventoryGrid).swap_items(item, item2)
 
