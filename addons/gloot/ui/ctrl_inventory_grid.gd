@@ -10,33 +10,47 @@ signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
-const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
-const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
-const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
 
-@export var field_dimensions: Vector2 = Vector2(32, 32) :
-    set(new_field_dimensions):
-        field_dimensions = new_field_dimensions
-        _queue_refresh()
-@export var item_spacing: int = 0 :
-    set(new_item_spacing):
-        item_spacing = new_item_spacing
-        _queue_refresh()
-@export var draw_grid: bool = true :
-    set(new_draw_grid):
-        draw_grid = new_draw_grid
-        _queue_refresh()
-@export var grid_color: Color = Color.BLACK :
-    set(new_grid_color):
-        grid_color = new_grid_color
-        _queue_refresh()
-@export var draw_selections: bool = false :
-    set(new_draw_selections):
-        draw_selections = new_draw_selections
-@export var selection_color: Color = Color.GRAY
+class GridControl extends Control:
+    var color: Color = Color.BLACK :
+        set(new_color):
+            if new_color == color:
+                return
+            color = new_color
+            queue_redraw()
+    var dimensions: Vector2i = Vector2i.ZERO :
+        set(new_dimensions):
+            if new_dimensions == dimensions:
+                return
+            dimensions = new_dimensions
+            queue_redraw()
+
+    func _init(color_: Color, dimensions_: Vector2i) -> void:
+        color = color_
+        dimensions = dimensions_
+
+    func _draw() -> void:
+        var rect = Rect2(Vector2.ZERO, size)
+        draw_rect(rect, color, false)
+
+        if dimensions.x < 1 || dimensions.y < 1:
+            return
+
+        for i in range(1, dimensions.x):
+            var from: Vector2 = Vector2(i * size.x / dimensions.x, 0)
+            var to: Vector2 = Vector2(i * size.x / dimensions.x, size.y)
+            draw_line(from, to, color)
+        for j in range(1, dimensions.y):
+            var from: Vector2 = Vector2(0, j * size.y / dimensions.y)
+            var to: Vector2 = Vector2(size.x, j * size.y / dimensions.y)
+            draw_line(from, to, color)
+        
+
 @export var inventory_path: NodePath :
     set(new_inv_path):
+        if new_inv_path == inventory_path:
+            return
         inventory_path = new_inv_path
         var node: Node = get_node_or_null(inventory_path)
 
@@ -50,35 +64,94 @@ const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
         update_configuration_warnings()
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
         default_item_texture = new_default_item_texture
-        _queue_refresh()
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
         stretch_item_sprites = new_stretch_item_sprites
+@export var field_dimensions: Vector2 = Vector2(32, 32) :
+    set(new_field_dimensions):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
+        field_dimensions = new_field_dimensions
+@export var item_spacing: int = 0 :
+    set(new_item_spacing):
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
+        item_spacing = new_item_spacing
+@export var draw_grid: bool = true :
+    set(new_draw_grid):
+        if new_draw_grid == draw_grid:
+            return
+        draw_grid = new_draw_grid
         _queue_refresh()
-@export var drag_sprite_z_index: int = 1
+@export var grid_color: Color = Color.BLACK :
+    set(new_grid_color):
+        if(new_grid_color == grid_color):
+            return
+        grid_color = new_grid_color
+        _queue_refresh()
+@export var draw_selections: bool = false :
+    set(new_draw_selections):
+        if new_draw_selections == draw_selections:
+            return
+        draw_selections = new_draw_selections
+        _queue_refresh()
+@export var selection_color: Color = Color.GRAY :
+    set(new_selection_color):
+        if(new_selection_color == selection_color):
+            return
+        selection_color = new_selection_color
+        _queue_refresh()
+
 var inventory: InventoryGrid = null :
     set(new_inventory):
         if inventory == new_inventory:
             return
 
-        _select(null)
-
         _disconnect_inventory_signals()
         inventory = new_inventory
         _connect_inventory_signals()
 
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.inventory = inventory
         _queue_refresh()
-var _ctrl_item_container: Control = null
-var _ctrl_drop_zone: CtrlDropZone = null
-var _selected_item: InventoryItem = null
+
+var _ctrl_grid: GridControl = null
+var _ctrl_selection: ColorRect = null
+var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
 var _refresh_queued: bool = false
+
+
+func _connect_inventory_signals() -> void:
+    if !is_instance_valid(inventory):
+        return
+    if !inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.connect(_queue_refresh)
+    if !inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.connect(_on_inventory_resized)
+
+
+func _disconnect_inventory_signals() -> void:
+    if !is_instance_valid(inventory):
+        return
+    if inventory.contents_changed.is_connected(_queue_refresh):
+        inventory.contents_changed.disconnect(_queue_refresh)
+    if inventory.size_changed.is_connected(_on_inventory_resized):
+        inventory.size_changed.disconnect(_on_inventory_resized)
+
+
+func _on_inventory_resized() -> void:
+    _queue_refresh()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
         return PackedStringArray([
-                "This node is not linked to an inventory, so it can't display any content.\n" + \
+                "This node is not linked to an inventory and can't display any content.\n" + \
                 "Set the inventory_path property to point to an InventoryGrid node."])
     return PackedStringArray()
 
@@ -86,75 +159,39 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _ready() -> void:
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if is_instance_valid(_ctrl_item_container):
-            _ctrl_item_container.queue_free()
-
-    _ctrl_item_container = Control.new()
-    _ctrl_item_container.size_flags_horizontal = SIZE_EXPAND_FILL
-    _ctrl_item_container.size_flags_vertical = SIZE_EXPAND_FILL
-    _ctrl_item_container.anchor_right = 1.0
-    _ctrl_item_container.anchor_bottom = 1.0
-    add_child(_ctrl_item_container)
-
-    _ctrl_drop_zone = CtrlDropZone.new()
-    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
-    _ctrl_drop_zone.size = size
-    resized.connect(func(): _ctrl_drop_zone.size = size)
-    CtrlDragable.dragable_grabbed.connect(func(dragable: CtrlDragable, grab_position: Vector2):
-        _ctrl_drop_zone.activate()
-    )
-    CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
-        _ctrl_drop_zone.deactivate()
-    )
-    add_child(_ctrl_drop_zone)
-
-    _ctrl_item_container.resized.connect(func(): _ctrl_drop_zone.size = _ctrl_item_container.size)
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.queue_free()
+            _ctrl_grid.queue_free()
+            _ctrl_selection.queue_free()
 
     if has_node(inventory_path):
         inventory = get_node_or_null(inventory_path)
 
+    _ctrl_inventory_grid_basic = CtrlInventoryGridBasic.new()
+    _ctrl_inventory_grid_basic.inventory = inventory
+    _ctrl_inventory_grid_basic.field_dimensions = field_dimensions
+    _ctrl_inventory_grid_basic.item_spacing = item_spacing
+    _ctrl_inventory_grid_basic.default_item_texture = default_item_texture
+    _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
+    _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
+    _ctrl_inventory_grid_basic.resized.connect(_update_size)
+    _ctrl_inventory_grid_basic.selection_changed.connect(_queue_refresh)
+
+    _ctrl_grid = GridControl.new(grid_color, _get_inventory_dimensions())
+    _ctrl_grid.color = grid_color
+    _ctrl_grid.dimensions = _get_inventory_dimensions()
+    _ctrl_grid.name = "CtrlGrid"
+
+    _ctrl_selection = ColorRect.new()
+    _ctrl_selection.color = selection_color
+    _ctrl_selection.hide()
+
+    add_child(_ctrl_grid)
+    add_child(_ctrl_selection)
+    add_child(_ctrl_inventory_grid_basic)
+
+    _update_size()
     _queue_refresh()
-
-
-func _connect_inventory_signals() -> void:
-    if !is_instance_valid(inventory):
-        return
-
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.connect(_on_item_modified)
-    if !inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.connect(_on_inventory_resized)
-    if !inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.connect(_on_item_removed)
-
-
-func _disconnect_inventory_signals() -> void:
-    if !is_instance_valid(inventory):
-        return
-
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.disconnect(_on_item_modified)
-    if inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.disconnect(_on_inventory_resized)
-    if inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.disconnect(_on_item_removed)
-
-
-func _on_item_modified(_item: InventoryItem) -> void:
-    _queue_refresh()
-
-
-func _on_inventory_resized() -> void:
-    _queue_refresh()
-
-
-func _on_item_removed(_item: InventoryItem) -> void:
-    if _item == _selected_item:
-        _select(null)
 
 
 func _process(_delta) -> void:
@@ -163,279 +200,52 @@ func _process(_delta) -> void:
         _refresh_queued = false
 
 
+func _refresh() -> void:
+    if is_instance_valid(_ctrl_grid):
+        _ctrl_grid.dimensions = _get_inventory_dimensions()
+        _ctrl_grid.color = grid_color
+        _ctrl_grid.visible = draw_grid
+    else:
+        _ctrl_grid.hide()
+
+    if is_instance_valid(_ctrl_selection) && is_instance_valid(_ctrl_inventory_grid_basic):
+        var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
+        _ctrl_selection.position = r.position
+        _ctrl_selection.size = r.size
+        _ctrl_selection.color = selection_color
+        _ctrl_selection.visible = draw_selections && _ctrl_inventory_grid_basic.get_selected_inventory_item()
+    else:
+        _ctrl_selection.hide()
+
+
 func _queue_refresh() -> void:
     _refresh_queued = true
 
 
-func _refresh() -> void:
-    _ctrl_drop_zone.deactivate()
-    _refresh_grid_container()
-    _clear_list()
-    _populate_list()
-    queue_redraw()
+func _get_inventory_dimensions() -> Vector2i:
+    var inventory_grid = _get_inventory()
+    if !is_instance_valid(inventory_grid):
+        return Vector2i.ZERO
+    return _ctrl_inventory_grid_basic.inventory.size
 
 
-func _draw() -> void:
-    if !is_instance_valid(inventory):
-        return
-    if draw_grid:
-        _draw_grid(Vector2.ZERO, inventory.size.x, inventory.size.y, field_dimensions, item_spacing)
+func _update_size() -> void:
+    custom_minimum_size = _ctrl_inventory_grid_basic.size
+    size = _ctrl_inventory_grid_basic.size
+    _ctrl_grid.custom_minimum_size = _ctrl_inventory_grid_basic.size
+    _ctrl_grid.size = _ctrl_inventory_grid_basic.size
 
 
-func _draw_grid(pos: Vector2, w: int, h: int, fsize: Vector2, spacing: int) -> void:
-    if w <= 0 || h <= 0 || spacing < 0:
-        return
-
-    if spacing <= 1:
-        var rect = Rect2(pos, _get_inventory_size_px())
-        draw_rect(rect, grid_color, false)
-        for i in range(w):
-            var from: Vector2 = Vector2(i * fsize.x, 0) + pos
-            var to: Vector2 = Vector2(i * fsize.x, rect.size.y) + pos
-            from += Vector2(spacing, 0)
-            to += Vector2(spacing, 0)
-            draw_line(from, to, grid_color)
-        for j in range(h):
-            var from: Vector2 = Vector2(0, j * fsize.y) + pos
-            var to: Vector2 = Vector2(rect.size.x, j * fsize.y) + pos
-            from += Vector2(0, spacing)
-            to += Vector2(0, spacing)
-            draw_line(from, to, grid_color)
-    else:
-        for i in range(w):
-            for j in range(h):
-                var field_pos = pos + Vector2(i * fsize.x, j * fsize.y) + Vector2(i, j) * spacing
-                var field_rect = Rect2(field_pos, fsize)
-                draw_rect(field_rect, grid_color, false)
-
-
-func _get_inventory_size_px() -> Vector2:
-    var result := Vector2(inventory.size.x * field_dimensions.x, \
-        inventory.size.y * field_dimensions.y)
-
-    # Also take item spacing into consideration
-    result += Vector2(inventory.size - Vector2i.ONE) * item_spacing
-
-    return result
-
-
-func _refresh_grid_container() -> void:
-    if !is_instance_valid(inventory):
-        return
-
-    custom_minimum_size = _get_inventory_size_px()
-    size = custom_minimum_size
-
-
-func _clear_list() -> void:
-    if !is_instance_valid(_ctrl_item_container):
-        return
-
-    for ctrl_inventory_item in _ctrl_item_container.get_children():
-        _ctrl_item_container.remove_child(ctrl_inventory_item)
-        ctrl_inventory_item.queue_free()
-
-
-func _populate_list() -> void:
-    if !is_instance_valid(inventory) || !is_instance_valid(_ctrl_item_container):
-        return
-        
-    for item in inventory.get_items():
-        var ctrl_inventory_item = CtrlInventoryItemRect.new()
-        ctrl_inventory_item.texture = default_item_texture
-        ctrl_inventory_item.item = item
-        ctrl_inventory_item.drag_z_index = drag_sprite_z_index
-        ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
-        ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
-        ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
-        ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
-        ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
-        ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
-        ctrl_inventory_item.size = _get_item_sprite_size(item)
-
-        ctrl_inventory_item.position = _get_field_position(inventory.get_item_position(item))
-        if !stretch_item_sprites:
-            # Position the item centered when it's not streched
-            ctrl_inventory_item.position += _get_unstreched_sprite_offset(item)
-
-        _ctrl_item_container.add_child(ctrl_inventory_item)
-
-    _refresh_selection()
-
-
-func _refresh_selection() -> void:
-    if !draw_selections:
-        return
-
-    if !is_instance_valid(_ctrl_item_container):
-        return
-
-    for ctrl_item in _ctrl_item_container.get_children():
-        ctrl_item.selected = ctrl_item.item && (ctrl_item.item == _selected_item)
-        ctrl_item.selection_bg_color = selection_color
-
-
-func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    _select(null)
-
-
-func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    var item = ctrl_inventory_item.item
-    # The item might have been freed in case the item stack has been moved and merged with another
-    # stack.
-    if is_instance_valid(item) and inventory.has_item(item):
-        if zone == null:
-            item_dropped.emit(item, drop_position + ctrl_inventory_item.position)
-        _select(item)
-
-
-func _get_item_sprite_size(item: InventoryItem) -> Vector2:
-    if stretch_item_sprites:
-        return _get_streched_item_sprite_size(item)
-    else:
-        return item.get_texture().get_size()
-
-
-func _get_streched_item_sprite_size(item: InventoryItem) -> Vector2:
-    var item_size := inventory.get_item_size(item)
-    var sprite_size := Vector2(item_size) * field_dimensions
-
-    # Also take item spacing into consideration
-    sprite_size += (Vector2(item_size) - Vector2.ONE) * item_spacing
-
-    return sprite_size
-
-
-func _get_unstreched_sprite_offset(item: InventoryItem) -> Vector2:
-    var texture = item.get_texture()
-    if texture == null:
-        texture = default_item_texture
-    if texture == null:
-        return Vector2.ZERO
-    return (_get_streched_item_sprite_size(item) - texture.get_size()) / 2
-
-
-func _on_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    var item = ctrl_inventory_item.item
-    if !item:
-        return
-
-    inventory_item_activated.emit(item)
-
-
-func _on_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    var item = ctrl_inventory_item.item
-    if !item:
-        return
-
-    inventory_item_context_activated.emit(item)
-
-
-func _on_item_mouse_entered(ctrl_inventory_item) -> void:
-    item_mouse_entered.emit(ctrl_inventory_item.item)
-
-
-func _on_item_mouse_exited(ctrl_inventory_item) -> void:
-    item_mouse_exited.emit(ctrl_inventory_item.item)
-
-
-func _select(item: InventoryItem) -> void:
-    if item == _selected_item:
-        return
-
-    if !inventory.has_item(item):
-        return
-
-    _selected_item = item
-    _refresh_selection()
-    selection_changed.emit()
-
-
-func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
-    var item: InventoryItem = dragable.item
-    if item == null:
-        return
-
-    if !is_instance_valid(inventory):
-        return
-
-    if inventory.has_item(item):
-        _handle_item_move(item, drop_position)
-    else:
-        _handle_item_transfer(item, drop_position)
-
-
-func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
-    var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
-    if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
-        _move_item(item, field_coords)
-    elif inventory is InventoryGridStacked:
-        _merge_item(item, field_coords)
-
-
-func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
-    var source_inventory: InventoryGrid = item.get_inventory()
-    
-    var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
-    if source_inventory != null:
-        if source_inventory.item_protoset != inventory.item_protoset:
-            return
-        source_inventory.transfer_to(item, inventory, field_coords)
-    else:
-        inventory.add_item_at(item, field_coords)
-
-
-func get_field_coords(local_pos: Vector2) -> Vector2i:
-    # We have to consider the item spacing when calculating field coordinates, thus we expand the
-    # size of each field by Vector2(item_spacing, item_spacing).
-    var field_dimensions_ex = field_dimensions + Vector2(item_spacing, item_spacing)
-
-    # We also don't want the item spacing to disturb snapping to the closest field, so we add half
-    # the spacing to the local coordinates.
-    var local_pos_ex = local_pos + (Vector2(item_spacing, item_spacing) / 2)
-
-    var x: int = local_pos_ex.x / (field_dimensions_ex.x)
-    var y: int = local_pos_ex.y / (field_dimensions_ex.y)
-    return Vector2i(x, y)
+func _get_inventory() -> InventoryGrid:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return null
+    if !is_instance_valid(_ctrl_inventory_grid_basic.inventory):
+        return null
+    return _ctrl_inventory_grid_basic.inventory
 
 
 func get_selected_inventory_item() -> InventoryItem:
-    return _selected_item
-
-
-func _move_item(item: InventoryItem, move_position: Vector2i) -> void:
-    if Engine.is_editor_hint():
-        GlootUndoRedo.move_inventory_item(inventory, item, move_position)
-    else:
-        inventory.move_item_to(item, move_position)
-
-        
-func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
-    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
-    if item_dst == null:
-        return
-
-    if Engine.is_editor_hint():
-        GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
-    else:
-        (inventory as InventoryGridStacked).join(item_dst, item_src)
-
-
-func _get_field_position(field_coords: Vector2i) -> Vector2:
-    var field_position = Vector2(field_coords.x * field_dimensions.x, \
-        field_coords.y * field_dimensions.y)
-    field_position += Vector2(item_spacing * field_coords)
-    return field_position
-
-
-func _get_global_field_position(field_coords: Vector2i) -> Vector2:
-    return _get_field_position(field_coords) + global_position
-
-
-func deselect_inventory_item() -> void:
-    _select(null)
-
-
-func select_inventory_item(item: InventoryItem) -> void:
-    _select(item)
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return null
+    return _ctrl_inventory_grid_basic.get_selected_inventory_item()
 

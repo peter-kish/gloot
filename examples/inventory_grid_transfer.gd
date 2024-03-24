@@ -2,8 +2,8 @@ extends Control
 
 const info_offset: Vector2 = Vector2(20, 0)
 
-@onready var ctrl_inventory_left: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/CtrlInventoryGridLeft
-@onready var ctrl_inventory_right: CtrlInventoryGrid = $VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2/CtrlInventoryGridRight
+@onready var ctrl_inventory_left := $VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer/CtrlInventoryGridLeft
+@onready var ctrl_inventory_right := $VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2/CtrlInventoryGridRight
 @onready var btn_sort_left: Button = $VBoxContainer/HBoxContainer/VBoxContainer/BtnSortLeft
 @onready var btn_sort_right: Button = $VBoxContainer/HBoxContainer/VBoxContainer2/BtnSortRight
 @onready var ctrl_slot: CtrlItemSlot = $VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer/CtrlItemSlot
@@ -37,7 +37,7 @@ func _input(event: InputEvent) -> void:
     lbl_info.set_global_position(get_global_mouse_position() + info_offset)
 
 
-func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:
+func _on_btn_sort(ctrl_inventory) -> void:
     if !ctrl_inventory.inventory.sort():
         print("Warning: InventoryGrid.sort() returned false!")
 
