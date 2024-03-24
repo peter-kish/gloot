@@ -146,6 +146,20 @@ static func move_inventory_item(inventory: InventoryGrid, item: InventoryItem, t
     undo_redo_manager.commit_action()
 
 
+static func swap_inventory_items(inventory: InventoryGrid, item1: InventoryItem, item2: InventoryItem) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+
+    var old_inv_state := inventory.serialize()
+    if !inventory.swap_items(item1, item2):
+        return
+    var new_inv_state := inventory.serialize()
+
+    undo_redo_manager.create_action("Swap Inventory Items")
+    undo_redo_manager.add_do_method(GlootUndoRedo, "_set_inventory", inventory, new_inv_state)
+    undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_inventory", inventory, old_inv_state)
+    undo_redo_manager.commit_action()
+
+
 static func rotate_inventory_item(inventory: InventoryGrid, item: InventoryItem) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
 

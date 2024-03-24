@@ -249,6 +249,17 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     return false
 
 
+func swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
+    assert(inventory != null, "Inventory not set!")
+    if get_item_size(item1) != get_item_size(item2):
+        return false
+    var temp_pos = get_item_position(item1)
+    _move_item_to_unsafe(item1, get_item_position(item2))
+    _move_item_to_unsafe(item2, temp_pos)
+
+    return true
+
+
 func move_item_to_free_spot(item: InventoryItem) -> bool:
     if rect_free(get_item_rect(item), item):
         return true
