@@ -81,6 +81,8 @@ func _update_json_data() -> void:
 
 
 func _save() -> void:
+    if !Engine.is_editor_hint():
+        return
     emit_changed()
     if !resource_path.is_empty():
         ResourceSaver.save(self)

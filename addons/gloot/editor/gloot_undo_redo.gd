@@ -4,7 +4,7 @@ extends Object
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 
 
-static func _get_undo_redo_manager() -> EditorUndoRedoManager:
+static func _get_undo_redo_manager():
     var gloot = load("res://addons/gloot/gloot.gd")
     assert(gloot.instance())
     var undo_redo_manager = gloot.instance().get_undo_redo()
