@@ -57,14 +57,14 @@ func test_swap() -> void:
     slot2.item_protoset = TEST_PROTOSET
     slot2.remember_source_inventory = false
 
-    # Swap inventory-inventory
+    # Swap items between two inventories
     assert(InventoryItem.swap(item, item2))
     assert(item.get_inventory() == inventory2)
     assert(item.get_item_slot() == null)
     assert(item2.get_inventory() == inventory)
     assert(item2.get_item_slot() == null)
 
-    # Swap inventory-slot
+    # Swap items between an inventory and a slot
     inventory.add_item(item)
     slot2.equip(item2)
     assert(InventoryItem.swap(item, item2))
@@ -73,7 +73,7 @@ func test_swap() -> void:
     assert(item2.get_inventory() == inventory)
     assert(item2.get_item_slot() == null)
 
-    # Swap slot-slot
+    # Swap items between two slots
     slot.equip(item)
     slot2.equip(item2)
     assert(InventoryItem.swap(item, item2))
@@ -81,6 +81,19 @@ func test_swap() -> void:
     assert(item.get_item_slot() == slot2)
     assert(item2.get_inventory() == null)
     assert(item2.get_item_slot() == slot)
+
+    # Swap within one inventory
+    inventory.add_item(item)
+    inventory.add_item(item2)
+    var idx = inventory.get_item_index(item)
+    var idx2 = inventory.get_item_index(item2)
+    assert(InventoryItem.swap(item, item2))
+    assert(item.get_inventory() == inventory)
+    assert(item.get_item_slot() == null)
+    assert(item2.get_inventory() == inventory)
+    assert(item2.get_item_slot() == null)
+    assert(inventory.get_item_index(item) == idx2)
+    assert(inventory.get_item_index(item2) == idx)
 
     free_inventory(inventory2)
     free_item(item2)
