@@ -178,47 +178,48 @@ func get_item_slot() -> ItemSlot:
 static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if item1 == null || item2 == null || item1 == item2:
         return false
-    var holder1 = item1.get_inventory()
-    if holder1 == null:
-        holder1 = item1.get_item_slot()
-    var holder2 = item2.get_inventory()
-    if holder2 == null:
-        holder2 = item2.get_item_slot()
-    if holder1 == null || holder2 == null:
+
+    var owner1 = item1.get_inventory()
+    if owner1 == null:
+        owner1 = item1.get_item_slot()
+    var owner2 = item2.get_inventory()
+    if owner2 == null:
+        owner2 = item2.get_item_slot()
+    if owner1 == null || owner2 == null:
         return false
 
-    var idx1 = _remove_item_from_holder(item1, holder1)
-    var idx2 = _remove_item_from_holder(item2, holder2)
-    if !_add_item_to_holder(item1, holder2, idx2):
-        _add_item_to_holder(item1, holder1, idx1)
-        _add_item_to_holder(item2, holder2, idx2)
+    var idx1 = _remove_item_from_owner(item1, owner1)
+    var idx2 = _remove_item_from_owner(item2, owner2)
+    if !_add_item_to_owner(item1, owner2, idx2):
+        _add_item_to_owner(item1, owner1, idx1)
+        _add_item_to_owner(item2, owner2, idx2)
         return false
-    if !_add_item_to_holder(item2, holder1, idx1):
-        _add_item_to_holder(item1, holder1, idx1)
-        _add_item_to_holder(item2, holder2, idx2)
+    if !_add_item_to_owner(item2, owner1, idx1):
+        _add_item_to_owner(item1, owner1, idx1)
+        _add_item_to_owner(item2, owner2, idx2)
         return false
 
     return true;
 
 
-static func _remove_item_from_holder(item: InventoryItem, item_holder) -> int:
-    if item_holder is Inventory:
-        var inventory := (item_holder as Inventory)
+static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
+    if item_owner is Inventory:
+        var inventory := (item_owner as Inventory)
         var item_idx = inventory.get_item_index(item)
         inventory.remove_item(item)
         return item_idx
-    (item_holder as ItemSlot).clear()
+    (item_owner as ItemSlot).clear()
     return 0
 
 
-static func _add_item_to_holder(item: InventoryItem, item_holder, index: int) -> bool:
-    if item_holder is Inventory:
-        var inventory := (item_holder as Inventory)
+static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> bool:
+    if item_owner is Inventory:
+        var inventory := (item_owner as Inventory)
         if inventory.add_item(item):
             inventory.move_item(inventory.get_item_index(item), index)
             return true
         return false
-    return (item_holder as ItemSlot).equip(item)
+    return (item_owner as ItemSlot).equip(item)
 
 
 func get_property(property_name: String, default_value = null) -> Variant:

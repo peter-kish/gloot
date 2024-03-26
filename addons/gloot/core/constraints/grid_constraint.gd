@@ -279,6 +279,34 @@ func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vec
     return _merge_to(item, destination, position)
 
 
+func swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
+    if get_item_size(item1) != get_item_size(item2):
+        return false
+
+    var pos1 = null
+    var pos2 = null
+    var grid_constraint1: GridConstraint = null
+    var grid_constraint2: GridConstraint = null
+    if item1.get_inventory() != null:
+        grid_constraint1 = item1.get_inventory()._constraint_manager.get_grid_constraint()
+    if item2.get_inventory() != null:
+        grid_constraint2 = item2.get_inventory()._constraint_manager.get_grid_constraint()
+
+    if grid_constraint1 != null:
+        pos1 = grid_constraint1.get_item_position(item1)
+    if grid_constraint2 != null:
+        pos2 = grid_constraint2.get_item_position(item2)
+
+    if InventoryItem.swap(item1, item2):
+        if grid_constraint1 != null && pos1 != null:
+            grid_constraint1._move_item_to_unsafe(item2, pos1)
+        if grid_constraint2 != null && pos2 != null:
+            grid_constraint2._move_item_to_unsafe(item1, pos2)
+        return true
+
+    return false
+
+
 func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
     var item_dst := destination._get_mergable_item_at(item, position)
     if item_dst == null:
