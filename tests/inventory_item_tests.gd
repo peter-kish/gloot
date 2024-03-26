@@ -1,6 +1,7 @@
 extends TestSuite
 
 var inventory: Inventory
+var slot: ItemSlot
 var item: InventoryItem
 
 const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
@@ -8,6 +9,8 @@ const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
 func init_suite() -> void:
     tests = [
         "test_get_inventory",
+        "test_get_item_slot",
+        "test_swap",
         "test_get_property",
         "test_set_property",
         "test_references",
@@ -22,11 +25,15 @@ func init_suite() -> void:
 
 func init_test() -> void:
     inventory = create_inventory(TEST_PROTOSET)
+    slot = ItemSlot.new()
+    slot.item_protoset = TEST_PROTOSET
+    slot.remember_source_inventory = false
     item = inventory.create_and_add_item("minimal_item")
 
 
 func cleanup_test() -> void:
     free_inventory(inventory)
+    free_slot(slot)
     free_item(item)
 
 
@@ -34,6 +41,50 @@ func test_get_inventory() -> void:
     assert(item.get_inventory() == inventory)
     inventory.remove_item(item)
     assert(item.get_inventory() == null)
+
+
+func test_get_item_slot() -> void:
+    assert(item.get_item_slot() == null)
+    inventory.remove_item(item)
+    slot.equip(item)
+    assert(item.get_item_slot() == slot)
+
+
+func test_swap() -> void:
+    var inventory2 = create_inventory(TEST_PROTOSET)
+    var item2 = inventory2.create_and_add_item("minimal_item")
+    var slot2 = ItemSlot.new()
+    slot2.item_protoset = TEST_PROTOSET
+    slot2.remember_source_inventory = false
+
+    # Swap inventory-inventory
+    assert(InventoryItem.swap(item, item2))
+    assert(item.get_inventory() == inventory2)
+    assert(item.get_item_slot() == null)
+    assert(item2.get_inventory() == inventory)
+    assert(item2.get_item_slot() == null)
+
+    # Swap inventory-slot
+    inventory.add_item(item)
+    slot2.equip(item2)
+    assert(InventoryItem.swap(item, item2))
+    assert(item.get_inventory() == null)
+    assert(item.get_item_slot() == slot2)
+    assert(item2.get_inventory() == inventory)
+    assert(item2.get_item_slot() == null)
+
+    # Swap slot-slot
+    slot.equip(item)
+    slot2.equip(item2)
+    assert(InventoryItem.swap(item, item2))
+    assert(item.get_inventory() == null)
+    assert(item.get_item_slot() == slot2)
+    assert(item2.get_inventory() == null)
+    assert(item2.get_item_slot() == slot)
+
+    free_inventory(inventory2)
+    free_item(item2)
+    free_slot(slot2)
 
 
 func test_get_property() -> void:
