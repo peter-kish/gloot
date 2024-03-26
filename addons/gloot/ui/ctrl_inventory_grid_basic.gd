@@ -349,7 +349,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
 
 
 func _swap_items(item: InventoryItem, position: Vector2i) -> void:
-    var item2 = (inventory as InventoryGridStacked).get_item_at(position)
+    var item2 = (inventory as InventoryGrid).get_item_at(position)
     if item2 == null:
         return
 
