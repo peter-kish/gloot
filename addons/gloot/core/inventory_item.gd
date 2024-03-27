@@ -188,6 +188,11 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if owner1 == null || owner2 == null:
         return false
 
+    if owner1 is Inventory:
+        owner1._constraint_manager._on_pre_item_swap(item1, item2)
+    if owner2 is Inventory && owner1 != owner2:
+        owner2._constraint_manager._on_pre_item_swap(item1, item2)
+
     var idx1 = _remove_item_from_owner(item1, owner1)
     var idx2 = _remove_item_from_owner(item2, owner2)
     if !_add_item_to_owner(item1, owner2, idx2):
@@ -199,6 +204,11 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
         _add_item_to_owner(item2, owner2, idx2)
         return false
 
+    if owner1 is Inventory:
+        owner1._constraint_manager._on_post_item_swap(item1, item2)
+    if owner2 is Inventory && owner1 != owner2:
+        owner2._constraint_manager._on_post_item_swap(item1, item2)
+
     return true;
 
 
@@ -208,7 +218,13 @@ static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
         var item_idx = inventory.get_item_index(item)
         inventory.remove_item(item)
         return item_idx
-    (item_owner as ItemSlot).clear()
+    
+    # TODO: Consider removing/deprecating ItemSlot.remember_source_inventory
+    var item_slot := (item_owner as ItemSlot)
+    var temp_remember_source_inventory = item_slot.remember_source_inventory
+    item_slot.remember_source_inventory = false
+    item_slot.clear()
+    item_slot.remember_source_inventory = temp_remember_source_inventory
     return 0
 
 

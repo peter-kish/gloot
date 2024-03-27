@@ -192,6 +192,9 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == item_slot.get_item():
         return
 
+    if item_slot.get_item() && InventoryItem.swap(item_slot.get_item(), item):
+        return
+        
     item_slot.equip(item)
 
 

@@ -12,6 +12,7 @@ const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
@@ -290,10 +291,9 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
-    if inventory.rect_free(Rect2i(field_coords, inventory.get_item_size(item)), item):
-        _move_item(item, field_coords)
-    elif inventory is InventoryGridStacked:
-        _merge_item(item, field_coords)
+    if !_move_item(item, field_coords):
+        if !_merge_item(item, field_coords):
+            _swap_items(item, field_coords)
 
 
 func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
@@ -304,8 +304,8 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
         if source_inventory.item_protoset != inventory.item_protoset:
             return
         source_inventory.transfer_to(item, inventory, field_coords)
-    else:
-        inventory.add_item_at(item, field_coords)
+    elif !inventory.add_item_at(item, field_coords):
+        _swap_items(item, field_coords)
 
 
 func get_field_coords(local_pos: Vector2) -> Vector2i:
@@ -326,22 +326,40 @@ func get_selected_inventory_item() -> InventoryItem:
     return _selected_item
 
 
-func _move_item(item: InventoryItem, move_position: Vector2i) -> void:
+func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
+    if !inventory.rect_free(Rect2i(move_position, inventory.get_item_size(item)), item):
+        return false
     if Engine.is_editor_hint():
         GlootUndoRedo.move_inventory_item(inventory, item, move_position)
-    else:
-        inventory.move_item_to(item, move_position)
+        return true
+    inventory.move_item_to(item, move_position)
+    return true
 
         
-func _merge_item(item_src: InventoryItem, position: Vector2i) -> void:
+func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
+    if !(inventory is InventoryGridStacked):
+        return false
+
     var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
     if item_dst == null:
-        return
+        return false
 
     if Engine.is_editor_hint():
         GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
     else:
         (inventory as InventoryGridStacked).join(item_dst, item_src)
+
+    return true
+
+
+func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
+    var item2 = inventory.get_item_at(position)
+    if item2 == null:
+        return false
+
+    # TODO: Undo/Redo
+    InventoryItem.swap(item, item2)
+    return true
 
 
 func _get_field_position(field_coords: Vector2i) -> Vector2:

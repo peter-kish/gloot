@@ -17,6 +17,7 @@ const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 var _item_map := ItemMap.new(Vector2i.ZERO)
+var _swap_position := Vector2i.ZERO
 
 @export var size: Vector2i = DEFAULT_SIZE :
     set(new_size):
@@ -59,6 +60,26 @@ func _on_item_removed(item: InventoryItem) -> void:
     
 func _on_item_modified(item: InventoryItem) -> void:
     _refresh_item_map()
+
+
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
+    if inventory.has_item(item1):
+        _swap_position = get_item_position(item1)
+    elif inventory.has_item(item2):
+        _swap_position = get_item_position(item2)
+
+
+func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
+    var has1 := inventory.has_item(item1)
+    var has2 := inventory.has_item(item2)
+    if has1 && has2:
+        var temp_pos = get_item_position(item1)
+        _move_item_to_unsafe(item1, get_item_position(item2))
+        _move_item_to_unsafe(item2, temp_pos)
+    elif has1:
+        move_item_to(item1, _swap_position)
+    elif has2:
+        move_item_to(item2, _swap_position)
 
 
 func _bounds_broken() -> bool:
@@ -276,35 +297,10 @@ func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vec
             destination.move_item_to(item, position)
             return true
 
-    return _merge_to(item, destination, position)
-
-
-func swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
-    if get_item_size(item1) != get_item_size(item2):
-        return false
-
-    var pos1 = null
-    var pos2 = null
-    var grid_constraint1: GridConstraint = null
-    var grid_constraint2: GridConstraint = null
-    if item1.get_inventory() != null:
-        grid_constraint1 = item1.get_inventory()._constraint_manager.get_grid_constraint()
-    if item2.get_inventory() != null:
-        grid_constraint2 = item2.get_inventory()._constraint_manager.get_grid_constraint()
-
-    if grid_constraint1 != null:
-        pos1 = grid_constraint1.get_item_position(item1)
-    if grid_constraint2 != null:
-        pos2 = grid_constraint2.get_item_position(item2)
-
-    if InventoryItem.swap(item1, item2):
-        if grid_constraint1 != null && pos1 != null:
-            grid_constraint1._move_item_to_unsafe(item2, pos1)
-        if grid_constraint2 != null && pos2 != null:
-            grid_constraint2._move_item_to_unsafe(item1, pos2)
+    if _merge_to(item, destination, position):
         return true
 
-    return false
+    return InventoryItem.swap(item, destination.get_item_at(position))
 
 
 func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
