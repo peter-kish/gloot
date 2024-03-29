@@ -114,6 +114,13 @@ func _ready() -> void:
 
     _refresh()
 
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PREDELETE:
+        if is_instance_valid(drag_preview):
+            drag_preview.free()
+
+
 func _update_selection() -> void:
     if !is_instance_valid(_selection_rect):
         return

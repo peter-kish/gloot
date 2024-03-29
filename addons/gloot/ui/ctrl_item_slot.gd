@@ -6,6 +6,7 @@ extends Control
 const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 
 @export var item_slot_path: NodePath :
@@ -192,10 +193,23 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == item_slot.get_item():
         return
 
+    if _join_stacks(item_slot.get_item(), item):
+        return
+
     if _swap_items(item_slot.get_item(), item):
         return
         
     item_slot.equip(item)
+
+
+func _join_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    if item_dst == null:
+        return false
+    if !is_instance_valid(item_dst.get_inventory()):
+        return false
+    if item_dst.get_inventory()._constraint_manager.get_stacks_constraint() == null:
+        return false
+    return StacksConstraint.join_stacks(item_dst, item_src)
 
 
 func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
@@ -206,6 +220,7 @@ func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
         return false
 
     return InventoryItem.swap(item1, item2)
+
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
     _ctrl_drop_zone.activate()

@@ -56,8 +56,8 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     return _constraint_manager.get_stacks_constraint().split_stack_safe(item, new_stack_size)
 
 
-func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return _constraint_manager.get_stacks_constraint().join_stacks(item_dst, item_src)
+static func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    return StacksConstraint.join_stacks(item_dst, item_src)
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:

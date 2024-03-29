@@ -146,25 +146,25 @@ func test_split_stack() -> void:
 func test_stacks_joinable() -> void:
     inventory.add_item(item)
     inventory.add_item(item_2)
-    assert(!stacks_constraint.stacks_joinable(item, item_2))
+    assert(!StacksConstraint.stacks_joinable(item, item_2))
 
     assert(StacksConstraint.set_item_stack_size(item, 1))
     assert(StacksConstraint.set_item_stack_size(item_2, 1))
-    assert(stacks_constraint.stacks_joinable(item, item_2))
+    assert(StacksConstraint.stacks_joinable(item, item_2))
     
     item_2.set_property("custom_property", "custom_value")
-    assert(!stacks_constraint.stacks_joinable(item, item_2))
+    assert(!StacksConstraint.stacks_joinable(item, item_2))
 
 
 func test_join_stacks() -> void:
     inventory.add_item(item)
     inventory.add_item(item_2)
-    assert(!stacks_constraint.join_stacks(item, item_2))
+    assert(!StacksConstraint.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 2)
     
     assert(StacksConstraint.set_item_stack_size(item, 1))
     assert(StacksConstraint.set_item_stack_size(item_2, 1))
-    assert(stacks_constraint.join_stacks(item, item_2))
+    assert(StacksConstraint.join_stacks(item, item_2))
     assert(inventory.get_item_count() == 1)
     assert(!is_node_valid(item_2))
 
