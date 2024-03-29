@@ -323,10 +323,8 @@ func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vec
     assert(destination.inventory != null, "Destination inventory not set!")
     var item_size = get_item_size(item)
     var rect := Rect2i(position, item_size)
-    if destination.rect_free(rect):
-        if inventory.transfer(item, destination.inventory):
-            destination.move_item_to(item, position)
-            return true
+    if destination.rect_free(rect) && destination.add_item_at(item, position):
+        return true
 
     if _merge_to(item, destination, position):
         return true
