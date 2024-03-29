@@ -192,11 +192,20 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if item == item_slot.get_item():
         return
 
-    if item_slot.get_item() && InventoryItem.swap(item_slot.get_item(), item):
+    if _swap_items(item_slot.get_item(), item):
         return
         
     item_slot.equip(item)
 
+
+func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
+    if item_slot.get_item() == null:
+        return false
+    if item_slot is ItemRefSlot:
+        # No support for swapping (planning to deprecate ItemRefSlot)
+        return false
+
+    return InventoryItem.swap(item1, item2)
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
     _ctrl_drop_zone.activate()
