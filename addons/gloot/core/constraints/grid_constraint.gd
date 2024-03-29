@@ -342,13 +342,6 @@ func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vecto
     return inventory._constraint_manager.get_stacks_constraint().join_stacks(item_dst, item)
 
 
-func _swap_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
-    var item_dst = destination.get_item_at(position)
-    if !is_instance_valid(item_dst):
-        return false
-    return swap_items(item, item_dst)
-
-
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     if inventory._constraint_manager.get_stacks_constraint() == null:
         return null

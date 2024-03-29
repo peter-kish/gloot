@@ -291,9 +291,11 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
-    if !_move_item(item, field_coords):
-        if !_merge_item(item, field_coords):
-            _swap_items(item, field_coords)
+    if _move_item(item, field_coords):
+        return
+    if _merge_item(item, field_coords):
+        return
+    _swap_items(item, field_coords)
 
 
 func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
@@ -351,26 +353,15 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
     return true
 
 
-func _swap_items(item: InventoryItem, position: Vector2i) -> void:
-    var item2 = (inventory as InventoryGrid).get_item_at(position)
-    if item2 == null:
-        return
-
-    if Engine.is_editor_hint():
-        GlootUndoRedo.swap_inventory_items(item, item2)
-    else:
-        (inventory as InventoryGrid).swap_items(item, item2)
-
-    return true
-
-
 func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
     var item2 = inventory.get_item_at(position)
     if item2 == null:
         return false
 
-    # TODO: Undo/Redo
-    InventoryItem.swap(item, item2)
+    if Engine.is_editor_hint():
+        GlootUndoRedo.swap_inventory_items(item, item2)
+    else:
+        InventoryItem.swap(item, item2)
     return true
 
 
