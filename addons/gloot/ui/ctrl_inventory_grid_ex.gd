@@ -96,6 +96,13 @@ class SelectionPanel extends Panel:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
+@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.select_mode = select_mode
 
 @export_group("Custom Styles")
 @export var field_style: StyleBox :
@@ -235,6 +242,7 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.item_mouse_entered.connect(_on_item_mouse_entered)
     _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)
     _ctrl_inventory_grid_basic.selection_changed.connect(_on_selection_changed)
+    _ctrl_inventory_grid_basic.select_mode = select_mode
     add_child(_ctrl_inventory_grid_basic)
 
     _selection_panels = Control.new()

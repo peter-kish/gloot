@@ -106,6 +106,13 @@ class GridControl extends Control:
             return
         selection_color = new_selection_color
         _queue_refresh()
+@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.select_mode = select_mode
 
 var inventory: InventoryGrid = null :
     set(new_inventory):
@@ -176,6 +183,7 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
     _ctrl_inventory_grid_basic.selection_changed.connect(_queue_refresh)
+    _ctrl_inventory_grid_basic.select_mode = select_mode
 
     _ctrl_grid = GridControl.new(grid_color, _get_inventory_dimensions())
     _ctrl_grid.color = grid_color

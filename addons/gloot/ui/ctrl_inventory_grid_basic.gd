@@ -14,6 +14,8 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
+enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
+
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if new_field_dimensions == field_dimensions:
@@ -51,6 +53,12 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
     set(new_stretch_item_sprites):
         stretch_item_sprites = new_stretch_item_sprites
         _queue_refresh()
+@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        _clear_selection()
 var inventory: InventoryGrid = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -306,7 +314,7 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     else:
         _handle_item_transfer(item, drop_position)
 
-    if Input.is_key_pressed(KEY_CTRL):
+    if select_mode == SelectMode.SELECT_MULTI && Input.is_key_pressed(KEY_CTRL):
         if !_is_item_selected(item):
             _select(item)
         else:
