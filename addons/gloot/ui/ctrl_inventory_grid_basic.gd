@@ -206,12 +206,13 @@ func _populate_list() -> void:
         var ctrl_inventory_item = CtrlInventoryItemRect.new()
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        # ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
+        ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
+        ctrl_inventory_item.clicked.connect(_on_item_clicked.bind(ctrl_inventory_item))
         ctrl_inventory_item.size = _get_item_sprite_size(item)
 
         ctrl_inventory_item.position = _get_field_position(inventory.get_item_position(item))
@@ -222,8 +223,8 @@ func _populate_list() -> void:
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
 
-# func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-#     _clear_selection()
+func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+    _clear_selection()
 
 
 func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
@@ -267,6 +268,21 @@ func _on_item_mouse_entered(ctrl_inventory_item) -> void:
 
 func _on_item_mouse_exited(ctrl_inventory_item) -> void:
     item_mouse_exited.emit(ctrl_inventory_item.item)
+
+
+func _on_item_clicked(ctrl_inventory_item) -> void:
+    var item = ctrl_inventory_item.item
+    if !is_instance_valid(item):
+        return
+
+    if select_mode == SelectMode.SELECT_MULTI && Input.is_key_pressed(KEY_CTRL):
+        if !_is_item_selected(item):
+            _select(item)
+        else:
+            _deselect(item)
+    else:
+        _clear_selection()
+        _select(item)
 
 
 func _select(item: InventoryItem) -> void:
@@ -313,15 +329,6 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
         _handle_item_move(item, drop_position)
     else:
         _handle_item_transfer(item, drop_position)
-
-    if select_mode == SelectMode.SELECT_MULTI && Input.is_key_pressed(KEY_CTRL):
-        if !_is_item_selected(item):
-            _select(item)
-        else:
-            _deselect(item)
-    else:
-        _clear_selection()
-        _select(item)
 
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:

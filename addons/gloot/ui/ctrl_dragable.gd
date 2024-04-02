@@ -23,6 +23,7 @@ static var dragable_dropped: Signal = (func():
 
 signal grabbed(position)
 signal dropped(zone, position)
+signal clicked
 
 # Embedded Windows are placed on layer 1024. CanvasItems on layers 1025 and higher appear in front of embedded windows.
 # (https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html#description)
@@ -36,6 +37,8 @@ var _preview_canvas_layer := CanvasLayer.new()
 var drag_z_index := 1
 var enabled: bool = true
 var _show_queued := false
+var _clicked := false
+var _click_position := Vector2.ZERO
 
 
 static func grab(dragable: CtrlDragable) -> void:
@@ -137,16 +140,30 @@ func _process(_delta) -> void:
 func _gui_input(event: InputEvent) -> void:
     if !enabled:
         return
-        
-    if !(event is InputEventMouseButton):
-        return
 
-    var mb_event: InputEventMouseButton = event
-    if mb_event.button_index != MOUSE_BUTTON_LEFT:
-        return
+    if event is InputEventMouseMotion:
+        _handle_mouse_motion(event as InputEventMouseMotion)
+    elif event is InputEventMouseButton:
+        _handle_mouse_button(event as InputEventMouseButton)
 
-    if mb_event.is_pressed():
+
+func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
+    var deadzone_radius = ProjectSettings.get_setting("gloot/item_dragging_deadzone_radius", 8.0)
+    if _clicked && (get_local_mouse_position() - _click_position).length() > deadzone_radius:
+        _clicked = false
         grab(self)
+
+
+func _handle_mouse_button(event: InputEventMouseButton) -> void:
+    if event.button_index != MOUSE_BUTTON_LEFT:
+        return
+
+    if event.is_pressed():
+        _clicked = true
+        _click_position = get_local_mouse_position()
+        clicked.emit()
+    else:
+        _clicked = false
 
 
 func activate() -> void:
