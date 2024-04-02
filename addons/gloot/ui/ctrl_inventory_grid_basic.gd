@@ -56,7 +56,7 @@ var inventory: InventoryGrid = null :
         if inventory == new_inventory:
             return
 
-        _select(null)
+        _clear_selection()
 
         _disconnect_inventory_signals()
         inventory = new_inventory
@@ -65,7 +65,7 @@ var inventory: InventoryGrid = null :
         _queue_refresh()
 var _ctrl_item_container: Control = null
 var _ctrl_drop_zone: CtrlDropZone = null
-var _selected_item: InventoryItem = null
+var _selected_items: Array[InventoryItem] = []
 var _refresh_queued: bool = false
 
 
@@ -145,9 +145,8 @@ func _on_inventory_resized() -> void:
     _queue_refresh()
 
 
-func _on_item_removed(_item: InventoryItem) -> void:
-    if _item == _selected_item:
-        _select(null)
+func _on_item_removed(item: InventoryItem) -> void:
+    _deselect(item)
 
 
 func _process(_delta) -> void:
@@ -199,7 +198,7 @@ func _populate_list() -> void:
         var ctrl_inventory_item = CtrlInventoryItemRect.new()
         ctrl_inventory_item.texture = default_item_texture
         ctrl_inventory_item.item = item
-        ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
+        # ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
         ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
@@ -215,8 +214,8 @@ func _populate_list() -> void:
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
 
-func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
-    _select(null)
+# func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+#     _clear_selection()
 
 
 func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
@@ -263,13 +262,34 @@ func _on_item_mouse_exited(ctrl_inventory_item) -> void:
 
 
 func _select(item: InventoryItem) -> void:
-    if item == _selected_item:
+    if item in _selected_items:
         return
 
     if (item != null) && !inventory.has_item(item):
         return
 
-    _selected_item = item
+    _selected_items.append(item)
+    selection_changed.emit()
+
+
+func _is_item_selected(item: InventoryItem) -> bool:
+    return item in _selected_items
+
+
+func _deselect(item: InventoryItem) -> void:
+    if !(item in _selected_items):
+        return
+    var idx := _selected_items.find(item)
+    if idx < 0:
+        return
+    _selected_items.remove_at(idx)
+    selection_changed.emit()
+
+
+func _clear_selection() -> void:
+    if _selected_items.is_empty():
+        return
+    _selected_items.clear()
     selection_changed.emit()
 
 
@@ -286,7 +306,14 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     else:
         _handle_item_transfer(item, drop_position)
 
-    _select(item)
+    if Input.is_key_pressed(KEY_CTRL):
+        if !_is_item_selected(item):
+            _select(item)
+        else:
+            _deselect(item)
+    else:
+        _clear_selection()
+        _select(item)
 
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
@@ -325,7 +352,13 @@ func get_field_coords(local_pos: Vector2) -> Vector2i:
 
 
 func get_selected_inventory_item() -> InventoryItem:
-    return _selected_item
+    if _selected_items.is_empty():
+        return null
+    return _selected_items[0]
+
+
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    return _selected_items.duplicate()
 
 
 func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
@@ -373,7 +406,7 @@ func _get_field_position(field_coords: Vector2i) -> Vector2:
 
 
 func deselect_inventory_item() -> void:
-    _select(null)
+    _clear_selection()
 
 
 func select_inventory_item(item: InventoryItem) -> void:

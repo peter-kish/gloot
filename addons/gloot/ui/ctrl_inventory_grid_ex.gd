@@ -128,9 +128,9 @@ var inventory: InventoryGrid = null :
             _ctrl_inventory_grid_basic.inventory = inventory
         _queue_refresh()
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
-var _field_background_grid: Control
-var _field_backgrounds: Array
-var _selection_panel: SelectionPanel
+var _field_background_grid: Control = null
+var _field_backgrounds: Array = []
+var _selection_panels: Control = null
 var _refresh_queued: bool = false
 
 
@@ -168,17 +168,25 @@ func _queue_refresh() -> void:
 
 
 func _refresh_selection_panel() -> void:
-    if !is_instance_valid(_selection_panel):
-        return
-    _selection_panel.set_style(selection_style)
-    var selected_item = _ctrl_inventory_grid_basic.get_selected_inventory_item()
-    _selection_panel.visible = (selected_item != null) && (selection_style != null)
-    if !selected_item:
+    if !is_instance_valid(_selection_panels):
         return
 
-    var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
-    _selection_panel.position = r.position
-    _selection_panel.size = r.size
+    for child in _selection_panels.get_children():
+        child.queue_free()
+
+    var selected_items := _ctrl_inventory_grid_basic.get_selected_inventory_items()
+    _selection_panels.visible = (!selected_items.is_empty()) && (selection_style != null)
+    if selected_items.is_empty():
+        return
+
+    for selected_item in selected_items:
+        var selection_panel := SelectionPanel.new()
+        var rect := _ctrl_inventory_grid_basic.get_item_rect(selected_item)
+        selection_panel.position = rect.position
+        selection_panel.size = rect.size
+        selection_panel.set_style(selection_style)
+        selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        _selection_panels.add_child(selection_panel)
 
 
 func _refresh_field_background_grid() -> void:
@@ -229,12 +237,10 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.selection_changed.connect(_on_selection_changed)
     add_child(_ctrl_inventory_grid_basic)
 
-    _selection_panel = SelectionPanel.new()
-    _selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    _selection_panel.hide()
-    _selection_panel.name = "SelectionPanel"
-    _selection_panel.set_style(selection_style)
-    add_child(_selection_panel)
+    _selection_panels = Control.new()
+    _selection_panels.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _selection_panels.name = "SelectionPanels"
+    add_child(_selection_panels)
 
     CtrlDragable.dragable_dropped.connect(func(_grabbed_dragable, _zone, _local_drop_position):
         _fill_background(field_style, PriorityPanel.StylePriority.LOW)
@@ -265,7 +271,7 @@ func _on_selection_changed() -> void:
     if !field_selected_style:
         return
     for item in inventory.get_items():
-        if item == _ctrl_inventory_grid_basic.get_selected_inventory_item():
+        if item in _ctrl_inventory_grid_basic.get_selected_inventory_items():
             _set_item_background(item, field_selected_style, PriorityPanel.StylePriority.HIGH)
         else:
             _set_item_background(item, null, PriorityPanel.StylePriority.HIGH)
@@ -344,4 +350,10 @@ func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     return _ctrl_inventory_grid_basic.get_selected_inventory_item()
+
+
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return []
+    return _ctrl_inventory_grid_basic.get_selected_inventory_items()
     
