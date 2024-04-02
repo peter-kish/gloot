@@ -114,9 +114,10 @@ func _on_btn_edit() -> void:
 
 
 func _on_btn_remove() -> void:
-    var selected_item: InventoryItem = _inventory_control.get_selected_inventory_item()
-    if selected_item != null:
-        GlootUndoRedo.remove_inventory_item(inventory, selected_item)
+    var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
+    for selected_item in selected_items:
+        if selected_item != null:
+            GlootUndoRedo.remove_inventory_item(inventory, selected_item)
 
 
 static func _select_node(node: Node) -> void:

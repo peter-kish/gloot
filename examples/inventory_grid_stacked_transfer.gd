@@ -52,17 +52,18 @@ func _on_btn_split(ctrl_inventory) -> void:
         print("Warning: inventory is not InventoryGridStacked!")
         return
 
-    var selected_item = ctrl_inventory.get_selected_inventory_item()
-    if selected_item == null:
+    var selected_items = ctrl_inventory.get_selected_inventory_items()
+    if selected_items.is_empty():
         return
 
-    var stack_size := InventoryGridStacked.get_item_stack_size(selected_item)
-    if stack_size < 2:
-        return
+    for selected_item in selected_items:
+        var stack_size := InventoryGridStacked.get_item_stack_size(selected_item)
+        if stack_size < 2:
+            return
 
-    # All this floor/float jazz just to do integer division without warnings
-    var new_stack_size: int = floor(float(stack_size) / 2)
-    inventory_stacked.split(selected_item, new_stack_size)
+        # All this floor/float jazz just to do integer division without warnings
+        var new_stack_size: int = floor(float(stack_size) / 2)
+        inventory_stacked.split(selected_item, new_stack_size)
 
 
 func _on_btn_unequip() -> void:
