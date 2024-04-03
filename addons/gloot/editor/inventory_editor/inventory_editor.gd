@@ -113,7 +113,7 @@ func _on_inventory_item_context_activated(item: InventoryItem) -> void:
         var grid_constraint := inventory.get_grid_constraint()
         if grid_constraint == null:
             return false
-        var rotated = grid_constraint.get_item_rotation(item)
+        var rotated = grid_constraint.is_item_rotated(item)
         return grid_constraint.set_item_rotation(item, !rotated)
     )
 

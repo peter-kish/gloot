@@ -4,6 +4,7 @@ extends Control
 
 # TODO: Consider renaming to item_activated
 signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
@@ -130,6 +131,9 @@ func _populate() -> void:
     _inventory_item_grid.selection_style = selection_style
     _inventory_item_grid.inventory_item_activated.connect(func(item: InventoryItem):
         inventory_item_activated.emit(item)
+    )
+    _inventory_item_grid.inventory_item_context_activated.connect(func(item: InventoryItem):
+        inventory_item_context_activated.emit(item)
     )
     add_child(_inventory_item_grid)
 

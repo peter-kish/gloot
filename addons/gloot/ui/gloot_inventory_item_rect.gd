@@ -3,8 +3,10 @@ extends TextureRect
 
 signal selected_status_changed
 signal activated
+signal context_activated
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 @export var selection_style: StyleBox :
     get:
@@ -60,6 +62,10 @@ func _ready() -> void:
     _label_stack_size.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
     add_child(_label_stack_size)
 
+    resized.connect(func():
+        pivot_offset = size / 2;
+    )
+
     _update_stack_size_label()
 
 
@@ -67,6 +73,11 @@ func refresh(item_rect: Rect2) -> void:
     position = item_rect.position
     size = item_rect.size
     texture = item.get_texture()
+    if is_instance_valid(item) && GridConstraint.is_item_rotated(item):
+        if GridConstraint.is_item_rotation_positive(item):
+            rotation = PI / 2
+        else:
+            rotation = -PI / 2
     _update_stack_size_label()
 
 
@@ -81,12 +92,15 @@ func _set_selection_style(style: StyleBox) -> void:
 func _gui_input(event):
     if !(event is InputEventMouseButton):
         return
-    if event.button_index != MOUSE_BUTTON_LEFT:
-        return
-    if event.pressed:
-        selected = true
-    if event.double_click:
-        activated.emit()
+    var mb_event: InputEventMouseButton = event
+
+    if mb_event.button_index == MOUSE_BUTTON_LEFT:
+        if mb_event.pressed:
+            selected = true
+        if mb_event.double_click:
+            activated.emit()
+    elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT && mb_event.pressed:
+        context_activated.emit()
 
 
 func _update_stack_size_label() -> void:
