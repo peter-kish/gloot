@@ -224,7 +224,7 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
 func _get_prototype_size(prototype_id: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
     assert(inventory.protoset != null, "Inventory protoset is null!")
-    var size: Vector2i = inventory.protoset.get_item_property(prototype_id, KEY_SIZE, Vector2i.ONE)
+    var size: Vector2i = inventory.protoset.get_prototype_property(prototype_id, KEY_SIZE, Vector2i.ONE)
     return size
 
 

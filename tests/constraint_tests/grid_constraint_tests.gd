@@ -130,7 +130,6 @@ func test_item_rotation() -> void:
     assert(!grid_constraint.rotate_item(item))
 
     inventory.remove_item(new_item)
-    new_item.free()
 
 
 func test_add_item_at() -> void:

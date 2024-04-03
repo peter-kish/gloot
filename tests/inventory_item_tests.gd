@@ -26,7 +26,7 @@ func init_suite() -> void:
 func init_test() -> void:
     inventory = create_inventory(TEST_PROTOSET)
     slot = ItemSlot.new()
-    slot.item_protoset = TEST_PROTOSET
+    slot.protoset = TEST_PROTOSET
     slot.remember_source_inventory = false
     item = inventory.create_and_add_item("minimal_item")
 
@@ -53,7 +53,7 @@ func test_swap() -> void:
     var inventory2 = create_inventory(TEST_PROTOSET)
     var item2 = inventory2.create_and_add_item("minimal_item")
     var slot2 = ItemSlot.new()
-    slot2.item_protoset = TEST_PROTOSET
+    slot2.protoset = TEST_PROTOSET
     slot2.remember_source_inventory = false
 
     # Swap items between two inventories
@@ -148,16 +148,16 @@ func test_reset() -> void:
     item.set_property("foo", "bar")
 
     item.reset()
-    assert(item.protoset == inventory.item_protoset)
+    assert(item.protoset == inventory.protoset)
     assert(item.prototype_id == "minimal_item")
-    assert(item.properties.is_empty())
-    assert(!item.properties.has("foo"))
+    assert(item.get_overridden_properties().is_empty())
+    assert(!item.has_property("foo"))
 
     inventory.remove_item(item)
     item.reset()
     assert(item.protoset == null)
     assert(item.prototype_id == "")
-    assert(item.properties.is_empty())
+    assert(item.get_overridden_properties().is_empty())
 
 
 func test_get_texture() -> void:

@@ -29,6 +29,10 @@ signal property_changed(property_name)
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
             return
+        if protoset == null && !new_prototype_id.is_empty():
+            return
+        if (protoset != null) && (!protoset.has_prototype(new_prototype_id)):
+            return
         _reset_properties()
         prototype_id = new_prototype_id
         prototype_id_changed.emit()
