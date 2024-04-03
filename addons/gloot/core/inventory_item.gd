@@ -12,7 +12,7 @@ signal property_changed(property_name)
         if new_protoset == protoset:
             return
 
-        if (_inventory != null) && (new_protoset != _inventory.item_protoset):
+        if (_inventory != null) && (new_protoset != _inventory.protoset):
             return
 
         protoset = new_protoset
@@ -41,7 +41,7 @@ var _inventory: Inventory :
             return
         _inventory = new_inventory
         if _inventory:
-            protoset = _inventory.item_protoset
+            protoset = _inventory.protoset
 var _item_slot: ItemSlot
 
 const KEY_PROTOSET: String = "protoset"
@@ -149,7 +149,7 @@ static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> b
 func has_property(property_name: String) -> bool:
     if _properties.has(property_name):
         return true
-    if protoset && protoset.has_item_property(prototype_id, property_name):
+    if protoset && protoset.has_prototype_property(prototype_id, property_name):
         return true
     return false
 
@@ -163,7 +163,7 @@ func get_property(property_name: String, default_value = null) -> Variant:
             return value.duplicate()
         return value
 
-    if protoset && protoset.has_item_property(prototype_id, property_name):
+    if protoset && protoset.has_prototype_property(prototype_id, property_name):
         var value = protoset.get_prototype_property(prototype_id, property_name, default_value)
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
@@ -172,7 +172,7 @@ func get_property(property_name: String, default_value = null) -> Variant:
     if _properties.has(property_name):
         return _properties[property_name]
     if protoset:
-        return protoset.get_item_property(prototype_id, property_name, default_value)
+        return protoset.get_prototype_property(prototype_id, property_name, default_value)
     return default_value
 
 
@@ -180,8 +180,8 @@ func set_property(property_name: String, value) -> void:
     if get_property(property_name) == value:
         return
 
-    if protoset && protoset.has_item_property(prototype_id, property_name):
-        if protoset.get_item_property(prototype_id, property_name) == value && _properties.has(property_name):
+    if protoset && protoset.has_prototype_property(prototype_id, property_name):
+        if protoset.get_prototype_property(prototype_id, property_name) == value && _properties.has(property_name):
             _properties.erase(property_name)
             property_changed.emit(property_name)
             return

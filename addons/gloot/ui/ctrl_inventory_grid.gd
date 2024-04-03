@@ -133,28 +133,6 @@ var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
 var _refresh_queued: bool = false
 
 
-func _connect_inventory_signals() -> void:
-    if !is_instance_valid(inventory):
-        return
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.connect(_on_inventory_resized)
-
-
-func _disconnect_inventory_signals() -> void:
-    if !is_instance_valid(inventory):
-        return
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.disconnect(_on_inventory_resized)
-
-
-func _on_inventory_resized() -> void:
-    _queue_refresh()
-
-
 func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
         return PackedStringArray([
@@ -234,10 +212,8 @@ func _connect_inventory_signals() -> void:
         inventory.item_protoset_changed.connect(_refresh_item)
     if !inventory.item_prototype_id_changed.is_connected(_refresh_item):
         inventory.item_prototype_id_changed.connect(_refresh_item)
-    if !inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.connect(_on_inventory_resized)
-    if !inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.connect(_on_item_removed)
+    if !inventory.size_changed.is_connected(_queue_refresh):
+        inventory.size_changed.connect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
     if grid_constraint != null && !grid_constraint.item_moved.is_connected(_on_item_moved):
         grid_constraint.item_moved.connect(_on_item_moved)
@@ -257,10 +233,8 @@ func _disconnect_inventory_signals() -> void:
         inventory.item_protoset_changed.disconnect(_refresh_item)
     if inventory.item_prototype_id_changed.is_connected(_refresh_item):
         inventory.item_prototype_id_changed.disconnect(_refresh_item)
-    if inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.disconnect(_on_inventory_resized)
-    if inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.disconnect(_on_item_removed)
+    if inventory.size_changed.is_connected(_queue_refresh):
+        inventory.size_changed.disconnect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
     if grid_constraint != null && grid_constraint.item_moved.is_connected(_on_item_moved):
         grid_constraint.item_moved.disconnect(_on_item_moved)
@@ -274,15 +248,6 @@ func _on_item_property_changed(item: InventoryItem, _property: String) -> void:
 
 func _refresh_item(_item: InventoryItem) -> void:
     _queue_refresh()
-
-
-func _on_inventory_resized() -> void:
-    _queue_refresh()
-
-
-func _on_item_removed(_item: InventoryItem) -> void:
-    if _item == _selected_item:
-        _select(null)
 
 
 func _on_item_moved(_item: InventoryItem) -> void:

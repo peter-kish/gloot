@@ -128,8 +128,12 @@ func _connect_inventory_signals() -> void:
 
     if !inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.connect(_on_item_modified)
+    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.connect(_on_item_property_changed)
+    if !inventory.item_protoset_changed.is_connected(_on_item_modified):
+        inventory.item_protoset_changed.connect(_on_item_modified)
+    if !inventory.item_prototype_id_changed.is_connected(_on_item_modified):
+        inventory.item_prototype_id_changed.connect(_on_item_modified)
     if !inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.connect(_on_inventory_resized)
     if !inventory.item_removed.is_connected(_on_item_removed):
@@ -142,12 +146,20 @@ func _disconnect_inventory_signals() -> void:
 
     if inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.disconnect(_on_item_property_changed)
+    if inventory.item_protoset_changed.is_connected(_on_item_modified):
+        inventory.item_protoset_changed.disconnect(_on_item_modified)
+    if inventory.item_prototype_id_changed.is_connected(_on_item_modified):
+        inventory.item_prototype_id_changed.disconnect(_on_item_modified)
     if inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.disconnect(_on_inventory_resized)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
+
+
+func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
+    _queue_refresh()
 
 
 func _on_item_modified(_item: InventoryItem) -> void:

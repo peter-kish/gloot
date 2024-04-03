@@ -153,7 +153,7 @@ func get_prototype_property(id: String, property_name: String, default_value = n
     return default_value
 
     
-func has_item_property(id: String, property_name: String) -> bool:
+func has_prototype_property(id: String, property_name: String) -> bool:
     if !has_prototype(id):
         return false
 

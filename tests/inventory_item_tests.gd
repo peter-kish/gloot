@@ -34,7 +34,6 @@ func init_test() -> void:
 func cleanup_test() -> void:
     free_inventory(inventory)
     free_slot(slot)
-    free_item(item)
 
 
 func test_get_inventory() -> void:
@@ -96,7 +95,6 @@ func test_swap() -> void:
     assert(inventory.get_item_index(item2) == idx)
 
     free_inventory(inventory2)
-    free_item(item2)
     free_slot(slot2)
 
 
