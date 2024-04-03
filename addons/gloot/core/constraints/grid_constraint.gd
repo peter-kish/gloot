@@ -54,7 +54,7 @@ func _on_item_added(item: InventoryItem) -> void:
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    _item_map.clear_rect(get_item_rect(item), item)
+    _item_map.clear_rect(get_item_rect(item))
     _item_positions.erase(item)
 
     
@@ -102,8 +102,8 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     var has2 := inventory.has_item(item2)
     if has1 && has2:
         var temp_pos = get_item_position(item1)
-        _move_item_to_unsafe(item1, get_item_position(item2))
-        _move_item_to_unsafe(item2, temp_pos)
+        set_item_position_unsafe(item1, get_item_position(item2))
+        set_item_position_unsafe(item2, temp_pos)
     elif has1:
         move_item_to(item1, _swap_position)
     elif has2:
@@ -143,13 +143,11 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:
-    var result: Vector2i
+    var result: Vector2i = item.get_property(KEY_SIZE, Vector2i.ONE)
     if is_item_rotated(item):
-        result.x = item.get_property(KEY_HEIGHT, 1)
-        result.y = item.get_property(KEY_WIDTH, 1)
-    else:
-        result.x = item.get_property(KEY_WIDTH, 1)
-        result.y = item.get_property(KEY_HEIGHT, 1)
+        var temp := result.x
+        result.x = result.y
+        result.y = temp
     return result
 
 

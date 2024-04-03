@@ -109,7 +109,13 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 
 
 func _on_inventory_item_context_activated(item: InventoryItem) -> void:
-    GlootUndoRedo.rotate_inventory_item(inventory, item)
+    Undoables.exec_inventory_undoable([inventory], "Rotate Inventory Item", func():
+        var grid_constraint := inventory.get_grid_constraint()
+        if grid_constraint == null:
+            return false
+        var rotated = grid_constraint.get_item_rotation(item)
+        return grid_constraint.set_item_rotation(item, !rotated)
+    )
 
 
 func _ready() -> void:

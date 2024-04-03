@@ -15,9 +15,7 @@ signal property_changed(property_name)
         if (_inventory != null) && (new_protoset != _inventory.item_protoset):
             return
 
-        _disconnect_protoset_signals()
         protoset = new_protoset
-        _connect_protoset_signals()
 
         # Reset the prototype ID (pick the first prototype from the protoset)
         if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
@@ -56,21 +54,6 @@ const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-
-func _connect_protoset_signals() -> void:
-    if protoset == null:
-        return
-    protoset.changed.connect(_on_protoset_changed)
-
-
-func _disconnect_protoset_signals() -> void:
-    if protoset == null:
-        return
-    protoset.changed.disconnect(_on_protoset_changed)
-
-
-func _on_protoset_changed() -> void:
-    update_configuration_warnings()
 
 
 func _reset_properties() -> void:
@@ -215,7 +198,7 @@ func set_property(property_name: String, value) -> void:
 func clear_property(property_name: String) -> void:
     if _properties.has(property_name):
         _properties.erase(property_name)
-        properties_changed.emit()
+        property_changed.emit(property_name)
 
 
 func get_overridden_properties() -> Array:
