@@ -15,7 +15,7 @@ const KEY_ITEM_POSITIONS: String = "item_positions"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 var _item_map := ItemMap.new(Vector2i.ZERO)
-var _swap_position := Vector2i.ZERO
+var _swap_positions: Array[Vector2i]
 var _item_positions := {}
 
 @export var size: Vector2i = DEFAULT_SIZE :
@@ -72,42 +72,34 @@ func _on_item_prototype_id_changed(item: InventoryItem) -> void:
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
-    if !_size_check(item1, item2):
-        return false
-
-    if inventory.has_item(item1):
-        _swap_position = get_item_position(item1)
-    elif inventory.has_item(item2):
-        _swap_position = get_item_position(item2)
-    return true
-
-
-func _size_check(item1: InventoryItem, item2: InventoryItem) -> bool:
     var inv1 = item1.get_inventory()
+    var inv2 = item2.get_inventory()
     var grid_constraint1: GridConstraint = null
-    if is_instance_valid(inv1):
-        grid_constraint1 = inv1._constraint_manager.get_grid_constraint()
-    var inv2 = item1.get_inventory()
     var grid_constraint2: GridConstraint = null
+    var pos1 = Vector2i.ZERO
+    var pos2 = Vector2i.ZERO
+    if is_instance_valid(inv1):
+        grid_constraint1 = inv1.get_grid_constraint()
+        if is_instance_valid(grid_constraint1):
+            pos1 = grid_constraint1.get_item_position(item1)
     if is_instance_valid(inv2):
-        grid_constraint2 = inv2._constraint_manager.get_grid_constraint()
-
+        grid_constraint2 = inv2.get_grid_constraint()
+        if is_instance_valid(grid_constraint2):
+            pos2 = grid_constraint2.get_item_position(item2)
+    
+    _swap_positions = [pos1, pos2]
     if is_instance_valid(grid_constraint1) || is_instance_valid(grid_constraint2):
         return get_item_size(item1) == get_item_size(item2)
     return true
 
 
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
-    var has1 := inventory.has_item(item1)
-    var has2 := inventory.has_item(item2)
-    if has1 && has2:
-        var temp_pos = get_item_position(item1)
-        set_item_position_unsafe(item1, get_item_position(item2))
-        set_item_position_unsafe(item2, temp_pos)
-    elif has1:
-        move_item_to(item1, _swap_position)
-    elif has2:
-        move_item_to(item2, _swap_position)
+    const ITEM1_IDX = 0
+    const ITEM2_IDX = 1
+    if is_instance_valid(item1.get_inventory()) && is_instance_valid(item1.get_inventory().get_grid_constraint()):
+        item1.get_inventory().get_grid_constraint().set_item_position(item1, _swap_positions[ITEM2_IDX])
+    if is_instance_valid(item2.get_inventory()) && is_instance_valid(item2.get_inventory().get_grid_constraint()):
+        item2.get_inventory().get_grid_constraint().set_item_position(item2, _swap_positions[ITEM1_IDX])
 
 
 func _bounds_broken() -> bool:
