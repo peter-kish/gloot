@@ -25,6 +25,7 @@ Inventory that has a limited capacity in terms of space. The inventory capacity 
 * `create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem` - Creates an `InventoryItem` based on the given prototype ID and adds it to the inventory at the given position. Returns `null` if the item cannot be added.
 * `get_item_at(position: Vector2i) -> InventoryItem` - Returns the item at the given position in the inventory. Returns `null` if the given field is empty.
 * `move_item_to(item: InventoryItem, position: Vector2i) -> bool` - Moves the given item in the inventory to the new given position.
+* `swap_items(item1: InventoryItem, item1: InventoryItem) -> bool` - Swaps the positions of the two given items. NOTE: In the current version only items of the same size can be swapped.
 * `transfer_to(item: InventoryItem, destination: InventoryGrid, position: Vector2i) -> bool` - Transfers the given item to the given inventory to the given position.
 * `rect_free(rect: Rect2, exception: InventoryItem = null) -> bool` - Checks if the given rectangle is not occupied by any items (with a given optional exception).
 * `find_free_place(item: InventoryItem) -> Dictionary` - Finds a free place for the given item. Returns a dictionary with two fields: `success` and `position`. If `success` is `true` a free place has been found and is stored in the `position` field. Otherwise `success` is set to false.

@@ -171,6 +171,73 @@ func get_inventory() -> Inventory:
     return _inventory
 
 
+func get_item_slot() -> ItemSlot:
+    return _item_slot
+
+
+static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
+    if item1 == null || item2 == null || item1 == item2:
+        return false
+
+    var owner1 = item1.get_inventory()
+    if owner1 == null:
+        owner1 = item1.get_item_slot()
+    var owner2 = item2.get_inventory()
+    if owner2 == null:
+        owner2 = item2.get_item_slot()
+    if owner1 == null || owner2 == null:
+        return false
+
+    if owner1 is Inventory:
+        owner1._constraint_manager._on_pre_item_swap(item1, item2)
+    if owner2 is Inventory && owner1 != owner2:
+        owner2._constraint_manager._on_pre_item_swap(item1, item2)
+
+    var idx1 = _remove_item_from_owner(item1, owner1)
+    var idx2 = _remove_item_from_owner(item2, owner2)
+    if !_add_item_to_owner(item1, owner2, idx2):
+        _add_item_to_owner(item1, owner1, idx1)
+        _add_item_to_owner(item2, owner2, idx2)
+        return false
+    if !_add_item_to_owner(item2, owner1, idx1):
+        _add_item_to_owner(item1, owner1, idx1)
+        _add_item_to_owner(item2, owner2, idx2)
+        return false
+
+    if owner1 is Inventory:
+        owner1._constraint_manager._on_post_item_swap(item1, item2)
+    if owner2 is Inventory && owner1 != owner2:
+        owner2._constraint_manager._on_post_item_swap(item1, item2)
+
+    return true;
+
+
+static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
+    if item_owner is Inventory:
+        var inventory := (item_owner as Inventory)
+        var item_idx = inventory.get_item_index(item)
+        inventory.remove_item(item)
+        return item_idx
+    
+    # TODO: Consider removing/deprecating ItemSlot.remember_source_inventory
+    var item_slot := (item_owner as ItemSlot)
+    var temp_remember_source_inventory = item_slot.remember_source_inventory
+    item_slot.remember_source_inventory = false
+    item_slot.clear()
+    item_slot.remember_source_inventory = temp_remember_source_inventory
+    return 0
+
+
+static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> bool:
+    if item_owner is Inventory:
+        var inventory := (item_owner as Inventory)
+        if inventory.add_item(item):
+            inventory.move_item(inventory.get_item_index(item), index)
+            return true
+        return false
+    return (item_owner as ItemSlot).equip(item)
+
+
 func get_property(property_name: String, default_value = null) -> Variant:
     # Note: The protoset editor still doesn't support arrays and dictionaries,
     # but those can still be added via JSON definitions or via code.

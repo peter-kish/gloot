@@ -6,6 +6,8 @@ extends Control
 signal inventory_item_activated(item)
 signal inventory_item_context_activated(item)
 
+enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList.SELECT_MULTI}
+
 @export var inventory_path: NodePath :
     set(new_inv_path):
         inventory_path = new_inv_path
@@ -22,6 +24,14 @@ signal inventory_item_context_activated(item)
 
 
 @export var default_item_icon: Texture2D
+@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        if is_instance_valid(_item_list):
+            _item_list.deselect_all();
+            _item_list.select_mode = select_mode
 var inventory: Inventory = null :
     set(new_inventory):
         if new_inventory == inventory:
@@ -66,6 +76,7 @@ func _ready():
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
     _item_list.item_activated.connect(_on_list_item_activated)
     _item_list.item_clicked.connect(_on_list_item_clicked)
+    _item_list.select_mode = select_mode
     _vbox_container.add_child(_item_list)
 
     if has_node(inventory_path):
@@ -157,6 +168,14 @@ func get_selected_inventory_item() -> InventoryItem:
         return null
 
     return _get_inventory_item(_item_list.get_selected_items()[0])
+
+
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+    var indexes = _item_list.get_selected_items()
+    for i in indexes:
+        result.append(_get_inventory_item(i))
+    return result
 
 
 func _get_inventory_item(index: int) -> InventoryItem:

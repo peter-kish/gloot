@@ -21,6 +21,7 @@ func init_suite():
         "test_create_and_add_item_at",
         "test_get_items_under",
         "test_move_item_to",
+        "test_swap_items",
         "test_transfer_to",
         "test_rect_free",
         "test_sort",
@@ -209,6 +210,19 @@ func test_move_item_to() -> void:
 
         inventory.remove_item(new_item)
         new_item.free()
+
+
+func test_swap_items() -> void:
+    var new_item_1x1 = grid_constraint.create_and_add_item_at("item_1x1", Vector2i.ZERO)
+    var new_item_2x2 = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE, Vector2i(1, 0))
+    var new_item_2x2_2 = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE, Vector2i(0, 2))
+    assert(new_item_1x1 != null)
+    assert(new_item_2x2 != null)
+    assert(new_item_2x2_2 != null)
+    assert(!grid_constraint.swap_items(new_item_1x1, new_item_2x2))
+    assert(grid_constraint.swap_items(new_item_2x2_2, new_item_2x2))
+    assert(grid_constraint.get_item_position(new_item_2x2) == Vector2i(0, 2))
+    assert(grid_constraint.get_item_position(new_item_2x2_2) == Vector2i(1, 0))
 
 
 func test_transfer_to() -> void:

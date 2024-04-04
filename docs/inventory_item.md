@@ -14,7 +14,8 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 
 ## Methods
 
-* `get_inventory() -> Node` - Returns the `Inventory` this item belongs to.
+* `get_inventory() -> Inventory` - Returns the `Inventory` this item belongs to.
+* `get_item_slot() -> ItemSlot` - Returns the `ItemSlot` this item is equipped in.
 * `get_property(property_name: String, default_value = null) -> Variant` - Returns the value of the property with the given name. In case the property can not be found, the default value is returned.
 * `set_property(property_name: String, value) -> void` - Sets the property with the given name for this item.
 * `clear_property(property_name: String) -> void` - Clears the property with the given name for this item.

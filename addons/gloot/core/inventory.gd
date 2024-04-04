@@ -219,12 +219,7 @@ func has_item_by_id(prototype_id: String) -> bool:
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    if !_can_remove_item(item) || !destination.can_add_item(item):
-        return false
-
-    remove_item(item)
-    destination.add_item(item)
-    return true
+    return destination.add_item(item)
 
 
 func reset() -> void:

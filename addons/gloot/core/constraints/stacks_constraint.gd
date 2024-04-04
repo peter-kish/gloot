@@ -186,10 +186,13 @@ func split_stack_safe(item: InventoryItem, new_stack_size: int) -> InventoryItem
     return new_item
 
 
-func join_stacks(
+static func join_stacks(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> bool:
+    if item_dst == null || item_src == null:
+        return false
+
     if (!stacks_joinable(item_dst, item_src)):
         return false
 
@@ -198,11 +201,10 @@ func join_stacks(
     return true
 
 
-func stacks_joinable(
+static func stacks_joinable(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> bool:
-    assert(inventory != null, "inventory is null!")
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
 

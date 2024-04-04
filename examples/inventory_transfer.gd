@@ -20,19 +20,21 @@ func _ready() -> void:
 
 
 func _on_ltor_pressed() -> void:
-    var item: InventoryItem = ctrl_inventory_left.get_selected_inventory_item()
-    if item == null:
+    var selected_items: Array[InventoryItem] = ctrl_inventory_left.get_selected_inventory_items()
+    if selected_items.is_empty():
         return
 
-    inventory_left.transfer(item, inventory_right)
+    for selected_item in selected_items:
+        inventory_left.transfer(selected_item, inventory_right)
 
 
 func _on_rtol_pressed() -> void:
-    var item: InventoryItem = ctrl_inventory_right.get_selected_inventory_item()
-    if item == null:
+    var selected_items: Array[InventoryItem] = ctrl_inventory_right.get_selected_inventory_items()
+    if selected_items.is_empty():
         return
 
-    inventory_right.transfer(item, inventory_left)
+    for selected_item in selected_items:
+        inventory_right.transfer(selected_item, inventory_left)
 
 
 func _on_equip_pressed() -> void:

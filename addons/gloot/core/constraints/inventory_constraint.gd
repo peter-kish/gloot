@@ -55,3 +55,13 @@ func _on_item_removed(item: InventoryItem) -> void:
 # Override this
 func _on_item_modified(item: InventoryItem) -> void:
     pass
+
+
+# Override this
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
+    pass
+
+
+# Override this
+func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
+    pass

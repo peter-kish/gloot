@@ -106,6 +106,13 @@ class GridControl extends Control:
             return
         selection_color = new_selection_color
         _queue_refresh()
+@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.select_mode = select_mode
 
 var inventory: InventoryGrid = null :
     set(new_inventory):
@@ -121,7 +128,7 @@ var inventory: InventoryGrid = null :
         _queue_refresh()
 
 var _ctrl_grid: GridControl = null
-var _ctrl_selection: ColorRect = null
+var _ctrl_selection: Control = null
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
 var _refresh_queued: bool = false
 
@@ -176,15 +183,15 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
     _ctrl_inventory_grid_basic.selection_changed.connect(_queue_refresh)
+    _ctrl_inventory_grid_basic.select_mode = select_mode
 
     _ctrl_grid = GridControl.new(grid_color, _get_inventory_dimensions())
     _ctrl_grid.color = grid_color
     _ctrl_grid.dimensions = _get_inventory_dimensions()
     _ctrl_grid.name = "CtrlGrid"
 
-    _ctrl_selection = ColorRect.new()
-    _ctrl_selection.color = selection_color
-    _ctrl_selection.hide()
+    _ctrl_selection = Control.new()
+    _ctrl_selection.visible = draw_selections
 
     add_child(_ctrl_grid)
     add_child(_ctrl_selection)
@@ -209,13 +216,16 @@ func _refresh() -> void:
         _ctrl_grid.hide()
 
     if is_instance_valid(_ctrl_selection) && is_instance_valid(_ctrl_inventory_grid_basic):
-        var r := _ctrl_inventory_grid_basic.get_item_rect(_ctrl_inventory_grid_basic.get_selected_inventory_item())
-        _ctrl_selection.position = r.position
-        _ctrl_selection.size = r.size
-        _ctrl_selection.color = selection_color
-        _ctrl_selection.visible = draw_selections && _ctrl_inventory_grid_basic.get_selected_inventory_item()
-    else:
-        _ctrl_selection.hide()
+        for child in _ctrl_selection.get_children():
+            child.queue_free()
+        for selected_inventory_item in _ctrl_inventory_grid_basic.get_selected_inventory_items():
+            var rect := _ctrl_inventory_grid_basic.get_item_rect(selected_inventory_item)
+            var selection_rect := ColorRect.new()
+            selection_rect.color = selection_color
+            selection_rect.position = rect.position
+            selection_rect.size = rect.size
+            _ctrl_selection.add_child(selection_rect)
+            _ctrl_selection.visible = draw_selections
 
 
 func _queue_refresh() -> void:
@@ -248,4 +258,10 @@ func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     return _ctrl_inventory_grid_basic.get_selected_inventory_item()
+
+
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return []
+    return _ctrl_inventory_grid_basic.get_selected_inventory_items()
 

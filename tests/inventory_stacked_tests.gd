@@ -113,7 +113,7 @@ func test_stack_split_join() -> void:
     var item2 = inventory.get_items()[1]
     assert(InventoryStacked.get_item_stack_size(item1) == 5)
     assert(InventoryStacked.get_item_stack_size(item2) == 5)
-    var joined = inventory.join(item1, item2)
+    var joined = InventoryStacked.join(item1, item2)
     assert(joined)
     assert(InventoryStacked.get_item_stack_size(item1) == 10)
     assert(inventory.get_item_count() == 1)
