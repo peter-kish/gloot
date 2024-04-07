@@ -50,6 +50,26 @@ func _on_item_modified(item: InventoryItem) -> void:
     _calculate_occupied_space()
 
 
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
+    return _can_swap(item1, item2) && _can_swap(item2, item1)
+
+
+static func _can_swap(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    var inv = item_dst.get_inventory()
+    if !is_instance_valid(inv):
+        return true
+
+    var weight_constraint = inv._constraint_manager.get_weight_constraint()
+    if !is_instance_valid(weight_constraint):
+        return true
+
+    if weight_constraint.has_unlimited_capacity():
+        return true
+
+    var space_needed: float = weight_constraint.occupied_space - get_item_weight(item_dst) + get_item_weight(item_src)
+    return space_needed <= weight_constraint.capacity
+
+
 func has_unlimited_capacity() -> bool:
     return capacity == 0.0
 

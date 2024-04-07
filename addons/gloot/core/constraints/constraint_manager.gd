@@ -61,13 +61,14 @@ func _on_item_modified(item: InventoryItem) -> void:
         _grid_constraint._on_item_modified(item)
 
 
-func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
-    if _weight_constraint != null:
-        _weight_constraint._on_pre_item_swap(item1, item2)
-    if _stacks_constraint != null:
-        _stacks_constraint._on_pre_item_swap(item1, item2)
-    if _grid_constraint != null:
-        _grid_constraint._on_pre_item_swap(item1, item2)
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
+    if _weight_constraint != null && !_weight_constraint._on_pre_item_swap(item1, item2):
+        return false
+    if _stacks_constraint != null && !_stacks_constraint._on_pre_item_swap(item1, item2):
+        return false
+    if _grid_constraint != null && !_grid_constraint._on_pre_item_swap(item1, item2):
+        return false
+    return true
 
 
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:

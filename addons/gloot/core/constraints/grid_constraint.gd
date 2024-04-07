@@ -62,11 +62,15 @@ func _on_item_modified(item: InventoryItem) -> void:
     _refresh_item_map()
 
 
-func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
+    if get_item_size(item1) != get_item_size(item2):
+        return false
+
     if inventory.has_item(item1):
         _swap_position = get_item_position(item1)
     elif inventory.has_item(item2):
         _swap_position = get_item_position(item2)
+    return true
 
 
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
@@ -268,37 +272,6 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
         return true
 
     return false
-
-
-func swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
-    assert(inventory != null, "Inventory not set!")
-    if !is_instance_valid(item1) || !is_instance_valid(item2):
-        return false
-    if get_item_size(item1) != get_item_size(item2):
-        return false
-
-    var inv1 := item1.get_inventory()
-    var inv2 := item2.get_inventory()
-    if !is_instance_valid(inv1) || !is_instance_valid(inv2):
-        return false
-
-    var grid_constraint1 = inv1._constraint_manager.get_grid_constraint()
-    var grid_constraint2 = inv2._constraint_manager.get_grid_constraint()
-    if !is_instance_valid(grid_constraint1) || !is_instance_valid(grid_constraint2):
-        return false
-    
-    var pos1 = grid_constraint1.get_item_position(item1)
-    var pos2 = grid_constraint2.get_item_position(item2)
-    assert(inv1.remove_item(item1))
-    assert(inv2.remove_item(item2))
-    if !inv1.can_add_item(item2) || !inv2.can_add_item(item1):
-        assert(grid_constraint1.add_item_at(item1, pos1))
-        assert(grid_constraint2.add_item_at(item2, pos2))
-        return false;
-    assert(grid_constraint1.add_item_at(item2, pos1))
-    assert(grid_constraint2.add_item_at(item1, pos2))
-
-    return true
 
 
 func move_item_to_free_spot(item: InventoryItem) -> bool:

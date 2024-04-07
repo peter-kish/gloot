@@ -16,6 +16,7 @@ func init_suite():
         "test_occupied_space",
         "test_get_free_space",
         "test_get_space_for",
+        "test_swap_items",
         "test_serialize",
         "test_serialize_json",
     ]
@@ -91,6 +92,24 @@ func test_get_space_for() -> void:
     inventory.add_item(item)
     assert(!weight_constraint.get_space_for(item).is_inf())
     assert(weight_constraint.get_space_for(item).count == 1)
+
+
+func test_swap_items() -> void:
+    weight_constraint.capacity = 3
+    var small_item = inventory.create_and_add_item("minimal_item")
+    
+    var inv2 = Inventory.new()
+    inv2.item_protoset = TEST_PROTOSET
+    inv2._constraint_manager.enable_weight_constraint(20.0)
+    var big_item = inv2.create_and_add_item("big_item")
+
+    assert(!InventoryItem.swap(small_item, big_item))
+    WeightConstraint.set_item_weight(big_item, 1)
+    assert(InventoryItem.swap(small_item, big_item))
+    assert(inventory.has_item(big_item))
+    assert(!inventory.has_item(small_item))
+
+    free_inventory(inv2)
 
 
 func test_serialize() -> void:

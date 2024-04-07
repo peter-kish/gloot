@@ -24,6 +24,7 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 * `get_title() -> String` - Helper function for retrieving the item title. It checks the `name` item property and uses it as the title, if available. Otherwise, `prototype_id` is returned as title.
 * `serialize() -> Dictionary` - Serializes the item into a dictionary.
 * `deserialize(source: Dictionary) -> bool` - Deserializes the item from a given dictionary.
+* `static func swap(item1: InventoryItem, item2: InventoryItem) -> bool` - Swaps the two given items contained in an `Inventory` or an `ItemSlot`. **NOTE:** In the current version only items of the same size can be swapped.
 
 ## Signals
 

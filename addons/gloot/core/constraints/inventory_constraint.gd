@@ -58,8 +58,8 @@ func _on_item_modified(item: InventoryItem) -> void:
 
 
 # Override this
-func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
-    pass
+func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
+    return true
 
 
 # Override this

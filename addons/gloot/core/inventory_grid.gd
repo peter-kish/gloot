@@ -80,10 +80,6 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().move_item_to(item, position)
 
 
-func swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
-    return _constraint_manager.get_grid_constraint().swap_items(item1, item2)
-
-
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().transfer_to(item, destination._constraint_manager.get_grid_constraint(), position)
 

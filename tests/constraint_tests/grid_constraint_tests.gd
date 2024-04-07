@@ -219,8 +219,8 @@ func test_swap_items() -> void:
     assert(new_item_1x1 != null)
     assert(new_item_2x2 != null)
     assert(new_item_2x2_2 != null)
-    assert(!grid_constraint.swap_items(new_item_1x1, new_item_2x2))
-    assert(grid_constraint.swap_items(new_item_2x2_2, new_item_2x2))
+    assert(!InventoryItem.swap(new_item_1x1, new_item_2x2))
+    assert(InventoryItem.swap(new_item_2x2_2, new_item_2x2))
     assert(grid_constraint.get_item_position(new_item_2x2) == Vector2i(0, 2))
     assert(grid_constraint.get_item_position(new_item_2x2_2) == Vector2i(1, 0))
 

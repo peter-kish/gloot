@@ -189,9 +189,11 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
         return false
 
     if owner1 is Inventory:
-        owner1._constraint_manager._on_pre_item_swap(item1, item2)
+        if !owner1._constraint_manager._on_pre_item_swap(item1, item2):
+            return false
     if owner2 is Inventory && owner1 != owner2:
-        owner2._constraint_manager._on_pre_item_swap(item1, item2)
+        if !owner2._constraint_manager._on_pre_item_swap(item1, item2):
+            return false
 
     var idx1 = _remove_item_from_owner(item1, owner1)
     var idx2 = _remove_item_from_owner(item2, owner2)
