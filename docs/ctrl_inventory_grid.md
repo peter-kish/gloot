@@ -19,11 +19,13 @@ A UI control representing a grid based inventory (`InventoryGrid`). Displays a g
 * `stretch_item_sprites: bool` - If true, the inventory item sprites will be stretched to fit the inventory fields they are positioned on.
 * `drag_sprite_z_index: int` - The z-index used for the dragged `InventoryItem` in order to appear above other UI elements.
 * `inventory: InventoryGrid` - The `Inventory` node linked to this control.
+* `select_mode: int` - Single or multi select mode (hold CTRL to select multiple items).
 
 ## Methods
 
 * `get_field_coords(global_pos: Vector2) -> Vector2i` - Converts the given global coordinates to local inventory field coordinates.
-* `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item.
+* `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item. In case multiple items are selected, the first one is returned.
+* `get_selected_inventory_items() -> Array[InventoryItem]` - Returns all the currently selected items.
 * `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
 * `deselect_inventory_item() -> void` - Deselects the selected item.
 

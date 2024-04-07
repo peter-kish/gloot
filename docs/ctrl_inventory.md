@@ -13,10 +13,12 @@ A UI control representing a basic `Inventory`. Displays a list of items in the i
 * `inventory_path: NodePath` - Path to an `Inventory` node.
 * `default_item_icon: Texture` - The default icon that will be used for items with no `image` property.
 * `inventory: Inventory` - The `Inventory` node linked to this control.
+* `select_mode: int` - Single or multi select mode (hold CTRL to select multiple items).
 
 ## Methods
 
-* `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item.
+* `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item. In case multiple items are selected, the first one is returned.
+* `get_selected_inventory_items() -> Array[InventoryItem]` - Returns all the currently selected items.
 * `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
 * `deselect_inventory_item() -> void` - Deselects the selected item.
 
