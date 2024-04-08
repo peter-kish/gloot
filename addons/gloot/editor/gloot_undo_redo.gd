@@ -155,7 +155,7 @@ static func swap_inventory_items(item1: InventoryItem, item2: InventoryItem) -> 
     var new_inv_states: Array[Dictionary] = [{}, {}]
     old_inv_states[0] = inventories[0].serialize()
     old_inv_states[1] = inventories[1].serialize()
-    if InventoryItem.swap(item1, item2):
+    if !InventoryItem.swap(item1, item2):
         return
     new_inv_states[0] = inventories[0].serialize()
     new_inv_states[1] = inventories[1].serialize()

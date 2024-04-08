@@ -63,13 +63,28 @@ func _on_item_modified(item: InventoryItem) -> void:
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
-    if get_item_size(item1) != get_item_size(item2):
+    if !_size_check(item1, item2):
         return false
 
     if inventory.has_item(item1):
         _swap_position = get_item_position(item1)
     elif inventory.has_item(item2):
         _swap_position = get_item_position(item2)
+    return true
+
+
+func _size_check(item1: InventoryItem, item2: InventoryItem) -> bool:
+    var inv1 = item1.get_inventory()
+    var grid_constraint1: GridConstraint = null
+    if is_instance_valid(inv1):
+        grid_constraint1 = inv1._constraint_manager.get_grid_constraint()
+    var inv2 = item1.get_inventory()
+    var grid_constraint2: GridConstraint = null
+    if is_instance_valid(inv2):
+        grid_constraint2 = inv2._constraint_manager.get_grid_constraint()
+
+    if is_instance_valid(grid_constraint1) || is_instance_valid(grid_constraint2):
+        return get_item_size(item1) == get_item_size(item2)
     return true
 
 
