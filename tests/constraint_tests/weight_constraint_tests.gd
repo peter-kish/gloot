@@ -97,7 +97,7 @@ func test_swap_items() -> void:
     var small_item = inventory.create_and_add_item("minimal_item")
     
     var inv2 = Inventory.new()
-    inv2.item_protoset = TEST_PROTOSET
+    inv2.protoset = TEST_PROTOSET
     inv2._constraint_manager.enable_weight_constraint(20.0)
     var big_item = inv2.create_and_add_item("big_item")
 
