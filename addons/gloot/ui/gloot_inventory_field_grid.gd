@@ -5,13 +5,6 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 const GlootInventoryField = preload("res://addons/gloot/ui/gloot_inventory_field.gd")
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        inventory = get_node_or_null(inventory_path)
-
 @export var style: StyleBox :
     get:
         return style
@@ -40,7 +33,7 @@ const Undoables = preload("res://addons/gloot/editor/undoables.gd")
         field_size = new_field_size
         _update_field_size(field_size)
 
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     get:
         return inventory
     set(new_inventory):
@@ -75,11 +68,6 @@ func _disconnect_inventory_signals() -> void:
     inventory.protoset_changed.disconnect(_refresh)
     if inventory.get_grid_constraint() != null:
         inventory.get_grid_constraint().size_changed.disconnect(_refresh)
-
-
-func _ready() -> void:
-    if !inventory_path.is_empty():
-        inventory = get_node_or_null(inventory_path)
 
 
 func _refresh() -> void:

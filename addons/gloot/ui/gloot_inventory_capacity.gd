@@ -2,13 +2,6 @@
 class_name  GlootInventoryCapacity
 extends Control
 
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        inventory = get_node_or_null(inventory_path)
-
 @export var show_label = true :
     get:
         return show_label
@@ -19,7 +12,7 @@ extends Control
         if _label != null:
             _label.visible = show_label
 
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     get:
         return inventory
     set(new_inventory):
@@ -31,6 +24,7 @@ var inventory: Inventory = null :
         inventory = new_inventory
         if inventory != null:
             _connect_inventory_signals()
+        _refresh()
 
 var _progress_bar: ProgressBar
 var _label: Label
@@ -57,6 +51,9 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _refresh() -> void:
+    if !is_instance_valid(_label) || !is_instance_valid(_progress_bar):
+        return
+
     _label.text = ""
     _progress_bar.min_value = 0
     _progress_bar.max_value = 1
@@ -78,9 +75,6 @@ func _refresh() -> void:
 
 
 func _ready() -> void:
-    if !inventory_path.is_empty():
-        inventory = get_node_or_null(inventory_path)
-
     _progress_bar = ProgressBar.new()
     _progress_bar.show_percentage = false
     add_child(_progress_bar)

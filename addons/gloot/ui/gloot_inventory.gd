@@ -1,5 +1,5 @@
 @tool
-class_name  GlootInventory
+class_name GlootInventory
 extends ItemList
 
 signal inventory_item_activated(item)
@@ -7,15 +7,7 @@ signal inventory_item_context_activated(item)
 
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        inventory = get_node_or_null(inventory_path)
-
-
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     get:
         return inventory
     set(new_inventory):
@@ -62,8 +54,6 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
 
 
 func _ready() -> void:
-    if !inventory_path.is_empty():
-        inventory = get_node_or_null(inventory_path)
     item_activated.connect(_on_list_item_activated)
     item_clicked.connect(_on_list_item_clicked)
     _refresh()

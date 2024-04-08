@@ -10,7 +10,7 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
 const GlootInventoryItemGrid = preload("res://addons/gloot/ui/gloot_inventory_item_grid.gd")
 
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     get:
         return inventory
     set(new_inventory):
@@ -18,13 +18,6 @@ var inventory: Inventory = null :
             return
         inventory = new_inventory
         _refresh()
-
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        inventory = get_node_or_null(inventory_path)
 
 @export var field_size: Vector2 = Vector2(32, 32) :
     get:
@@ -80,8 +73,6 @@ var _inventory_item_grid: GlootInventoryItemGrid = null
 
 
 func _ready() -> void:
-    if !inventory_path.is_empty():
-        inventory = get_node_or_null(inventory_path)
     _refresh()
 
 

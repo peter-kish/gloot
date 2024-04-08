@@ -8,21 +8,7 @@ signal inventory_item_context_activated(item)
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
 const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_item_rect.gd")
 
-@export var inventory_path: NodePath :
-    get:
-        return inventory_path
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        inventory = get_node_or_null(inventory_path)
-
-@export var field_grid_path: NodePath :
-    get:
-        return field_grid_path
-    set(new_field_grid_path):
-        field_grid_path = new_field_grid_path
-        field_grid = get_node_or_null(field_grid_path)
-
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     get:
         return inventory
     set(new_inventory):
@@ -40,7 +26,7 @@ var inventory: Inventory = null :
             _refresh()
         _connect_inventory_signals()
 
-var field_grid: GlootInventoryFieldGrid = null :
+@export var field_grid: GlootInventoryFieldGrid = null :
     get:
         return field_grid
     set(new_field_grid):
@@ -109,10 +95,6 @@ func _on_item_property_changed(item: InventoryItem, property_: String) -> void:
 
 func _ready() -> void:
     mouse_filter = Control.MOUSE_FILTER_IGNORE
-    if !inventory_path.is_empty():
-        inventory = get_node_or_null(inventory_path)
-    if !field_grid_path.is_empty():
-        field_grid = get_node_or_null(field_grid_path)
     _refresh()
 
         

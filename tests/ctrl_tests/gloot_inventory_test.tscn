@@ -22,7 +22,7 @@ layout_mode = 0
 offset_right = 410.0
 offset_bottom = 504.0
 
-[node name="GlootInventory" type="ItemList" parent="VBoxContainer"]
+[node name="GlootInventory" type="ItemList" parent="VBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_vertical = 3
 item_count = 2
@@ -30,9 +30,9 @@ item_0/text = "minimal_item"
 item_1/text = "item 2"
 item_1/icon = ExtResource("1_cc2bv")
 script = ExtResource("1_ekglp")
-inventory_path = NodePath("../../Inventory")
+inventory = NodePath("../../Inventory")
 
-[node name="GlootInventory2" type="ItemList" parent="VBoxContainer"]
+[node name="GlootInventory2" type="ItemList" parent="VBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_vertical = 3
 item_count = 2
@@ -40,13 +40,13 @@ item_0/text = "minimal_item (x3)"
 item_1/text = "big_item"
 item_1/icon = ExtResource("3_tihgd")
 script = ExtResource("1_ekglp")
-inventory_path = NodePath("../../InventoryStacked")
+inventory = NodePath("../../InventoryStacked")
 
-[node name="GlootInventoryCapacity" type="Control" parent="VBoxContainer"]
+[node name="GlootInventoryCapacity" type="Control" parent="VBoxContainer" node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 2
 script = ExtResource("6_rmuq7")
-inventory_path = NodePath("../../InventoryStacked")
+inventory = NodePath("../../InventoryStacked")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_pqnv1")
