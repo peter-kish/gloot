@@ -6,36 +6,26 @@ const GlootInventoryField = preload("res://addons/gloot/ui/gloot_inventory_field
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
 @export var style: StyleBox :
-    get:
-        return style
     set(new_style):
         style = new_style
         _update_style(style)
 
 @export var hover_style: StyleBox :
-    get:
-        return hover_style
     set(new_hover_style):
         hover_style = new_hover_style
         _update_hover_style(hover_style)
 
 @export var selected_style: StyleBox :
-    get:
-        return selected_style
     set(new_selected_style):
         selected_style = new_selected_style
         _update_selected_style(selected_style)
 
 @export var field_size: Vector2 = Vector2(32, 32) :
-    get:
-        return field_size
     set(new_field_size):
         field_size = new_field_size
         _update_field_size(field_size)
 
 @export var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return

@@ -9,8 +9,6 @@ const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 @export var selection_style: StyleBox :
-    get:
-        return selection_style
     set(new_selection_style):
         if new_selection_style == selection_style:
             return
@@ -18,8 +16,6 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
         _set_selection_style(selection_style)
 
 var item: InventoryItem = null :
-    get:
-        return item
     set(new_item):
         if new_item == item:
             return
@@ -29,8 +25,6 @@ var item: InventoryItem = null :
 var _label_stack_size: Label = null
 var _panel_selection: Panel = null
 var selected: bool = false :
-    get:
-        return selected
     set(new_selected):
         if selected == new_selected:
             return

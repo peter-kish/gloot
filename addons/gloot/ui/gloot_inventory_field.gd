@@ -4,30 +4,22 @@ extends Panel
 signal item_dropped(item)
 
 @export var style: StyleBox :
-    get:
-        return style
     set(new_style):
         style = new_style
         if !selected:
             _set_active_style(style)
 
 @export var hover_style: StyleBox :
-    get:
-        return hover_style
     set(new_hover_style):
         hover_style = new_hover_style
 
 @export var selected_style: StyleBox :
-    get:
-        return selected_style
     set(new_selected_style):
         selected_style = new_selected_style
         if selected:
             _set_active_style(selected_style)
 
 @export var selected: bool :
-    get:
-        return selected
     set(new_selected):
         selected = new_selected
         if selected:

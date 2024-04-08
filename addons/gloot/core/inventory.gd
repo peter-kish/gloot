@@ -21,8 +21,6 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 enum Constraint {WEIGHT, STACKS, GRID}
 
 @export var protoset: ItemProtoset:
-    get:
-        return protoset
     set(new_protoset):
         if new_protoset == protoset:
             return
@@ -35,8 +33,6 @@ enum Constraint {WEIGHT, STACKS, GRID}
 var _items: Array[InventoryItem] = []
 var _constraint_manager: ConstraintManager = null
 var _serialized_format: Dictionary:
-    get:
-        return _serialized_format
     set(new_serialized_format):
         _serialized_format = new_serialized_format
 

@@ -11,8 +11,6 @@ const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_f
 const GlootInventoryItemGrid = preload("res://addons/gloot/ui/gloot_inventory_item_grid.gd")
 
 @export var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -20,16 +18,12 @@ const GlootInventoryItemGrid = preload("res://addons/gloot/ui/gloot_inventory_it
         _refresh()
 
 @export var field_size: Vector2 = Vector2(32, 32) :
-    get:
-        return field_size
     set(new_field_size):
         field_size = new_field_size
         if _inventory_field_grid:
             _inventory_field_grid.field_size = field_size
 
 @export var item_spacing: int = 0 :
-    get:
-        return item_spacing
     set(new_item_spacing):
         item_spacing = max(0, new_item_spacing)
         if _inventory_field_grid == null:
@@ -37,32 +31,24 @@ const GlootInventoryItemGrid = preload("res://addons/gloot/ui/gloot_inventory_it
         _update_item_spacing()
 
 @export var field_style: StyleBox :
-    get:
-        return field_style
     set(new_field_style):
         field_style = new_field_style
         if _inventory_field_grid:
             _inventory_field_grid.style = field_style
 
 @export var field_hover_style: StyleBox :
-    get:
-        return field_hover_style
     set(new_field_hover_style):
         field_hover_style = new_field_hover_style
         if _inventory_field_grid:
             _inventory_field_grid.hover_style = field_hover_style
 
 @export var field_selected_style: StyleBox :
-    get:
-        return field_selected_style
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         if _inventory_field_grid:
             _inventory_field_grid.selected_style = field_selected_style
 
 @export var selection_style: StyleBox :
-    get:
-        return selection_style
     set(new_selection_style):
         selection_style = new_selection_style
         if _inventory_item_grid:

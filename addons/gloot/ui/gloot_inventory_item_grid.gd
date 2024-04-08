@@ -9,8 +9,6 @@ const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_f
 const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_item_rect.gd")
 
 @export var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -27,8 +25,6 @@ const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_it
         _connect_inventory_signals()
 
 @export var field_grid: GlootInventoryFieldGrid = null :
-    get:
-        return field_grid
     set(new_field_grid):
         if field_grid == new_field_grid:
             return
@@ -45,8 +41,6 @@ const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_it
 
 
 @export var selection_style: StyleBox :
-    get:
-        return selection_style
     set(new_selection_style):
         selection_style = new_selection_style
         for gloot_inventory_item_rect in get_children():

@@ -21,13 +21,9 @@ const KEY_ITEM: String = "item"
 
 var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem :
-    get:
-        return _item
     set(new_item):
         _item = new_item
 var _serialized_format: Dictionary = {} :
-    get:
-        return _serialized_format
     set(new_serialized_format):
         _serialized_format = new_serialized_format
 

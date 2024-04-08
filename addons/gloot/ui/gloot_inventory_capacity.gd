@@ -3,8 +3,6 @@ class_name  GlootInventoryCapacity
 extends Control
 
 @export var show_label = true :
-    get:
-        return show_label
     set(new_show_label):
         if new_show_label == show_label:
             return
@@ -13,8 +11,6 @@ extends Control
             _label.visible = show_label
 
 @export var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return

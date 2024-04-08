@@ -8,8 +8,6 @@ signal inventory_item_context_activated(item)
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 @export var inventory: Inventory = null :
-    get:
-        return inventory
     set(new_inventory):
         if inventory == new_inventory:
             return
