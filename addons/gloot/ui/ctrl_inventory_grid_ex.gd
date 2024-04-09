@@ -265,10 +265,12 @@ func _update_size() -> void:
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:
     _set_item_background(item, field_highlighted_style, PriorityPanel.StylePriority.MEDIUM)
+    item_mouse_entered.emit(item)
 
 
 func _on_item_mouse_exited(item: InventoryItem) -> void:
     _set_item_background(item, null, PriorityPanel.StylePriority.MEDIUM)
+    item_mouse_exited.emit(item)
 
 
 func _on_selection_changed() -> void:
