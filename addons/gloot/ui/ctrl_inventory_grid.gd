@@ -183,7 +183,7 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
     _ctrl_inventory_grid_basic.select_mode = select_mode
-    
+
     _ctrl_inventory_grid_basic.item_dropped.connect(func(item: InventoryItem, drop_position: Vector2):
         item_dropped.emit(item, drop_position)
     )
@@ -267,6 +267,18 @@ func _get_inventory() -> InventoryGrid:
     if !is_instance_valid(_ctrl_inventory_grid_basic.inventory):
         return null
     return _ctrl_inventory_grid_basic.inventory
+
+
+func deselect_inventory_item() -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
+    _ctrl_inventory_grid_basic.deselect_inventory_item()
+
+
+func select_inventory_item(item: InventoryItem) -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
+    _ctrl_inventory_grid_basic.select_inventory_item(item)
 
 
 func get_selected_inventory_item() -> InventoryItem:

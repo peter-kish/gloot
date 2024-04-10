@@ -374,6 +374,18 @@ func _get_global_grabbed_item_local_pos() -> Vector2:
     return Vector2(-1, -1)
 
 
+func deselect_inventory_item() -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
+    _ctrl_inventory_grid_basic.deselect_inventory_item()
+
+
+func select_inventory_item(item: InventoryItem) -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
+    _ctrl_inventory_grid_basic.select_inventory_item(item)
+
+
 func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
