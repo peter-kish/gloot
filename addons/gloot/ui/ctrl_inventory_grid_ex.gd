@@ -3,6 +3,10 @@
 class_name CtrlInventoryGridEx
 extends Control
 
+signal item_dropped(item, offset)
+signal selection_changed
+signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -239,6 +243,15 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
+    _ctrl_inventory_grid_basic.item_dropped.connect(func(item: InventoryItem, drop_position: Vector2):
+        item_dropped.emit(item, drop_position)
+    )
+    _ctrl_inventory_grid_basic.inventory_item_activated.connect(func(item: InventoryItem):
+        inventory_item_activated.emit(item)
+    )
+    _ctrl_inventory_grid_basic.inventory_item_context_activated.connect(func(item: InventoryItem):
+        inventory_item_context_activated.emit(item)
+    )
     _ctrl_inventory_grid_basic.item_mouse_entered.connect(_on_item_mouse_entered)
     _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)
     _ctrl_inventory_grid_basic.selection_changed.connect(_on_selection_changed)
@@ -274,6 +287,11 @@ func _on_item_mouse_exited(item: InventoryItem) -> void:
 
 
 func _on_selection_changed() -> void:
+    _handle_selection_change()
+    selection_changed.emit()
+
+
+func _handle_selection_change() -> void:
     if !is_instance_valid(inventory):
         return
     _refresh_selection_panel()
