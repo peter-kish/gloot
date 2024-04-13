@@ -15,10 +15,10 @@ const ConstraintManager = preload("res://addons/gloot/core/constraints/constrain
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
             return
-        # TODO: Maybe the inventory should be cleared here?
-        if not _items.is_empty():
-            return
+        clear()
+        _disconnect_protoset_signals()
         item_protoset = new_item_protoset
+        _connect_protoset_signals()
         protoset_changed.emit()
         update_configuration_warnings()
 var _items: Array[InventoryItem] = []
@@ -29,6 +29,22 @@ const KEY_ITEM_PROTOSET: String = "item_protoset"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/core/verify.gd")
+
+
+func _disconnect_protoset_signals() -> void:
+    if !is_instance_valid(item_protoset):
+        return
+    item_protoset.changed.disconnect(_on_protoset_changed)
+
+
+func _connect_protoset_signals() -> void:
+    if !is_instance_valid(item_protoset):
+        return
+    item_protoset.changed.connect(_on_protoset_changed)
+
+
+func _on_protoset_changed() -> void:
+    protoset_changed.emit()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -238,7 +254,7 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_ITEM_PROTOSET] = item_protoset.resource_path
+    result[KEY_ITEM_PROTOSET] = _serialize_item_protoset(item_protoset)
     result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
@@ -246,6 +262,15 @@ func serialize() -> Dictionary:
             result[KEY_ITEMS].append(item.serialize())
 
     return result
+
+
+static func _serialize_item_protoset(item_protoset: ItemProtoset) -> String:
+    if !is_instance_valid(item_protoset):
+        return ""
+    elif item_protoset.resource_path.is_empty():
+        return item_protoset.json_data
+    else:
+        return item_protoset.resource_path
 
 
 func deserialize(source: Dictionary) -> bool:
@@ -260,7 +285,7 @@ func deserialize(source: Dictionary) -> bool:
 
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    item_protoset = load(source[KEY_ITEM_PROTOSET])
+    item_protoset = _deserialize_item_protoset(source[KEY_ITEM_PROTOSET])
     # TODO: Check return value:
     if source.has(KEY_CONSTRAINTS):
         _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
@@ -273,4 +298,15 @@ func deserialize(source: Dictionary) -> bool:
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 
     return true
+
+
+static func _deserialize_item_protoset(data: String) -> ItemProtoset:
+    if data.is_empty():
+        return null
+    elif data.begins_with("res://"):
+        return load(data)
+    else:
+        var protoset := ItemProtoset.new()
+        protoset.json_data = data
+        return protoset
 

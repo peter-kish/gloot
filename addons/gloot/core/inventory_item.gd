@@ -283,7 +283,7 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_PROTOSET] = protoset.resource_path
+    result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
     result[KEY_PROTOTYE_ID] = prototype_id
     if !properties.is_empty():
         result[KEY_PROPERTIES] = {}
@@ -316,7 +316,7 @@ func deserialize(source: Dictionary) -> bool:
     
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    protoset = load(source[KEY_PROTOSET])
+    protoset = Inventory._deserialize_item_protoset(source[KEY_PROTOSET])
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():

@@ -15,7 +15,8 @@ func init_suite() -> void:
         "test_transfer",
         "test_remove_item",
         "test_serialize",
-        "test_serialize_json"
+        "test_serialize_json",
+        "test_local_protoset",
     ]
 
 
@@ -98,3 +99,16 @@ func test_serialize_json() -> void:
     assert(item.is_queued_for_deletion())
     assert(inventory1.deserialize(inventory_data))
     assert(inventory1.get_item_count() == 1)
+
+
+func test_local_protoset() -> void:
+    var inv = Inventory.new()
+    inv.item_protoset = ItemProtoset.new()
+    inv.item_protoset.add_prototype("asd")
+    assert(inv.create_and_add_item("asd") != null)
+
+    var inv_data = inv.serialize()
+    inv.reset()
+    inv.deserialize(inv_data)
+
+    inv.queue_free()
