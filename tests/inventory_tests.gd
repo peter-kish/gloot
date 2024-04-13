@@ -100,8 +100,8 @@ func test_serialize_json() -> void:
 
 func test_local_protoset() -> void:
     var inv = Inventory.new()
-    inv.item_protoset = ItemProtoset.new()
-    inv.item_protoset.add_prototype("asd")
+    inv.protoset = ItemProtoset.new()
+    inv.protoset.add_prototype("asd")
     assert(inv.create_and_add_item("asd") != null)
 
     var inv_data = inv.serialize()

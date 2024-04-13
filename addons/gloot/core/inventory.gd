@@ -347,7 +347,7 @@ func serialize() -> Dictionary:
         return result
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_ITEM_PROTOSET] = _serialize_item_protoset(protoset)
+    result[KEY_PROTOSET] = _serialize_item_protoset(protoset)
     result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
@@ -378,7 +378,7 @@ func deserialize(source: Dictionary) -> bool:
 
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    protoset = _deserialize_item_protoset(source[KEY_ITEM_PROTOSET])
+    protoset = _deserialize_item_protoset(source[KEY_PROTOSET])
     # TODO: Check return value:
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
