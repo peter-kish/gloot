@@ -8,31 +8,7 @@ signal inventory_item_context_activated(item)
 
 enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList.SELECT_MULTI}
 
-@export var inventory_path: NodePath :
-    set(new_inv_path):
-        inventory_path = new_inv_path
-        var node: Node = get_node_or_null(inventory_path)
-
-        if node == null:
-            return
-
-        if is_inside_tree():
-            assert(node is Inventory)
-            
-        inventory = node
-        update_configuration_warnings()
-
-
-@export var default_item_icon: Texture2D
-@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
-    set(new_select_mode):
-        if select_mode == new_select_mode:
-            return
-        select_mode = new_select_mode
-        if is_instance_valid(_item_list):
-            _item_list.deselect_all();
-            _item_list.select_mode = select_mode
-var inventory: Inventory = null :
+@export var inventory: Inventory = null :
     set(new_inventory):
         if new_inventory == inventory:
             return
@@ -42,20 +18,22 @@ var inventory: Inventory = null :
         _connect_inventory_signals()
 
         _queue_refresh()
+@export var default_item_icon: Texture2D
+@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+    set(new_select_mode):
+        if select_mode == new_select_mode:
+            return
+        select_mode = new_select_mode
+        if is_instance_valid(_item_list):
+            _item_list.deselect_all();
+            _item_list.select_mode = select_mode
+
 var _vbox_container: VBoxContainer
 var _item_list: ItemList
 var _refresh_queued: bool = false
 
 const KEY_IMAGE = "image"
 const KEY_NAME = "name"
-
-
-func _get_configuration_warnings() -> PackedStringArray:
-    if inventory_path.is_empty():
-        return PackedStringArray([
-                "This node is not linked to an inventory, so it can't display any content.\n" + \
-                "Set the inventory_path property to point to an Inventory node."])
-    return PackedStringArray()
 
 
 func _ready():
@@ -78,9 +56,6 @@ func _ready():
     _item_list.item_clicked.connect(_on_list_item_clicked)
     _item_list.select_mode = select_mode
     _vbox_container.add_child(_item_list)
-
-    if has_node(inventory_path):
-        inventory = get_node(inventory_path)
 
     _queue_refresh()
 

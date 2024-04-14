@@ -16,6 +16,18 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 
 enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
 
+@export var inventory: InventoryGrid = null :
+    set(new_inventory):
+        if inventory == new_inventory:
+            return
+
+        _clear_selection()
+
+        _disconnect_inventory_signals()
+        inventory = new_inventory
+        _connect_inventory_signals()
+
+        _queue_refresh()
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if new_field_dimensions == field_dimensions:
@@ -28,21 +40,6 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
             return
         item_spacing = new_item_spacing
         _queue_refresh()
-@export var inventory_path: NodePath :
-    set(new_inv_path):
-        if new_inv_path == inventory_path:
-            return
-        inventory_path = new_inv_path
-        var node: Node = get_node_or_null(inventory_path)
-
-        if node == null:
-            return
-
-        if is_inside_tree():
-            assert(node is InventoryGrid)
-            
-        inventory = node
-        update_configuration_warnings()
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         if new_default_item_texture == default_item_texture:
@@ -59,30 +56,11 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
             return
         select_mode = new_select_mode
         _clear_selection()
-var inventory: InventoryGrid = null :
-    set(new_inventory):
-        if inventory == new_inventory:
-            return
 
-        _clear_selection()
-
-        _disconnect_inventory_signals()
-        inventory = new_inventory
-        _connect_inventory_signals()
-
-        _queue_refresh()
 var _ctrl_item_container: Control = null
 var _ctrl_drop_zone: CtrlDropZone = null
 var _selected_items: Array[InventoryItem] = []
 var _refresh_queued: bool = false
-
-
-func _get_configuration_warnings() -> PackedStringArray:
-    if inventory_path.is_empty():
-        return PackedStringArray([
-                "This node is not linked to an inventory and it can't display any content.\n" + \
-                "Set the inventory_path property to point to an InventoryGrid node."])
-    return PackedStringArray()
 
 
 func _ready() -> void:
@@ -110,9 +88,6 @@ func _ready() -> void:
         _ctrl_drop_zone.deactivate()
     )
     add_child(_ctrl_drop_zone)
-
-    if has_node(inventory_path):
-        inventory = get_node_or_null(inventory_path)
 
     _queue_refresh()
 

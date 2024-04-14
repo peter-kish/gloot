@@ -66,22 +66,18 @@ class SelectionPanel extends Panel:
         if style != null:
             add_theme_stylebox_override("panel", style)
 
-
-@export var inventory_path: NodePath :
-    set(new_inv_path):
-        if new_inv_path == inventory_path:
-            return
-        inventory_path = new_inv_path
-        var node: Node = get_node_or_null(inventory_path)
-
-        if node == null:
+@export var inventory: InventoryGrid = null :
+    set(new_inventory):
+        if inventory == new_inventory:
             return
 
-        if is_inside_tree():
-            assert(node is InventoryGrid)
-            
-        inventory = node
-        update_configuration_warnings()
+        _disconnect_inventory_signals()
+        inventory = new_inventory
+        _connect_inventory_signals()
+
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.inventory = inventory
+        _queue_refresh()
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
@@ -128,18 +124,6 @@ class SelectionPanel extends Panel:
         selection_style = new_selection_style
         _queue_refresh()
 
-var inventory: InventoryGrid = null :
-    set(new_inventory):
-        if inventory == new_inventory:
-            return
-
-        _disconnect_inventory_signals()
-        inventory = new_inventory
-        _connect_inventory_signals()
-
-        if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.inventory = inventory
-        _queue_refresh()
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
 var _field_background_grid: Control = null
 var _field_backgrounds: Array = []
@@ -229,9 +213,6 @@ func _ready() -> void:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.queue_free()
             _field_background_grid.queue_free()
-
-    if has_node(inventory_path):
-        inventory = get_node_or_null(inventory_path)
 
     _field_background_grid = Control.new()
     _field_background_grid.name = "FieldBackgrounds"

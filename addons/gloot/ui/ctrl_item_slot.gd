@@ -8,24 +8,16 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
-
-@export var item_slot_path: NodePath :
-    set(new_item_slot_path):
-        if item_slot_path == new_item_slot_path:
+@export var item_slot: ItemSlotBase :
+    set(new_item_slot):
+        if new_item_slot == item_slot:
             return
-        item_slot_path = new_item_slot_path
-        var node: Node = get_node_or_null(item_slot_path)
+
+        _disconnect_item_slot_signals()
+        item_slot = new_item_slot
+        _connect_item_slot_signals()
         
-        if node == null:
-            _clear()
-            return
-
-        if is_inside_tree():
-            assert(node is ItemSlotBase)
-            
-        item_slot = node
         _refresh()
-        update_configuration_warnings()
 @export var default_item_icon: Texture2D :
     set(new_default_item_icon):
         if default_item_icon == new_default_item_icon:
@@ -83,28 +75,11 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
         label_clip_text = new_label_clip_text
         if is_instance_valid(_label):
             _label.clip_text = label_clip_text
-var item_slot: ItemSlotBase :
-    set(new_item_slot):
-        if new_item_slot == item_slot:
-            return
 
-        _disconnect_item_slot_signals()
-        item_slot = new_item_slot
-        _connect_item_slot_signals()
-        
-        _refresh()
 var _hbox_container: HBoxContainer
 var _ctrl_inventory_item_rect: CtrlInventoryItemRect
 var _label: Label
 var _ctrl_drop_zone: CtrlDropZone
-
-
-func _get_configuration_warnings() -> PackedStringArray:
-    if item_slot_path.is_empty():
-        return PackedStringArray([
-            "This node is not linked to an item slot, so it can't display any content.\n" + \
-            "Set the item_slot_path property to point to an ItemSlotBase node."])
-    return PackedStringArray()
 
 
 func _connect_item_slot_signals() -> void:
@@ -132,11 +107,6 @@ func _ready():
         # Clean up, in case it is duplicated in the editor
         if is_instance_valid(_hbox_container):
             _hbox_container.queue_free()
-
-    var node: Node = get_node_or_null(item_slot_path)
-    if is_inside_tree() && node:
-        assert(node is ItemSlotBase)
-    item_slot = node
 
     _hbox_container = HBoxContainer.new()
     _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
