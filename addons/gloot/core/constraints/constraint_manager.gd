@@ -2,6 +2,7 @@ extends RefCounted
 
 signal constraint_enabled
 signal constraint_disabled
+signal pre_constraint_disabled
 
 const KEY_WEIGHT_CONSTRAINT = "weight_constraint"
 const KEY_STACKS_CONSTRAINT = "stacks_constraint"
@@ -240,18 +241,21 @@ func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> voi
 
 func disable_weight_constraint() -> void:
     assert(_weight_constraint_enabled, "Weight constraint is already disabled")
+    pre_constraint_disabled.emit(Constraint.WEIGHT)
     _weight_constraint_enabled = false
     constraint_disabled.emit(Constraint.WEIGHT)
 
 
 func disable_stacks_constraint() -> void:
     assert(_stacks_constraint_enabled, "Stacks constraint is already disabled")
+    pre_constraint_disabled.emit(Constraint.STACKS)
     _stacks_constraint_enabled = false
     constraint_disabled.emit(Constraint.STACKS)
 
 
 func disable_grid_constraint() -> void:
     assert(_grid_constraint_enabled, "Grid constraint is already disabled")
+    pre_constraint_disabled.emit(Constraint.GRID)
     _grid_constraint_enabled = false
     constraint_disabled.emit(Constraint.GRID)
 

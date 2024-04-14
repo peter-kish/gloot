@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://bedqf0wehyig3"]
+
+[ext_resource type="Script" path="res://addons/gloot/editor/inventory_editor/inventory_configuration_editor.gd" id="1_feuiw"]
+
+[node name="InventoryConfigurationEditor" type="VBoxContainer"]
+offset_right = 1152.0
+offset_bottom = 101.0
+script = ExtResource("1_feuiw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CheckBoxWeightConstraint" type="CheckBox" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Weight Constraint"
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Capacity:"
+
+[node name="LineEditCapacity" type="LineEdit" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CheckBoxStacksConstraint" type="CheckBox" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Stacks Constraint"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CheckBoxGridConstraint" type="CheckBox" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Grid Constraint"
+
+[node name="Label" type="Label" parent="HBoxContainer3"]
+layout_mode = 2
+text = "Size:"
+
+[node name="LineEditSizeX" type="LineEdit" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false
+
+[node name="LineEditSizeY" type="LineEdit" parent="HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+editable = false

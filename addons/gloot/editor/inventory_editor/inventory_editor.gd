@@ -6,17 +6,14 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
 const POPUP_SIZE = Vector2i(800, 300)
 
-@onready var hsplit_container = $HSplitContainer
-@onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
-@onready var inventory_control_container = $HSplitContainer/VBoxContainer
-@onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
-@onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
-@onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
 var inventory: Inventory :
     set(new_inventory):
+        if inventory == new_inventory:
+            return
         disconnect_inventory_signals()
         inventory = new_inventory
         connect_inventory_signals()
+        %InventoryConfigurationEditor.inventory = inventory
 
         _refresh()
 var _inventory_control: Control
@@ -68,16 +65,15 @@ func _refresh() -> void:
         
     # Remove the inventory control, if present
     if _inventory_container:
-        scroll_container.remove_child(_inventory_container)
+        %ScrollContainer.remove_child(_inventory_container)
         _inventory_container.queue_free()
         _inventory_container = null
 
     # Create the appropriate inventory control and populate it
     _inventory_container = _create_inventory_container()
-    scroll_container.add_child(_inventory_container)
+    %ScrollContainer.add_child(_inventory_container)
 
-    # Set prototype_id_filter values
-    prototype_id_filter.set_values(inventory.protoset._prototypes.keys())
+    %ChoiceFilter.set_values(inventory.protoset._prototypes.keys())
 
 
 func _create_inventory_container() -> Control:
@@ -127,19 +123,19 @@ func _on_inventory_item_context_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
-    prototype_id_filter.pick_icon = EditorIcons.get_icon("Add")
-    prototype_id_filter.filter_icon = EditorIcons.get_icon("Search")
-    btn_edit.icon = EditorIcons.get_icon("Edit")
-    btn_remove.icon = EditorIcons.get_icon("Remove")
+    %ChoiceFilter.pick_icon = EditorIcons.get_icon("Add")
+    %ChoiceFilter.filter_icon = EditorIcons.get_icon("Search")
+    %BtnEdit.icon = EditorIcons.get_icon("Edit")
+    %BtnRemove.icon = EditorIcons.get_icon("Remove")
 
-    prototype_id_filter.choice_picked.connect(_on_prototype_id_picked)
-    btn_edit.pressed.connect(_on_btn_edit)
-    btn_remove.pressed.connect(_on_btn_remove)
+    %ChoiceFilter.choice_picked.connect(_on_prototype_id_picked)
+    %BtnEdit.pressed.connect(_on_btn_edit)
+    %BtnRemove.pressed.connect(_on_btn_remove)
     _refresh()
 
 
 func _on_prototype_id_picked(index: int) -> void:
-    var prototype_id = prototype_id_filter.values[index]
+    var prototype_id = %ChoiceFilter.values[index]
     Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
         return (inventory.create_and_add_item(prototype_id) != null)
     )

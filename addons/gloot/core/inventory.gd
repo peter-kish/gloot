@@ -12,6 +12,7 @@ signal contents_changed
 signal protoset_changed
 signal constraint_enabled(constraint)
 signal constraint_disabled(constraint)
+signal pre_constraint_disabled(constraint)
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
@@ -30,55 +31,6 @@ enum Constraint {WEIGHT, STACKS, GRID}
         _connect_protoset_signals()
         protoset_changed.emit()
         update_configuration_warnings()
-
-@export_group("Weight Constraint", "weight_constraint")
-@export var weight_constraint_enabled := false :
-    set(new_weight_constraint_enabled):
-        if weight_constraint_enabled == new_weight_constraint_enabled:
-            return
-        weight_constraint_enabled = new_weight_constraint_enabled
-        if new_weight_constraint_enabled:
-            enable_weight_constraint(weight_constraint_capacity)
-        else:
-            disable_weight_constraint()
-@export var weight_constraint_capacity: float = 0.0 :
-    set(new_weight_constraint_capacity):
-        if get_weight_constraint() == null:
-            return
-        if weight_constraint_capacity == new_weight_constraint_capacity:
-            return
-        get_weight_constraint().capacity = new_weight_constraint_capacity
-        weight_constraint_capacity = get_weight_constraint().capacity
-
-@export_group("Stacks Constraint", "stacks_constraint")
-@export var stacks_constraint_enabled := false :
-    set(new_stacks_constraint_enabled):
-        if stacks_constraint_enabled == new_stacks_constraint_enabled:
-            return
-        stacks_constraint_enabled = new_stacks_constraint_enabled
-        if new_stacks_constraint_enabled:
-            enable_stacks_constraint()
-        else:
-            disable_stacks_constraint()
-
-@export_group("Grid Constraint", "grid_constraint")
-@export var grid_constraint_enabled := false :
-    set(new_grid_constraint_enabled):
-        if grid_constraint_enabled == new_grid_constraint_enabled:
-            return
-        grid_constraint_enabled = new_grid_constraint_enabled
-        if new_grid_constraint_enabled:
-            enable_grid_constraint(grid_constraint_size)
-        else:
-            disable_grid_constraint()
-@export var grid_constraint_size: Vector2i = GridConstraint.DEFAULT_SIZE :
-    set(new_grid_constraint_size):
-        if grid_constraint_size == new_grid_constraint_size:
-            return
-        if get_grid_constraint() == null:
-            return
-        get_grid_constraint().size = new_grid_constraint_size
-        grid_constraint_size = get_grid_constraint().size
 
 var _items: Array[InventoryItem] = []
 var _constraint_manager: ConstraintManager = null
@@ -140,6 +92,7 @@ func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
     _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
     _constraint_manager.constraint_disabled.connect(func(constraint: int): constraint_disabled.emit(constraint))
+    _constraint_manager.pre_constraint_disabled.connect(func(constraint: int): pre_constraint_disabled.emit(constraint))
 
 
 func _on_constraint_enabled(constraint: int) -> void:
@@ -398,7 +351,7 @@ func serialize() -> Dictionary:
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOSET] = _serialize_item_protoset(protoset)
-    # result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
+    result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -437,8 +390,8 @@ func deserialize(source: Dictionary) -> bool:
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
-    # if source.has(KEY_CONSTRAINTS):
-    #     _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
+    if source.has(KEY_CONSTRAINTS):
+        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 
     return true
 

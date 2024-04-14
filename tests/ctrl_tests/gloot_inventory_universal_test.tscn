@@ -18,14 +18,17 @@ inventory = NodePath("../Inventory")
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_dake3")
 protoset = ExtResource("3_g1t7i")
-weight_constraint_enabled = true
-weight_constraint_capacity = 9.0
-grid_constraint_size = Vector2i(5, 5)
 _serialized_format = {
+"constraints": {
+"grid_constraint": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+},
+"stacks_constraint": {}
+},
 "items": [{
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "minimal_item"
-}, {
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"
 }, {
