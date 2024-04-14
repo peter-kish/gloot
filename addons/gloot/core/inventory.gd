@@ -91,7 +91,7 @@ static func _get_item_script() -> Script:
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
     _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
-    _constraint_manager.constraint_disabled.connect(func(constraint: int): constraint_disabled.emit(constraint))
+    _constraint_manager.constraint_disabled.connect(_on_constraing_disabled)
     _constraint_manager.pre_constraint_disabled.connect(func(constraint: int): pre_constraint_disabled.emit(constraint))
 
 
@@ -103,6 +103,12 @@ func _on_constraint_enabled(constraint: int) -> void:
         if !grid_constraint.item_moved.is_connected(_on_item_moved):
             grid_constraint.item_moved.connect(_on_item_moved)
     constraint_enabled.emit(constraint)
+    _update_serialized_format()
+
+
+func _on_constraing_disabled(constraint: int) -> void:
+    constraint_disabled.emit(constraint)
+    _update_serialized_format()
 
 
 func _ready() -> void:

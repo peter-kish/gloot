@@ -117,23 +117,30 @@ func _ready() -> void:
                 inventory.disable_grid_constraint()
     )
 
-    %LineEditCapacity.text_submitted.connect(func(new_text: String):
-        if is_instance_valid(inventory.get_weight_constraint()):
-            inventory.get_weight_constraint().capacity = float(new_text)
-            _on_capacity_changed()
-    )
+    %LineEditCapacity.text_submitted.connect(func(new_text: String): _set_capacity(new_text))
+    %LineEditCapacity.focus_exited.connect(func(): _set_capacity(%LineEditCapacity.text))
+    %LineEditSizeX.text_submitted.connect(func(new_text: String): _set_size_x(new_text))
+    %LineEditSizeX.focus_exited.connect(func(): _set_size_x(%LineEditSizeX.text))
+    %LineEditSizeY.text_submitted.connect(func(new_text: String): _set_size_y(new_text))
+    %LineEditSizeY.focus_exited.connect(func(): _set_size_y(%LineEditSizeY.text))
 
-    %LineEditSizeX.text_submitted.connect(func(new_text: String):
-        if is_instance_valid(inventory.get_grid_constraint()):
-            inventory.get_grid_constraint().size = Vector2i(int(new_text), inventory.get_grid_constraint().size.y)
-            _on_size_changed()
-    )
 
-    %LineEditSizeY.text_submitted.connect(func(new_text: String):
-        if is_instance_valid(inventory.get_grid_constraint()):
-            inventory.get_grid_constraint().size = Vector2i(inventory.get_grid_constraint().size.x, int(new_text))
-            _on_size_changed()
-    )
+func _set_capacity(str_capacity: String) -> void:
+    if is_instance_valid(inventory.get_weight_constraint()):
+        inventory.get_weight_constraint().capacity = float(str_capacity)
+        _on_capacity_changed()
+
+
+func _set_size_x(str_size_x: String) -> void:
+    if is_instance_valid(inventory.get_grid_constraint()):
+        inventory.get_grid_constraint().size = Vector2i(int(str_size_x), inventory.get_grid_constraint().size.y)
+        _on_size_changed()
+
+
+func _set_size_y(str_size_y: String) -> void:
+    if is_instance_valid(inventory.get_grid_constraint()):
+        inventory.get_grid_constraint().size = Vector2i(inventory.get_grid_constraint().size.x, int(str_size_y))
+        _on_size_changed()
 
 
 func _refresh() -> void:
