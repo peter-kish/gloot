@@ -96,7 +96,11 @@ func _init() -> void:
 
 
 func _on_constraint_enabled(constraint: int) -> void:
-    if constraint == ConstraintManager.Constraint.GRID:
+    if constraint == ConstraintManager.Constraint.WEIGHT:
+        var weight_constraint := _constraint_manager.get_weight_constraint()
+        if !weight_constraint.capacity_changed.is_connected(_update_serialized_format):
+            weight_constraint.capacity_changed.connect(_update_serialized_format)
+    elif constraint == ConstraintManager.Constraint.GRID:
         var grid_constraint := _constraint_manager.get_grid_constraint()
         if !grid_constraint.size_changed.is_connected(_update_serialized_format):
             grid_constraint.size_changed.connect(_update_serialized_format)
