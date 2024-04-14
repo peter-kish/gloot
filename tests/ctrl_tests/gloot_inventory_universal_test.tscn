@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://b74caupvwsuxa"]
+
+[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_universal.gd" id="1_vwrjq"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_dake3"]
+[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="3_g1t7i"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="GlootInventoryUniversal" type="VBoxContainer" parent="." node_paths=PackedStringArray("inventory")]
+layout_mode = 0
+offset_right = 367.0
+offset_bottom = 294.0
+script = ExtResource("1_vwrjq")
+inventory = NodePath("../Inventory")
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("2_dake3")
+protoset = ExtResource("3_g1t7i")
+weight_constraint_enabled = true
+weight_constraint_capacity = 9.0
+grid_constraint_size = Vector2i(5, 5)
+_serialized_format = {
+"items": [{
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "minimal_item"
+}, {
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item1"
+}, {
+"protoset": "res://tests/data/item_definitions_basic.tres",
+"prototype_id": "item2"
+}],
+"node_name": "Inventory",
+"protoset": "res://tests/data/item_definitions_basic.tres"
+}

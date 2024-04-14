@@ -30,6 +30,56 @@ enum Constraint {WEIGHT, STACKS, GRID}
         _connect_protoset_signals()
         protoset_changed.emit()
         update_configuration_warnings()
+
+@export_group("Weight Constraint", "weight_constraint")
+@export var weight_constraint_enabled := false :
+    set(new_weight_constraint_enabled):
+        if weight_constraint_enabled == new_weight_constraint_enabled:
+            return
+        weight_constraint_enabled = new_weight_constraint_enabled
+        if new_weight_constraint_enabled:
+            enable_weight_constraint(weight_constraint_capacity)
+        else:
+            disable_weight_constraint()
+@export var weight_constraint_capacity: float = 0.0 :
+    set(new_weight_constraint_capacity):
+        if get_weight_constraint() == null:
+            return
+        if weight_constraint_capacity == new_weight_constraint_capacity:
+            return
+        get_weight_constraint().capacity = new_weight_constraint_capacity
+        weight_constraint_capacity = get_weight_constraint().capacity
+
+@export_group("Stacks Constraint", "stacks_constraint")
+@export var stacks_constraint_enabled := false :
+    set(new_stacks_constraint_enabled):
+        if stacks_constraint_enabled == new_stacks_constraint_enabled:
+            return
+        stacks_constraint_enabled = new_stacks_constraint_enabled
+        if new_stacks_constraint_enabled:
+            enable_stacks_constraint()
+        else:
+            disable_stacks_constraint()
+
+@export_group("Grid Constraint", "grid_constraint")
+@export var grid_constraint_enabled := false :
+    set(new_grid_constraint_enabled):
+        if grid_constraint_enabled == new_grid_constraint_enabled:
+            return
+        grid_constraint_enabled = new_grid_constraint_enabled
+        if new_grid_constraint_enabled:
+            enable_grid_constraint(grid_constraint_size)
+        else:
+            disable_grid_constraint()
+@export var grid_constraint_size: Vector2i = GridConstraint.DEFAULT_SIZE :
+    set(new_grid_constraint_size):
+        if grid_constraint_size == new_grid_constraint_size:
+            return
+        if get_grid_constraint() == null:
+            return
+        get_grid_constraint().size = new_grid_constraint_size
+        grid_constraint_size = get_grid_constraint().size
+
 var _items: Array[InventoryItem] = []
 var _constraint_manager: ConstraintManager = null
 var _serialized_format: Dictionary:
@@ -93,19 +143,19 @@ func _init() -> void:
 
 
 func _on_constraint_enabled(constraint: int) -> void:
-    if constraint != ConstraintManager.Constraint.GRID:
-        return
-    var grid_constraint := _constraint_manager.get_grid_constraint()
-    if !grid_constraint.size_changed.is_connected(_update_serialized_format):
-        grid_constraint.size_changed.connect(_update_serialized_format)
-    if !grid_constraint.item_moved.is_connected(_on_item_moved):
-        grid_constraint.item_moved.connect(_on_item_moved)
+    if constraint == ConstraintManager.Constraint.GRID:
+        var grid_constraint := _constraint_manager.get_grid_constraint()
+        if !grid_constraint.size_changed.is_connected(_update_serialized_format):
+            grid_constraint.size_changed.connect(_update_serialized_format)
+        if !grid_constraint.item_moved.is_connected(_on_item_moved):
+            grid_constraint.item_moved.connect(_on_item_moved)
     constraint_enabled.emit(constraint)
 
 
 func _ready() -> void:
     if !_serialized_format.is_empty():
         deserialize(_serialized_format)
+
     for item in get_items():
         _connect_item_signals(item)
 
@@ -348,7 +398,7 @@ func serialize() -> Dictionary:
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOSET] = _serialize_item_protoset(protoset)
-    result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
+    # result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -387,8 +437,8 @@ func deserialize(source: Dictionary) -> bool:
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
-    if source.has(KEY_CONSTRAINTS):
-        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
+    # if source.has(KEY_CONSTRAINTS):
+    #     _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 
     return true
 
