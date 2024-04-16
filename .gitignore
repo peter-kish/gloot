@@ -21,4 +21,7 @@ mono_crash.*.json
 .DS_Store
 *~
 
+# Editor debugger plugin
+addons/zylann.editor_debugger/*
+
 .vscode
