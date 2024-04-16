@@ -129,7 +129,7 @@ func _notification(what) -> void:
 
 
 func _process(_delta) -> void:
-    if is_instance_valid(drag_preview) && drag_preview.visible:
+    if is_instance_valid(drag_preview) && is_instance_valid(drag_preview.get_parent()):
         drag_preview.scale = get_global_transform().get_scale()
         drag_preview.global_position = _get_global_preview_position()
     if _show_queued:
