@@ -5,6 +5,7 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
 signal activated
+signal clicked
 signal context_activated
 
 var item: InventoryItem :
@@ -74,8 +75,6 @@ func _get_item_position() -> Vector2:
 
 
 func _ready() -> void:
-    drag_preview = CtrlInventoryItemRect.new()
-
     _texture_rect = TextureRect.new()
     _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -96,12 +95,6 @@ func _ready() -> void:
         deactivate()
 
     _refresh()
-
-
-func _notification(what: int) -> void:
-    if what == NOTIFICATION_PREDELETE:
-        if is_instance_valid(drag_preview):
-            drag_preview.free()
 
 
 func _update_texture() -> void:
@@ -142,23 +135,24 @@ func _refresh() -> void:
     _update_stack_size()
 
 
-func drag_start() -> void:
-    if drag_preview != null:
-        drag_preview.item = item
-        drag_preview.texture = texture
-        drag_preview.size = size
-        drag_preview.stretch_mode = stretch_mode
-    super.drag_start()
+func create_preview() -> Control:
+    var preview = TextureRect.new()
+    preview.texture = texture
+    preview.size = size
+    preview.stretch_mode = stretch_mode
+    return preview
 
 
 func _gui_input(event: InputEvent) -> void:
-    super._gui_input(event)
     if !(event is InputEventMouseButton):
         return
 
     var mb_event: InputEventMouseButton = event
-    if mb_event.button_index == MOUSE_BUTTON_LEFT && mb_event.double_click:
-        activated.emit()
+    if mb_event.button_index == MOUSE_BUTTON_LEFT:
+        if mb_event.double_click:
+            activated.emit()
+        else:
+            clicked.emit()
     elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT:
         context_activated.emit()
 

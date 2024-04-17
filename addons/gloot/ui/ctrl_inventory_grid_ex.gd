@@ -271,6 +271,11 @@ func _ready() -> void:
     _queue_refresh()
 
 
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+
+
 func _update_size() -> void:
     custom_minimum_size = _ctrl_inventory_grid_basic.size
     size = _ctrl_inventory_grid_basic.size

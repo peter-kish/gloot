@@ -230,6 +230,11 @@ func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_p
     _ctrl_drop_zone.deactivate()
 
 
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        _ctrl_drop_zone.deactivate()
+
+
 func _refresh() -> void:
     _clear()
 

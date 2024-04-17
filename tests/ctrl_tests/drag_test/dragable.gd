@@ -17,19 +17,25 @@ func _ready() -> void:
     _texture_rect.texture = texture
     _texture_rect.resized.connect(func(): size = _texture_rect.size)
     add_child(_texture_rect)
+    grabbed.connect(func(_offset):
+        _on_dragable_grabbed()
+    )
 
-    drag_preview = TextureRect.new()
-    drag_preview.texture = texture
 
-
-func drag_start() -> void:
-    super.drag_start()
+func _on_dragable_grabbed() -> void:
     if _texture_rect:
         _texture_rect.hide()
 
 
-func drag_end() -> void:
-    super.drag_end()
-    if _texture_rect:
-        _texture_rect.show()
+func _notification(what) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        if _texture_rect:
+            _texture_rect.show()
+
+
+func create_preview() -> Control:
+    var preview = TextureRect.new()
+    preview.texture = texture
+    preview.scale = get_global_transform().get_scale()
+    return preview
 
