@@ -4,7 +4,6 @@ extends Control
 signal dragable_dropped(dragable, position)
 
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
-const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 
 
 func activate() -> void:
@@ -24,7 +23,8 @@ func _can_drop_data(at_position: Vector2, data) -> bool:
 
 
 func _drop_data(at_position: Vector2, data) -> void:
-    var local_pos := CtrlDragable.get_grab_offset() / get_global_transform().get_scale()
-    dragable_dropped.emit(data, at_position - local_pos)
-    CtrlDragable.dragable_dropped.emit(data, self, at_position - local_pos)
+    var local_offset := CtrlDragable.get_grab_offset_local_to(self)
+    dragable_dropped.emit(data, at_position - local_offset)
+    CtrlDragable.dragable_dropped.emit(data, self, at_position - local_offset)
+
 

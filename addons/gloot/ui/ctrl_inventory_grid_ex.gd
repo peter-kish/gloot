@@ -335,10 +335,13 @@ func _highlight_grabbed_item(style: StyleBox):
         _fill_background(field_style, PriorityPanel.StylePriority.LOW)
         return
 
+    _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+
     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
     var item_size := inventory.get_item_size(grabbed_item)
     var rect := Rect2i(grabbed_item_coords, item_size)
-    _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+    if !Rect2i(Vector2i.ZERO, inventory.size).encloses(rect):
+        return
     _set_rect_background(rect, style, PriorityPanel.StylePriority.LOW)
 
 
@@ -375,7 +378,7 @@ func _get_global_grabbed_item() -> InventoryItem:
 
 func _get_global_grabbed_item_local_pos() -> Vector2:
     if CtrlDragable.get_grabbed_dragable():
-        return get_local_mouse_position() - CtrlDragable.get_grab_offset()
+        return get_local_mouse_position() - CtrlDragable.get_grab_offset_local_to(self)
     return Vector2(-1, -1)
 
 

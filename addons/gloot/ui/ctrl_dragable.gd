@@ -38,6 +38,10 @@ static func get_grab_offset() -> Vector2:
     return _grab_offset
 
 
+static func get_grab_offset_local_to(control: Control) -> Vector2:
+    return CtrlDragable.get_grab_offset() / control.get_global_transform().get_scale()
+
+
 func _get_drag_data(at_position: Vector2):
     if !_enabled:
         return null
