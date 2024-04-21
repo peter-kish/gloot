@@ -136,7 +136,8 @@ func _refresh() -> void:
 
 
 func create_preview() -> Control:
-    var preview = TextureRect.new()
+    var preview = CtrlInventoryItemRect.new()
+    preview.item = item
     preview.texture = texture
     preview.size = size
     preview.stretch_mode = stretch_mode
