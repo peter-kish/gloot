@@ -12,6 +12,7 @@ signal item_mouse_exited(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
+const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
 

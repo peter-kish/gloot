@@ -1,6 +1,6 @@
-class_name CtrlInventoryItemRect
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
+const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
