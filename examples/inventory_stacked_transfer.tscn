@@ -29,20 +29,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
-inventory_path = NodePath("../../../InventoryStackedLeft")
+inventory = NodePath("../../../InventoryStackedLeft")
 default_item_icon = ExtResource("5")
 
-[node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
-inventory_path = NodePath("../../../InventoryStackedRight")
+inventory = NodePath("../../../InventoryStackedRight")
 default_item_icon = ExtResource("5")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
@@ -51,11 +51,11 @@ layout_mode = 2
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer"]
+[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
-item_slot_path = NodePath("../../../../ItemSlot")
+item_slot = NodePath("../../../../ItemSlot")
 default_item_icon = ExtResource("5")
 label_visible = false
 

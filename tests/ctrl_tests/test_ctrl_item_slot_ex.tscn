@@ -23,7 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlItemSlotEx" type="Control" parent="."]
+[node name="CtrlItemSlotEx" type="Control" parent="." node_paths=PackedStringArray("item_slot")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 32.0
@@ -31,7 +31,7 @@ offset_bottom = 32.0
 script = ExtResource("3")
 slot_style = SubResource("1")
 slot_highlighted_style = SubResource("2")
-item_slot_path = NodePath("../ItemSlot")
+item_slot = NodePath("../ItemSlot")
 label_visible = false
 
 [node name="Inventory" type="Node" parent="."]
@@ -39,7 +39,6 @@ script = ExtResource("2")
 protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {},
-"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item1"
@@ -47,10 +46,11 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_basic.tres",
 "prototype_id": "item2"
 }],
-"node_name": "Inventory"
+"node_name": "Inventory",
+"protoset": "res://tests/data/item_definitions_basic.tres"
 }
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemSlot" type="Node" parent="." node_paths=PackedStringArray("inventory")]
 script = ExtResource("4")
-inventory_path = NodePath("../Inventory")
-equipped_item = 0
+_equipped_item = 0
+inventory = NodePath("../Inventory")

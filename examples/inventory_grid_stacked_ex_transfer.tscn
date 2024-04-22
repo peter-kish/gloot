@@ -75,13 +75,13 @@ layout_mode = 2
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer"]
+[node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
-inventory_path = NodePath("../../../../../InventoryGridStackedLeft")
+inventory = NodePath("../../../../../InventoryGridStackedLeft")
 default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
@@ -105,13 +105,13 @@ layout_mode = 2
 [node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 
-[node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2"]
+[node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
-inventory_path = NodePath("../../../../../InventoryGridStackedRight")
+inventory = NodePath("../../../../../InventoryGridStackedRight")
 default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
@@ -140,14 +140,14 @@ text = "Item Slot:"
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer"]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6_wlx5u")
 slot_style = SubResource("7")
 slot_highlighted_style = SubResource("8")
-item_slot_path = NodePath("../../../../../ItemSlot")
+item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]

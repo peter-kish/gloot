@@ -36,7 +36,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventoryGridEx" type="Control" parent="."]
+[node name="CtrlInventoryGridEx" type="Control" parent="." node_paths=PackedStringArray("inventory")]
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 1
@@ -44,13 +44,12 @@ anchors_preset = 0
 offset_right = 160.0
 offset_bottom = 160.0
 script = ExtResource("1_4tfdv")
+inventory = NodePath("../InventoryGridStacked")
+default_item_texture = ExtResource("5_8hsr1")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
 field_selected_style = SubResource("3")
 selection_style = SubResource("4")
-draw_grid = false
-inventory_path = NodePath("../InventoryGridStacked")
-default_item_texture = ExtResource("5_8hsr1")
 
 [node name="InventoryGridStacked" type="Node" parent="."]
 script = ExtResource("6_bevw1")

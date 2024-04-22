@@ -13,13 +13,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventoryGrid" type="Container" parent="."]
+[node name="CtrlInventoryGrid" type="Container" parent="." node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 160.0
 script = ExtResource("1_mgf0d")
-inventory_path = NodePath("../InventoryGridStacked")
+inventory = NodePath("../InventoryGridStacked")
 default_item_texture = ExtResource("2_fptnp")
 
 [node name="InventoryGridStacked" type="Node" parent="."]

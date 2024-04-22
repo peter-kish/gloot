@@ -13,13 +13,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventoryStacked" type="VBoxContainer" parent="."]
+[node name="CtrlInventoryStacked" type="VBoxContainer" parent="." node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_top = -1.0
 offset_right = 377.0
 offset_bottom = 224.0
 script = ExtResource("2")
-inventory_path = NodePath("../InventoryStacked")
+inventory = NodePath("../InventoryStacked")
 default_item_icon = ExtResource("4")
 
 [node name="InventoryStacked" type="Node" parent="."]
@@ -30,11 +30,9 @@ _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
 "weight_constraint": {
-"capacity": 20.0,
-"occupied_space": 1.0
+"capacity": 20.0
 }
 },
-"protoset": "res://tests/data/item_definitions_stack.tres",
 "items": [{
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "minimal_item"
@@ -42,5 +40,6 @@ _serialized_format = {
 "protoset": "res://tests/data/item_definitions_stack.tres",
 "prototype_id": "stackable_item"
 }],
-"node_name": "InventoryStacked"
+"node_name": "InventoryStacked",
+"protoset": "res://tests/data/item_definitions_stack.tres"
 }

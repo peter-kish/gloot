@@ -30,20 +30,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CtrlInventory" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="CtrlInventory" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
-inventory_path = NodePath("../../../Inventory")
+inventory = NodePath("../../../Inventory")
 default_item_icon = ExtResource("5")
 
-[node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
-inventory_path = NodePath("../../../Inventory2")
+inventory = NodePath("../../../Inventory2")
 default_item_icon = ExtResource("5")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
@@ -56,11 +56,11 @@ size_flags_horizontal = 3
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
 layout_mode = 2
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer"]
+[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer" node_paths=PackedStringArray("item_slot")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
-item_slot_path = NodePath("../../../../../ItemSlot")
+item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
 
 [node name="BtnEquipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
