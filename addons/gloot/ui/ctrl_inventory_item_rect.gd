@@ -68,12 +68,6 @@ func _disconnect_item_signals() -> void:
         item.properties_changed.disconnect(_refresh)
 
 
-func _get_item_position() -> Vector2:
-    if is_instance_valid(item) && item.get_inventory():
-        return item.get_inventory().get_item_position(item)
-    return Vector2(0, 0)
-
-
 func _ready() -> void:
     _texture_rect = TextureRect.new()
     _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -157,21 +151,3 @@ func _gui_input(event: InputEvent) -> void:
     elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT:
         context_activated.emit()
 
-
-func get_stretched_texture_size(container_size: Vector2) -> Vector2:
-    if texture == null:
-        return Vector2.ZERO
-
-    match stretch_mode:
-        TextureRect.StretchMode.STRETCH_TILE, \
-        TextureRect.StretchMode.STRETCH_SCALE:
-            return container_size
-        TextureRect.StretchMode.STRETCH_KEEP, \
-        TextureRect.StretchMode.STRETCH_KEEP_CENTERED:
-            return texture.get_size()
-        TextureRect.StretchMode.STRETCH_KEEP_ASPECT, \
-        TextureRect.StretchMode.STRETCH_KEEP_ASPECT_CENTERED, \
-        TextureRect.StretchMode.STRETCH_KEEP_ASPECT_COVERED:
-            return size
-
-    return Vector2.ZERO
