@@ -7,10 +7,13 @@ var _absolute: bool = false
 
 
 func _init(path: String) -> void:
+    path = path.strip_edges()
     if path.is_empty():
         return
-    _path = path.split(DELIMITER, false)
     _absolute = (path[0] == DELIMITER)
+    _path = path.split(DELIMITER, false)
+    for i in _path.size():
+        _path[i] = _path[i].strip_edges()
 
 
 func is_absolute() -> bool:

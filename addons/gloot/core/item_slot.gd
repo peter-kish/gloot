@@ -3,7 +3,7 @@
 class_name ItemSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
-signal prototree_changed
+signal prototree_json_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
@@ -16,7 +16,7 @@ const KEY_ITEM: String = "item"
             _item = null
         prototree_json = new_prototree_json
         _prototree.deserialize(prototree_json)
-        prototree_changed.emit()
+        prototree_json_changed.emit()
         update_configuration_warnings()
 @export var remember_source_inventory: bool = true
 

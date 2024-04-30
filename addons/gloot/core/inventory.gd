@@ -155,8 +155,8 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.prototree_changed.is_connected(_on_item_prototree_changed):
-        item.prototree_changed.connect(_on_item_prototree_changed.bind(item))
+    if !item.prototree_json_changed.is_connected(_on_item_prototree_changed):
+        item.prototree_json_changed.connect(_on_item_prototree_changed.bind(item))
     if !item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
         item.prototype_path_changed.connect(_on_item_prototype_path_changed.bind(item))
     if !item.property_changed.is_connected(_on_item_property_changed):
@@ -164,8 +164,8 @@ func _connect_item_signals(item: InventoryItem) -> void:
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.prototree_changed.is_connected(_on_item_prototree_changed):
-        item.prototree_changed.disconnect(_on_item_prototree_changed)
+    if item.prototree_json_changed.is_connected(_on_item_prototree_changed):
+        item.prototree_json_changed.disconnect(_on_item_prototree_changed)
     if item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
         item.prototype_path_changed.disconnect(_on_item_prototype_path_changed)
     if item.property_changed.is_connected(_on_item_property_changed):

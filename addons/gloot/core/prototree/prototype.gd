@@ -104,9 +104,13 @@ func get_path() -> PrototypePath:
 
 
 func _get_str_path() -> String:
-    if !is_instance_valid(_parent):
-        return "/%s" % get_id()
+    if _is_root():
+        return PrototypePath.DELIMITER
     return "%s/%s" % [_parent._get_str_path(), get_id()]
+
+
+func _is_root() -> bool:
+    return !is_instance_valid(_parent)
 
 
 func get_prototypes() -> Array:

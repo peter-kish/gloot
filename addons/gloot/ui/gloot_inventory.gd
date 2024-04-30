@@ -28,7 +28,7 @@ func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
         inventory.ready.connect(_refresh)
     inventory.contents_changed.connect(_refresh)
-    inventory.prototree_changed.connect(_refresh)
+    inventory.prototree_json_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
     inventory.item_prototree_changed.connect(_refresh_item)
     inventory.item_prototype_path_changed.connect(_refresh_item)
@@ -38,7 +38,7 @@ func _disconnect_inventory_signals() -> void:
     if inventory.ready.is_connected(_refresh):
         inventory.ready.disconnect(_refresh)
     inventory.contents_changed.disconnect(_refresh)
-    inventory.prototree_changed.disconnect(_refresh)
+    inventory.prototree_json_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)
     inventory.item_prototree_changed.disconnect(_refresh_item)
     inventory.item_prototype_path_changed.disconnect(_refresh_item)

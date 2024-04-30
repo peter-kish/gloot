@@ -3,7 +3,7 @@
 extends RefCounted
 class_name InventoryItem
 
-signal prototree_changed
+signal prototree_json_changed
 signal prototype_path_changed
 signal property_changed(property_name)
 
@@ -25,7 +25,7 @@ signal property_changed(property_name)
         else:
             prototype_path = ""
 
-        prototree_changed.emit()
+        prototree_json_changed.emit()
         
 var _prototree := ProtoTree.new()
 
@@ -225,7 +225,7 @@ func get_overridden_properties() -> Array:
 
 
 func get_properties() -> Array:
-    return _properties.keys() + _prototree.root().get_prototype(prototype_path).keys()
+    return _properties.keys() + _prototree.get_prototype(prototype_path).get_properties().keys()
 
 
 func is_property_overridden(property_name) -> bool:
@@ -306,7 +306,7 @@ func get_texture() -> Texture2D:
 
 
 func get_title() -> String:
-    var title = get_property(KEY_NAME, prototype_path)
+    var title = get_property(KEY_NAME, null)
     if !(title is String):
         title = _prototree.get_prototype(prototype_path).get_id()
 
