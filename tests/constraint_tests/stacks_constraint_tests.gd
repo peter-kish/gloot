@@ -45,11 +45,11 @@ func cleanup_test() -> void:
 
 
 func test_get_prototype_max_stack_size() -> void:
-    assert(StacksConstraint.get_prototype_max_stack_size(item.protoset, TEST_PROTOTYPE_PATH) == 5)
+    assert(StacksConstraint.get_prototype_max_stack_size(item.get_prototree(), TEST_PROTOTYPE_PATH) == 5)
 
 
 func test_get_prototype_stack_size() -> void:
-    assert(StacksConstraint.get_prototype_stack_size(item.protoset, TEST_PROTOTYPE_PATH) == 5)
+    assert(StacksConstraint.get_prototype_stack_size(item.get_prototree(), TEST_PROTOTYPE_PATH) == 5)
 
 
 func test_get_item_max_stack_size() -> void:

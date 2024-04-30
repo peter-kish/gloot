@@ -16,7 +16,7 @@ func init_suite() -> void:
         "test_remove_item",
         "test_serialize",
         "test_serialize_json",
-        "test_local_protoset",
+        "test_local_prototree",
     ]
 
 
@@ -98,11 +98,11 @@ func test_serialize_json() -> void:
     assert(inventory1.get_item_count() == 1)
 
 
-func test_local_protoset() -> void:
+func test_local_prototree() -> void:
     var inv = Inventory.new()
-    inv.protoset = ProtoTree.new()
-    inv.protoset.add_prototype("asd")
-    assert(inv.create_and_add_item("asd") != null)
+    inv.prototree_json = ProtoTree.new()
+    inv.prototree_json.add_prototype("asd")
+    assert(inv.create_and_add_item("/asd") != null)
 
     var inv_data = inv.serialize()
     inv.reset()

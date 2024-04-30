@@ -71,7 +71,7 @@ func create_inventory_grid_stacked(prototree_json: JSON, size: Vector2i) -> Inve
     return inventory
 
 
-# Create an item with the given prototype ID from the given protoset
+# Create an item with the given prototype ID from the given prototree
 func create_item(prototree_json: JSON, prototype_path: String) -> InventoryItem:
     var item = InventoryItem.new()
     item.prototree_json = prototree_json

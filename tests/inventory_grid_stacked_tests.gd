@@ -66,8 +66,8 @@ func test_add_item_automerge() -> void:
     assert(!inventory_3x3.has_item(item_2x2_2));
 
     item_2x2_2 = InventoryItem.new()
-    item_2x2_2.protoset = TEST_PROTOTREE
-    item_2x2_2.prototype_id = "/item_2x2"
+    item_2x2_2.prototree_json = TEST_PROTOTREE
+    item_2x2_2.prototype_path = "/item_2x2"
 
     # No stack space, no grid space
     assert(InventoryGridStacked.set_item_stack_size(item_2x2,

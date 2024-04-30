@@ -26,7 +26,7 @@ func init_suite() -> void:
 func init_test() -> void:
     inventory = create_inventory(TEST_PROTOTREE)
     slot = ItemSlot.new()
-    slot.protoset = TEST_PROTOTREE
+    slot.prototree_json = TEST_PROTOTREE
     slot.remember_source_inventory = false
     item = inventory.create_and_add_item("minimal_item")
 
@@ -53,7 +53,7 @@ func test_swap() -> void:
     var inventory2 = create_inventory(TEST_PROTOTREE)
     var item2 = inventory2.create_and_add_item("minimal_item")
     var slot2 = ItemSlot.new()
-    slot2.protoset = TEST_PROTOTREE
+    slot2.prototree_json = TEST_PROTOTREE
     slot2.remember_source_inventory = false
 
     # Swap items between two inventories
@@ -111,7 +111,7 @@ func test_set_property() -> void:
 
 func test_references() -> void:
     inventory.remove_item(item)
-    item.protoset = preload("res://tests/data/prototree_dict.json")
+    item.prototree_json = preload("res://tests/data/prototree_dict.json")
     var dict: Dictionary = item.get_property("dictionary")
     assert(dict != null)
     assert(dict.has("foo"))
@@ -141,14 +141,14 @@ func test_reset() -> void:
     item.set_property("foo", "bar")
 
     item.reset()
-    assert(item.protoset == inventory.protoset)
+    assert(item.prototree_json == inventory.prototree_json)
     assert(item.prototype_id == "minimal_item")
     assert(item.get_overridden_properties().is_empty())
     assert(!item.has_property("foo"))
 
     inventory.remove_item(item)
     item.reset()
-    assert(item.protoset == null)
+    assert(item.prototree_json == null)
     assert(item.prototype_id == "")
     assert(item.get_overridden_properties().is_empty())
 
