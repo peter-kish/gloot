@@ -86,7 +86,7 @@ func get_mergable_items(item: InventoryItem) -> Array[InventoryItem]:
 
 
 static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool:
-    # Two item stacks are mergable if they have the same prototype ID and neither of the two contain
+    # Two item stacks are mergable if they have the same prototype and neither of the two contain
     # overridden properties that the other one doesn't have (except for "stack_size", "max_stack_size",
     # "grid_position", or "weight").
     assert(item_1 != null, "item_1 is null!")
@@ -98,7 +98,7 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
         WeightConstraint.KEY_WEIGHT
     ]
 
-    if item_1.prototype_path != item_2.prototype_path:
+    if !item_1.get_prototype().get_path().equal(item_2.get_prototype().get_path()):
         return false
 
     for property in item_1.get_overridden_properties():

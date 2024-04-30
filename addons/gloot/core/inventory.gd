@@ -49,6 +49,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func get_prototree() -> ProtoTree:
+    # TODO: Consider returning null when prototree_json is null
     return _prototree
 
 
@@ -155,19 +156,11 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.prototree_json_changed.is_connected(_on_item_prototree_changed):
-        item.prototree_json_changed.connect(_on_item_prototree_changed.bind(item))
-    if !item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
-        item.prototype_path_changed.connect(_on_item_prototype_path_changed.bind(item))
     if !item.property_changed.is_connected(_on_item_property_changed):
         item.property_changed.connect(_on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.prototree_json_changed.is_connected(_on_item_prototree_changed):
-        item.prototree_json_changed.disconnect(_on_item_prototree_changed)
-    if item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
-        item.prototype_path_changed.disconnect(_on_item_prototype_path_changed)
     if item.property_changed.is_connected(_on_item_property_changed):
         item.property_changed.disconnect(_on_item_property_changed)
 
@@ -176,18 +169,6 @@ func _on_item_property_changed(property: String, item: InventoryItem) -> void:
     _update_serialized_format()
     _constraint_manager._on_item_property_changed(item, property)
     item_property_changed.emit(item, property)
-
-
-func _on_item_prototree_changed(item: InventoryItem) -> void:
-    _update_serialized_format()
-    _constraint_manager._on_item_prototree_changed(item)
-    item_prototree_changed.emit(item)
-
-
-func _on_item_prototype_path_changed(item: InventoryItem) -> void:
-    _update_serialized_format()
-    _constraint_manager._on_item_prototype_path_changed(item)
-    item_prototype_path_changed.emit(item)
 
 
 func get_items() -> Array[InventoryItem]:
@@ -238,9 +219,7 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 
 func create_and_add_item(prototype_path: String) -> InventoryItem:
-    var item: InventoryItem = InventoryItem.new()
-    item.prototree_json = prototree_json
-    item.prototype_path = prototype_path
+    var item: InventoryItem = InventoryItem.new(prototree_json, prototype_path)
     if add_item(item):
         return item
     else:
@@ -416,7 +395,7 @@ func deserialize(source: Dictionary) -> bool:
             var item = _get_item_script().new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_path)
+            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.get_title())
     if source.has(KEY_CONSTRAINTS):
         _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 

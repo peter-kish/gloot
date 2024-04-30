@@ -100,8 +100,8 @@ func test_swap() -> void:
 
 func test_get_property() -> void:
     assert(item.get_property("name", "none") == "none")
-    item.prototype_path = "/item1"
-    assert(item.get_property("name", "none") == "item 1")
+    var item2 := inventory.create_and_add_item("/item1")
+    assert(item2.get_property("name", "none") == "item 1")
 
 
 func test_set_property() -> void:
@@ -110,18 +110,17 @@ func test_set_property() -> void:
 
 
 func test_references() -> void:
-    inventory.remove_item(item)
-    item.prototree_json = preload("res://tests/data/prototree_dict.json")
-    var dict: Dictionary = item.get_property("dictionary")
+    var item2 := create_item(preload("res://tests/data/prototree_dict.json"), "containing_dict")
+    var dict: Dictionary = item2.get_property("dictionary")
     assert(dict != null)
     assert(dict.has("foo"))
     assert(dict["foo"] == "bar")
     assert(dict.has("baz"))
     assert(dict["baz"] == 42)
     dict["baz"] = 43
-    assert(item.get_property("dictionary")["baz"] == 42)
-    item.set_property("dictionary", dict)
-    assert(item.get_property("dictionary")["baz"] == 43)
+    assert(item2.get_property("dictionary")["baz"] == 42)
+    item2.set_property("dictionary", dict)
+    assert(item2.get_property("dictionary")["baz"] == 43)
     
 
 
@@ -130,40 +129,41 @@ func test_clear_property() -> void:
     item.clear_property("name")
     assert(item.get_property("name", "none") == "none")
 
-    item.prototype_path = "/item1"
-    item.set_property("name", "Bob")
-    assert(item.get_property("name", "none") == "Bob")
-    item.clear_property("name")
-    assert(item.get_property("name", "none") == "item 1")
+    var item2 := inventory.create_and_add_item("/item1")
+    item2.set_property("name", "Bob")
+    assert(item2.get_property("name", "none") == "Bob")
+    item2.clear_property("name")
+    assert(item2.get_property("name", "none") == "item 1")
 
 
 func test_reset() -> void:
     item.set_property("foo", "bar")
 
     item.reset()
-    assert(item.prototree_json == inventory.prototree_json)
-    assert(PrototypePath.str_paths_equal(item.prototype_path, "/minimal_item"))
+    assert(item._prototree_json == inventory.prototree_json)
+    assert(item.get_prototype() != null)
+    assert(PrototypePath.str_paths_equal(str(item.get_prototype().get_path()), "/minimal_item"))
     assert(item.get_overridden_properties().is_empty())
     assert(!item.has_property("foo"))
 
     inventory.remove_item(item)
     item.reset()
-    assert(item.prototree_json == null)
-    assert(item.prototype_path == "")
+    assert(item._prototree_json == null)
+    assert(item.get_prototype() == null)
     assert(item.get_overridden_properties().is_empty())
 
 
 func test_get_texture() -> void:
     assert(item.get_texture() == null)
-    item.prototype_path = "/item1"
-    assert(item.get_texture() != null)
-    assert(item.get_texture().resource_path == "res://images/item_book_blue.png")
+    var item2 := inventory.create_and_add_item("/item1")
+    assert(item2.get_texture() != null)
+    assert(item2.get_texture().resource_path == "res://images/item_book_blue.png")
 
 
 func test_get_title() -> void:
     assert(item.get_title() == "minimal_item")
-    item.prototype_path = "/item1"
-    assert(item.get_title() == "item 1")
+    var item2 := inventory.create_and_add_item("/item1")
+    assert(item2.get_title() == "item 1")
 
 
 func test_serialize() -> void:

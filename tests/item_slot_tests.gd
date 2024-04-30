@@ -24,12 +24,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = InventoryItem.new()
-    item.prototree_json = TEST_PROTOTREE
-    item.prototype_path = TEST_PROTOTYPE_PATH
-    item2 = InventoryItem.new()
-    item2.prototree_json = TEST_PROTOTREE
-    item2.prototype_path = TEST_PROTOTYPE_PATH
+    item = InventoryItem.new(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
+    item2 = InventoryItem.new(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
     inventory = Inventory.new()
     inventory.prototree_json = TEST_PROTOTREE
     inventory.add_item(item)
@@ -118,23 +114,23 @@ func test_reset() -> void:
 
 func test_serialize() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item.prototree_json
-    var expected_prototype_path := item.prototype_path
+    var expected_prototree_json := item._prototree_json
+    var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
     var item_slot_data = slot.serialize()
     slot.reset()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().prototree_json == expected_prototree_json)
-    assert(PrototypePath.str_paths_equal(slot.get_item().prototype_path, expected_prototype_path))
+    assert(slot.get_item()._prototree_json == expected_prototree_json)
+    assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)
 
 
 func test_serialize_json() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item.prototree_json
-    var expected_prototype_path := item.prototype_path
+    var expected_prototree_json := item._prototree_json
+    var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
     var item_slot_data = slot.serialize()
@@ -148,6 +144,6 @@ func test_serialize_json() -> void:
     slot.reset()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().prototree_json == expected_prototree_json)
-    assert(PrototypePath.str_paths_equal(slot.get_item().prototype_path, expected_prototype_path))
+    assert(slot.get_item()._prototree_json == expected_prototree_json)
+    assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)

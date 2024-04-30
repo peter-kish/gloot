@@ -63,10 +63,6 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
         _refresh_item_map()
 
 
-func _on_item_prototree_changed(item: InventoryItem) -> void:
-    _refresh_item_map()
-
-
 func _on_item_prototype_path_changed(item: InventoryItem) -> void:
     _refresh_item_map()
 

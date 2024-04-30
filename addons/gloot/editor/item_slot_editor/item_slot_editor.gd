@@ -73,9 +73,7 @@ func _apply_editor_settings() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
-    var item := InventoryItem.new()
-    item.prototree_json = item_slot.prototree_json
-    item.prototype_path = str(prototype.get_path())
+    var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
     Undoables.exec_slot_undoable(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )

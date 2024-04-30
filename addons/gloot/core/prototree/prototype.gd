@@ -30,12 +30,12 @@ func has_property(property: String) -> bool:
     return false
 
 
-func get_property(property: String) -> Variant:
+func get_property(property: String, default_value: Variant = null) -> Variant:
     if _properties.has(property):
         return _properties[property]
     if is_instance_valid(_parent):
         return _parent.get_property(property)
-    return null
+    return default_value
 
 
 func get_properties() -> Dictionary:

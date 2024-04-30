@@ -59,7 +59,7 @@ func _get_dictionary() -> Dictionary:
     if item.get_prototree().is_empty():
         return {}
 
-    if !item.get_prototree().has_prototype(item.prototype_path):
+    if !item.get_prototree().has_prototype(item.get_prototype().get_path()):
         return {}
 
     var result: Dictionary = item.get_prototype().get_properties()

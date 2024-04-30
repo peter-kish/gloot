@@ -113,7 +113,7 @@ func can_hold_item(item: InventoryItem) -> bool:
     assert(prototree_json != null, "Item prototree not set!")
     if item == null:
         return false
-    if prototree_json != item.prototree_json:
+    if prototree_json != item._prototree_json:
         return false
 
     return true

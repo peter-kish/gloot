@@ -92,8 +92,8 @@ func test_items_mergable() -> void:
     item_2.clear_property("custom_property")
     assert(StacksConstraint.items_mergable(item, item_2))
     
-    item_2.prototype_path = "/minimal_item"
-    assert(!StacksConstraint.items_mergable(item, item_2))
+    var item3 = create_item(TEST_PROTOTREE, "/minimal_item")
+    assert(!StacksConstraint.items_mergable(item, item3))
 
 
 func test_get_mergable_items() -> void:
