@@ -48,10 +48,10 @@ func test_add_remove() -> void:
 
 
 func test_has_item() -> void:
-    assert(inventory1.has_item_by_id("minimal_item"))
+    assert(inventory1.has_item_by_prototype_path("/minimal_item"))
     assert(inventory1.has_item(item))
     assert(inventory1.remove_item(item))
-    assert(!inventory1.has_item_by_id("minimal_item"))
+    assert(!inventory1.has_item_by_prototype_path("/minimal_item"))
     assert(!inventory1.has_item(item))
 
 
@@ -60,7 +60,7 @@ func test_create_and_add() -> void:
     assert(new_item)
     assert(inventory2.get_item_count() == 1)
     assert(inventory2.has_item(new_item))
-    assert(inventory2.has_item_by_id("minimal_item_2"))
+    assert(inventory2.has_item_by_prototype_path("/minimal_item_2"))
 
 
 func test_transfer() -> void:
@@ -99,10 +99,12 @@ func test_serialize_json() -> void:
 
 
 func test_local_prototree() -> void:
-    var inv = Inventory.new()
-    inv.prototree_json = ProtoTree.new()
-    inv.prototree_json.add_prototype("asd")
-    assert(inv.create_and_add_item("/asd") != null)
+    var inv := Inventory.new()
+    var json := JSON.new()
+    var file := FileAccess.open("res://tests/data/prototree_basic.json", FileAccess.READ)
+    json.parse(file.get_as_text())
+    inv.prototree_json = json
+    assert(inv.create_and_add_item("/minimal_item") != null)
 
     var inv_data = inv.serialize()
     inv.reset()

@@ -98,7 +98,7 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
         WeightConstraint.KEY_WEIGHT
     ]
 
-    if item_1.prototype_id != item_2.prototype_id:
+    if item_1.prototype_path != item_2.prototype_path:
         return false
 
     for property in item_1.get_overridden_properties():

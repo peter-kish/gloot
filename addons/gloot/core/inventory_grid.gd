@@ -62,8 +62,8 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().add_item_at(item, position)
 
 
-func create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem:
-    return _constraint_manager.get_grid_constraint().create_and_add_item_at(prototype_id, position)
+func create_and_add_item_at(prototype_path: String, position: Vector2i) -> InventoryItem:
+    return _constraint_manager.get_grid_constraint().create_and_add_item_at(prototype_path, position)
 
 
 func get_item_at(position: Vector2i) -> InventoryItem:

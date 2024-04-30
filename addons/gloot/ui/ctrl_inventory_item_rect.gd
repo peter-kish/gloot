@@ -50,8 +50,8 @@ func _connect_item_signals(new_item: InventoryItem) -> void:
 
     if !new_item.prototree_changed.is_connected(_refresh):
         new_item.prototree_changed.connect(_refresh)
-    if !new_item.prototype_id_changed.is_connected(_refresh):
-        new_item.prototype_id_changed.connect(_refresh)
+    if !new_item.prototype_path_changed.is_connected(_refresh):
+        new_item.prototype_path_changed.connect(_refresh)
     if !new_item.property_changed.is_connected(_on_item_property_changed):
         new_item.property_changed.connect(_on_item_property_changed)
 
@@ -62,8 +62,8 @@ func _disconnect_item_signals() -> void:
 
     if item.prototree_changed.is_connected(_refresh):
         item.prototree_changed.disconnect(_refresh)
-    if item.prototype_id_changed.is_connected(_refresh):
-        item.prototype_id_changed.disconnect(_refresh)
+    if item.prototype_path_changed.is_connected(_refresh):
+        item.prototype_path_changed.disconnect(_refresh)
     if item.property_changed.is_connected(_on_item_property_changed):
         item.property_changed.disconnect(_on_item_property_changed)
 

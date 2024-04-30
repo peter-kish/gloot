@@ -274,7 +274,7 @@ func remove_all_items() -> void:
 
 func get_item_by_prototype_path(prototype_path: String) -> InventoryItem:
     for item in get_items():
-        if item.prototype_path == prototype_path:
+        if _is_item_at_path(item, prototype_path):
             return item
             
     return null
@@ -284,10 +284,20 @@ func get_items_by_prototype_path(prototype_path: String) -> Array[InventoryItem]
     var result: Array[InventoryItem] = []
 
     for item in get_items():
-        if item.prototype_path == prototype_path:
+        if _is_item_at_path(item, prototype_path):
             result.append(item)
             
     return result
+
+
+func _is_item_at_path(item: InventoryItem, path: String) -> bool:
+    var prototype := item.get_prototree().get_prototype(path)
+    if !is_instance_valid(prototype):
+        return false
+
+    var prototype_path := item.get_prototree().get_prototype(path).get_path()
+    var abs_item_path := item.get_prototype().get_path()
+    return abs_item_path.equal(prototype_path)
 
 
 func has_item_by_prototype_path(prototype_path: String) -> bool:
@@ -406,7 +416,7 @@ func deserialize(source: Dictionary) -> bool:
             var item = _get_item_script().new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
+            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_path)
     if source.has(KEY_CONSTRAINTS):
         _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 

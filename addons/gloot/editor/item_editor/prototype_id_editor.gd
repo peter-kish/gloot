@@ -30,7 +30,7 @@ func _on_prototype_activated(prototype: Prototype) -> void:
         Undoables.exec_item_undoable(item, "Set Item Prototype", func():
             var prototype_path := str(prototype.get_path())
             item.prototype_path = prototype_path
-            return item.prototype_path == prototype_path
+            return PrototypePath.str_paths_equal(item.prototype_path, prototype_path)
         )
     hide()
 

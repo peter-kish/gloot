@@ -67,7 +67,7 @@ func _on_item_prototree_changed(item: InventoryItem) -> void:
     _refresh_item_map()
 
 
-func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+func _on_item_prototype_path_changed(item: InventoryItem) -> void:
     _refresh_item_map()
 
 
@@ -213,10 +213,10 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
     return true
 
 
-func _get_prototype_size(prototype_id: String) -> Vector2i:
+func _get_prototype_size(prototype_path: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
     assert(inventory.prototree_json != null, "Inventory prototree is null!")
-    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_id, KEY_SIZE, Vector2i.ONE)
+    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_path, KEY_SIZE, Vector2i.ONE)
     return size
 
 
@@ -249,13 +249,13 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     return false
 
 
-func create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem:
+func create_and_add_item_at(prototype_path: String, position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
-    var item_rect := Rect2i(position, _get_prototype_size(prototype_id))
+    var item_rect := Rect2i(position, _get_prototype_size(prototype_path))
     if !rect_free(item_rect):
         return null
 
-    var item = inventory.create_and_add_item(prototype_id)
+    var item = inventory.create_and_add_item(prototype_path)
     if item == null:
         return null
 

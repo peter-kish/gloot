@@ -69,7 +69,7 @@ func get_prototype_property(path: Variant, property: String, default_value: Vari
     if has_prototype(path):
         var prototype = get_prototype(path)
         if !prototype._properties.is_empty() && prototype.has_property(property):
-            return prototype._properties[property]
+            return prototype.get_property(property)
     
     return default_value
 
@@ -87,13 +87,15 @@ func create_prototype(prototype_id: String) -> Prototype:
 
 func get_prototype(path) -> Prototype:
     path = _to_path(path)
+    if path.is_empty():
+        return null
     var prototype = self
     if path.is_absolute():
         prototype = _get_root()
     for i in range(path.get_name_count()):
-        if !prototype._prototypes.has(path.get_name(i)):
+        if !prototype._prototypes.has(str(path.get_name(i))):
             return null
-        prototype = prototype._prototypes[path.get_name(i)]
+        prototype = prototype._prototypes[str(path.get_name(i))]
     return prototype
 
 
@@ -153,15 +155,20 @@ func deserialize(json: JSON) -> bool:
 func _deserialize_from_dict(data: Dictionary) -> bool:
     # TODO: data verification
     if data.is_empty():
-        return false
+        return true
     if data.has(KEY_PROPERTIES):
         for property in data[KEY_PROPERTIES].keys():
             if typeof(data[KEY_PROPERTIES][property]) == TYPE_STRING:
-                set_property(property, str_to_var(data[KEY_PROPERTIES][property]))
+                var value = str_to_var(data[KEY_PROPERTIES][property])
+                if value == null:
+                    set_property(property, data[KEY_PROPERTIES][property])
+                else:
+                    set_property(property, value)
             else:
                 set_property(property, data[KEY_PROPERTIES][property])
     if data.has(KEY_PROTOTYPES):
         for prototype_id in data[KEY_PROTOTYPES].keys():
             var new_protototype := create_prototype(prototype_id)
-            new_protototype._deserialize_from_dict(data[KEY_PROTOTYPES][prototype_id])
+            if !new_protototype._deserialize_from_dict(data[KEY_PROTOTYPES][prototype_id]):
+                return false
     return true

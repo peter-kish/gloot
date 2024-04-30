@@ -3,10 +3,12 @@ extends RefCounted
 
 const DELIMITER = "/"
 var _path: PackedStringArray
-var _absolute: bool
+var _absolute: bool = false
 
 
 func _init(path: String) -> void:
+    if path.is_empty():
+        return
     _path = path.split(DELIMITER, false)
     _absolute = (path[0] == DELIMITER)
 
@@ -25,6 +27,24 @@ func get_name(idx: int) -> StringName:
 
 func is_empty() -> bool:
     return _path.is_empty()
+
+
+func equal(other: PrototypePath) -> bool:
+    if _path.size() != other._path.size():
+        return false
+    if _absolute != other._absolute:
+        return false
+
+    for i in range(_path.size()):
+        if _path[i] != other._path[i]:
+            return false
+    return true
+
+
+static func str_paths_equal(path1: String, path2: String) -> bool:
+    var p1 := PrototypePath.new(path1)
+    var p2 := PrototypePath.new(path2)
+    return p1.equal(p2)
 
 
 func _to_string() -> String:

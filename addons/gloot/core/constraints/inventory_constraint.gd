@@ -73,6 +73,6 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
 
 
 # Override this
-func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+func _on_item_prototype_path_changed(item: InventoryItem) -> void:
     pass
     

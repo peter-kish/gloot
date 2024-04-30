@@ -127,7 +127,7 @@ func test_serialize() -> void:
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item().prototree_json == expected_prototree_json)
-    assert(slot.get_item().prototype_path == expected_prototype_path)
+    assert(PrototypePath.str_paths_equal(slot.get_item().prototype_path, expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)
 
 
@@ -149,5 +149,5 @@ func test_serialize_json() -> void:
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item().prototree_json == expected_prototree_json)
-    assert(slot.get_item().prototype_path == expected_prototype_path)
+    assert(PrototypePath.str_paths_equal(slot.get_item().prototype_path, expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)

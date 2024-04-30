@@ -86,7 +86,7 @@ func test_create_and_add_item_at() -> void:
     assert(new_item)
     assert(inventory_3x3.get_item_count() == 1)
     assert(inventory_3x3.has_item(new_item))
-    assert(inventory_3x3.has_item_by_id("/item_1x1"))
+    assert(inventory_3x3.has_item_by_prototype_path("/item_1x1"))
     assert(inventory_3x3.get_item_position(new_item) == Vector2i(1, 1))
 
 

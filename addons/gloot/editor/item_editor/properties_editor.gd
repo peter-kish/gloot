@@ -62,7 +62,7 @@ func _get_dictionary() -> Dictionary:
     if !item.get_prototree().has_prototype(item.prototype_path):
         return {}
 
-    var result: Dictionary = item.get_prototree().get_prototype(item.prototype_id).duplicate()
+    var result: Dictionary = item.get_prototype().get_properties()
     for key in item.get_properties():
         result[key] = item.get_property(key)
     return result
@@ -95,7 +95,7 @@ func _get_remove_button_map() -> Dictionary:
     var dictionary: Dictionary = _get_dictionary()
     for key in dictionary.keys():
         result[key] = {}
-        if item.get_prototree().get_prototype(item.prototype_id).has_property(key):
+        if item.has_property(key):
             result[key]["text"] = ""
             result[key]["icon"] = EditorIcons.get_icon("Reload")
         else:

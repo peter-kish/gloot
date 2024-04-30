@@ -31,14 +31,16 @@ var _prototree := ProtoTree.new()
 
 @export var prototype_path: String :
     set(new_prototype_path):
-        if new_prototype_path == prototype_path:
+        if PrototypePath.str_paths_equal(new_prototype_path, prototype_path):
             return
-        if _prototree.is_empty() && !new_prototype_path.is_empty():
+        if prototree_json == null && !new_prototype_path.is_empty():
             return
-        if !_prototree.is_empty() && (!_prototree.has_prototype(new_prototype_path)):
+        if prototree_json != null && (!_prototree.has_prototype(new_prototype_path)):
             return
         _reset_properties()
         prototype_path = new_prototype_path
+        if prototree_json != null:
+            prototype_path = str(_prototree.get_prototype(prototype_path).get_path())
         prototype_path_changed.emit()
 
 @export var _properties: Dictionary
@@ -231,7 +233,7 @@ func is_property_overridden(property_name) -> bool:
 
 
 func reset() -> void:
-    _prototree.clear()
+    prototree_json = null
     prototype_path = ""
     _properties = {}
 

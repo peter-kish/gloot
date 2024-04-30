@@ -86,13 +86,13 @@ func _on_item_prototree_changed(item: InventoryItem) -> void:
         _grid_constraint._on_item_prototree_changed(item)
 
 
-func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+func _on_item_prototype_path_changed(item: InventoryItem) -> void:
     if _weight_constraint_enabled:
-        _weight_constraint._on_item_prototype_id_changed(item)
+        _weight_constraint._on_item_prototype_path_changed(item)
     if _stacks_constraint_enabled:
-        _stacks_constraint._on_item_prototype_id_changed(item)
+        _stacks_constraint._on_item_prototype_path_changed(item)
     if _grid_constraint_enabled:
-        _grid_constraint._on_item_prototype_id_changed(item)
+        _grid_constraint._on_item_prototype_path_changed(item)
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:

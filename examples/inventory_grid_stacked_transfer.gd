@@ -27,7 +27,7 @@ func _ready() -> void:
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:
     lbl_info.show()
-    lbl_info.text = item.prototype_id
+    lbl_info.text = item.get_title()
 
 
 func _on_item_mouse_exited(_item: InventoryItem) -> void:

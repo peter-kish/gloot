@@ -45,6 +45,7 @@ script = ExtResource("6")
 
 [node name="InventoryItemTests" type="Node" parent="."]
 script = ExtResource("10_sgu71")
+enabled = null
 
 [node name="InventoryStackedTests" type="Node" parent="."]
 script = ExtResource("3")
@@ -57,6 +58,7 @@ script = ExtResource("8_btq38")
 
 [node name="ItemSlotTests" type="Node" parent="."]
 script = ExtResource("14_3213w")
+enabled = null
 
 [node name="ItemRefSlotTests" type="Node" parent="."]
 script = ExtResource("14_4hmdq")
