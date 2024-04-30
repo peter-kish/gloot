@@ -6,7 +6,7 @@ var item_1x1: InventoryItem
 var item_2x2: InventoryItem
 var item_2x2_2: InventoryItem
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_grid.tres")
+const TEST_PROTOTREE = preload("res://tests/data/prototree_grid.json")
 
 
 func init_suite():
@@ -23,12 +23,12 @@ func init_suite():
 
 
 func init_test():
-    inventory_3x3 = create_inventory_grid_stacked(TEST_PROTOSET, Vector2i(3, 3))
-    inventory_3x3_2 = create_inventory_grid_stacked(TEST_PROTOSET, Vector2i(3, 3))
+    inventory_3x3 = create_inventory_grid_stacked(TEST_PROTOTREE, Vector2i(3, 3))
+    inventory_3x3_2 = create_inventory_grid_stacked(TEST_PROTOTREE, Vector2i(3, 3))
     
-    item_1x1 = create_item(TEST_PROTOSET, "item_1x1")
-    item_2x2 = create_item(TEST_PROTOSET, "item_2x2")
-    item_2x2_2 = create_item(TEST_PROTOSET, "item_2x2")
+    item_1x1 = create_item(TEST_PROTOTREE, "/item_1x1")
+    item_2x2 = create_item(TEST_PROTOTREE, "/item_2x2")
+    item_2x2_2 = create_item(TEST_PROTOTREE, "/item_2x2")
 
 
 func cleanup_test() -> void:
@@ -66,8 +66,8 @@ func test_add_item_automerge() -> void:
     assert(!inventory_3x3.has_item(item_2x2_2));
 
     item_2x2_2 = InventoryItem.new()
-    item_2x2_2.protoset = TEST_PROTOSET
-    item_2x2_2.prototype_id = "item_2x2"
+    item_2x2_2.protoset = TEST_PROTOTREE
+    item_2x2_2.prototype_id = "/item_2x2"
 
     # No stack space, no grid space
     assert(InventoryGridStacked.set_item_stack_size(item_2x2,

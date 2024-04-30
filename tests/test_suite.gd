@@ -44,38 +44,38 @@ func _run_tests():
         cleanup_test()
 
 
-func create_inventory(protoset: ItemProtoset) -> Inventory:
+func create_inventory(prototree_json: JSON) -> Inventory:
     var inventory = Inventory.new()
-    inventory.protoset = protoset
+    inventory.prototree_json = prototree_json
     return inventory
 
 
-func create_inventory_stacked(protoset: ItemProtoset, capacity: float) -> InventoryStacked:
+func create_inventory_stacked(prototree_json: JSON, capacity: float) -> InventoryStacked:
     var inventory = InventoryStacked.new()
-    inventory.protoset = protoset
+    inventory.prototree_json = prototree_json
     inventory.capacity = capacity
     return inventory
 
 
-func create_inventory_grid(protoset: ItemProtoset, size: Vector2i) -> InventoryGrid:
+func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> InventoryGrid:
     var inventory = InventoryGrid.new()
-    inventory.protoset = protoset
+    inventory.prototree_json = prototree_json
     inventory.size = size
     return inventory
 
 
-func create_inventory_grid_stacked(protoset: ItemProtoset, size: Vector2i) -> InventoryGridStacked:
+func create_inventory_grid_stacked(prototree_json: JSON, size: Vector2i) -> InventoryGridStacked:
     var inventory = InventoryGridStacked.new()
-    inventory.protoset = protoset
+    inventory.prototree_json = prototree_json
     inventory.size = size
     return inventory
 
 
 # Create an item with the given prototype ID from the given protoset
-func create_item(protoset: ItemProtoset, prototype_id: String) -> InventoryItem:
+func create_item(prototree_json: JSON, prototype_path: String) -> InventoryItem:
     var item = InventoryItem.new()
-    item.protoset = protoset
-    item.prototype_id = prototype_id
+    item.prototree_json = prototree_json
+    item.prototype_path = prototype_path
     return item
 
 

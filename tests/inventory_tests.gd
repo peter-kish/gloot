@@ -4,7 +4,7 @@ var inventory1: Inventory
 var inventory2: Inventory
 var item: InventoryItem
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
+const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
 
 func init_suite() -> void:
     tests = [
@@ -21,8 +21,8 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory1 = create_inventory(TEST_PROTOSET)
-    inventory2 = create_inventory(TEST_PROTOSET)
+    inventory1 = create_inventory(TEST_PROTOTREE)
+    inventory2 = create_inventory(TEST_PROTOTREE)
     item = inventory1.create_and_add_item("minimal_item")
 
 
@@ -100,7 +100,7 @@ func test_serialize_json() -> void:
 
 func test_local_protoset() -> void:
     var inv = Inventory.new()
-    inv.protoset = ItemProtoset.new()
+    inv.protoset = ProtoTree.new()
     inv.protoset.add_prototype("asd")
     assert(inv.create_and_add_item("asd") != null)
 

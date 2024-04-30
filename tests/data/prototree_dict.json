@@ -1,0 +1,12 @@
+{
+    "prototypes": {
+        "containing_dict": {
+            "properties": {
+                "dictionary": {
+                    "foo": "bar",
+                    "baz": 42
+                }
+            }
+        }
+    }
+}

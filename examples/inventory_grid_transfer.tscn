@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://jopigw4xplp4"]
+[gd_scene load_steps=7 format=3 uid="uid://jopigw4xplp4"]
 
-[ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
@@ -97,7 +96,6 @@ Use the 'Unequip' button to unequip it."
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
-protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -121,7 +119,6 @@ _serialized_format = {
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
-protoset = ExtResource("1")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -150,5 +147,4 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_273xl")
-protoset = ExtResource("1")
 _serialized_format = {}

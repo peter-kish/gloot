@@ -7,8 +7,8 @@ var item: InventoryItem
 var item_2: InventoryItem
 var stacks_constraint: StacksConstraint
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_stack.tres")
-const TEST_PROTOTYPE = "limited_stackable_item"
+const TEST_PROTOTREE = preload("res://tests/data/prototree_stacks.json")
+const TEST_PROTOTYPE_PATH = "/stackable_item/limited_stackable_item"
 
 
 func init_suite():
@@ -33,9 +33,9 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
-    item_2 = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
-    inventory = create_inventory(TEST_PROTOSET)
+    item = create_item(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
+    item_2 = create_item(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
+    inventory = create_inventory(TEST_PROTOTREE)
     inventory.enable_stacks_constraint()
     stacks_constraint = inventory.get_stacks_constraint()
 
@@ -45,11 +45,11 @@ func cleanup_test() -> void:
 
 
 func test_get_prototype_max_stack_size() -> void:
-    assert(StacksConstraint.get_prototype_max_stack_size(item.protoset, TEST_PROTOTYPE) == 5)
+    assert(StacksConstraint.get_prototype_max_stack_size(item.protoset, TEST_PROTOTYPE_PATH) == 5)
 
 
 func test_get_prototype_stack_size() -> void:
-    assert(StacksConstraint.get_prototype_stack_size(item.protoset, TEST_PROTOTYPE) == 5)
+    assert(StacksConstraint.get_prototype_stack_size(item.protoset, TEST_PROTOTYPE_PATH) == 5)
 
 
 func test_get_item_max_stack_size() -> void:

@@ -1,7 +1,7 @@
 extends TestSuite
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
-const TEST_PROTOTYPE_ID = "minimal_item"
+const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
+const TEST_PROTOTYPE_PATH = "/minimal_item"
 
 var slot: ItemSlot
 var slot2: ItemSlot
@@ -25,19 +25,19 @@ func init_suite():
 
 func init_test() -> void:
     item = InventoryItem.new()
-    item.protoset = TEST_PROTOSET
-    item.prototype_id = TEST_PROTOTYPE_ID
+    item.prototree_json = TEST_PROTOTREE
+    item.prototype_path = TEST_PROTOTYPE_PATH
     item2 = InventoryItem.new()
-    item2.protoset = TEST_PROTOSET
-    item2.prototype_id = TEST_PROTOTYPE_ID
+    item2.prototree_json = TEST_PROTOTREE
+    item2.prototype_path = TEST_PROTOTYPE_PATH
     inventory = Inventory.new()
-    inventory.protoset = TEST_PROTOSET
+    inventory.prototree_json = TEST_PROTOTREE
     inventory.add_item(item)
     inventory.add_item(item2)
     slot = ItemSlot.new()
-    slot.protoset = TEST_PROTOSET
+    slot.prototree_json = TEST_PROTOTREE
     slot2 = ItemSlot.new()
-    slot2.protoset = TEST_PROTOSET
+    slot2.prototree_json = TEST_PROTOTREE
 
 
 func cleanup_test() -> void:

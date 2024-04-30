@@ -10,12 +10,12 @@ var inventory2: Inventory
 var item: InventoryItem
 var constraint_manager: ConstraintManager
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
-const TEST_PROTOTYPE = "minimal_item"
-const TEST_PROTOSET_WS = preload("res://tests/data/item_definitions_stack.tres")
-const TEST_PROTOTYPE_WS = "minimal_item"
-const TEST_PROTOSET_G = preload("res://tests/data/item_definitions_grid.tres")
-const TEST_PROTOTYPE_G = "item_2x2"
+const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
+const TEST_PROTOTYPE_PATH = "/minimal_item"
+const TEST_PROTOTREE_WS = preload("res://tests/data/prototree_stacks.json")
+const TEST_PROTOTYPE_PATH_WS = "/minimal_item"
+const TEST_PROTOTREE_G = preload("res://tests/data/prototree_grid.json")
+const TEST_PROTOTYPE_PATH_G = "/item_2x2"
 
 
 func init_suite():
@@ -40,9 +40,9 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = create_item(TEST_PROTOSET, TEST_PROTOTYPE)
-    inventory = create_inventory(TEST_PROTOSET)
-    inventory2 = create_inventory(TEST_PROTOSET)
+    item = create_item(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
+    inventory = create_inventory(TEST_PROTOTREE)
+    inventory2 = create_inventory(TEST_PROTOTREE)
     constraint_manager = inventory._constraint_manager
 
 
@@ -63,9 +63,9 @@ func test_has_space_for() -> void:
 
 
 func test_w_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_weight_constraint(10.0)
     assert(constraint_manager.get_weight_constraint() != null)
@@ -83,9 +83,9 @@ func test_w_has_space_for() -> void:
 
 
 func test_s_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_stacks_constraint()
     assert(constraint_manager.get_stacks_constraint() != null)
@@ -105,9 +105,9 @@ func test_s_has_space_for() -> void:
 
 
 func test_g_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    item.protoset = TEST_PROTOSET_G
-    item.prototype_id = TEST_PROTOTYPE_G
+    inventory.protoset = TEST_PROTOTREE_G
+    item.protoset = TEST_PROTOTREE_G
+    item.prototype_id = TEST_PROTOTYPE_PATH_G
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var grid_constraint = constraint_manager.get_grid_constraint()
@@ -127,9 +127,9 @@ func test_g_has_space_for() -> void:
 
 
 func test_ws_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()
@@ -157,9 +157,9 @@ func test_ws_has_space_for() -> void:
 
 
 func test_wg_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     constraint_manager.enable_weight_constraint(10.0)
@@ -183,9 +183,9 @@ func test_wg_has_space_for() -> void:
 
 
 func test_sg_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
@@ -212,9 +212,9 @@ func test_sg_has_space_for() -> void:
 
 
 func test_wsg_has_space_for() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    item.protoset = TEST_PROTOSET_WS
-    item.prototype_id = TEST_PROTOTYPE_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    item.protoset = TEST_PROTOTREE_WS
+    item.prototype_id = TEST_PROTOTYPE_PATH_WS
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()
@@ -244,9 +244,9 @@ func test_wsg_has_space_for() -> void:
 
 
 func test_g_enforce_constraints() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    item.protoset = TEST_PROTOSET_G
-    item.prototype_id = TEST_PROTOTYPE_G
+    inventory.protoset = TEST_PROTOTREE_G
+    item.protoset = TEST_PROTOTREE_G
+    item.prototype_id = TEST_PROTOTYPE_PATH_G
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     var grid_constraint = constraint_manager.get_grid_constraint()
@@ -271,9 +271,9 @@ func test_g_enforce_constraints() -> void:
 
 
 func test_wg_enforce_constraints() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    item.protoset = TEST_PROTOSET_G
-    item.prototype_id = TEST_PROTOTYPE_G
+    inventory.protoset = TEST_PROTOTREE_G
+    item.protoset = TEST_PROTOTREE_G
+    item.prototype_id = TEST_PROTOTYPE_PATH_G
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
@@ -303,7 +303,7 @@ func test_wg_enforce_constraints() -> void:
 
 
 func test_sg_enforce_constraints() -> void:
-    inventory.protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOTREE_G
 
     constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
@@ -312,7 +312,7 @@ func test_sg_enforce_constraints() -> void:
     assert(stacks_constraint != null)
     assert(grid_constraint != null)
 
-    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
     # Test cases:
@@ -329,8 +329,8 @@ func test_sg_enforce_constraints() -> void:
 
     for data in test_data:
         var test_item := InventoryItem.new()
-        test_item.protoset = TEST_PROTOSET_G
-        test_item.prototype_id = TEST_PROTOTYPE_G
+        test_item.protoset = TEST_PROTOTREE_G
+        test_item.prototype_id = TEST_PROTOTYPE_PATH_G
 
         grid_constraint.size = data.input.inv_size
         StacksConstraint.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
@@ -345,9 +345,9 @@ func test_sg_enforce_constraints() -> void:
 
 
 func test_wsg_enforce_constraints() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    item.protoset = TEST_PROTOSET_G
-    item.prototype_id = TEST_PROTOTYPE_G
+    inventory.protoset = TEST_PROTOTREE_G
+    item.protoset = TEST_PROTOTREE_G
+    item.prototype_id = TEST_PROTOTYPE_PATH_G
 
     constraint_manager.enable_stacks_constraint()
     constraint_manager.enable_weight_constraint(10.0)
@@ -359,7 +359,7 @@ func test_wsg_enforce_constraints() -> void:
     assert(weight_constraint != null)
     assert(grid_constraint != null)
 
-    var new_item = inventory.create_and_add_item(TEST_PROTOTYPE_G)
+    var new_item = inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
     # Test cases:
@@ -408,8 +408,8 @@ func test_wsg_enforce_constraints() -> void:
 
     for data in test_data:
         var test_item := InventoryItem.new()
-        test_item.protoset = TEST_PROTOSET_G
-        test_item.prototype_id = TEST_PROTOTYPE_G
+        test_item.protoset = TEST_PROTOTREE_G
+        test_item.prototype_id = TEST_PROTOTYPE_PATH_G
 
         grid_constraint.size = data.input.inv_size
         StacksConstraint.set_item_max_stack_size(new_item, data.input.new_item_max_stack_size)
@@ -425,8 +425,8 @@ func test_wsg_enforce_constraints() -> void:
 
 
 func test_ws_transfer_autosplit() -> void:
-    inventory.protoset = TEST_PROTOSET_WS
-    inventory2.protoset = TEST_PROTOSET_WS
+    inventory.protoset = TEST_PROTOTREE_WS
+    inventory2.protoset = TEST_PROTOTREE_WS
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()
@@ -464,8 +464,8 @@ func test_ws_transfer_autosplit() -> void:
     ]
 
     for data in test_data:
-        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_WS)
-        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_WS)
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_WS)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_PATH_WS)
 
         inventory2.get_weight_constraint().capacity = data.input.dst_capacity
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
@@ -481,8 +481,8 @@ func test_ws_transfer_autosplit() -> void:
 
 
 func test_sg_transfer_autosplit() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    inventory2.protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOTREE_G
+    inventory2.protoset = TEST_PROTOTREE_G
 
     constraint_manager.enable_grid_constraint(Vector2i(3, 3))
     constraint_manager.enable_stacks_constraint()
@@ -521,8 +521,8 @@ func test_sg_transfer_autosplit() -> void:
     ]
 
     for data in test_data:
-        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
-        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_PATH_G)
 
         inventory2.get_grid_constraint().size = data.input.dst_inv_size
         assert(StacksConstraint.set_item_stack_size(src_item, data.input.src_stack_size))
@@ -547,8 +547,8 @@ func test_sg_transfer_autosplit() -> void:
 
     
 func test_wsg_transfer_autosplit() -> void:
-    inventory.protoset = TEST_PROTOSET_G
-    inventory2.protoset = TEST_PROTOSET_G
+    inventory.protoset = TEST_PROTOTREE_G
+    inventory2.protoset = TEST_PROTOTREE_G
 
     constraint_manager.enable_weight_constraint(10.0)
     constraint_manager.enable_stacks_constraint()
@@ -597,8 +597,8 @@ func test_wsg_transfer_autosplit() -> void:
     ]
 
     for data in test_data:
-        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_G)
-        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_G)
+        var src_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+        var dst_item := inventory2.create_and_add_item(TEST_PROTOTYPE_PATH_G)
 
         inventory2.get_grid_constraint().size = data.input.dst_inv_size
         inventory2.get_weight_constraint().capacity = data.input.dst_inv_capacity

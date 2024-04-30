@@ -4,7 +4,7 @@ var inventory: Inventory
 var slot: ItemSlot
 var item: InventoryItem
 
-const TEST_PROTOSET = preload("res://tests/data/item_definitions_basic.tres")
+const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
 
 func init_suite() -> void:
     tests = [
@@ -24,9 +24,9 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory = create_inventory(TEST_PROTOSET)
+    inventory = create_inventory(TEST_PROTOTREE)
     slot = ItemSlot.new()
-    slot.protoset = TEST_PROTOSET
+    slot.protoset = TEST_PROTOTREE
     slot.remember_source_inventory = false
     item = inventory.create_and_add_item("minimal_item")
 
@@ -50,10 +50,10 @@ func test_get_item_slot() -> void:
 
 
 func test_swap() -> void:
-    var inventory2 = create_inventory(TEST_PROTOSET)
+    var inventory2 = create_inventory(TEST_PROTOTREE)
     var item2 = inventory2.create_and_add_item("minimal_item")
     var slot2 = ItemSlot.new()
-    slot2.protoset = TEST_PROTOSET
+    slot2.protoset = TEST_PROTOTREE
     slot2.remember_source_inventory = false
 
     # Swap items between two inventories
@@ -110,15 +110,8 @@ func test_set_property() -> void:
 
 
 func test_references() -> void:
-    var protoset := ItemProtoset.new()
-    protoset.add_prototype("containing_dict")
-    protoset.set_prototype_property("containing_dict", "dictionary", {
-        "foo": "bar",
-        "baz": 42
-    })
-
     inventory.remove_item(item)
-    item.protoset = protoset
+    item.protoset = preload("res://tests/data/prototree_dict.json")
     var dict: Dictionary = item.get_property("dictionary")
     assert(dict != null)
     assert(dict.has("foo"))
