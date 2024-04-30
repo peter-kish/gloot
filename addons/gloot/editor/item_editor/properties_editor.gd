@@ -7,7 +7,6 @@ const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN
 const COLOR_INVALID = Color.RED
-var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID]
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"
@@ -50,7 +49,6 @@ func _refresh() -> void:
     _dict_editor.dictionary = _get_dictionary()
     _dict_editor.color_map = _get_color_map()
     _dict_editor.remove_button_map = _get_remove_button_map()
-    _dict_editor.immutable_keys = IMMUTABLE_KEYS
     _dict_editor.refresh()
 
 
@@ -58,13 +56,13 @@ func _get_dictionary() -> Dictionary:
     if item == null:
         return {}
 
-    if !item.protoset:
+    if item.get_prototree().is_empty():
         return {}
 
-    if !item.protoset.has_prototype(item.prototype_id):
+    if !item.get_prototree().has_prototype(item.prototype_path):
         return {}
 
-    var result: Dictionary = item.protoset.get_prototype(item.prototype_id).duplicate()
+    var result: Dictionary = item.get_prototree().get_prototype(item.prototype_id).duplicate()
     for key in item.get_properties():
         result[key] = item.get_property(key)
     return result
@@ -74,7 +72,7 @@ func _get_color_map() -> Dictionary:
     if item == null:
         return {}
 
-    if !item.protoset:
+    if item.get_prototree().is_empty():
         return {}
 
     var result: Dictionary = {}
@@ -82,8 +80,6 @@ func _get_color_map() -> Dictionary:
     for key in dictionary.keys():
         if item.is_property_overridden(key):
             result[key] = COLOR_OVERRIDDEN
-        if key == ItemProtoset.KEY_ID && !item.protoset.has_prototype(dictionary[key]):
-            result[key] = COLOR_INVALID
 
     return result
             
@@ -92,20 +88,20 @@ func _get_remove_button_map() -> Dictionary:
     if item == null:
         return {}
 
-    if !item.protoset:
+    if item.get_prototree().is_empty():
         return {}
 
     var result: Dictionary = {}
     var dictionary: Dictionary = _get_dictionary()
     for key in dictionary.keys():
         result[key] = {}
-        if item.protoset.get_prototype(item.prototype_id).has(key):
+        if item.get_prototree().get_prototype(item.prototype_id).has_property(key):
             result[key]["text"] = ""
             result[key]["icon"] = EditorIcons.get_icon("Reload")
         else:
             result[key]["text"] = ""
             result[key]["icon"] = EditorIcons.get_icon("Remove")
 
-        result[key]["disabled"] = (not item.is_property_overridden(key)) or (key in IMMUTABLE_KEYS)
+        result[key]["disabled"] = not item.is_property_overridden(key)
     return result
 

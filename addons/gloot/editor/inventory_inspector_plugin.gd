@@ -1,6 +1,5 @@
 extends EditorInspectorPlugin
 
-const EditProtosetButton = preload("res://addons/gloot/editor/protoset_editor/edit_protoset_button.tscn")
 const InventoryInspector = preload("res://addons/gloot/editor/inventory_editor/inventory_inspector.tscn")
 const ItemSlotInspector = preload("res://addons/gloot/editor/item_slot_editor/item_slot_inspector.tscn")
 const ItemRefSlotButton = preload("res://addons/gloot/editor/item_slot_editor/item_ref_slot_button.gd")
@@ -10,8 +9,7 @@ func _can_handle(object: Object) -> bool:
     return (object is Inventory) || \
             (object is InventoryItem) || \
             (object is ItemSlot) || \
-            (object is ItemRefSlot) || \
-            (object is ItemProtoset)
+            (object is ItemRefSlot)
 
 
 func _parse_begin(object: Object) -> void:
@@ -23,10 +21,6 @@ func _parse_begin(object: Object) -> void:
         var item_slot_inspector := ItemSlotInspector.instantiate()
         item_slot_inspector.init(object as ItemSlot)
         add_custom_control(item_slot_inspector)
-    if object is ItemProtoset:
-        var edit_protoset_button := EditProtosetButton.instantiate()
-        edit_protoset_button.init(object as ItemProtoset)
-        add_custom_control(edit_protoset_button)
 
 
 func _parse_property(object: Object,

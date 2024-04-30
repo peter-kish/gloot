@@ -64,6 +64,17 @@ const KEY_NAME: String = "name"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
+func get_prototree() -> ProtoTree:
+    return _prototree
+
+
+func get_prototype() -> Prototype:
+    # TODO: Store the prototype instead of getting it on each call.
+    if _prototree.is_empty():
+        return null
+    return _prototree.get_prototype(prototype_path)
+
+
 func _reset_properties() -> void:
     if _prototree.is_empty() || prototype_path.is_empty():
         _properties = {}

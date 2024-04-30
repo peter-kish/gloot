@@ -8,7 +8,7 @@ signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
-const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
@@ -372,7 +372,9 @@ func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
     if !inventory.rect_free(Rect2i(move_position, inventory.get_item_size(item)), item):
         return false
     if Engine.is_editor_hint():
-        GlootUndoRedo.move_inventory_item(inventory, item, move_position)
+        Undoables.exec_inventory_undoable([inventory], "Move Inventory Item", func(): 
+            return inventory.move_item_to(item, move_position)
+        )
         return true
     inventory.move_item_to(item, move_position)
     return true
@@ -387,7 +389,9 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
         return false
 
     if Engine.is_editor_hint():
-        GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
+        Undoables.exec_inventory_undoable([inventory], "Merge Inventory Items", func(): 
+            return (inventory as InventoryGridStacked).join(item_dst, item_src)
+        )
     else:
         (inventory as InventoryGridStacked).join(item_dst, item_src)
     return true
@@ -399,7 +403,15 @@ func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
         return false
 
     if Engine.is_editor_hint():
-        GlootUndoRedo.swap_inventory_items(item, item2)
+        var inventories: Array[Inventory]
+        if is_instance_valid(item.get_inventory()):
+            inventories.append(item.get_inventory())
+        if is_instance_valid(item2.get_inventory()):
+            inventories.append(item2.get_inventory())
+        Undoables.exec_inventory_undoable(inventories, "Swap Inventory Items", func():
+            InventoryItem.swap(item, item2)
+            return true
+        )
     else:
         InventoryItem.swap(item, item2)
     return true

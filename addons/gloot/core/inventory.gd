@@ -48,6 +48,10 @@ const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
+func get_prototree() -> ProtoTree:
+    return _prototree
+
+
 func _disconnect_prototree_json_signals() -> void:
     if !is_instance_valid(prototree_json):
         return
