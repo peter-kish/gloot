@@ -3,39 +3,43 @@
 extends RefCounted
 class_name InventoryItem
 
-signal protoset_changed
-signal prototype_id_changed
+signal prototree_changed
+signal prototype_path_changed
 signal property_changed(property_name)
 
-@export var protoset: ItemProtoset :
-    set(new_protoset):
-        if new_protoset == protoset:
+@export var prototree_json: JSON :
+    set(new_prototree_json):
+        if new_prototree_json == prototree_json:
             return
 
-        if (_inventory != null) && (new_protoset != _inventory.protoset):
+        if (_inventory != null) && (new_prototree_json != _inventory.prototree_json):
             return
 
-        protoset = new_protoset
+        prototree_json = new_prototree_json
+        _prototree.deserialize(prototree_json)
 
-        # Reset the prototype ID (pick the first prototype from the protoset)
-        if protoset && protoset._prototypes && protoset._prototypes.keys().size() > 0:
-            prototype_id = protoset._prototypes.keys()[0]
+        # Reset the prototype ID (pick the first prototype from the prototree)
+        var prototypes := _prototree.get_prototypes()
+        if prototypes.size() > 0:
+            prototype_path = "/%s" % prototypes[0].get_id()
         else:
-            prototype_id = ""
+            prototype_path = ""
 
-        protoset_changed.emit()
+        prototree_changed.emit()
+        
+var _prototree := ProtoTree.new()
 
-@export var prototype_id: String :
-    set(new_prototype_id):
-        if new_prototype_id == prototype_id:
+@export var prototype_path: String :
+    set(new_prototype_path):
+        if new_prototype_path == prototype_path:
             return
-        if protoset == null && !new_prototype_id.is_empty():
+        if _prototree.is_empty() && !new_prototype_path.is_empty():
             return
-        if (protoset != null) && (!protoset.has_prototype(new_prototype_id)):
+        if !_prototree.is_empty() && (!_prototree.has_prototype(new_prototype_path)):
             return
         _reset_properties()
-        prototype_id = new_prototype_id
-        prototype_id_changed.emit()
+        prototype_path = new_prototype_path
+        prototype_path_changed.emit()
 
 @export var _properties: Dictionary
 
@@ -45,11 +49,11 @@ var _inventory: Inventory :
             return
         _inventory = new_inventory
         if _inventory:
-            protoset = _inventory.protoset
+            prototree_json = _inventory.prototree_json
 var _item_slot: ItemSlot
 
-const KEY_PROTOSET: String = "protoset"
-const KEY_PROTOTYE_ID: String = "prototype_id"
+const KEY_PROTOTREE: String = "prototree"
+const KEY_PROTOTYE_PATH: String = "prototype_path"
 const KEY_PROPERTIES: String = "properties"
 const KEY_TYPE: String = "type"
 const KEY_VALUE: String = "value"
@@ -61,7 +65,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 func _reset_properties() -> void:
-    if !protoset || prototype_id.is_empty():
+    if _prototree.is_empty() || prototype_path.is_empty():
         _properties = {}
         return
 
@@ -71,8 +75,8 @@ func _reset_properties() -> void:
 
 func duplicate() -> InventoryItem:
     var result := InventoryItem.new()
-    result.protoset = protoset
-    result.prototype_id = prototype_id
+    result.prototree_json = prototree_json
+    result.prototype_path = prototype_path
     result._properties = _properties.duplicate()
     return result
 
@@ -153,30 +157,28 @@ static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> b
 func has_property(property_name: String) -> bool:
     if _properties.has(property_name):
         return true
-    if protoset && protoset.has_prototype_property(prototype_id, property_name):
+    if _prototree.has_prototype_property(prototype_path, property_name):
         return true
     return false
 
 
 func get_property(property_name: String, default_value = null) -> Variant:
-    # Note: The protoset editor still doesn't support arrays and dictionaries,
-    # but those can still be added via JSON definitions or via code.
     if _properties.has(property_name):
         var value = _properties[property_name]
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
         return value
 
-    if protoset && protoset.has_prototype_property(prototype_id, property_name):
-        var value = protoset.get_prototype_property(prototype_id, property_name, default_value)
+    if _prototree.has_prototype_property(prototype_path, property_name):
+        var value = _prototree.get_prototype_property(prototype_path, property_name, default_value)
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
         return value
         
     if _properties.has(property_name):
         return _properties[property_name]
-    if protoset:
-        return protoset.get_prototype_property(prototype_id, property_name, default_value)
+    if _prototree.get_prototypes().is_empty():
+        return _prototree.get_prototype_property(prototype_path, property_name, default_value)
     return default_value
 
 
@@ -184,8 +186,8 @@ func set_property(property_name: String, value) -> void:
     if get_property(property_name) == value:
         return
 
-    if protoset && protoset.has_prototype_property(prototype_id, property_name):
-        if protoset.get_prototype_property(prototype_id, property_name) == value && _properties.has(property_name):
+    if _prototree.has_prototype_property(prototype_path, property_name):
+        if _prototree.get_prototype_property(prototype_path, property_name) == value && _properties.has(property_name):
             _properties.erase(property_name)
             property_changed.emit(property_name)
             return
@@ -210,7 +212,7 @@ func get_overridden_properties() -> Array:
 
 
 func get_properties() -> Array:
-    return _properties.keys() + protoset.get_prototype(prototype_id).keys()
+    return _properties.keys() + _prototree.root().get_prototype(prototype_path).keys()
 
 
 func is_property_overridden(property_name) -> bool:
@@ -218,16 +220,16 @@ func is_property_overridden(property_name) -> bool:
 
 
 func reset() -> void:
-    protoset = null
-    prototype_id = ""
+    _prototree.clear()
+    prototype_path = ""
     _properties = {}
 
 
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
-    result[KEY_PROTOTYE_ID] = prototype_id
+    result[KEY_PROTOTREE] = Inventory._serialize_prototree_json(prototree_json)
+    result[KEY_PROTOTYE_PATH] = prototype_path
     if !_properties.is_empty():
         result[KEY_PROPERTIES] = {}
         for property_name in _properties.keys():
@@ -249,15 +251,15 @@ func _serialize_property(property_name: String) -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
+    if !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOTYE_PATH, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()
     
-    protoset = Inventory._deserialize_item_protoset(source[KEY_PROTOSET])
-    prototype_id = source[KEY_PROTOTYE_ID]
+    prototree_json = Inventory._deserialize_prototree_json(source[KEY_PROTOTREE])
+    prototype_path = source[KEY_PROTOTYE_PATH]
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():
             var value = _deserialize_property(source[KEY_PROPERTIES][key])
@@ -291,8 +293,8 @@ func get_texture() -> Texture2D:
 
 
 func get_title() -> String:
-    var title = get_property(KEY_NAME, prototype_id)
+    var title = get_property(KEY_NAME, prototype_path)
     if !(title is String):
-        title = prototype_id
+        title = _prototree.get_prototype(prototype_path).get_id()
 
     return title

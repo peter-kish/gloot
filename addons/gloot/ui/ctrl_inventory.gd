@@ -68,8 +68,8 @@ func _connect_inventory_signals() -> void:
         inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.connect(_on_item_property_changed)
-    if !inventory.item_protoset_changed.is_connected(_refresh_item):
-        inventory.item_protoset_changed.connect(_refresh_item)
+    if !inventory.item_prototree_changed.is_connected(_refresh_item):
+        inventory.item_prototree_changed.connect(_refresh_item)
     if !inventory.item_prototype_id_changed.is_connected(_refresh_item):
         inventory.item_prototype_id_changed.connect(_refresh_item)
 
@@ -82,8 +82,8 @@ func _disconnect_inventory_signals() -> void:
         inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.disconnect(_on_item_property_changed)
-    if inventory.item_protoset_changed.is_connected(_refresh_item):
-        inventory.item_protoset_changed.disconnect(_refresh_item)
+    if inventory.item_prototree_changed.is_connected(_refresh_item):
+        inventory.item_prototree_changed.disconnect(_refresh_item)
     if inventory.item_prototype_id_changed.is_connected(_refresh_item):
         inventory.item_prototype_id_changed.disconnect(_refresh_item)
 

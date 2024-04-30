@@ -6,10 +6,10 @@ class_name Inventory
 signal item_added(item)
 signal item_removed(item)
 signal item_property_changed(item, property)
-signal item_protoset_changed(item)
-signal item_prototype_id_changed(item)
+signal item_prototree_changed(item)
+signal item_prototype_path_changed(item)
 signal contents_changed
-signal protoset_changed
+signal prototree_json_changed
 signal constraint_enabled(constraint)
 signal constraint_disabled(constraint)
 signal pre_constraint_disabled(constraint)
@@ -21,16 +21,19 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 
 enum Constraint {WEIGHT, STACKS, GRID}
 
-@export var protoset: ItemProtoset:
-    set(new_protoset):
-        if new_protoset == protoset:
+@export var prototree_json: JSON :
+    set(new_prototree_json):
+        if new_prototree_json == prototree_json:
             return
         clear()
-        _disconnect_protoset_signals()
-        protoset = new_protoset
-        _connect_protoset_signals()
-        protoset_changed.emit()
+        _disconnect_prototree_json_signals()
+        prototree_json = new_prototree_json
+        _prototree.deserialize(prototree_json)
+        _connect_prototree_json_signals()
+        prototree_json_changed.emit()
         update_configuration_warnings()
+
+var _prototree := ProtoTree.new()
 
 var _items: Array[InventoryItem] = []
 var _constraint_manager: ConstraintManager = null
@@ -39,26 +42,26 @@ var _serialized_format: Dictionary:
         _serialized_format = new_serialized_format
 
 const KEY_NODE_NAME: String = "node_name"
-const KEY_PROTOSET: String = "protoset"
+const KEY_PROTOTREE: String = "prototree"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
-func _disconnect_protoset_signals() -> void:
-    if !is_instance_valid(protoset):
+func _disconnect_prototree_json_signals() -> void:
+    if !is_instance_valid(prototree_json):
         return
-    protoset.changed.disconnect(_on_protoset_changed)
+    prototree_json.changed.disconnect(_on_prototree_json_changed)
 
 
-func _connect_protoset_signals() -> void:
-    if !is_instance_valid(protoset):
+func _connect_prototree_json_signals() -> void:
+    if !is_instance_valid(prototree_json):
         return
-    protoset.changed.connect(_on_protoset_changed)
+    prototree_json.changed.connect(_on_prototree_json_changed)
 
 
-func _on_protoset_changed() -> void:
-    protoset_changed.emit()
+func _on_prototree_json_changed() -> void:
+    prototree_json_changed.emit()
 
     
 func _get_property_list():
@@ -77,9 +80,9 @@ func _update_serialized_format() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if protoset == null:
+    if prototree_json == null:
         return PackedStringArray([
-                "This inventory node has no protoset. Set the 'protoset' field to be able to " \
+                "This inventory node has no prototree. Set the 'prototree_json' field to be able to " \
                 + "populate the inventory with items."])
     return PackedStringArray()
 
@@ -148,19 +151,19 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.protoset_changed.is_connected(_on_item_protoset_changed):
-        item.protoset_changed.connect(_on_item_protoset_changed.bind(item))
-    if !item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
-        item.prototype_id_changed.connect(_on_item_prototype_id_changed.bind(item))
+    if !item.prototree_changed.is_connected(_on_item_prototree_changed):
+        item.prototree_changed.connect(_on_item_prototree_changed.bind(item))
+    if !item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
+        item.prototype_path_changed.connect(_on_item_prototype_path_changed.bind(item))
     if !item.property_changed.is_connected(_on_item_property_changed):
         item.property_changed.connect(_on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.protoset_changed.is_connected(_on_item_protoset_changed):
-        item.protoset_changed.disconnect(_on_item_protoset_changed)
-    if item.prototype_id_changed.is_connected(_on_item_prototype_id_changed):
-        item.prototype_id_changed.disconnect(_on_item_prototype_id_changed)
+    if item.prototree_changed.is_connected(_on_item_prototree_changed):
+        item.prototree_changed.disconnect(_on_item_prototree_changed)
+    if item.prototype_path_changed.is_connected(_on_item_prototype_path_changed):
+        item.prototype_path_changed.disconnect(_on_item_prototype_path_changed)
     if item.property_changed.is_connected(_on_item_property_changed):
         item.property_changed.disconnect(_on_item_property_changed)
 
@@ -171,16 +174,16 @@ func _on_item_property_changed(property: String, item: InventoryItem) -> void:
     item_property_changed.emit(item, property)
 
 
-func _on_item_protoset_changed(item: InventoryItem) -> void:
+func _on_item_prototree_changed(item: InventoryItem) -> void:
     _update_serialized_format()
-    _constraint_manager._on_item_protoset_changed(item)
-    item_protoset_changed.emit(item)
+    _constraint_manager._on_item_prototree_changed(item)
+    item_prototree_changed.emit(item)
 
 
-func _on_item_prototype_id_changed(item: InventoryItem) -> void:
+func _on_item_prototype_path_changed(item: InventoryItem) -> void:
     _update_serialized_format()
-    _constraint_manager._on_item_prototype_id_changed(item)
-    item_prototype_id_changed.emit(item)
+    _constraint_manager._on_item_prototype_path_changed(item)
+    item_prototype_path_changed.emit(item)
 
 
 func get_items() -> Array[InventoryItem]:
@@ -230,10 +233,10 @@ func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 
-func create_and_add_item(prototype_id: String) -> InventoryItem:
+func create_and_add_item(prototype_path: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
-    item.protoset = protoset
-    item.prototype_id = prototype_id
+    item.prototree_json = prototree_json
+    item.prototype_path = prototype_path
     if add_item(item):
         return item
     else:
@@ -265,26 +268,26 @@ func remove_all_items() -> void:
     _update_serialized_format()
 
 
-func get_item_by_id(prototype_id: String) -> InventoryItem:
+func get_item_by_prototype_path(prototype_path: String) -> InventoryItem:
     for item in get_items():
-        if item.prototype_id == prototype_id:
+        if item.prototype_path == prototype_path:
             return item
             
     return null
 
 
-func get_items_by_id(prototype_id: String) -> Array[InventoryItem]:
+func get_items_by_prototype_path(prototype_path: String) -> Array[InventoryItem]:
     var result: Array[InventoryItem] = []
 
     for item in get_items():
-        if item.prototype_id == prototype_id:
+        if item.prototype_path == prototype_path:
             result.append(item)
             
     return result
 
 
-func has_item_by_id(prototype_id: String) -> bool:
-    return get_item_by_id(prototype_id) != null
+func has_item_by_prototype_path(prototype_path: String) -> bool:
+    return get_item_by_prototype_path(prototype_path) != null
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
@@ -342,7 +345,7 @@ func _on_item_moved(item: InventoryItem) -> void:
 
 func reset() -> void:
     clear()
-    protoset = null
+    prototree_json = null
     _constraint_manager.reset()
 
 
@@ -356,11 +359,11 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    if protoset == null || _constraint_manager == null:
+    if prototree_json == null || _constraint_manager == null:
         return result
 
     result[KEY_NODE_NAME] = name as String
-    result[KEY_PROTOSET] = _serialize_item_protoset(protoset)
+    result[KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
     result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
@@ -370,28 +373,28 @@ func serialize() -> Dictionary:
     return result
 
 
-static func _serialize_item_protoset(protoset: ItemProtoset) -> String:
-    if !is_instance_valid(protoset):
+static func _serialize_prototree_json(prototree_json: JSON) -> String:
+    if !is_instance_valid(prototree_json):
         return ""
-    elif protoset.resource_path.is_empty():
-        return protoset.json_data
+    elif prototree_json.resource_path.is_empty():
+        return prototree_json.stringify(prototree_json.data)
     else:
-        return protoset.resource_path
+        return prototree_json.resource_path
 
 
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
         !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
-    protoset = null
+    prototree_json = null
 
     if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
         name = source[KEY_NODE_NAME]
-    protoset = _deserialize_item_protoset(source[KEY_PROTOSET])
+    prototree_json = _deserialize_prototree_json(source[KEY_PROTOTREE])
     # TODO: Check return value:
     if source.has(KEY_ITEMS):
         var items = source[KEY_ITEMS]
@@ -406,13 +409,13 @@ func deserialize(source: Dictionary) -> bool:
     return true
 
 
-static func _deserialize_item_protoset(data: String) -> ItemProtoset:
+static func _deserialize_prototree_json(data: String) -> JSON:
     if data.is_empty():
         return null
     elif data.begins_with("res://"):
         return load(data)
     else:
-        var protoset := ItemProtoset.new()
-        protoset.json_data = data
-        return protoset
+        var prototree := JSON.new()
+        prototree.parse(data)
+        return prototree
 

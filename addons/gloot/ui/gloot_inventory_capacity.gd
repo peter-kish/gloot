@@ -30,7 +30,7 @@ func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
         inventory.ready.connect(_refresh)
     inventory.contents_changed.connect(_refresh)
-    inventory.protoset_changed.connect(_refresh)
+    inventory.prototree_changed.connect(_refresh)
     if inventory.get_weight_constraint():
         inventory.get_weight_constraint().capacity_changed.connect(_refresh)
         inventory.get_weight_constraint().occupied_space_changed.connect(_refresh)
@@ -40,7 +40,7 @@ func _disconnect_inventory_signals() -> void:
     if inventory.ready.is_connected(_refresh):
         inventory.ready.disconnect(_refresh)
     inventory.contents_changed.disconnect(_refresh)
-    inventory.protoset_changed.disconnect(_refresh)
+    inventory.prototree_changed.disconnect(_refresh)
     if inventory.get_weight_constraint():
         inventory.get_weight_constraint().capacity_changed.disconnect(_refresh)
         inventory.get_weight_constraint().occupied_space_changed.disconnect(_refresh)

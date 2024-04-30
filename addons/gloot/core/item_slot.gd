@@ -3,19 +3,19 @@
 class_name ItemSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
-signal protoset_changed
+signal prototree_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
-@export var protoset: ItemProtoset:
-    set(new_protoset):
-        if new_protoset == protoset:
+@export var prototree_json: JSON:
+    set(new_prototree_json):
+        if new_prototree_json == prototree_json:
             return
         if _item:
             _item = null
-        protoset = new_protoset
-        protoset_changed.emit()
+        prototree_json = new_prototree_json
+        prototree_changed.emit()
         update_configuration_warnings()
 @export var remember_source_inventory: bool = true
 
@@ -49,9 +49,9 @@ func _ready() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if protoset == null:
+    if prototree_json == null:
         return PackedStringArray([
-                "This item slot has no protoset. Set the 'protoset' field to be able to equip items."])
+                "This item slot has no prototree. Set the 'prototree_json' field to be able to equip items."])
     return PackedStringArray()
 
 
@@ -108,10 +108,10 @@ func get_item() -> InventoryItem:
 
 
 func can_hold_item(item: InventoryItem) -> bool:
-    assert(protoset != null, "Item protoset not set!")
+    assert(prototree_json != null, "Item prototree not set!")
     if item == null:
         return false
-    if protoset != item.protoset:
+    if prototree_json != item.prototree_json:
         return false
 
     return true

@@ -63,7 +63,7 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
         _refresh_item_map()
 
 
-func _on_item_protoset_changed(item: InventoryItem) -> void:
+func _on_item_prototree_changed(item: InventoryItem) -> void:
     _refresh_item_map()
 
 
@@ -215,8 +215,8 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
 
 func _get_prototype_size(prototype_id: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
-    assert(inventory.protoset != null, "Inventory protoset is null!")
-    var size: Vector2i = inventory.protoset.get_prototype_property(prototype_id, KEY_SIZE, Vector2i.ONE)
+    assert(inventory.prototree_json != null, "Inventory prototree is null!")
+    var size: Vector2i = inventory._prototree.get_prototype_property(prototype_id, KEY_SIZE, Vector2i.ONE)
     return size
 
 

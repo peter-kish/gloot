@@ -63,7 +63,7 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
 
 
 # Override this
-func _on_item_protoset_changed(item: InventoryItem) -> void:
+func _on_item_prototree_changed(item: InventoryItem) -> void:
     pass
 
 
