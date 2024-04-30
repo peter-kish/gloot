@@ -3,11 +3,11 @@
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="1_cc2bv"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="1_ekglp"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_pqnv1"]
-[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="3_0q423"]
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="3_tihgd"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="6_kj6w0"]
+[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_qv00e"]
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_capacity.gd" id="6_rmuq7"]
-[ext_resource type="Resource" uid="uid://c1fip2r65xx12" path="res://tests/data/item_definitions_stack.tres" id="7_bva1c"]
+[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="8_yp1gc"]
 
 [node name="gloot_inventory_test" type="Control"]
 layout_mode = 3
@@ -26,7 +26,8 @@ offset_bottom = 504.0
 layout_mode = 2
 size_flags_vertical = 3
 item_count = 2
-item_0/text = "minimal_item"
+item_0/text = "item 1"
+item_0/icon = ExtResource("3_tihgd")
 item_1/text = "item 2"
 item_1/icon = ExtResource("1_cc2bv")
 script = ExtResource("1_ekglp")
@@ -36,9 +37,10 @@ inventory = NodePath("../../Inventory")
 layout_mode = 2
 size_flags_vertical = 3
 item_count = 2
-item_0/text = "minimal_item (x3)"
-item_1/text = "big_item"
-item_1/icon = ExtResource("3_tihgd")
+item_0/text = "stackable_item (x10)"
+item_0/icon = ExtResource("1_cc2bv")
+item_1/text = "stackable_item (x10)"
+item_1/icon = ExtResource("1_cc2bv")
 script = ExtResource("1_ekglp")
 inventory = NodePath("../../InventoryStacked")
 
@@ -50,24 +52,24 @@ inventory = NodePath("../../InventoryStacked")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_pqnv1")
-protoset = ExtResource("3_0q423")
+prototree_json = ExtResource("6_qv00e")
 _serialized_format = {
 "constraints": {},
 "items": [{
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "minimal_item"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
 }, {
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item2"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1/item_2"
 }],
 "node_name": "Inventory",
-"protoset": "res://tests/data/item_definitions_basic.tres"
+"prototree": "res://tests/data/prototree_basic.json"
 }
 
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource("6_kj6w0")
 capacity = 30.0
-protoset = ExtResource("7_bva1c")
+prototree_json = ExtResource("8_yp1gc")
 _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
@@ -76,18 +78,12 @@ _serialized_format = {
 }
 },
 "items": [{
-"properties": {
-"stack_size": {
-"type": 2,
-"value": "3"
-}
-},
-"protoset": "res://tests/data/item_definitions_stack.tres",
-"prototype_id": "minimal_item"
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/stackable_item"
 }, {
-"protoset": "res://tests/data/item_definitions_stack.tres",
-"prototype_id": "big_item"
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/stackable_item"
 }],
 "node_name": "InventoryStacked",
-"protoset": "res://tests/data/item_definitions_stack.tres"
+"prototree": "res://tests/data/prototree_stacks.json"
 }

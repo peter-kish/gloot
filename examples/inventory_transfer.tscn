@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
-[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
 [node name="InventoryTransfer" type="Control"]
@@ -91,37 +91,37 @@ text = ">>>"
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
-protoset = ExtResource("3")
+prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
 "constraints": {},
 "items": [{
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item1"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
 }, {
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item2"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1/item_2"
 }],
 "node_name": "Inventory",
-"protoset": "res://tests/data/item_definitions_basic.tres"
+"prototree": "res://tests/data/prototree_basic.json"
 }
 
 [node name="Inventory2" type="Node" parent="."]
 script = ExtResource("2")
-protoset = ExtResource("3")
+prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
 "constraints": {},
 "items": [{
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item1"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
 }, {
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item2"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1/item_2"
 }],
 "node_name": "Inventory2",
-"protoset": "res://tests/data/item_definitions_basic.tres"
+"prototree": "res://tests/data/prototree_basic.json"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_v60ia")
-protoset = ExtResource("3")
+prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {}

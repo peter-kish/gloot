@@ -21,6 +21,8 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Tree" type="Tree" parent="MarginContainer"]
+[node name="PrototreeViewer" type="Tree" parent="MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+hide_root = true
 script = ExtResource("2_a6cnj")

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_stacked.gd" id="2"]
-[ext_resource type="Resource" uid="uid://c1fip2r65xx12" path="res://tests/data/item_definitions_stack.tres" id="3"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="4"]
+[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="4_uov1j"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -25,7 +25,7 @@ default_item_icon = ExtResource("4")
 [node name="InventoryStacked" type="Node" parent="."]
 script = ExtResource("1")
 capacity = 20.0
-protoset = ExtResource("3")
+prototree_json = ExtResource("4_uov1j")
 _serialized_format = {
 "constraints": {
 "stacks_constraint": {},
@@ -34,12 +34,12 @@ _serialized_format = {
 }
 },
 "items": [{
-"protoset": "res://tests/data/item_definitions_stack.tres",
-"prototype_id": "minimal_item"
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/minimal_item"
 }, {
-"protoset": "res://tests/data/item_definitions_stack.tres",
-"prototype_id": "stackable_item"
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/stackable_item"
 }],
 "node_name": "InventoryStacked",
-"protoset": "res://tests/data/item_definitions_stack.tres"
+"prototree": "res://tests/data/prototree_stacks.json"
 }

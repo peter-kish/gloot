@@ -6,9 +6,9 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_grid.gd" id="5_gr16f"]
 [ext_resource type="StyleBox" uid="uid://b5mwcxjup04pf" path="res://addons/gloot/ui/default_grid_field.tres" id="6_01am2"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="6_wdx0v"]
-[ext_resource type="Resource" uid="uid://ddrmqwl3guset" path="res://tests/data/item_definitions_grid.tres" id="7_7k1ec"]
 [ext_resource type="StyleBox" uid="uid://duhrvm4a6ylfc" path="res://addons/gloot/ui/default_grid_selection.tres" id="7_874l1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="8_6sua0"]
+[ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_wecto"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r7srh"]
 bg_color = Color(0.219608, 0.219608, 0.219608, 1)
@@ -143,7 +143,7 @@ text = "Split"
 [node name="InventoryGrid" type="Node" parent="."]
 script = ExtResource("6_wdx0v")
 size = Vector2i(5, 5)
-protoset = ExtResource("7_7k1ec")
+prototree_json = ExtResource("8_wecto")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -154,47 +154,49 @@ _serialized_format = {
 }
 },
 "items": [{
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_1x1"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
 }, {
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_2x2"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryGrid",
-"protoset": "res://tests/data/item_definitions_grid.tres"
+"prototree": "res://tests/data/prototree_grid.json"
 }
 
 [node name="InventoryGridStacked" type="Node" parent="."]
 script = ExtResource("8_6sua0")
 size = Vector2i(5, 5)
-protoset = ExtResource("7_7k1ec")
+prototree_json = ExtResource("8_wecto")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
 "item_positions": {
-"1": "Vector2i(0, 1)",
-"2": "Vector2i(0, 3)"
+"1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
 },
 "stacks_constraint": {}
 },
 "items": [{
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_1x1"
+"properties": {
+"stack_size": {
+"type": 2,
+"value": "4"
+}
+},
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
 }, {
 "properties": {
 "stack_size": {
 "type": 2,
-"value": "3"
+"value": "4"
 }
 },
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_2x2"
-}, {
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_2x2"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryGridStacked",
-"protoset": "res://tests/data/item_definitions_grid.tres"
+"prototree": "res://tests/data/prototree_grid.json"
 }

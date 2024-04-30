@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://jopigw4xplp4"]
+[gd_scene load_steps=8 format=3 uid="uid://jopigw4xplp4"]
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory_grid.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="6_h2hjt"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_273xl"]
 
 [node name="InventoryGridTransfer" type="Control"]
@@ -96,6 +97,7 @@ Use the 'Unequip' button to unequip it."
 [node name="InventoryGridLeft" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
+prototree_json = ExtResource("6_h2hjt")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -106,19 +108,20 @@ _serialized_format = {
 }
 },
 "items": [{
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_1x1"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
 }, {
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_2x2"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryGridLeft",
-"protoset": "res://tests/data/item_definitions_grid.tres"
+"prototree": "res://tests/data/prototree_grid.json"
 }
 
 [node name="InventoryGridRight" type="Node" parent="."]
 script = ExtResource("2")
 size = Vector2i(5, 5)
+prototree_json = ExtResource("6_h2hjt")
 _serialized_format = {
 "constraints": {
 "grid_constraint": {
@@ -129,14 +132,14 @@ _serialized_format = {
 }
 },
 "items": [{
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_1x1"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
 }, {
-"protoset": "res://tests/data/item_definitions_grid.tres",
-"prototype_id": "item_2x2"
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryGridRight",
-"protoset": "res://tests/data/item_definitions_grid.tres"
+"prototree": "res://tests/data/prototree_grid.json"
 }
 
 [node name="LblInfo" type="Label" parent="."]
@@ -147,4 +150,5 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("8_273xl")
+prototree_json = ExtResource("6_h2hjt")
 _serialized_format = {}

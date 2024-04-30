@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dnmcyf6p4gtgp"]
 
-[ext_resource type="Resource" uid="uid://nnxjxxu47mtj" path="res://tests/data/item_definitions_basic.tres" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="3"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="4"]
+[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_yg38y"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -13,26 +13,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventory" type="VBoxContainer" parent="."]
+[node name="CtrlInventory" type="VBoxContainer" parent="." node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 302.0
 offset_bottom = 220.0
 script = ExtResource("3")
-inventory_path = NodePath("../Inventory")
+inventory = NodePath("../Inventory")
 default_item_icon = ExtResource("4")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
-protoset = ExtResource("1")
+prototree_json = ExtResource("4_yg38y")
 _serialized_format = {
 "constraints": {},
-"protoset": "res://tests/data/item_definitions_basic.tres",
 "items": [{
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item1"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/minimal_item"
 }, {
-"protoset": "res://tests/data/item_definitions_basic.tres",
-"prototype_id": "item2"
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
 }],
-"node_name": "Inventory"
+"node_name": "Inventory",
+"prototree": "res://tests/data/prototree_basic.json"
 }
