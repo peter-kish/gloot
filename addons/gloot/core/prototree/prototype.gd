@@ -59,7 +59,6 @@ func has_prototype(path) -> bool:
 
 
 func has_prototype_property(path: Variant, property: String) -> bool:
-    # TODO: Test
     if !has_prototype(path):
         return false
 
@@ -69,14 +68,15 @@ func has_prototype_property(path: Variant, property: String) -> bool:
 func get_prototype_property(path: Variant, property: String, default_value: Variant = null) -> Variant:
     if has_prototype(path):
         var prototype = get_prototype(path)
-        if !prototype._properties.is_empty() && prototype.has(property):
+        if !prototype._properties.is_empty() && prototype.has_property(property):
             return prototype._properties[property]
     
     return default_value
 
 
 func create_prototype(prototype_id: String) -> Prototype:
-    # TODO: Consider using a property path as input
+    # TODO: Consider using a prototype path as input
+    # TODO: Consider using a prototype as input
     if has_prototype(PrototypePath.new(prototype_id)):
         return null
     var new_prototype := Prototype.new(prototype_id)
@@ -98,7 +98,6 @@ func get_prototype(path) -> Prototype:
 
 
 func get_path() -> PrototypePath:
-    # TODO: Test
     return PrototypePath.new(_get_str_path())
 
 

@@ -8,6 +8,10 @@ func get_root() -> Prototype:
     return _root
 
 
+func create_prototype(prototype_id: String) -> Prototype:
+    return _root.create_prototype(prototype_id)
+
+
 func get_prototype(path) -> Prototype:
     return _root.get_prototype(path)
 
@@ -33,7 +37,6 @@ func clear() -> void:
 
 
 func is_empty() -> bool:
-    # TODO: Test
     return _root.get_properties().is_empty() && _root.get_prototypes().is_empty()
 
 

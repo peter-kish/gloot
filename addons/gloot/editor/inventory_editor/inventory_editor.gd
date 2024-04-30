@@ -29,13 +29,13 @@ func connect_inventory_signals():
         inventory.get_weight_constraint().capacity_changed.connect(_refresh)
     if inventory.get_grid_constraint():
         inventory.get_grid_constraint().size_changed.connect(_refresh)
-    inventory.protoset_changed.connect(_refresh)
+    inventory.prototree_json_changed.connect(_refresh)
     inventory.constraint_enabled.connect(_on_constraint_toggled)
     inventory.constraint_disabled.connect(_on_constraint_toggled)
 
-    if !inventory.protoset:
+    if !inventory.prototree_json:
         return
-    inventory.protoset.changed.connect(_refresh)
+    inventory.prototree_json.changed.connect(_refresh)
 
 
 func disconnect_inventory_signals():
@@ -46,13 +46,13 @@ func disconnect_inventory_signals():
         inventory.get_weight_constraint().capacity_changed.disconnect(_refresh)
     if inventory.get_grid_constraint():
         inventory.get_grid_constraint().size_changed.disconnect(_refresh)
-    inventory.protoset_changed.disconnect(_refresh)
+    inventory.prototree_json_changed.disconnect(_refresh)
     inventory.constraint_enabled.disconnect(_on_constraint_toggled)
     inventory.constraint_disabled.disconnect(_on_constraint_toggled)
 
-    if !inventory.protoset:
+    if !inventory.prototree_json:
         return
-    inventory.protoset.changed.disconnect(_refresh)
+    inventory.prototree_json.changed.disconnect(_refresh)
 
 
 func _on_constraint_toggled(constraint: int) -> void:
@@ -60,7 +60,7 @@ func _on_constraint_toggled(constraint: int) -> void:
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || inventory == null || inventory.protoset == null:
+    if !is_inside_tree() || inventory == null || inventory.prototree_json == null:
         return
         
     # Remove the inventory control, if present
@@ -73,7 +73,7 @@ func _refresh() -> void:
     _inventory_container = _create_inventory_container()
     %ScrollContainer.add_child(_inventory_container)
 
-    %ChoiceFilter.set_values(inventory.protoset._prototypes.keys())
+    %PrototreeViewer.prototree_json = inventory.prototree_json
 
 
 func _create_inventory_container() -> Control:
@@ -123,21 +123,18 @@ func _on_inventory_item_context_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
-    %ChoiceFilter.pick_icon = EditorIcons.get_icon("Add")
-    %ChoiceFilter.filter_icon = EditorIcons.get_icon("Search")
     %BtnEdit.icon = EditorIcons.get_icon("Edit")
     %BtnRemove.icon = EditorIcons.get_icon("Remove")
 
-    %ChoiceFilter.choice_picked.connect(_on_prototype_id_picked)
+    %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
     %BtnEdit.pressed.connect(_on_btn_edit)
     %BtnRemove.pressed.connect(_on_btn_remove)
     _refresh()
 
 
-func _on_prototype_id_picked(index: int) -> void:
-    var prototype_id = %ChoiceFilter.values[index]
+func _on_prototype_activated(prototype: Prototype) -> void:
     Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
-        return (inventory.create_and_add_item(prototype_id) != null)
+        return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
     
 

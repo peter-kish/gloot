@@ -6,17 +6,11 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
 const POPUP_SIZE = Vector2i(800, 300)
 
-@onready var hsplit_container = $HSplitContainer
-@onready var prototype_id_filter = $HSplitContainer/ChoiceFilter
-@onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
-@onready var btn_clear = $HSplitContainer/VBoxContainer/HBoxContainer/BtnClear
-@onready var ctrl_item_slot = $HSplitContainer/VBoxContainer/CtrlItemSlot
-
 var item_slot: ItemSlot :
     set(new_item_slot):
         disconnect_item_slot_signals()
         item_slot = new_item_slot
-        ctrl_item_slot.item_slot = item_slot
+        %CtrlItemSlot.item_slot = item_slot
         connect_item_slot_signals()
 
         _refresh()
@@ -31,10 +25,10 @@ func connect_item_slot_signals():
     item_slot.item_equipped.connect(_refresh)
     item_slot.cleared.connect(_refresh)
 
-    if !item_slot.protoset:
+    if !item_slot.prototree_json:
         return
-    item_slot.protoset.changed.connect(_refresh)
-    item_slot.protoset_changed.connect(_refresh)
+    item_slot.prototree_json.changed.connect(_refresh)
+    item_slot.prototree_json_changed.connect(_refresh)
 
 
 func disconnect_item_slot_signals():
@@ -44,10 +38,10 @@ func disconnect_item_slot_signals():
     item_slot.item_equipped.disconnect(_refresh)
     item_slot.cleared.disconnect(_refresh)
 
-    if !item_slot.protoset:
+    if !item_slot.prototree_json:
         return
-    item_slot.protoset.changed.disconnect(_refresh)
-    item_slot.protoset_changed.disconnect(_refresh)
+    item_slot.prototree_json.changed.disconnect(_refresh)
+    item_slot.prototree_json_changed.disconnect(_refresh)
 
 
 func init(item_slot_: ItemSlot) -> void:
@@ -55,25 +49,22 @@ func init(item_slot_: ItemSlot) -> void:
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || item_slot == null || item_slot.protoset == null:
+    if !is_inside_tree() || item_slot == null || item_slot.prototree_json == null:
         return
-    prototype_id_filter.set_values(item_slot.protoset._prototypes.keys())
+    %PrototreeViewer.prototree_json = item_slot.prototree_json
 
 
 func _ready() -> void:
     _apply_editor_settings()
 
-    prototype_id_filter.pick_icon = EditorIcons.get_icon("Add")
-    prototype_id_filter.filter_icon = EditorIcons.get_icon("Search")
-    btn_edit.icon = EditorIcons.get_icon("Edit")
-    btn_clear.icon = EditorIcons.get_icon("Remove")
+    %BtnEdit.icon = EditorIcons.get_icon("Edit")
+    %BtnClear.icon = EditorIcons.get_icon("Remove")
 
-    prototype_id_filter.choice_picked.connect(_on_prototype_id_picked)
-    btn_edit.pressed.connect(_on_btn_edit)
-    btn_clear.pressed.connect(_on_btn_clear)
+    %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
+    %BtnEdit.pressed.connect(_on_btn_edit)
+    %BtnClear.pressed.connect(_on_btn_clear)
 
-    ctrl_item_slot.item_slot = item_slot
-    _refresh()
+    %CtrlItemSlot.item_slot = item_slot
 
 
 func _apply_editor_settings() -> void:
@@ -81,11 +72,10 @@ func _apply_editor_settings() -> void:
     custom_minimum_size.y = control_height
 
 
-func _on_prototype_id_picked(index: int) -> void:
-    var prototype_id = prototype_id_filter.values[index]
+func _on_prototype_activated(prototype: Prototype) -> void:
     var item := InventoryItem.new()
-    item.protoset = item_slot.protoset
-    item.prototype_id = prototype_id
+    item.prototree_json = item_slot.prototree_json
+    item.prototype_path = str(prototype.get_path())
     Undoables.exec_slot_undoable(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )

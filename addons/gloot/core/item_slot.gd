@@ -15,10 +15,12 @@ const KEY_ITEM: String = "item"
         if _item:
             _item = null
         prototree_json = new_prototree_json
+        _prototree.deserialize(prototree_json)
         prototree_changed.emit()
         update_configuration_warnings()
 @export var remember_source_inventory: bool = true
 
+var _prototree := ProtoTree.new()
 var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem :
     set(new_item):
