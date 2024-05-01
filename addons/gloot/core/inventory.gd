@@ -249,7 +249,7 @@ func remove_all_items() -> void:
     _update_serialized_format()
 
 
-func get_item_by_prototype_path(prototype_path: String) -> InventoryItem:
+func get_item_with_prototype_path(prototype_path: String) -> InventoryItem:
     for item in get_items():
         if _is_item_at_path(item, prototype_path):
             return item
@@ -257,7 +257,7 @@ func get_item_by_prototype_path(prototype_path: String) -> InventoryItem:
     return null
 
 
-func get_items_by_prototype_path(prototype_path: String) -> Array[InventoryItem]:
+func get_items_with_prototype_path(prototype_path: String) -> Array[InventoryItem]:
     var result: Array[InventoryItem] = []
 
     for item in get_items():
@@ -277,8 +277,8 @@ func _is_item_at_path(item: InventoryItem, path: String) -> bool:
     return abs_item_path.equal(prototype_path)
 
 
-func has_item_by_prototype_path(prototype_path: String) -> bool:
-    return get_item_by_prototype_path(prototype_path) != null
+func has_item_with_prototype_path(prototype_path: String) -> bool:
+    return get_item_with_prototype_path(prototype_path) != null
 
 
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
