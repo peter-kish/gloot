@@ -4,9 +4,9 @@ extends Control
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 
-@onready var panel = $Panel
-@onready var panel2 = $Panel2
-@onready var dragable: CtrlDragable = $Dragable
+@onready var panel = %Panel
+@onready var panel2 = %Panel2
+@onready var dragable: CtrlDragable = %Dragable
 
 
 # Called when the node enters the scene tree for the first time.

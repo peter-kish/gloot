@@ -3,7 +3,7 @@
 class_name CtrlItemSlot
 extends Control
 
-const CtrlInventoryRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
@@ -94,7 +94,7 @@ var item_slot: ItemSlotBase :
         
         _refresh()
 var _hbox_container: HBoxContainer
-var _ctrl_inventory_item_rect: CtrlInventoryRect
+var _ctrl_inventory_item_rect: CtrlInventoryItemRect
 var _label: Label
 var _ctrl_drop_zone: CtrlDropZone
 
@@ -144,7 +144,7 @@ func _ready():
     add_child(_hbox_container)
     _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
-    _ctrl_inventory_item_rect = CtrlInventoryRect.new()
+    _ctrl_inventory_item_rect = CtrlInventoryItemRect.new()
     _ctrl_inventory_item_rect.visible = item_texture_visible
     _ctrl_inventory_item_rect.size_flags_horizontal = SIZE_EXPAND_FILL
     _ctrl_inventory_item_rect.size_flags_vertical = SIZE_EXPAND_FILL
@@ -228,6 +228,11 @@ func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
 
 func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
     _ctrl_drop_zone.deactivate()
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        _ctrl_drop_zone.deactivate()
 
 
 func _refresh() -> void:

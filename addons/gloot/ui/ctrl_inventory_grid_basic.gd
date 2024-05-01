@@ -117,6 +117,11 @@ func _ready() -> void:
     _queue_refresh()
 
 
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        _ctrl_drop_zone.deactivate()
+
+
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
