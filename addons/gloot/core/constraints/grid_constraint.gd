@@ -63,10 +63,6 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
         _refresh_item_map()
 
 
-func _on_item_prototype_path_changed(item: InventoryItem) -> void:
-    _refresh_item_map()
-
-
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     var inv1 = item1.get_inventory()
     var inv2 = item2.get_inventory()

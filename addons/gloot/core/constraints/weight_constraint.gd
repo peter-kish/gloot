@@ -51,10 +51,6 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
         _calculate_occupied_space()
 
 
-func _on_item_prototype_path_changed(item: InventoryItem) -> void:
-    _calculate_occupied_space()
-
-
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     return _can_swap(item1, item2) && _can_swap(item2, item1)
 

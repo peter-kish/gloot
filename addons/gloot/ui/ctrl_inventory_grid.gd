@@ -180,10 +180,6 @@ func _connect_inventory_signals() -> void:
         inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.connect(_on_item_property_changed)
-    if !inventory.item_prototree_changed.is_connected(_refresh_item):
-        inventory.item_prototree_changed.connect(_refresh_item)
-    if !inventory.item_prototype_path_changed.is_connected(_refresh_item):
-        inventory.item_prototype_path_changed.connect(_refresh_item)
     if !inventory.size_changed.is_connected(_queue_refresh):
         inventory.size_changed.connect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
@@ -201,10 +197,6 @@ func _disconnect_inventory_signals() -> void:
         inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.disconnect(_on_item_property_changed)
-    if inventory.item_prototree_changed.is_connected(_refresh_item):
-        inventory.item_prototree_changed.disconnect(_refresh_item)
-    if inventory.item_prototype_path_changed.is_connected(_refresh_item):
-        inventory.item_prototype_path_changed.disconnect(_refresh_item)
     if inventory.size_changed.is_connected(_queue_refresh):
         inventory.size_changed.disconnect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
@@ -214,11 +206,7 @@ func _disconnect_inventory_signals() -> void:
         inventory.constraint_enabled.disconnect(_on_constraint_enabled)
 
 
-func _on_item_property_changed(item: InventoryItem, _property: String) -> void:
-    _refresh_item(item)
-
-
-func _refresh_item(_item: InventoryItem) -> void:
+func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
     _queue_refresh()
 
 

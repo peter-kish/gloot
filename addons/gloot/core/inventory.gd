@@ -6,8 +6,6 @@ class_name Inventory
 signal item_added(item)
 signal item_removed(item)
 signal item_property_changed(item, property)
-signal item_prototree_changed(item)
-signal item_prototype_path_changed(item)
 signal contents_changed
 signal prototree_json_changed
 signal constraint_enabled(constraint)

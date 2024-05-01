@@ -105,10 +105,6 @@ func _connect_inventory_signals() -> void:
         inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.connect(_on_item_property_changed)
-    if !inventory.item_prototree_changed.is_connected(_on_item_modified):
-        inventory.item_prototree_changed.connect(_on_item_modified)
-    if !inventory.item_prototype_path_changed.is_connected(_on_item_modified):
-        inventory.item_prototype_path_changed.connect(_on_item_modified)
     if !inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.connect(_on_inventory_resized)
     if !inventory.item_removed.is_connected(_on_item_removed):
@@ -123,10 +119,6 @@ func _disconnect_inventory_signals() -> void:
         inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.disconnect(_on_item_property_changed)
-    if inventory.item_prototree_changed.is_connected(_on_item_modified):
-        inventory.item_prototree_changed.disconnect(_on_item_modified)
-    if inventory.item_prototype_path_changed.is_connected(_on_item_modified):
-        inventory.item_prototype_path_changed.disconnect(_on_item_modified)
     if inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.disconnect(_on_inventory_resized)
     if inventory.item_removed.is_connected(_on_item_removed):
@@ -134,10 +126,6 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
-    _queue_refresh()
-
-
-func _on_item_modified(_item: InventoryItem) -> void:
     _queue_refresh()
 
 
