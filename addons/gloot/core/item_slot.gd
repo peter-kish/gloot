@@ -1,9 +1,11 @@
 @tool
 @icon("res://addons/gloot/images/icon_item_slot.svg")
 class_name ItemSlot
-extends "res://addons/gloot/core/item_slot_base.gd"
+extends Node
 
 signal prototree_json_changed
+signal item_equipped
+signal cleared
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"

@@ -78,6 +78,7 @@ layout_mode = 2
 [node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
 inventory = NodePath("../../../../../InventoryGridStackedLeft")
@@ -107,6 +108,7 @@ layout_mode = 2
 [node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
 inventory = NodePath("../../../../../InventoryGridStackedRight")

@@ -71,7 +71,7 @@ static func _set_item(item: InventoryItem, data: Dictionary) -> void:
     item.deserialize(data)
 
 
-static func exec_slot_undoable(slot: ItemSlotBase, action_name: String, callable: Callable) -> bool:
+static func exec_slot_undoable(slot: ItemSlot, action_name: String, callable: Callable) -> bool:
     var undo_redo_manager = _get_undo_redo_manager()
     if undo_redo_manager == null:
         return callable.call()
@@ -90,5 +90,5 @@ static func exec_slot_undoable(slot: ItemSlotBase, action_name: String, callable
     return true
 
 
-static func _set_slot(slot: ItemSlotBase, data: Dictionary) -> void:
+static func _set_slot(slot: ItemSlot, data: Dictionary) -> void:
     slot.deserialize(data)

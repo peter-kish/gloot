@@ -8,7 +8,7 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
-@export var item_slot: ItemSlotBase :
+@export var item_slot: ItemSlot :
     set(new_item_slot):
         if new_item_slot == item_slot:
             return
