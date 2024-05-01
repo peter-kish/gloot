@@ -185,9 +185,6 @@ func _join_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
 func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
     if item_slot.get_item() == null:
         return false
-    if item_slot is ItemRefSlot:
-        # No support for swapping (planning to deprecate ItemRefSlot)
-        return false
 
     return InventoryItem.swap(item1, item2)
 

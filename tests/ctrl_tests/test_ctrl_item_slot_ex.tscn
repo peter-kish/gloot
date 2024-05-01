@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot_ex.gd" id="3"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="5"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="5_pdba3"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="6_d71rj"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="7"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
@@ -50,7 +50,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_basic.json"
 }
 
-[node name="ItemSlot" type="Node" parent="." node_paths=PackedStringArray("inventory")]
-script = ExtResource("4")
-_equipped_item = 0
-inventory = NodePath("../Inventory")
+[node name="ItemSlot" type="Node" parent="."]
+script = ExtResource("6_d71rj")
+prototree_json = ExtResource("5_pdba3")
+_serialized_format = {
+"item": {
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
+}
+}

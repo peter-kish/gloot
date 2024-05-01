@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="3"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_ref_slot.gd" id="4"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_1rf0i"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="5_ct3sj"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -16,13 +16,12 @@ grow_vertical = 2
 
 [node name="CtrlItemSlot" type="HBoxContainer" parent="." node_paths=PackedStringArray("item_slot")]
 layout_mode = 0
-offset_right = 57.0
+offset_right = 4.0
 offset_bottom = 23.0
 script = ExtResource("3")
 item_slot = NodePath("../ItemSlot")
 default_item_icon = ExtResource("5")
 label_visible = false
-icon_stretch_mode = 4
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
@@ -40,7 +39,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_basic.json"
 }
 
-[node name="ItemSlot" type="Node" parent="." node_paths=PackedStringArray("inventory")]
-script = ExtResource("4")
-_equipped_item = 0
-inventory = NodePath("../Inventory")
+[node name="ItemSlot" type="Node" parent="."]
+script = ExtResource("5_ct3sj")
+prototree_json = ExtResource("4_1rf0i")
+_serialized_format = {
+"item": {
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/item1"
+}
+}
