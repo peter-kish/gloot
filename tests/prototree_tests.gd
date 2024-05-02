@@ -111,3 +111,5 @@ func deserialize_test() -> void:
     assert(!prototree.is_empty())
     assert(prototree.get_root().has_prototype("item1"))
     var item1 := prototree.get_root().get_prototype("item1")
+    assert(item1.get_property("name") == "item 1")
+    assert(item1.get_property("image") == "res://images/item_book_blue.png")
