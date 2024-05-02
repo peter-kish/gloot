@@ -1,8 +1,8 @@
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 signal activated
 signal clicked
@@ -118,7 +118,7 @@ func _update_stack_size() -> void:
     if !is_instance_valid(item):
         _stack_size_label.text = ""
         return
-    var stack_size: int = StacksConstraint.get_item_stack_size(item)
+    var stack_size: int = StackManager.get_item_stack_size(item).count
     if stack_size <= 1:
         _stack_size_label.text = ""
     else:

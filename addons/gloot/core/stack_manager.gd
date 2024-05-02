@@ -26,14 +26,14 @@ static func set_item_stack_size(item: InventoryItem, stack_size: ItemCount) -> b
         var inventory: Inventory = item.get_inventory()
         if inventory != null:
             inventory.remove_item(item)
-    item.set_property(KEY_STACK_SIZE, stack_size)
+    item.set_property(KEY_STACK_SIZE, stack_size.count)
     return true
 
 
 static func set_item_max_stack_size(item: InventoryItem, max_stack_size: ItemCount) -> void:
     assert(item != null, "item is null!")
     assert(max_stack_size != null, "max_stack_size is null!")
-    item.set_property(KEY_MAX_STACK_SIZE, max_stack_size.to_int())
+    item.set_property(KEY_MAX_STACK_SIZE, max_stack_size.count)
 
 
 static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
@@ -96,8 +96,9 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> b
     if !_can_merge_stacks(item_dst, item_src):
         return false
 
-    set_item_stack_size(item_dst, get_item_stack_size(item_dst).add(get_item_stack_size(item_src)))
+    var src_size := get_item_stack_size(item_src)
     set_item_stack_size(item_src, ItemCount.zero())
+    set_item_stack_size(item_dst, get_item_stack_size(item_dst).add(src_size))
     return true
 
 
@@ -154,5 +155,15 @@ static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> b
         return true
     return false
 
+
+static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+    var new_stack := split_stack(item, new_stack_size)
+    if new_stack == null:
+        return null
+
+    if !inv.add_item(new_stack):
+        return null
+    
+    return new_stack
 
 

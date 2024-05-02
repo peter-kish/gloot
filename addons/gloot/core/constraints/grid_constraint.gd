@@ -5,7 +5,7 @@ signal item_moved(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const ItemMap = preload("res://addons/gloot/core/constraints/item_map.gd")
 
 const KEY_SIZE: String = "size"
@@ -318,17 +318,14 @@ func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vecto
     if item_dst == null:
         return false
 
-    return inventory.get_stacks_constraint().join_stacks(item_dst, item)
+    return StackManager.merge_stacks(item_dst, item)
     
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    if inventory.get_stacks_constraint() == null:
-        return null
-
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if inventory.get_stacks_constraint().stacks_joinable(item, mergable_item):
+        if StackManager.items_mergable(item, mergable_item):
             return mergable_item
     return null
 
@@ -339,7 +336,7 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     for item_dst in get_items_under(rect):
         if item_dst == item:
             continue
-        if StacksConstraint.items_mergable(item_dst, item):
+        if StackManager.items_mergable(item_dst, item):
             result.append(item_dst)
 
     return result

@@ -11,6 +11,7 @@
 		},
 		"stackable_item": {
 			"properties": {
+				"max_stack_size": 10,
 				"stack_size": 10,
 				"image": "res://images/item_scroll_blue.png"
 			},

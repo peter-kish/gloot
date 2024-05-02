@@ -25,15 +25,6 @@ unique_name_in_owner = true
 layout_mode = 2
 editable = false
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="CheckBoxStacksConstraint" type="CheckBox" parent="HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-disabled = true
-text = "Stacks Constraint"
-
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
 layout_mode = 2
 

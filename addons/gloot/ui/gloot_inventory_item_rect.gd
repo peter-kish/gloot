@@ -7,6 +7,7 @@ signal context_activated
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 @export var selection_style: StyleBox :
     set(new_selection_style):
@@ -109,11 +110,7 @@ func _update_stack_size_label() -> void:
     if inventory == null:
         return
 
-    var stacks_constraint = inventory.get_stacks_constraint()
-    if stacks_constraint == null:
-        return
-
-    var stack_size: int = stacks_constraint.get_item_stack_size(item)
+    var stack_size: int = StackManager.get_item_stack_size(item).count
     if stack_size <= 1:
         return
     _label_stack_size.text = str(stack_size)
@@ -162,11 +159,7 @@ func _can_drop_data(at_position, data) -> bool:
     if inventory == null:
         return false
 
-    var stacks_constraint = inventory.get_stacks_constraint()
-    if stacks_constraint == null:
-        return false
-
-    if !stacks_constraint.items_mergable(item, data.item):
+    if !StackManager.items_mergable(item, data.item):
         return false
 
     return true
@@ -180,11 +173,9 @@ func _drop_data(at_position, data):
     if inventory == null:
         return
 
-    var stacks_constraint = inventory.get_stacks_constraint()
-    if stacks_constraint == null:
-        return
-
     Undoables.exec_inventory_undoable([inventory], "Join Item Stacks", func():
-        return stacks_constraint.join_stacks_autosplit(item, data.item)
+        # TODO: Implement
+        # return stacks_constraint.join_stacks_autosplit(item, data.item)
+        return false
     )
 

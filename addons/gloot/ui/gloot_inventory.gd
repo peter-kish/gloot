@@ -5,7 +5,7 @@ extends ItemList
 signal inventory_item_activated(item)
 signal inventory_item_context_activated(item)
 
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 @export var inventory: Inventory = null :
     set(new_inventory):
@@ -41,7 +41,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == InventoryItem.KEY_NAME || property == StacksConstraint.KEY_STACK_SIZE:
+    if property == InventoryItem.KEY_NAME || property == StackManager.KEY_STACK_SIZE:
         set_item_text(inventory.get_item_index(item), _get_item_title(item))
     if property == InventoryItem.KEY_IMAGE:
         set_item_icon(inventory.get_item_index(item), item.get_texture())

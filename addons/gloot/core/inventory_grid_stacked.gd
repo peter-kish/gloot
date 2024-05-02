@@ -3,10 +3,7 @@
 extends InventoryGrid
 class_name InventoryGridStacked
 
-
-func _init() -> void:
-    super._init()
-    _constraint_manager.enable_stacks_constraint()
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 
 func has_place_for(item: InventoryItem) -> bool:
@@ -14,47 +11,51 @@ func has_place_for(item: InventoryItem) -> bool:
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    return _constraint_manager.get_stacks_constraint().add_item_automerge(item)
+    # TODO: Implement
+    return false
     
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    return _constraint_manager.get_stacks_constraint().split_stack_safe(item, new_stack_size)
+    return StackManager.split_stack(item, ItemCount.new(new_stack_size))
 
 
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return _constraint_manager.get_stacks_constraint().join_stacks(item_dst, item_src)
+    # TODO: Implement
+    return false
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
-    return StacksConstraint.get_item_stack_size(item)
+    return StackManager.get_item_stack_size(item).count
 
 
 static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> bool:
-    return StacksConstraint.set_item_stack_size(item, new_stack_size)
+    return StackManager.set_item_stack_size(item, ItemCount.new(new_stack_size))
 
 
 static func get_item_max_stack_size(item: InventoryItem) -> int:
-    return StacksConstraint.get_item_max_stack_size(item)
+    return StackManager.get_item_max_stack_size(item).count
 
 
 static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void:
-    StacksConstraint.set_item_max_stack_size(item, new_stack_size)
+    StackManager.set_item_max_stack_size(item, ItemCount.new(new_stack_size))
 
 
 func get_prototype_stack_size(prototype_path: String) -> int:
-    return _constraint_manager.get_stacks_constraint().get_prototype_stack_size(_prototree, prototype_path)
+    return StackManager.get_prototype_stack_size(_prototree, prototype_path).count
 
 
 func get_prototype_max_stack_size(prototype_path: String) -> int:
-    return _constraint_manager.get_stacks_constraint().get_prototype_max_stack_size(_prototree, prototype_path)
+    return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_automerge(item, destination)
+    # TODO: Implement
+    return false
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_autosplitmerge(item, destination)
+    # TODO: Implement
+    return false
 
 
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
@@ -62,5 +63,8 @@ func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    return _constraint_manager.get_grid_constraint()._get_mergable_item_at(item, position)
+    var target_item := _constraint_manager.get_grid_constraint().get_item_at(position)
+    if StackManager.items_mergable(item, target_item):
+        return target_item
+    return null
 

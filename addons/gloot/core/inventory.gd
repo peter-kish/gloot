@@ -14,10 +14,9 @@ signal pre_constraint_disabled(constraint)
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 
-enum Constraint {WEIGHT, STACKS, GRID}
+enum Constraint {WEIGHT, GRID}
 
 @export var prototree_json: JSON :
     set(new_prototree_json):
@@ -290,11 +289,6 @@ func enable_weight_constraint(capacity: float = 0) -> void:
     _constraint_manager.enable_weight_constraint(capacity)
 
 
-func enable_stacks_constraint() -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.enable_stacks_constraint()
-
-
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(_constraint_manager != null, "Missing constraint manager!")
     _constraint_manager.enable_grid_constraint(size)
@@ -305,11 +299,6 @@ func disable_weight_constraint(capacity: float = 0) -> void:
     _constraint_manager.disable_weight_constraint()
 
 
-func disable_stacks_constraint() -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.disable_stacks_constraint()
-
-
 func disable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(_constraint_manager != null, "Missing constraint manager!")
     _constraint_manager.disable_grid_constraint()
@@ -318,11 +307,6 @@ func disable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> vo
 func get_weight_constraint() -> WeightConstraint:
     assert(_constraint_manager != null, "Missing constraint manager!")
     return _constraint_manager.get_weight_constraint()
-
-
-func get_stacks_constraint() -> StacksConstraint:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    return _constraint_manager.get_stacks_constraint()
 
 
 func get_grid_constraint() -> GridConstraint:

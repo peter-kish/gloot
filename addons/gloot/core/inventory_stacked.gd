@@ -6,6 +6,8 @@ class_name InventoryStacked
 signal capacity_changed
 signal occupied_space_changed
 
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+
 @export var capacity: float :
     get:
         if _constraint_manager == null || _constraint_manager.get_weight_constraint() == null:
@@ -25,7 +27,6 @@ var occupied_space: float :
 func _init() -> void:
     super._init()
     _constraint_manager.enable_weight_constraint()
-    _constraint_manager.enable_stacks_constraint()
     _constraint_manager.get_weight_constraint().capacity_changed.connect(func(): capacity_changed.emit())
     _constraint_manager.get_weight_constraint().occupied_space_changed.connect(func(): occupied_space_changed.emit())
 
@@ -43,56 +44,59 @@ func has_place_for(item: InventoryItem) -> bool:
 
 
 func add_item_automerge(item: InventoryItem) -> bool:
-    return _constraint_manager.get_stacks_constraint().add_item_automerge(item)
+    # TODO: Implement
+    return false
 
 
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    return _constraint_manager.get_stacks_constraint().split_stack_safe(item, new_stack_size)
+    return StackManager.inv_split_stack(self, item, ItemCount.new(new_stack_size))
 
 
 static func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    return StacksConstraint.join_stacks(item_dst, item_src)
+    return StackManager.merge_stacks(item_dst, item_src)
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
-    return StacksConstraint.get_item_stack_size(item)
+    return StackManager.get_item_stack_size(item).count
 
 
 static func set_item_stack_size(item: InventoryItem, new_stack_size: int) -> bool:
-    return StacksConstraint.set_item_stack_size(item, new_stack_size)
+    return StackManager.set_item_stack_size(item, ItemCount.new(new_stack_size))
 
 
 static func get_item_max_stack_size(item: InventoryItem) -> int:
-    return StacksConstraint.get_item_max_stack_size(item)
+    return StackManager.get_item_max_stack_size(item).count
 
 
 static func set_item_max_stack_size(item: InventoryItem, new_stack_size: int) -> void:
-    StacksConstraint.set_item_max_stack_size(item, new_stack_size)
+    StackManager.set_item_max_stack_size(item, ItemCount.new(new_stack_size))
 
 
 func get_prototype_stack_size(prototype_path: String) -> int:
-    return StacksConstraint.get_prototype_stack_size(_prototree, prototype_path)
+    return StackManager.get_prototype_stack_size(_prototree, prototype_path).count
 
 
 func get_prototype_max_stack_size(prototype_path: String) -> int:
-    return StacksConstraint.get_prototype_max_stack_size(_prototree, prototype_path)
+    return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
 
 
 func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_autosplit(item, destination).success
+    # TODO: Implement
+    return false
 
 
 func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_automerge(item, destination)
+    # TODO: Implement
+    return false
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return _constraint_manager.get_stacks_constraint().transfer_autosplitmerge(item, destination)
+    # TODO: Implement
+    return false
 
 
 func reset() -> void:
     super.reset()
     _constraint_manager.enable_weight_constraint()
-    _constraint_manager.enable_stacks_constraint()
     _constraint_manager.get_weight_constraint().capacity_changed.connect(func(): capacity_changed.emit())
     _constraint_manager.get_weight_constraint().occupied_space_changed.connect(func(): occupied_space_changed.emit())

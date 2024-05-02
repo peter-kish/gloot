@@ -8,7 +8,7 @@ const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 
 var capacity: float :
@@ -47,7 +47,7 @@ func _on_item_removed(item: InventoryItem) -> void:
 
     
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == KEY_WEIGHT || property == StacksConstraint.KEY_STACK_SIZE:
+    if property == KEY_WEIGHT || property == StackManager.KEY_STACK_SIZE:
         _calculate_occupied_space()
 
 
@@ -106,7 +106,8 @@ static func _get_item_unit_weight(item: InventoryItem) -> float:
 static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
-    return StacksConstraint.get_item_stack_size(item) * _get_item_unit_weight(item)
+    # TODO: Handle infinity?
+    return StackManager.get_item_stack_size(item).count * _get_item_unit_weight(item)
 
 
 static func set_item_weight(item: InventoryItem, weight: float) -> void:

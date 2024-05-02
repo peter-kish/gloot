@@ -28,6 +28,16 @@ func add(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+func sub(item_count_: ItemCount) -> ItemCount:
+    assert(!item_count_.gt(self), "Can't subtract a count greater than self!")
+    if item_count_.is_inf():
+        count = 0
+    elif !self.is_inf():
+        count -= item_count_.count
+
+    return self
+
+
 func mul(item_count_: ItemCount) -> ItemCount:
     if (count == 0):
         return self

@@ -53,9 +53,6 @@ func _enable_constraint_editing(constraint: int) -> void:
             %CheckBoxWeightConstraint.button_pressed = true
         %LineEditCapacity.editable = true
         %LineEditCapacity.text = str(inventory.get_weight_constraint().capacity)
-    elif constraint == Inventory.Constraint.STACKS:
-        if !%CheckBoxStacksConstraint.button_pressed:
-            %CheckBoxStacksConstraint.button_pressed = true
     elif constraint == Inventory.Constraint.GRID:
         var grid_constraint := inventory.get_grid_constraint()
         if !%CheckBoxGridConstraint.button_pressed:
@@ -76,9 +73,6 @@ func _disable_constraint_editing(constraint: int) -> void:
             %CheckBoxWeightConstraint.button_pressed = false
         %LineEditCapacity.editable = false
         %LineEditCapacity.text = ""
-    elif constraint == Inventory.Constraint.STACKS:
-        if %CheckBoxStacksConstraint.button_pressed:
-            %CheckBoxStacksConstraint.button_pressed = false
     elif constraint == Inventory.Constraint.GRID:
         if %CheckBoxGridConstraint.button_pressed:
             %CheckBoxGridConstraint.button_pressed = false
@@ -121,22 +115,17 @@ func _refresh() -> void:
     _disconnect_ui_signals()
 
     %CheckBoxWeightConstraint.disabled = true
-    %CheckBoxStacksConstraint.disabled = true
     %CheckBoxGridConstraint.disabled = true
     _disable_constraint_editing(Inventory.Constraint.WEIGHT)
-    _disable_constraint_editing(Inventory.Constraint.STACKS)
     _disable_constraint_editing(Inventory.Constraint.GRID)
     
     if !is_instance_valid(inventory):
         return
 
     %CheckBoxWeightConstraint.disabled = false
-    %CheckBoxStacksConstraint.disabled = false
     %CheckBoxGridConstraint.disabled = false
     if is_instance_valid(inventory.get_weight_constraint()):
         _enable_constraint_editing(Inventory.Constraint.WEIGHT)
-    if is_instance_valid(inventory.get_stacks_constraint()):
-        _enable_constraint_editing(Inventory.Constraint.STACKS)
     if is_instance_valid(inventory.get_grid_constraint()):
         _enable_constraint_editing(Inventory.Constraint.GRID)
 
@@ -145,7 +134,6 @@ func _refresh() -> void:
 
 func _connect_ui_signals() -> void:
     _safe_connect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
-    _safe_connect(%CheckBoxStacksConstraint.toggled, _on_stacks_constraint_toggled)
     _safe_connect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
 
     _safe_connect(%LineEditCapacity.text_submitted, _set_capacity)
@@ -158,7 +146,6 @@ func _connect_ui_signals() -> void:
 
 func _disconnect_ui_signals() -> void:
     _safe_disconnect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
-    _safe_disconnect(%CheckBoxStacksConstraint.toggled, _on_stacks_constraint_toggled)
     _safe_disconnect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
 
     _safe_disconnect(%LineEditCapacity.text_submitted, _set_capacity)
@@ -181,23 +168,6 @@ func _on_weight_constraint_toggled(toggled_on: bool) -> void:
         Undoables.exec_inventory_undoable([inventory], "Disable Weight Constraint", func():
             if is_instance_valid(inventory.get_weight_constraint()):
                 inventory.disable_weight_constraint()
-                return true
-            return false
-        )
-
-
-func _on_stacks_constraint_toggled(toggled_on: bool) -> void:
-    if toggled_on:
-        Undoables.exec_inventory_undoable([inventory], "Enable Stacks Constraint", func():
-            if !is_instance_valid(inventory.get_stacks_constraint()):
-                inventory.enable_stacks_constraint()
-                return true
-            return false
-        )
-    else:
-        Undoables.exec_inventory_undoable([inventory], "Disable Stacks Constraint", func():
-            if is_instance_valid(inventory.get_stacks_constraint()):
-                inventory.disable_stacks_constraint()
                 return true
             return false
         )
