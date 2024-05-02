@@ -43,9 +43,9 @@ func has_place_for(item: InventoryItem) -> bool:
     return _constraint_manager.has_space_for(item)
 
 
-func add_item_automerge(item: InventoryItem) -> bool:
-    # TODO: Implement
-    return false
+# func add_item_automerge(item: InventoryItem) -> bool:
+#     # TODO: Implement
+#     return false
 
 
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
@@ -80,19 +80,19 @@ func get_prototype_max_stack_size(prototype_path: String) -> int:
     return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
 
 
-func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
-    # TODO: Implement
-    return false
+# func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
+#     # TODO: Implement
+#     return false
 
 
-func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    # TODO: Implement
-    return false
+# func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
+#     # TODO: Implement
+#     return false
 
 
-func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    # TODO: Implement
-    return false
+# func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
+#     # TODO: Implement
+#     return false
 
 
 func reset() -> void:

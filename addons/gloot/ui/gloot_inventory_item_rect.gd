@@ -159,7 +159,7 @@ func _can_drop_data(at_position, data) -> bool:
     if inventory == null:
         return false
 
-    if !StackManager.items_mergable(item, data.item):
+    if !StackManager.can_merge_stacks(item, data.item):
         return false
 
     return true

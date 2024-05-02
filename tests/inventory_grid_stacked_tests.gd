@@ -12,13 +12,13 @@ const TEST_PROTOTREE = preload("res://tests/data/prototree_grid.json")
 func init_suite():
     tests = [
         "test_has_place_for",
-        "test_add_item_automerge",
+        # "test_add_item_automerge",
         "test_stack_split",
         "test_stack_cant_split",
         "test_stack_join",
         "test_stack_cant_join",
-        "test_automerge",
-        "test_autosplitmerge",
+        # "test_automerge",
+        # "test_autosplitmerge",
     ]
 
 
@@ -78,6 +78,7 @@ func test_add_item_automerge() -> void:
 
 func test_stack_split() -> void:
     assert(inventory_3x3.add_item(item_1x1))
+    InventoryGridStacked.set_item_max_stack_size(item_1x1, 2)
     assert(InventoryGridStacked.set_item_stack_size(item_1x1, 2))
     var new_item = inventory_3x3.split(item_1x1, 1)
     assert(new_item != null)
@@ -96,6 +97,7 @@ func test_stack_cant_split() -> void:
 
 
 func test_stack_join() -> void:
+    InventoryGridStacked.set_item_max_stack_size(item_1x1, 2)
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))
@@ -103,7 +105,6 @@ func test_stack_join() -> void:
 
 
 func test_stack_cant_join() -> void:
-    InventoryGridStacked.set_item_max_stack_size(item_1x1, 1)
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))

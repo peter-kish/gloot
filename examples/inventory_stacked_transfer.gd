@@ -25,7 +25,7 @@ func _on_ltor_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        inventory_left.transfer_autosplitmerge(selected_item, inventory_right)
+        inventory_left.transfer(selected_item, inventory_right)
 
 
 func _on_rtol_pressed() -> void:
@@ -34,7 +34,7 @@ func _on_rtol_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        inventory_right.transfer_autosplitmerge(selected_item, inventory_left)
+        inventory_right.transfer(selected_item, inventory_left)
 
 
 func _on_equip_pressed() -> void:
@@ -49,6 +49,6 @@ func _on_equip_pressed() -> void:
 
 func _on_unequip_pressed() -> void:
     if slot.get_item() != null && inventory_left.has_place_for(slot.get_item()):
-        inventory_left.add_item_automerge(slot.get_item())
+        inventory_left.add_item(slot.get_item())
         slot.clear()
         

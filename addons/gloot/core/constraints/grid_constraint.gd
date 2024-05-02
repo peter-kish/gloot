@@ -325,7 +325,7 @@ func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> Inventory
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if StackManager.items_mergable(item, mergable_item):
+        if StackManager.can_merge_stacks(mergable_item, item):
             return mergable_item
     return null
 
@@ -336,7 +336,7 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     for item_dst in get_items_under(rect):
         if item_dst == item:
             continue
-        if StackManager.items_mergable(item_dst, item):
+        if StackManager.can_merge_stacks(item_dst, item):
             result.append(item_dst)
 
     return result
@@ -424,7 +424,13 @@ func has_space_for(item: InventoryItem) -> bool:
     if item_size == Vector2i.ONE:
         return _item_map.free_fields > 0
         
-    return find_free_space(item_size).success
+    if find_free_space(item_size).success:
+        return true
+
+    var total_free_stack_space = ItemCount.zero()
+    for i in inventory.get_items():
+        total_free_stack_space.add(StackManager._get_free_stack_space(i))
+    return total_free_stack_space.ge(StackManager.get_item_stack_size(item))
 
 
 # TODO: Check if find_free_place is needed
