@@ -164,12 +164,17 @@ static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size:
         return null
 
     if !inv.add_item(new_stack):
+        merge_stacks(item, new_stack)
         return null
     
     return new_stack
 
 
 static func inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    assert(inv.has_item(item_dst), "Inventory must contain item_dst!")
+    if !inv.has_item(item_src) && !inv.can_add_item(item_src):
+        return false
+
     if !merge_stacks(item_dst, item_src):
         return false
     inv.remove_item(item_src)
