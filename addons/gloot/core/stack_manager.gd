@@ -164,13 +164,13 @@ static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> b
 static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
     assert(inv.has_item(item), "Inventory must contain item!")
 
-    # TODO: Use a test stack instead
+    var old_item_stack_size := get_item_stack_size(item)
     var new_stack := split_stack(item, new_stack_size)
     if new_stack == null:
         return null
 
     if !inv.add_item(new_stack):
-        merge_stacks(item, new_stack)
+        set_item_stack_size(item, old_item_stack_size)
         return null
     
     return new_stack
