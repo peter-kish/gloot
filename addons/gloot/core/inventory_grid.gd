@@ -78,10 +78,6 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().move_item_to(item, position)
 
 
-func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
-    return _constraint_manager.get_grid_constraint().transfer_to(item, destination.get_grid_constraint(), position)
-
-
 func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     return _constraint_manager.get_grid_constraint().rect_free(rect, exception)
 

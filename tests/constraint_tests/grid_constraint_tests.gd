@@ -22,7 +22,6 @@ func init_suite():
         "test_get_items_under",
         "test_move_item_to",
         "test_swap_items",
-        "test_transfer_to",
         "test_rect_free",
         "test_sort",
         "test_get_space_for",
@@ -218,33 +217,6 @@ func test_swap_items() -> void:
     assert(InventoryItem.swap(new_item_2x2_2, new_item_2x2))
     assert(grid_constraint.get_item_position(new_item_2x2) == Vector2i(0, 2))
     assert(grid_constraint.get_item_position(new_item_2x2_2) == Vector2i(1, 0))
-
-
-func test_transfer_to() -> void:
-    var inventory2 := create_inventory(TEST_PROTOTREE)
-    inventory2.enable_grid_constraint()
-    var grid_constraint2 := inventory2.get_grid_constraint()
-    grid_constraint2.create_and_add_item_at(TEST_PROTOTYPE_PATH, Vector2i(2, 2))
-
-    inventory.add_item(item)
-
-    var test_data := [
-        {input = Vector2i.ZERO, expected = true},
-        {input = Vector2i.ONE, expected = false},
-        {input = Vector2i(4, 4), expected = true},
-        {input = Vector2i(15, 15), expected = false},
-    ]
-
-    for data in test_data:
-        assert(grid_constraint.transfer_to(item, grid_constraint2, data.input) == data.expected)
-        if data.expected:
-            assert(inventory2.has_item(item))
-            assert(grid_constraint2.get_item_position(item) == data.input)
-
-        if inventory2.has_item(item):
-            assert(inventory2.transfer(item, inventory))
-
-    free_inventory(inventory2)
 
 
 func test_rect_free() -> void:

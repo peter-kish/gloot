@@ -12,6 +12,14 @@ func has_place_for(item: InventoryItem) -> bool:
 
 func add_item_automerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_automerge(self, item)
+
+
+func add_item_autosplitmerge(item: InventoryItem) -> bool:
+    return StackManager.inv_add_autosplitmerge(self, item)
+
+
+func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
+    return _constraint_manager.get_grid_constraint().add_item_at(item, position)
     
     
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
@@ -44,18 +52,6 @@ func get_prototype_stack_size(prototype_path: String) -> int:
 
 func get_prototype_max_stack_size(prototype_path: String) -> int:
     return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
-
-
-func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
-    return StackManager.inv_add_automerge(destination, item)
-
-
-func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
-    return StackManager.inv_add_autosplitmerge(destination, item)
-
-
-func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
-    return _constraint_manager.get_grid_constraint().transfer_to(item, destination.get_grid_constraint(), position)
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:

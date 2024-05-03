@@ -12,7 +12,6 @@ func init_suite() -> void:
         "test_has_item",
         "test_add_remove",
         "test_create_and_add",
-        "test_transfer",
         "test_remove_item",
         "test_serialize",
         "test_serialize_json",
@@ -61,12 +60,6 @@ func test_create_and_add() -> void:
     assert(inventory2.get_item_count() == 1)
     assert(inventory2.has_item(new_item))
     assert(inventory2.has_item_with_prototype_path("/minimal_item_2"))
-
-
-func test_transfer() -> void:
-    assert(inventory1.transfer(item, inventory2))
-    assert(!inventory1.has_item(item))
-    assert(inventory2.has_item(item))
 
 
 func test_remove_item() -> void:

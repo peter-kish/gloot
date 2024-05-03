@@ -83,14 +83,6 @@ func get_prototype_max_stack_size(prototype_path: String) -> int:
     return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
 
 
-func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return StackManager.inv_add_automerge(destination, item)
-
-
-func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
-    return StackManager.inv_add_autosplitmerge(destination, item)
-
-
 func reset() -> void:
     super.reset()
     _constraint_manager.enable_weight_constraint()

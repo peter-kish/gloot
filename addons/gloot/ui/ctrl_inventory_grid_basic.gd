@@ -327,7 +327,7 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     if source_inventory != null:
         if source_inventory.prototree_json != inventory.prototree_json:
             return
-        source_inventory.transfer_to(item, inventory, field_coords)
+        inventory.add_item_at(item, field_coords)
     elif !inventory.add_item_at(item, field_coords):
         _swap_items(item, field_coords)
 

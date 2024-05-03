@@ -25,7 +25,7 @@ func _on_ltor_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        inventory_left.transfer(selected_item, inventory_right)
+        inventory_right.add_item(selected_item)
 
 
 func _on_rtol_pressed() -> void:
@@ -34,7 +34,7 @@ func _on_rtol_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        inventory_right.transfer(selected_item, inventory_left)
+        inventory_left.add_item(selected_item)
 
 
 func _on_equip_pressed() -> void:

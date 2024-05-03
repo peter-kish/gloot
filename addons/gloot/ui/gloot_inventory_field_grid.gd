@@ -117,7 +117,7 @@ func _on_item_dropped(item: InventoryItem, index: int) -> void:
         if src_grid_constraint == null:
             return
         Undoables.exec_inventory_undoable([inventory, src_inventory], "Transfer Inventory Item", func():
-            return src_grid_constraint.transfer_to(item, dst_grid_constraint, field_coords)
+            dst_grid_constraint.add_item_at(item, field_coords)
         )
 
 

@@ -280,10 +280,6 @@ func has_item_with_prototype_path(prototype_path: String) -> bool:
     return get_item_with_prototype_path(prototype_path) != null
 
 
-func transfer(item: InventoryItem, destination: Inventory) -> bool:
-    return destination.add_item(item)
-
-
 func enable_weight_constraint(capacity: float = 0) -> void:
     assert(_constraint_manager != null, "Missing constraint manager!")
     _constraint_manager.enable_weight_constraint(capacity)

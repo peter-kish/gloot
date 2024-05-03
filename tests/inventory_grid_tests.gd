@@ -19,8 +19,6 @@ func init_suite():
         "test_get_items_under",
         "test_move_item_to",
         "test_sort",
-        "test_transfer",
-        "test_transfer_to",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -135,33 +133,6 @@ func test_sort() -> void:
     assert(inventory_3x3.sort())
     assert(inventory_3x3.get_item_at(Vector2i(0, 0)) == item_2x2)
     assert(inventory_3x3.get_item_at(Vector2i(0, 2)) == item_1x1)
-
-
-func test_transfer():
-    assert(inventory_3x3_2.add_item(item_1x1))
-    assert(inventory_3x3_2.add_item(item_2x2))
-
-    # Empty inventory
-    assert(inventory_3x3_2.transfer(item_1x1, inventory_3x3))
-    var item_pos = inventory_3x3.get_item_position(item_1x1)
-    assert(item_pos.x == 0)
-    assert(item_pos.y == 0)
-
-    # Enough free space
-    assert(inventory_3x3_2.transfer(item_2x2, inventory_3x3))
-    assert(inventory_3x3_2.get_item_count() == 0)
-    assert(inventory_3x3.get_item_count() == 2)
-
-    # Not enough free space
-    assert(!inventory_3x3_2.transfer(item_2x2_2, inventory_3x3))
-
-
-func test_transfer_to():
-    assert(inventory_3x3_2.add_item(item_1x1))
-    assert(inventory_3x3_2.add_item(item_2x2))
-
-    assert(inventory_3x3_2.transfer_to(item_1x1, inventory_3x3, Vector2i(1, 1)))
-    assert(!inventory_3x3_2.transfer_to(item_2x2, inventory_3x3, Vector2i(2, 2)))
 
 
 func test_serialize():

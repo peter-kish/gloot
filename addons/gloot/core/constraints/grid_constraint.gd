@@ -299,20 +299,6 @@ func move_item_to_free_spot(item: InventoryItem) -> bool:
     return move_item_to(item, free_place.position)
 
 
-func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
-    assert(inventory != null, "Inventory not set!")
-    assert(destination.inventory != null, "Destination inventory not set!")
-    var item_size = get_item_size(item)
-    var rect := Rect2i(position, item_size)
-    if destination.rect_free(rect) && destination.add_item_at(item, position):
-        return true
-
-    if _merge_to(item, destination, position):
-        return true
-
-    return InventoryItem.swap(item, destination.get_item_at(position))
-
-
 func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
     var item_dst := destination._get_mergable_item_at(item, position)
     if item_dst == null:
