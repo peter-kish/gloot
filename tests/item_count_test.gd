@@ -10,7 +10,7 @@ func init_suite():
         "test_mul",
         "test_div",
         "test_eq",
-        "test_less",
+        "test_lt",
         "test_gt",
         "test_min",
     ]
@@ -101,7 +101,7 @@ func test_eq() -> void:
         assert(count.eq(count2) == data.expected)
 
 
-func test_less() -> void:
+func test_lt() -> void:
     var test_data := [
         {input = {left = 10, right = 20}, expected = true},
         {input = {left = 20, right = 10}, expected = false},
@@ -114,7 +114,7 @@ func test_less() -> void:
     for data in test_data:
         var count = ItemCount.new(data.input.left)
         var count2 = ItemCount.new(data.input.right)
-        assert(count.less(count2) == data.expected)
+        assert(count.lt(count2) == data.expected)
 
 
 func test_gt() -> void:

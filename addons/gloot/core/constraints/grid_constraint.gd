@@ -407,16 +407,27 @@ func _sort_if_needed() -> void:
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:
-    var occupied_rects: Array[Rect2i]
+    var result = _get_free_space_for(item).mul(StackManager.get_item_max_stack_size(item))
+
+    for i in inventory.get_items():
+        if StackManager.can_merge_stacks(i, item, true):
+            result.add(StackManager.get_free_stack_space(i))
+
+    return result
+
+
+func _get_free_space_for(item: InventoryItem) -> ItemCount:
     var item_size = get_item_size(item)
     if item_size == Vector2i.ONE:
         return ItemCount.new(_item_map.free_fields)
 
+    var occupied_rects: Array[Rect2i]
     var free_space := find_free_space(item_size, occupied_rects)
     while free_space.success:
         occupied_rects.append(Rect2i(free_space.position, item_size))
         free_space = find_free_space(item_size, occupied_rects)
     return ItemCount.new(occupied_rects.size())
+    
 
 
 func has_space_for(item: InventoryItem) -> bool:
@@ -429,7 +440,7 @@ func has_space_for(item: InventoryItem) -> bool:
 
     var total_free_stack_space = ItemCount.zero()
     for i in inventory.get_items():
-        total_free_stack_space.add(StackManager._get_free_stack_space(i))
+        total_free_stack_space.add(StackManager.get_free_stack_space(i))
     return total_free_stack_space.ge(StackManager.get_item_stack_size(item))
 
 

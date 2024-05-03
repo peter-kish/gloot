@@ -75,7 +75,7 @@ func eq(item_count_: ItemCount) -> bool:
     return item_count_.count == count
 
 
-func less(item_count_: ItemCount) -> bool:
+func lt(item_count_: ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
@@ -88,7 +88,7 @@ func less(item_count_: ItemCount) -> bool:
 
 
 func le(item_count_: ItemCount) -> bool:
-    return self.less(item_count_) || self.eq(item_count_)
+    return self.lt(item_count_) || self.eq(item_count_)
 
 
 func gt(item_count_: ItemCount) -> bool:
@@ -108,7 +108,7 @@ func ge(item_count_: ItemCount) -> bool:
 
 
 static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
-    if item_count_l.less(item_count_r):
+    if item_count_l.lt(item_count_r):
         return item_count_l
     return item_count_r
 

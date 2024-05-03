@@ -91,7 +91,6 @@ capacity = 50.0
 prototree_json = ExtResource("6_v6n8v")
 _serialized_format = {
 "constraints": {
-"stacks_constraint": {},
 "weight_constraint": {
 "capacity": 50.0
 }
@@ -103,6 +102,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/big_item"
 }, {
+"properties": {
+"max_stack_size": {
+"type": 3,
+"value": "100.0"
+}
+},
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/stackable_item"
 }],
@@ -116,7 +121,6 @@ capacity = 50.0
 prototree_json = ExtResource("6_v6n8v")
 _serialized_format = {
 "constraints": {
-"stacks_constraint": {},
 "weight_constraint": {
 "capacity": 50.0
 }
@@ -128,6 +132,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/big_item"
 }, {
+"properties": {
+"max_stack_size": {
+"type": 3,
+"value": "100.0"
+}
+},
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/stackable_item"
 }],

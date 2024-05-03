@@ -84,8 +84,6 @@ static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split
 
 
 static func can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
-    if !_stacks_compatible(item_dst, item_src):
-        return false
     if split_source:
         return _can_merge_stacks_split_source(item_dst, item_src)
     return _can_merge_stacks(item_dst, item_src)
@@ -105,9 +103,12 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> b
 
 
 static func _can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    if !_stacks_compatible(item_dst, item_src):
+        return false
+
     var src_size: ItemCount = get_item_stack_size(item_src)
     var dst_size := get_item_stack_size(item_dst)
-    var free_dst_stack_space := _get_free_stack_space(item_dst)
+    var free_dst_stack_space := get_free_stack_space(item_dst)
 
     if free_dst_stack_space.eq(ItemCount.zero()):
         return false
@@ -120,12 +121,14 @@ static func _merge_stacks_split_source(item_dst: InventoryItem, item_src: Invent
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
 
+    if !_stacks_compatible(item_dst, item_src):
+        return false
     if !_can_merge_stacks_split_source(item_dst, item_src):
         return false
     if _merge_stacks(item_dst, item_src):
         return true
 
-    var free_dst_stack_space := _get_free_stack_space(item_dst)
+    var free_dst_stack_space := get_free_stack_space(item_dst)
     var new_stack := split_stack(item_src, free_dst_stack_space)
     assert(_merge_stacks(item_dst, new_stack))
     return true
@@ -134,10 +137,10 @@ static func _merge_stacks_split_source(item_dst: InventoryItem, item_src: Invent
 static func _can_merge_stacks_split_source(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
-    return !_get_free_stack_space(item_dst).eq(ItemCount.zero())
+    return !get_free_stack_space(item_dst).eq(ItemCount.zero())
 
 
-static func _get_free_stack_space(item: InventoryItem) -> ItemCount:
+static func get_free_stack_space(item: InventoryItem) -> ItemCount:
     assert(item != null, "item is null!")
     return get_item_max_stack_size(item).sub(get_item_stack_size(item))
 
@@ -159,6 +162,9 @@ static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> b
 
 
 static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+    assert(inv.has_item(item), "Inventory must contain item!")
+
+    # TODO: Use a test stack instead
     var new_stack := split_stack(item, new_stack_size)
     if new_stack == null:
         return null
@@ -172,12 +178,46 @@ static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size:
 
 static func inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(inv.has_item(item_dst), "Inventory must contain item_dst!")
+
     if !inv.has_item(item_src) && !inv.can_add_item(item_src):
         return false
 
     if !merge_stacks(item_dst, item_src):
         return false
-    inv.remove_item(item_src)
+
+    var inv_src := item_src.get_inventory()
+    if is_instance_valid(inv_src):
+        inv_src.remove_item(item_src)
+    return true
+
+
+static func inv_add_automerge(inv: Inventory, item: InventoryItem) -> bool:
+    assert(!inv.has_item(item), "Inventory must not contain item!")
+
+    for i in inv.get_items():
+        if inv_merge_stack(inv, i, item):
+            return true
+    return inv.add_item(item)
+
+
+static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
+    assert(!inv.has_item(item), "Inventory must not contain item!")
+    
+    var space_for_item := inv._constraint_manager.get_space_for(item)
+    if space_for_item.eq(ItemCount.zero()):
+        return false
+
+    if inv_add_automerge(inv, item):
+        return true
+
+    var partial_stack = split_stack(item, space_for_item)
+    assert(get_item_stack_size(item).gt(ItemCount.zero()))
+    for i in inv.get_items():
+        merge_stacks(i, partial_stack, true)
+        if get_item_stack_size(partial_stack).eq(ItemCount.zero()):
+            return true
+
+    assert(inv.add_item(partial_stack))
     return true
 
 
