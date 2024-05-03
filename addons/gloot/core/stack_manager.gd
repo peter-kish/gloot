@@ -176,7 +176,13 @@ static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size:
     return new_stack
 
 
-static func inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+static func inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
+    if split_source:
+        return _inv_merge_stack_split_source(inv, item_dst, item_src)
+    return _inv_merge_stack(inv, item_dst, item_src)
+
+
+static func _inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(inv.has_item(item_dst), "Inventory must contain item_dst!")
 
     if !inv.has_item(item_src) && !inv.can_add_item(item_src):
@@ -191,33 +197,70 @@ static func inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: I
     return true
 
 
+static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    assert(inv.has_item(item_dst), "Inventory must contain item_dst!")
+
+    if !_stacks_compatible(item_dst, item_src):
+        return false
+
+    # item_dst and item_src are in the same inventory
+    if inv.has_item(item_src):
+        return merge_stacks(item_dst, item_src, true)
+
+    # item_dst and item_src are in different inventories
+    var receivable_stack_size := ItemCount.min(get_free_stack_space(item_dst), inv._constraint_manager.get_space_for(item_src))
+    if receivable_stack_size.eq(ItemCount.zero()):
+        return false
+    var src_stack_size := get_item_stack_size(item_src)
+    if receivable_stack_size.ge(src_stack_size):
+        # No splitting of item_src is needed
+        assert(_inv_merge_stack(inv, item_dst, item_src))
+        return true
+
+    # Need to split item_src
+    var partial_stack := split_stack(item_src, receivable_stack_size)
+    assert(partial_stack != null)
+    assert(merge_stacks(item_dst, partial_stack))
+    return true
+
+
 static func inv_add_automerge(inv: Inventory, item: InventoryItem) -> bool:
     assert(!inv.has_item(item), "Inventory must not contain item!")
 
     for i in inv.get_items():
-        if inv_merge_stack(inv, i, item):
+        if _inv_merge_stack(inv, i, item):
             return true
     return inv.add_item(item)
+
+
+static func inv_add_split_source(inv: Inventory, item: InventoryItem) -> bool:
+    var space_for_item := inv._constraint_manager.get_space_for(item)
+    if space_for_item.eq(ItemCount.zero()):
+        return false
+    var stack_size := get_item_stack_size(item)
+    if space_for_item.ge(stack_size):
+        assert(inv.add_item(item))
+        return true
+    var new_stack := split_stack(item, space_for_item)
+    assert(new_stack)
+    assert(inv.add_item(new_stack))
+    return true
 
 
 static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
     assert(!inv.has_item(item), "Inventory must not contain item!")
     
-    var space_for_item := inv._constraint_manager.get_space_for(item)
-    if space_for_item.eq(ItemCount.zero()):
-        return false
+    var stack_split := false
+    for i in inv.get_items():
+        if _inv_merge_stack_split_source(inv, i, item):
+            stack_split = true
 
-    if inv_add_automerge(inv, item):
+    if inv.has_item(item):
         return true
 
-    var partial_stack = split_stack(item, space_for_item)
-    assert(get_item_stack_size(item).gt(ItemCount.zero()))
-    for i in inv.get_items():
-        merge_stacks(i, partial_stack, true)
-        if get_item_stack_size(partial_stack).eq(ItemCount.zero()):
-            return true
+    if get_item_stack_size(item).gt(ItemCount.zero()):
+        if inv_add_split_source(inv, item):
+            stack_split = true
 
-    assert(inv.add_item(partial_stack))
-    return true
-
+    return stack_split
 

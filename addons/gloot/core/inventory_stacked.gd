@@ -47,6 +47,10 @@ func add_item_automerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_automerge(self, item)
 
 
+func add_item_autosplitmerge(item: InventoryItem) -> bool:
+    return StackManager.inv_add_autosplitmerge(self, item)
+
+
 func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
     return StackManager.inv_split_stack(self, item, ItemCount.new(new_stack_size))
 
@@ -77,11 +81,6 @@ func get_prototype_stack_size(prototype_path: String) -> int:
 
 func get_prototype_max_stack_size(prototype_path: String) -> int:
     return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
-
-
-# func transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool:
-#     # TODO: Implement
-#     return false
 
 
 func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool:

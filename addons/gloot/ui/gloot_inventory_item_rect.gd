@@ -174,8 +174,6 @@ func _drop_data(at_position, data):
         return
 
     Undoables.exec_inventory_undoable([inventory], "Join Item Stacks", func():
-        # TODO: Implement
-        # return stacks_constraint.join_stacks_autosplit(item, data.item)
-        return false
+        return StackManager.inv_merge_stack(inventory, item, data.item)
     )
 

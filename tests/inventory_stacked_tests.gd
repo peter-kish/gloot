@@ -20,14 +20,13 @@ func init_suite() -> void:
         "test_unlimited_capacity",
         "test_invalid_capacity",
         "test_stack_split_join",
-        # "test_automerge",
-        # "test_automerge_custom_dst_properties",
-        # "test_automerge_custom_src_properties",
-        # "test_max_stack_size",
-        # "test_automerge_max_stack_size",
+        "test_automerge",
+        "test_automerge_custom_dst_properties",
+        "test_automerge_custom_src_properties",
+        "test_max_stack_size",
+        "test_automerge_max_stack_size",
         "test_transfer",
-        # "test_transfer_autosplit",
-        # "test_transfer_autosplitmerge",
+        "test_transfer_autosplitmerge",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -138,7 +137,7 @@ func test_max_stack_size() -> void:
     assert(InventoryStacked.set_item_stack_size(limited_stackable_item, 3))
     assert(inventory.add_item(limited_stackable_item))
     assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 3)
-    assert(inventory.add_item_automerge(limited_stackable_item_2))
+    assert(inventory.add_item_autosplitmerge(limited_stackable_item_2))
     assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 5)
     assert(InventoryStacked.get_item_stack_size(limited_stackable_item_2) == 3)
 
@@ -149,11 +148,10 @@ func test_automerge_max_stack_size() -> void:
     assert(InventoryStacked.set_item_stack_size(stackable_item_2, 2))
     assert(inventory.add_item_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
-    assert(is_node_valid(stackable_item))
     assert(inventory.add_item_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
-    assert(InventoryStacked.get_item_stack_size(stackable_item) == 3)
-    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 1)
+    assert(InventoryStacked.get_item_stack_size(stackable_item) == 2)
+    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
 
 
 func test_transfer() -> void:
@@ -163,20 +161,6 @@ func test_transfer() -> void:
     assert(!inventory.has_item(limited_stackable_item))
     assert(inventory_2.has_item(limited_stackable_item))
     assert(inventory_2.has_item(limited_stackable_item_2))
-
-
-func test_transfer_autosplit() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 7))
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 5))
-    assert(inventory.add_item(stackable_item))
-    assert(inventory_2.add_item(stackable_item_2))
-    assert(inventory_2.transfer_autosplit(stackable_item_2, inventory))
-    assert(InventoryStacked.get_item_stack_size(stackable_item) == 7)
-    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
-    assert(inventory.get_item_count() == 2)
-    assert(inventory.occupied_space == 10)
-    assert(inventory_2.get_item_count() == 1)
-    assert(inventory_2.occupied_space == 2)
 
 
 func test_transfer_autosplitmerge() -> void:
