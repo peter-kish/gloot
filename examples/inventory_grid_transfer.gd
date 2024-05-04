@@ -31,7 +31,7 @@ func _input(event: InputEvent) -> void:
 
 func _on_btn_sort(ctrl_inventory) -> void:
     if !ctrl_inventory.inventory.get_grid_constraint().sort():
-        print("Warning: InventoryGrid.sort() returned false!")
+        print("Warning: GridConstraint.sort() returned false!")
 
 
 func _on_btn_unequip() -> void:

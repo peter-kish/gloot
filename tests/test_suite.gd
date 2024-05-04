@@ -50,24 +50,17 @@ func create_inventory(prototree_json: JSON) -> Inventory:
     return inventory
 
 
-func create_inventory_stacked(prototree_json: JSON, capacity: float) -> InventoryStacked:
-    var inventory = InventoryStacked.new()
+func create_inventory_stacked(prototree_json: JSON, capacity: float) -> Inventory:
+    var inventory = Inventory.new()
+    inventory.enable_weight_constraint(capacity)
     inventory.prototree_json = prototree_json
-    inventory.capacity = capacity
     return inventory
 
 
-func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> InventoryGrid:
-    var inventory = InventoryGrid.new()
+func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> Inventory:
+    var inventory = Inventory.new()
+    inventory.enable_grid_constraint(size)
     inventory.prototree_json = prototree_json
-    inventory.size = size
-    return inventory
-
-
-func create_inventory_grid_stacked(prototree_json: JSON, size: Vector2i) -> InventoryGridStacked:
-    var inventory = InventoryGridStacked.new()
-    inventory.prototree_json = prototree_json
-    inventory.size = size
     return inventory
 
 

@@ -121,4 +121,14 @@ static func zero() -> ItemCount:
     return ItemCount.new(0)
 
 
+static func one() -> ItemCount:
+    return ItemCount.new(1)
+
+
+func _to_string() -> String:
+    if self.is_inf():
+        return "INF"
+    return str(count)
+
+
 # TODO: Implement max()

@@ -107,8 +107,8 @@ func _get_item_title(item: InventoryItem) -> String:
         return ""
 
     var title = item.get_title()
-    var stack_size: int = InventoryStacked.get_item_stack_size(item)
-    if stack_size > 1:
+    var stack_size := StackManager.get_item_stack_size(item)
+    if stack_size.gt(ItemCount.one()):
         title = "%s (x%d)" % [title, stack_size]
 
     return title

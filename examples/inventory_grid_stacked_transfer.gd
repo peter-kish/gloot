@@ -44,8 +44,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_btn_sort(ctrl_inventory) -> void:
-    if !ctrl_inventory.inventory.sort():
-        print("Warning: InventoryGrid.sort() returned false!")
+    if !ctrl_inventory.inventory.get_grid_constraint().sort():
+        print("Warning: GridConstraint.sort() returned false!")
 
 
 func _on_btn_split(ctrl_inventory) -> void:
@@ -54,12 +54,12 @@ func _on_btn_split(ctrl_inventory) -> void:
         return
 
     for selected_item in selected_items:
-        var stack_size := InventoryGridStacked.get_item_stack_size(selected_item)
-        if stack_size < 2:
+        var stack_size := StackManager.get_item_stack_size(selected_item)
+        if stack_size.lt(ItemCount.new(2)):
             return
 
         # All this floor/float jazz just to do integer division without warnings
-        var new_stack_size: int = floor(float(stack_size) / 2)
+        var new_stack_size: int = floor(float(stack_size.count) / 2)
         StackManager.inv_split_stack(ctrl_inventory.inventory, selected_item, ItemCount.new(new_stack_size))
 
 

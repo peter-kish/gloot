@@ -32,7 +32,6 @@ script = ExtResource("5_atslo")
 
 [node name="ConstraintManagerTests" type="Node" parent="."]
 script = ExtResource("6_xg0v1")
-enabled = null
 
 [node name="VerificationTest" type="Node" parent="."]
 script = ExtResource("14")

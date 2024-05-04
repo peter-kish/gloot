@@ -1,7 +1,7 @@
 extends TestSuite
 
-var inventory: InventoryStacked
-var inventory_2: InventoryStacked
+var inventory: Inventory
+var inventory_2: Inventory
 var item: InventoryItem
 var big_item: InventoryItem
 var stackable_item: InventoryItem
@@ -9,6 +9,7 @@ var stackable_item_2: InventoryItem
 var limited_stackable_item: InventoryItem
 var limited_stackable_item_2: InventoryItem
 
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const TEST_PROTOTREE = preload("res://tests/data/prototree_stacks.json")
 
 
@@ -50,108 +51,108 @@ func cleanup_test() -> void:
 
 
 func test_space() -> void:
-    assert(inventory.capacity == 10.0)
-    assert(inventory.get_free_space() == 10.0)
-    assert(inventory.occupied_space == 0.0)
-    assert(inventory.has_place_for(item))
+    assert(inventory.get_weight_constraint().capacity == 10.0)
+    assert(inventory.get_weight_constraint().get_free_space() == 10.0)
+    assert(inventory.get_weight_constraint().occupied_space == 0.0)
+    assert(inventory.can_add_item(item))
     assert(inventory.add_item(item))
-    assert(inventory.occupied_space == 1.0)
-    assert(inventory.get_free_space() == 9.0)
+    assert(inventory.get_weight_constraint().occupied_space == 1.0)
+    assert(inventory.get_weight_constraint().get_free_space() == 9.0)
 
 
 func test_big_item() -> void:
-    assert(!inventory.has_place_for(big_item))
+    assert(!inventory.can_add_item(big_item))
     assert(!inventory.add_item(big_item))
 
 
 func test_change_capacity() -> void:
-    inventory.capacity = 0.5
-    assert(!inventory.has_place_for(item))
+    inventory.get_weight_constraint().capacity = 0.5
+    assert(!inventory.can_add_item(item))
     assert(!inventory.add_item(item))
 
 
 func test_unlimited_capacity() -> void:
-    inventory.capacity = 0
-    assert(inventory.has_place_for(item))
+    inventory.get_weight_constraint().capacity = 0
+    assert(inventory.can_add_item(item))
     assert(inventory.add_item(item))
-    assert(inventory.has_place_for(big_item))
+    assert(inventory.can_add_item(big_item))
     assert(inventory.add_item(big_item))
 
 
 func test_invalid_capacity() -> void:
-    inventory.capacity = 21
+    inventory.get_weight_constraint().capacity = 21
     assert(inventory.add_item(big_item))
-    inventory.capacity = 19
-    assert(inventory.capacity == 21)
+    inventory.get_weight_constraint().capacity = 19
+    assert(inventory.get_weight_constraint().capacity == 21)
 
 
 func test_stack_split_join() -> void:
     assert(inventory.add_item(stackable_item))
-    assert(inventory.split(stackable_item, 5) != null)
+    assert(StackManager.inv_split_stack(inventory, stackable_item, ItemCount.new(5)) != null)
     assert(inventory.get_item_count() == 2)
     var item1 = inventory.get_items()[0]
     var item2 = inventory.get_items()[1]
-    assert(InventoryStacked.get_item_stack_size(item1) == 5)
-    assert(InventoryStacked.get_item_stack_size(item2) == 5)
-    var joined = InventoryStacked.join(item1, item2)
+    assert(StackManager.get_item_stack_size(item1).eq(ItemCount.new(5)))
+    assert(StackManager.get_item_stack_size(item2).eq(ItemCount.new(5)))
+    var joined = StackManager.merge_stacks(item1, item2)
     assert(joined)
-    assert(InventoryStacked.get_item_stack_size(item1) == 10)
+    assert(StackManager.get_item_stack_size(item1).eq(ItemCount.new(10)))
     assert(inventory.get_item_count() == 1)
 
 
 func test_automerge() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 2))
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 2))
-    assert(inventory.add_item_automerge(stackable_item))
+    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(is_node_valid(stackable_item))
-    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
     assert(inventory.get_item_count() == 1)
     
     
 func test_automerge_custom_dst_properties() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 2))
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 2))
+    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
     stackable_item_2.set_property("custom_property", "custom_value")
-    assert(inventory.add_item_automerge(stackable_item))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
-    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
     assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
 func test_automerge_custom_src_properties() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 2))
+    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
     stackable_item.set_property("custom_property", "custom_value")
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 2))
-    assert(inventory.add_item_automerge(stackable_item))
+    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
-    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
     assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
 func test_max_stack_size() -> void:
-    assert(InventoryStacked.set_item_stack_size(limited_stackable_item, 3))
+    assert(StackManager.set_item_stack_size(limited_stackable_item, ItemCount.new(3)))
     assert(inventory.add_item(limited_stackable_item))
-    assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 3)
-    assert(inventory.add_item_autosplitmerge(limited_stackable_item_2))
-    assert(InventoryStacked.get_item_stack_size(limited_stackable_item) == 5)
-    assert(InventoryStacked.get_item_stack_size(limited_stackable_item_2) == 3)
+    assert(StackManager.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(3)))
+    assert(StackManager.inv_add_autosplitmerge(inventory, limited_stackable_item_2))
+    assert(StackManager.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(5)))
+    assert(StackManager.get_item_stack_size(limited_stackable_item_2).eq(ItemCount.new(3)))
 
 
 func test_automerge_max_stack_size() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 2))
-    InventoryStacked.set_item_max_stack_size(stackable_item, 3)
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 2))
-    assert(inventory.add_item_automerge(stackable_item))
+    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    StackManager.set_item_max_stack_size(stackable_item, ItemCount.new(3))
+    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item))
     assert(inventory.get_item_count() == 1)
-    assert(inventory.add_item_automerge(stackable_item_2))
+    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
     assert(inventory.get_item_count() == 2)
-    assert(InventoryStacked.get_item_stack_size(stackable_item) == 2)
-    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
+    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(2)))
+    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
 
 
 func test_add_item() -> void:
@@ -164,38 +165,37 @@ func test_add_item() -> void:
 
 
 func test_add_item_autosplitmerge() -> void:
-    assert(InventoryStacked.set_item_stack_size(stackable_item, 7))
-    assert(InventoryStacked.set_item_stack_size(stackable_item_2, 5))
+    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(7)))
+    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(5)))
     assert(inventory.add_item(stackable_item))
     assert(inventory_2.add_item(stackable_item_2))
-    assert(inventory.add_item_autosplitmerge(stackable_item_2))
-    assert(InventoryStacked.get_item_stack_size(stackable_item) == 10)
-    assert(InventoryStacked.get_item_stack_size(stackable_item_2) == 2)
+    assert(StackManager.inv_add_autosplitmerge(inventory, stackable_item_2))
+    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(10)))
+    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
     assert(inventory.get_item_count() == 1)
-    assert(inventory.occupied_space == 10)
+    assert(inventory.get_weight_constraint().occupied_space == 10)
     assert(inventory_2.get_item_count() == 1)
 
 
 func test_serialize() -> void:
     assert(inventory.add_item(item))
     var inventory_data = inventory.serialize()
-    var capacity = inventory.capacity
-    var occupied_space = inventory.occupied_space
+    var capacity = inventory.get_weight_constraint().capacity
+    var occupied_space = inventory.get_weight_constraint().occupied_space
     inventory.reset()
     assert(inventory.get_items().is_empty())
-    assert(inventory.capacity == 0)
-    assert(inventory.occupied_space == 0)
+    assert(inventory.get_weight_constraint() == null)
     assert(inventory.deserialize(inventory_data))
     assert(inventory.get_item_count() == 1)
-    assert(inventory.capacity == capacity)
-    assert(inventory.occupied_space == occupied_space)
+    assert(inventory.get_weight_constraint().capacity == capacity)
+    assert(inventory.get_weight_constraint().occupied_space == occupied_space)
     
 
 func test_serialize_json() -> void:
     assert(inventory.add_item(item))
     var inventory_data = inventory.serialize()
-    var capacity = inventory.capacity
-    var occupied_space = inventory.occupied_space
+    var capacity = inventory.get_weight_constraint().capacity
+    var occupied_space = inventory.get_weight_constraint().occupied_space
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)
@@ -205,10 +205,9 @@ func test_serialize_json() -> void:
 
     inventory.reset()
     assert(inventory.get_items().is_empty())
-    assert(inventory.capacity == 0)
-    assert(inventory.occupied_space == 0)
+    assert(inventory.get_weight_constraint() == null)
     assert(inventory.deserialize(inventory_data))
     assert(inventory.get_item_count() == 1)
-    assert(inventory.capacity == capacity)
-    assert(inventory.occupied_space == occupied_space)
+    assert(inventory.get_weight_constraint().capacity == capacity)
+    assert(inventory.get_weight_constraint().occupied_space == occupied_space)
 

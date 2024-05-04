@@ -122,20 +122,8 @@ func _populate_list() -> void:
         var texture := item.get_texture()
         if !texture:
             texture = default_item_icon
-        _item_list.add_item(_get_item_title(item), texture)
+        _item_list.add_item(inventory._get_item_title(item), texture)
         _item_list.set_item_metadata(_item_list.get_item_count() - 1, item)
-
-
-func _get_item_title(item: InventoryItem) -> String:
-    if item == null:
-        return ""
-
-    var title = item.get_title()
-    var stack_size: int = InventoryStacked.get_item_stack_size(item)
-    if stack_size > 1:
-        title = "%s (x%d)" % [title, stack_size]
-
-    return title
 
 
 func get_selected_inventory_item() -> InventoryItem:
