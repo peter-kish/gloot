@@ -110,11 +110,11 @@ func _init() -> void:
 
 
 func _on_constraint_enabled(constraint: int) -> void:
-    if constraint == ConstraintManager.Constraint.WEIGHT:
+    if constraint == Constraint.WEIGHT:
         var weight_constraint := _constraint_manager.get_weight_constraint()
         Utils.safe_connect(weight_constraint.capacity_changed, _on_capacity_changed)
         Utils.safe_connect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
-    elif constraint == ConstraintManager.Constraint.GRID:
+    elif constraint == Constraint.GRID:
         var grid_constraint := _constraint_manager.get_grid_constraint()
         Utils.safe_connect(grid_constraint.size_changed, _on_size_changed)
         Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
@@ -123,11 +123,11 @@ func _on_constraint_enabled(constraint: int) -> void:
 
 
 func _on_pre_constraint_disabled(constraint: int) -> void:
-    if constraint == ConstraintManager.Constraint.WEIGHT:
+    if constraint == Constraint.WEIGHT:
         var weight_constraint := _constraint_manager.get_weight_constraint()
         Utils.safe_disconnect(weight_constraint.capacity_changed, _on_capacity_changed)
         Utils.safe_disconnect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
-    elif constraint == ConstraintManager.Constraint.GRID:
+    elif constraint == Constraint.GRID:
         var grid_constraint := _constraint_manager.get_grid_constraint()
         Utils.safe_disconnect(grid_constraint.size_changed, _on_size_changed)
         Utils.safe_disconnect(grid_constraint.item_moved, _on_item_moved)

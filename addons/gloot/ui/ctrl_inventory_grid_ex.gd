@@ -191,6 +191,8 @@ func _refresh_field_background_grid() -> void:
 
     if !is_instance_valid(inventory):
         return
+    if inventory.get_grid_constraint() == null:
+        return
 
     var inv_size := inventory.get_grid_constraint().size
     for i in range(inv_size.x):
@@ -306,6 +308,8 @@ func _input(event) -> void:
 
 
 func _highlight_grabbed_item(style: StyleBox):
+    if inventory.get_grid_constraint() == null:
+        return
     var grabbed_item: InventoryItem = _get_global_grabbed_item()
     if !grabbed_item:
         return
@@ -330,7 +334,7 @@ func _is_hovering(local_pos: Vector2) -> bool:
 
 
 func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
-    if !item:
+    if !item || inventory.get_grid_constraint() == null:
         return false
 
     _set_rect_background(inventory.get_grid_constraint().get_item_rect(item), style, priority)

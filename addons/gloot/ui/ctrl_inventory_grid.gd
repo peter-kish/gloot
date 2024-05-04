@@ -204,7 +204,7 @@ func _on_item_moved(_item: InventoryItem) -> void:
 
 
 func _on_constraint_enabled(constraint: int) -> void:
-    if constraint == inventory.Constraint.GRID:
+    if constraint == Inventory.Constraint.GRID:
         Utils.safe_connect(inventory.get_grid_constraint().item_moved, _on_item_moved)
 
 

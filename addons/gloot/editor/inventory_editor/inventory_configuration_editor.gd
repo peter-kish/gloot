@@ -19,6 +19,8 @@ func _connect_inventory_signals() -> void:
         return
     inventory.size_changed.connect(_on_size_changed)
     inventory.capacity_changed.connect(_on_capacity_changed)
+    inventory.constraint_enabled.connect(_enable_constraint_editing)
+    inventory.pre_constraint_disabled.connect(_disable_constraint_editing)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -26,6 +28,8 @@ func _disconnect_inventory_signals() -> void:
         return
     inventory.size_changed.disconnect(_on_size_changed)
     inventory.capacity_changed.disconnect(_on_capacity_changed)
+    inventory.constraint_enabled.disconnect(_enable_constraint_editing)
+    inventory.pre_constraint_disabled.disconnect(_disable_constraint_editing)
 
 
 func _enable_constraint_editing(constraint: int) -> void:

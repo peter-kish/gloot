@@ -26,9 +26,7 @@ var inventory: Inventory = null :
         if _grid_constraint != null:
             _grid_constraint.inventory = inventory
 
-
-enum Constraint {WEIGHT, STACKS, GRID}
-enum Configuration {WSG, WS, WG, SG, W, S, G, VANILLA}
+enum Configuration {WG, W, G, VANILLA}
 
 
 func _init(inventory_: Inventory) -> void:
@@ -131,28 +129,28 @@ func enable_weight_constraint(capacity: float = 0.0) -> void:
     assert(!_weight_constraint_enabled, "Weight constraint is already enabled")
     _weight_constraint_enabled = true
     _weight_constraint.capacity = capacity
-    constraint_enabled.emit(Constraint.WEIGHT)
+    constraint_enabled.emit(Inventory.Constraint.WEIGHT)
 
 
 func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
     assert(!_grid_constraint_enabled, "Grid constraint is already enabled")
     _grid_constraint_enabled = true
     _grid_constraint.size = size
-    constraint_enabled.emit(Constraint.GRID)
+    constraint_enabled.emit(Inventory.Constraint.GRID)
 
 
 func disable_weight_constraint() -> void:
     assert(_weight_constraint_enabled, "Weight constraint is already disabled")
-    pre_constraint_disabled.emit(Constraint.WEIGHT)
+    pre_constraint_disabled.emit(Inventory.Constraint.WEIGHT)
     _weight_constraint_enabled = false
-    constraint_disabled.emit(Constraint.WEIGHT)
+    constraint_disabled.emit(Inventory.Constraint.WEIGHT)
 
 
 func disable_grid_constraint() -> void:
     assert(_grid_constraint_enabled, "Grid constraint is already disabled")
-    pre_constraint_disabled.emit(Constraint.GRID)
+    pre_constraint_disabled.emit(Inventory.Constraint.GRID)
     _grid_constraint_enabled = false
-    constraint_disabled.emit(Constraint.GRID)
+    constraint_disabled.emit(Inventory.Constraint.GRID)
 
 
 func get_weight_constraint() -> WeightConstraint:
