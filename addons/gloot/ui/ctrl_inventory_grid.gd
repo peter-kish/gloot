@@ -46,7 +46,7 @@ class GridControl extends Control:
             var to: Vector2 = Vector2(size.x, j * size.y / dimensions.y)
             draw_line(from, to, color)
         
-@export var inventory: InventoryGrid = null :
+@export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -180,11 +180,10 @@ func _connect_inventory_signals() -> void:
         inventory.contents_changed.connect(_queue_refresh)
     if !inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.connect(_on_item_property_changed)
-    if !inventory.size_changed.is_connected(_queue_refresh):
-        inventory.size_changed.connect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
     if grid_constraint != null && !grid_constraint.item_moved.is_connected(_on_item_moved):
         grid_constraint.item_moved.connect(_on_item_moved)
+        grid_constraint.size_changed.connect(_queue_refresh)
     if !inventory.constraint_enabled.is_connected(_on_constraint_enabled):
         inventory.constraint_enabled.connect(_on_constraint_enabled)
 
@@ -197,11 +196,10 @@ func _disconnect_inventory_signals() -> void:
         inventory.contents_changed.disconnect(_queue_refresh)
     if inventory.item_property_changed.is_connected(_on_item_property_changed):
         inventory.item_property_changed.disconnect(_on_item_property_changed)
-    if inventory.size_changed.is_connected(_queue_refresh):
-        inventory.size_changed.disconnect(_queue_refresh)
     var grid_constraint = inventory.get_grid_constraint()
     if grid_constraint != null && grid_constraint.item_moved.is_connected(_on_item_moved):
         grid_constraint.item_moved.disconnect(_on_item_moved)
+        grid_constraint.size_changed.disconnect(_queue_refresh)
     if inventory.constraint_enabled.is_connected(_on_constraint_enabled):
         inventory.constraint_enabled.disconnect(_on_constraint_enabled)
 
@@ -246,10 +244,9 @@ func _queue_refresh() -> void:
 
 
 func _get_inventory_dimensions() -> Vector2i:
-    var inventory_grid = _get_inventory()
-    if !is_instance_valid(inventory_grid):
+    if !is_instance_valid(inventory) || inventory.get_grid_constraint() == null:
         return Vector2i.ZERO
-    return _ctrl_inventory_grid_basic.inventory.size
+    return inventory.get_grid_constraint().size
 
 
 func _update_size() -> void:
@@ -259,7 +256,7 @@ func _update_size() -> void:
     _ctrl_grid.size = _ctrl_inventory_grid_basic.size
 
 
-func _get_inventory() -> InventoryGrid:
+func _get_inventory() -> Inventory:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     if !is_instance_valid(_ctrl_inventory_grid_basic.inventory):

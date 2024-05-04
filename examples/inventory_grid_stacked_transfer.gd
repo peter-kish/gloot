@@ -2,6 +2,8 @@ extends Control
 
 const info_offset: Vector2 = Vector2(20, 0)
 
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+
 @onready var ctrl_inventory_left := $"%CtrlInventoryGridLeft"
 @onready var ctrl_inventory_right := $"%CtrlInventoryGridRight"
 @onready var btn_sort_left: Button = $"%BtnSortLeft"
@@ -47,11 +49,6 @@ func _on_btn_sort(ctrl_inventory) -> void:
 
 
 func _on_btn_split(ctrl_inventory) -> void:
-    var inventory_stacked := (ctrl_inventory.inventory as InventoryGridStacked)
-    if inventory_stacked == null:
-        print("Warning: inventory is not InventoryGridStacked!")
-        return
-
     var selected_items = ctrl_inventory.get_selected_inventory_items()
     if selected_items.is_empty():
         return
@@ -63,7 +60,7 @@ func _on_btn_split(ctrl_inventory) -> void:
 
         # All this floor/float jazz just to do integer division without warnings
         var new_stack_size: int = floor(float(stack_size) / 2)
-        inventory_stacked.split(selected_item, new_stack_size)
+        StackManager.inv_split_stack(ctrl_inventory.inventory, selected_item, ItemCount.new(new_stack_size))
 
 
 func _on_btn_unequip() -> void:

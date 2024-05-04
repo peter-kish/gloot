@@ -121,6 +121,8 @@ func _on_constraing_disabled(constraint: int) -> void:
 
 
 func _ready() -> void:
+    renamed.connect(_update_serialized_format)
+
     if !_serialized_format.is_empty():
         deserialize(_serialized_format)
 

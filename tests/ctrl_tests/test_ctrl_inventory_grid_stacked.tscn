@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1fna7gc68qhq"]
+[gd_scene load_steps=4 format=3 uid="uid://d1fna7gc68qhq"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="1_mgf0d"]
-[ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="2_fptnp"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="3_l7kgs"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_myoia"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid_ex.gd" id="3_b3btf"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="4_utymg"]
 
 [node name="Control" type="Control"]
@@ -13,18 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventoryGrid" type="Container" parent="." node_paths=PackedStringArray("inventory")]
-custom_minimum_size = Vector2(160, 160)
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 160.0
-script = ExtResource("1_mgf0d")
-inventory = NodePath("../InventoryGridStacked")
-default_item_texture = ExtResource("2_fptnp")
-
-[node name="InventoryGridStacked" type="Node" parent="."]
-script = ExtResource("3_l7kgs")
-size = Vector2i(5, 5)
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("1_myoia")
 prototree_json = ExtResource("4_utymg")
 _serialized_format = {
 "constraints": {
@@ -33,11 +22,14 @@ _serialized_format = {
 "1": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
-},
-"stacks_constraint": {}
+}
 },
 "items": [{
 "properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
 "stack_size": {
 "type": 2,
 "value": "2"
@@ -47,6 +39,10 @@ _serialized_format = {
 "prototype_path": "/item_1x1"
 }, {
 "properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
 "stack_size": {
 "type": 2,
 "value": "2"
@@ -55,6 +51,14 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_2x2"
 }],
-"node_name": "InventoryGridStacked",
+"node_name": "Inventory",
 "prototree": "res://tests/data/prototree_grid.json"
 }
+
+[node name="CtrlInventoryGridEx" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+custom_minimum_size = Vector2(160, 160)
+anchors_preset = 0
+offset_right = 160.0
+offset_bottom = 160.0
+script = ExtResource("3_b3btf")
+inventory = NodePath("../Inventory")

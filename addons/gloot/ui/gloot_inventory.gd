@@ -69,6 +69,14 @@ func get_selected_inventory_item() -> InventoryItem:
     return _get_inventory_item(get_selected_items()[0])
 
 
+func get_selected_inventory_items() -> Array[InventoryItem]:
+    var result: Array[InventoryItem]
+    var indexes = get_selected_items()
+    for i in indexes:
+        result.append(_get_inventory_item(i))
+    return result
+
+
 func _get_inventory_item(index: int) -> InventoryItem:
     assert(index >= 0)
     assert(index < get_item_count())

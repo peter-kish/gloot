@@ -6,8 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5_igoy6"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot_ex.gd" id="6_wlx5u"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_grid_stacked.gd" id="7_6cshf"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_mr2pf"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
@@ -81,7 +81,7 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
-inventory = NodePath("../../../../../InventoryGridStackedLeft")
+inventory = NodePath("../../../../../InventoryLeft")
 default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
@@ -111,7 +111,7 @@ texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
-inventory = NodePath("../../../../../InventoryGridStackedRight")
+inventory = NodePath("../../../../../InventoryRight")
 default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
@@ -163,94 +163,6 @@ Press the 'Split' buttons to split the selected stack in half.
 Drag items from the right inventory onto the item slot to equip it.
 Use the 'Unequip' button to unequip it."
 
-[node name="InventoryGridStackedLeft" type="Node" parent="."]
-script = ExtResource("7_6cshf")
-size = Vector2i(5, 5)
-prototree_json = ExtResource("8_mr2pf")
-_serialized_format = {
-"constraints": {
-"grid_constraint": {
-"item_positions": {
-"1": "Vector2i(0, 1)"
-},
-"size": "Vector2i(5, 5)"
-}
-},
-"items": [{
-"properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
-"stack_size": {
-"type": 2,
-"value": "2"
-}
-},
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_1x1"
-}, {
-"properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
-"stack_size": {
-"type": 2,
-"value": "2"
-}
-},
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_2x2"
-}],
-"node_name": "InventoryGridStackedLeft",
-"prototree": "res://tests/data/prototree_grid.json"
-}
-
-[node name="InventoryGridStackedRight" type="Node" parent="."]
-script = ExtResource("7_6cshf")
-size = Vector2i(5, 5)
-prototree_json = ExtResource("8_mr2pf")
-_serialized_format = {
-"constraints": {
-"grid_constraint": {
-"item_positions": {
-"1": "Vector2i(0, 1)"
-},
-"size": "Vector2i(5, 5)"
-}
-},
-"items": [{
-"properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
-"stack_size": {
-"type": 2,
-"value": "2"
-}
-},
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_1x1"
-}, {
-"properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
-"stack_size": {
-"type": 2,
-"value": "2"
-}
-},
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_2x2"
-}],
-"node_name": "InventoryGridStackedRight",
-"prototree": "res://tests/data/prototree_grid.json"
-}
-
 [node name="LblInfo" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
@@ -262,3 +174,89 @@ offset_bottom = 14.0
 script = ExtResource("10_lyc83")
 prototree_json = ExtResource("8_mr2pf")
 _serialized_format = {}
+
+[node name="InventoryLeft" type="Node" parent="."]
+script = ExtResource("9_a6m37")
+prototree_json = ExtResource("8_mr2pf")
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+}
+},
+"items": [{
+"properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
+}, {
+"properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
+}],
+"node_name": "InventoryLeft",
+"prototree": "res://tests/data/prototree_grid.json"
+}
+
+[node name="InventoryRight" type="Node" parent="."]
+script = ExtResource("9_a6m37")
+prototree_json = ExtResource("8_mr2pf")
+_serialized_format = {
+"constraints": {
+"grid_constraint": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+}
+},
+"items": [{
+"properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_1x1"
+}, {
+"properties": {
+"max_stack_size": {
+"type": 2,
+"value": "5"
+},
+"stack_size": {
+"type": 2,
+"value": "2"
+}
+},
+"prototree": "res://tests/data/prototree_grid.json",
+"prototype_path": "/item_2x2"
+}],
+"node_name": "InventoryRight",
+"prototree": "res://tests/data/prototree_grid.json"
+}

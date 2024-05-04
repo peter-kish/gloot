@@ -65,7 +65,7 @@ class SelectionPanel extends Panel:
         if style != null:
             add_theme_stylebox_override("panel", style)
 
-@export var inventory: InventoryGrid = null :
+@export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -135,8 +135,8 @@ func _connect_inventory_signals() -> void:
         return
     if !inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.connect(_on_inventory_resized)
+    # if !inventory.size_changed.is_connected(_on_inventory_resized):
+    #     inventory.size_changed.connect(_on_inventory_resized)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -144,8 +144,8 @@ func _disconnect_inventory_signals() -> void:
         return
     if inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.size_changed.is_connected(_on_inventory_resized):
-        inventory.size_changed.disconnect(_on_inventory_resized)
+    # if inventory.size_changed.is_connected(_on_inventory_resized):
+    #     inventory.size_changed.disconnect(_on_inventory_resized)
 
 
 func _process(_delta) -> void:
@@ -195,9 +195,10 @@ func _refresh_field_background_grid() -> void:
     if !is_instance_valid(inventory):
         return
 
-    for i in range(inventory.size.x):
+    var inv_size := inventory.get_grid_constraint().size
+    for i in range(inv_size.x):
         _field_backgrounds.append([])
-        for j in range(inventory.size.y):
+        for j in range(inv_size.y):
             var field_panel: PriorityPanel = PriorityPanel.new(field_style, field_highlighted_style)
             field_panel.visible = (field_style != null)
             field_panel.size = field_dimensions
@@ -320,9 +321,9 @@ func _highlight_grabbed_item(style: StyleBox):
     _fill_background(field_style, PriorityPanel.StylePriority.LOW)
 
     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
-    var item_size := inventory.get_item_size(grabbed_item)
+    var item_size := inventory.get_grid_constraint().get_item_size(grabbed_item)
     var rect := Rect2i(grabbed_item_coords, item_size)
-    if !Rect2i(Vector2i.ZERO, inventory.size).encloses(rect):
+    if !Rect2i(Vector2i.ZERO, inventory.get_grid_constraint().size).encloses(rect):
         return
     _set_rect_background(rect, style, PriorityPanel.StylePriority.LOW)
 
@@ -335,14 +336,15 @@ func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -
     if !item:
         return false
 
-    _set_rect_background(inventory.get_item_rect(item), style, priority)
+    _set_rect_background(inventory.get_grid_constraint().get_item_rect(item), style, priority)
     return true
 
 
 func _set_rect_background(rect: Rect2i, style: StyleBox, priority: int) -> void:
-    var h_range = min(rect.size.x + rect.position.x, inventory.size.x)
+    var inv_size = inventory.get_grid_constraint().size
+    var h_range = min(rect.size.x + rect.position.x, inv_size.x)
     for i in range(rect.position.x, h_range):
-        var v_range = min(rect.size.y + rect.position.y, inventory.size.y)
+        var v_range = min(rect.size.y + rect.position.y, inv_size.y)
         for j in range(rect.position.y, v_range):
             _field_backgrounds[i][j].set_style(style, priority)
 

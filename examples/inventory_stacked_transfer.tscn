@@ -1,12 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://b2owv7hirds6s"]
+[gd_scene load_steps=11 format=3 uid="uid://b2owv7hirds6s"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_stacked.gd" id="1"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory_stacked.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="2_q4mul"]
+[ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="3_54nof"]
 [ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
+[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="4_nim7g"]
 [ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
+[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_capacity.gd" id="5_v7bum"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
 [ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="6_v6n8v"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_worre"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_1flkn"]
 
 [node name="InventoryStackedTransfer" type="Control"]
 layout_mode = 3
@@ -29,21 +32,51 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CtrlInventoryStackedLeft" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1")
-inventory = NodePath("../../../InventoryStackedLeft")
-default_item_icon = ExtResource("5")
 
-[node name="CtrlInventoryStackedRight" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="GlootInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+item_count = 3
+item_0/text = "minimal_item"
+item_1/text = "big_item"
+item_1/icon = ExtResource("2_q4mul")
+item_2/text = "stackable_item (x10)"
+item_2/icon = ExtResource("3_54nof")
+script = ExtResource("4_nim7g")
+inventory = NodePath("../../../../InventoryLeft")
+
+[node name="GlootInventoryCapacity" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("inventory")]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+script = ExtResource("5_v7bum")
+inventory = NodePath("../../../../InventoryLeft")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="GlootInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer/VBoxContainer2" node_paths=PackedStringArray("inventory")]
+unique_name_in_owner = true
+layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource("1")
-inventory = NodePath("../../../InventoryStackedRight")
-default_item_icon = ExtResource("5")
+item_count = 3
+item_0/text = "minimal_item"
+item_1/text = "big_item"
+item_1/icon = ExtResource("2_q4mul")
+item_2/text = "stackable_item (x10)"
+item_2/icon = ExtResource("3_54nof")
+script = ExtResource("4_nim7g")
+inventory = NodePath("../../../../InventoryRight")
+
+[node name="GlootInventoryCapacity" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2" node_paths=PackedStringArray("inventory")]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+script = ExtResource("5_v7bum")
+inventory = NodePath("../../../../InventoryRight")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -60,10 +93,12 @@ default_item_icon = ExtResource("5")
 label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Equip"
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Unquip"
 
@@ -76,76 +111,79 @@ Use the buttons below to transfer items from one inventory to the other."
 layout_mode = 2
 
 [node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "<<<"
 
 [node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = ">>>"
 
-[node name="InventoryStackedLeft" type="Node" parent="."]
-script = ExtResource("2")
-capacity = 50.0
-prototree_json = ExtResource("6_v6n8v")
-_serialized_format = {
-"constraints": {
-"weight_constraint": {
-"capacity": 50.0
-}
-},
-"items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/minimal_item"
-}, {
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/big_item"
-}, {
-"properties": {
-"max_stack_size": {
-"type": 3,
-"value": "100.0"
-}
-},
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/stackable_item"
-}],
-"node_name": "InventoryStackedLeft",
-"prototree": "res://tests/data/prototree_stacks.json"
-}
-
-[node name="InventoryStackedRight" type="Node" parent="."]
-script = ExtResource("2")
-capacity = 50.0
-prototree_json = ExtResource("6_v6n8v")
-_serialized_format = {
-"constraints": {
-"weight_constraint": {
-"capacity": 50.0
-}
-},
-"items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/minimal_item"
-}, {
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/big_item"
-}, {
-"properties": {
-"max_stack_size": {
-"type": 3,
-"value": "100.0"
-}
-},
-"prototree": "res://tests/data/prototree_stacks.json",
-"prototype_path": "/stackable_item"
-}],
-"node_name": "InventoryStackedRight",
-"prototree": "res://tests/data/prototree_stacks.json"
-}
-
 [node name="ItemSlot" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("8_worre")
 prototree_json = ExtResource("6_v6n8v")
 _serialized_format = {}
+
+[node name="InventoryLeft" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("9_1flkn")
+prototree_json = ExtResource("6_v6n8v")
+_serialized_format = {
+"constraints": {
+"weight_constraint": {
+"capacity": 50.0
+}
+},
+"items": [{
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/minimal_item"
+}, {
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/big_item"
+}, {
+"properties": {
+"max_stack_size": {
+"type": 3,
+"value": "100.0"
+}
+},
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/stackable_item"
+}],
+"node_name": "InventoryLeft",
+"prototree": "res://tests/data/prototree_stacks.json"
+}
+
+[node name="InventoryRight" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("9_1flkn")
+prototree_json = ExtResource("6_v6n8v")
+_serialized_format = {
+"constraints": {
+"weight_constraint": {
+"capacity": 50.0
+}
+},
+"items": [{
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/minimal_item"
+}, {
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/big_item"
+}, {
+"properties": {
+"max_stack_size": {
+"type": 3,
+"value": "100.0"
+}
+},
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/stackable_item"
+}],
+"node_name": "InventoryRight",
+"prototree": "res://tests/data/prototree_stacks.json"
+}

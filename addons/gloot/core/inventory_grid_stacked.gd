@@ -53,10 +53,3 @@ func get_prototype_stack_size(prototype_path: String) -> int:
 func get_prototype_max_stack_size(prototype_path: String) -> int:
     return StackManager.get_prototype_max_stack_size(_prototree, prototype_path).count
 
-
-func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    var target_item := _constraint_manager.get_grid_constraint().get_item_at(position)
-    if StackManager.can_merge_stacks(target_item, item):
-        return target_item
-    return null
-
