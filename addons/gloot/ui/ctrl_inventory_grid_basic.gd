@@ -104,8 +104,7 @@ func _connect_inventory_signals() -> void:
 
     Utils.safe_connect(inventory.contents_changed, _queue_refresh)
     Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
-    # TODO: Sort out constraint signals
-    # Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
     Utils.safe_connect(inventory.item_removed, _on_item_removed)
 
 
@@ -115,8 +114,7 @@ func _disconnect_inventory_signals() -> void:
 
     Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
     Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
-    # TODO: Sort out constraint signals
-    # Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
     Utils.safe_disconnect(inventory.item_removed, _on_item_removed)
 
 

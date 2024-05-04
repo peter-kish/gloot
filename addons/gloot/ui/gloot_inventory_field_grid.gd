@@ -48,16 +48,14 @@ func _connect_inventory_signals() -> void:
         Utils.safe_connect(inventory.ready, _refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
-    if inventory.get_grid_constraint() != null:
-        inventory.get_grid_constraint().size_changed.connect(_refresh)
+    inventory.size_changed.connect(_refresh)
 
 
 func _disconnect_inventory_signals() -> void:
     Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
-    if inventory.get_grid_constraint() != null:
-        inventory.get_grid_constraint().size_changed.disconnect(_refresh)
+    inventory.size_changed.disconnect(_refresh)
 
 
 func _refresh() -> void:

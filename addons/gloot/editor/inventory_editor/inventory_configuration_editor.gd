@@ -17,33 +17,15 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-
-    inventory.constraint_enabled.connect(_on_constraint_enabled)
-    inventory.pre_constraint_disabled.connect(_on_pre_constraint_disabled)
+    inventory.size_changed.connect(_on_size_changed)
+    inventory.capacity_changed.connect(_on_capacity_changed)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-
-    inventory.constraint_enabled.disconnect(_on_constraint_enabled)
-    inventory.pre_constraint_disabled.disconnect(_on_pre_constraint_disabled)
-
-
-func _on_constraint_enabled(constraint: int) -> void:
-    _enable_constraint_editing(constraint)
-    if constraint == Inventory.Constraint.WEIGHT:
-        Utils.safe_connect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
-    elif constraint == Inventory.Constraint.GRID:
-        Utils.safe_connect(inventory.get_grid_constraint().size_changed, _on_size_changed)
-
-
-func _on_pre_constraint_disabled(constraint: int) -> void:
-    _disable_constraint_editing(constraint)
-    if constraint == Inventory.Constraint.WEIGHT:
-        Utils.safe_disconnect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
-    elif constraint == Inventory.Constraint.GRID:
-        Utils.safe_disconnect(inventory.get_grid_constraint().size_changed, _on_size_changed)
+    inventory.size_changed.disconnect(_on_size_changed)
+    inventory.capacity_changed.disconnect(_on_capacity_changed)
 
 
 func _enable_constraint_editing(constraint: int) -> void:

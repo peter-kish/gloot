@@ -135,16 +135,14 @@ func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
     Utils.safe_connect(inventory.contents_changed, _queue_refresh)
-    # TODO: Sort out constraint signals
-    # Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
     Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
-    # TODO: Sort out constraint signals
-    # Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
 
 
 func _process(_delta) -> void:

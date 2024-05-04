@@ -179,10 +179,8 @@ func _connect_inventory_signals() -> void:
 
     Utils.safe_connect(inventory.contents_changed, _queue_refresh)
     Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
-    var grid_constraint = inventory.get_grid_constraint()
-    if grid_constraint != null:
-        Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
-        Utils.safe_connect(grid_constraint.size_changed, _queue_refresh)
+    Utils.safe_connect(inventory.item_moved, _on_item_moved)
+    Utils.safe_connect(inventory.size_changed, _queue_refresh)
     Utils.safe_connect(inventory.constraint_enabled, _on_constraint_enabled)
 
 
@@ -192,10 +190,8 @@ func _disconnect_inventory_signals() -> void:
 
     Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
     Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
-    var grid_constraint = inventory.get_grid_constraint()
-    if grid_constraint != null:
-        Utils.safe_disconnect(grid_constraint.item_moved, _on_item_moved)
-        Utils.safe_disconnect(grid_constraint.size_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.item_moved, _on_item_moved)
+    Utils.safe_disconnect(inventory.size_changed, _queue_refresh)
     Utils.safe_disconnect(inventory.constraint_enabled, _on_constraint_enabled)
 
 

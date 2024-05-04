@@ -12,6 +12,14 @@ signal constraint_enabled(constraint)
 signal constraint_disabled(constraint)
 signal pre_constraint_disabled(constraint)
 
+# TODO: Consider making these private:
+# Grid Constraint Signals
+signal size_changed
+signal item_moved(item)
+# Weight Constraint Signals
+signal capacity_changed
+signal occupied_space_changed
+
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
@@ -98,19 +106,32 @@ func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
     _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
     _constraint_manager.constraint_disabled.connect(_on_constraing_disabled)
-    _constraint_manager.pre_constraint_disabled.connect(func(constraint: int): pre_constraint_disabled.emit(constraint))
+    _constraint_manager.pre_constraint_disabled.connect(_on_pre_constraint_disabled)
 
 
 func _on_constraint_enabled(constraint: int) -> void:
     if constraint == ConstraintManager.Constraint.WEIGHT:
         var weight_constraint := _constraint_manager.get_weight_constraint()
-        Utils.safe_connect(weight_constraint.capacity_changed, _update_serialized_format)
+        Utils.safe_connect(weight_constraint.capacity_changed, _on_capacity_changed)
+        Utils.safe_connect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
     elif constraint == ConstraintManager.Constraint.GRID:
         var grid_constraint := _constraint_manager.get_grid_constraint()
-        Utils.safe_connect(grid_constraint.size_changed, _update_serialized_format)
+        Utils.safe_connect(grid_constraint.size_changed, _on_size_changed)
         Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
     constraint_enabled.emit(constraint)
     _update_serialized_format()
+
+
+func _on_pre_constraint_disabled(constraint: int) -> void:
+    if constraint == ConstraintManager.Constraint.WEIGHT:
+        var weight_constraint := _constraint_manager.get_weight_constraint()
+        Utils.safe_disconnect(weight_constraint.capacity_changed, _on_capacity_changed)
+        Utils.safe_disconnect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
+    elif constraint == ConstraintManager.Constraint.GRID:
+        var grid_constraint := _constraint_manager.get_grid_constraint()
+        Utils.safe_disconnect(grid_constraint.size_changed, _on_size_changed)
+        Utils.safe_disconnect(grid_constraint.item_moved, _on_item_moved)
+    pre_constraint_disabled.emit(constraint)
 
 
 func _on_constraing_disabled(constraint: int) -> void:
@@ -310,6 +331,22 @@ func get_grid_constraint() -> GridConstraint:
 
 func _on_item_moved(item: InventoryItem) -> void:
     _update_serialized_format()
+    item_moved.emit(item)
+
+
+func _on_size_changed() -> void:
+    _update_serialized_format()
+    size_changed.emit()
+
+
+func _on_capacity_changed() -> void:
+    _update_serialized_format()
+    capacity_changed.emit()
+
+
+func _on_occupied_space_changed() -> void:
+    _update_serialized_format()
+    occupied_space_changed.emit()
 
 
 func reset() -> void:

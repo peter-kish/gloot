@@ -25,10 +25,8 @@ func connect_inventory_signals():
     if !inventory:
         return
 
-    if inventory.get_weight_constraint():
-        inventory.get_weight_constraint().capacity_changed.connect(_refresh)
-    if inventory.get_grid_constraint():
-        inventory.get_grid_constraint().size_changed.connect(_refresh)
+    inventory.capacity_changed.connect(_refresh)
+    inventory.size_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.constraint_enabled.connect(_on_constraint_toggled)
     inventory.constraint_disabled.connect(_on_constraint_toggled)
@@ -42,10 +40,8 @@ func disconnect_inventory_signals():
     if !inventory:
         return
         
-    if inventory.get_weight_constraint():
-        inventory.get_weight_constraint().capacity_changed.disconnect(_refresh)
-    if inventory.get_grid_constraint():
-        inventory.get_grid_constraint().size_changed.disconnect(_refresh)
+    inventory.capacity_changed.disconnect(_refresh)
+    inventory.size_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.constraint_enabled.disconnect(_on_constraint_toggled)
     inventory.constraint_disabled.disconnect(_on_constraint_toggled)
