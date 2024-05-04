@@ -2,6 +2,8 @@
 class_name  GlootInventoryCapacity
 extends Control
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 @export var show_label = true :
     set(new_show_label):
         if new_show_label == show_label:
@@ -28,7 +30,7 @@ var _label: Label
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
-        inventory.ready.connect(_refresh)
+        Utils.safe_connect(inventory.ready, _refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
     if inventory.get_weight_constraint():
@@ -37,8 +39,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    if inventory.ready.is_connected(_refresh):
-        inventory.ready.disconnect(_refresh)
+    Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     if inventory.get_weight_constraint():

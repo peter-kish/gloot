@@ -15,6 +15,7 @@ signal pre_constraint_disabled(constraint)
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum Constraint {WEIGHT, GRID}
 
@@ -103,14 +104,11 @@ func _init() -> void:
 func _on_constraint_enabled(constraint: int) -> void:
     if constraint == ConstraintManager.Constraint.WEIGHT:
         var weight_constraint := _constraint_manager.get_weight_constraint()
-        if !weight_constraint.capacity_changed.is_connected(_update_serialized_format):
-            weight_constraint.capacity_changed.connect(_update_serialized_format)
+        Utils.safe_connect(weight_constraint.capacity_changed, _update_serialized_format)
     elif constraint == ConstraintManager.Constraint.GRID:
         var grid_constraint := _constraint_manager.get_grid_constraint()
-        if !grid_constraint.size_changed.is_connected(_update_serialized_format):
-            grid_constraint.size_changed.connect(_update_serialized_format)
-        if !grid_constraint.item_moved.is_connected(_on_item_moved):
-            grid_constraint.item_moved.connect(_on_item_moved)
+        Utils.safe_connect(grid_constraint.size_changed, _update_serialized_format)
+        Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
     constraint_enabled.emit(constraint)
     _update_serialized_format()
 
@@ -155,13 +153,11 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    if !item.property_changed.is_connected(_on_item_property_changed):
-        item.property_changed.connect(_on_item_property_changed.bind(item))
+    Utils.safe_connect(item.property_changed, _on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    if item.property_changed.is_connected(_on_item_property_changed):
-        item.property_changed.disconnect(_on_item_property_changed)
+    Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
 
 
 func _on_item_property_changed(property: String, item: InventoryItem) -> void:

@@ -6,6 +6,8 @@ extends Control
 signal inventory_item_activated(item)
 signal inventory_item_context_activated(item)
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList.SELECT_MULTI}
 
 @export var inventory: Inventory = null :
@@ -63,21 +65,15 @@ func _ready():
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.connect(_on_item_property_changed)
+    Utils.safe_connect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.disconnect(_on_item_property_changed)
+    Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
 
 
 func _on_list_item_activated(index: int) -> void:

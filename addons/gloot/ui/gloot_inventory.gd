@@ -6,6 +6,7 @@ signal inventory_item_activated(item)
 signal inventory_item_context_activated(item)
 
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var inventory: Inventory = null :
     set(new_inventory):
@@ -26,15 +27,14 @@ const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
-        inventory.ready.connect(_refresh)
+        Utils.safe_connect(inventory.ready, _refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
 
 
 func _disconnect_inventory_signals() -> void:
-    if inventory.ready.is_connected(_refresh):
-        inventory.ready.disconnect(_refresh)
+    Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)
@@ -109,7 +109,7 @@ func _get_item_title(item: InventoryItem) -> String:
     var title = item.get_title()
     var stack_size := StackManager.get_item_stack_size(item)
     if stack_size.gt(ItemCount.one()):
-        title = "%s (x%d)" % [title, stack_size]
+        title = "%s (x%d)" % [title, stack_size.count]
 
     return title
 

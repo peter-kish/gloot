@@ -83,7 +83,7 @@ func _create_inventory_container() -> Control:
     var capacity_control: GlootInventoryCapacity = null
 
     if inventory.get_grid_constraint() != null:
-        _inventory_control = GlootInventoryGrid.new()
+        _inventory_control = CtrlInventoryGridEx.new()
         _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
         _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
     else:

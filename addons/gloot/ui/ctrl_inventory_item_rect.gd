@@ -8,6 +8,8 @@ signal activated
 signal clicked
 signal context_activated
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 var item: InventoryItem :
     set(new_item):
         if item == new_item:
@@ -47,17 +49,13 @@ static var _stored_preview_offset: Vector2
 func _connect_item_signals(new_item: InventoryItem) -> void:
     if new_item == null:
         return
-
-    if !new_item.property_changed.is_connected(_on_item_property_changed):
-        new_item.property_changed.connect(_on_item_property_changed)
+    Utils.safe_connect(new_item.property_changed, _on_item_property_changed)
 
 
 func _disconnect_item_signals() -> void:
     if !is_instance_valid(item):
         return
-
-    if item.property_changed.is_connected(_on_item_property_changed):
-        item.property_changed.disconnect(_on_item_property_changed)
+    Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
 
 
 func _on_item_property_changed(_property: String) -> void:

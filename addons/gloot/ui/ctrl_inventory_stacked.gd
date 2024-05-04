@@ -42,11 +42,8 @@ func _connect_inventory_signals() -> void:
         return
 
     super._connect_inventory_signals()
-
-    if !inventory.capacity_changed.is_connected(_queue_refresh):
-        inventory.capacity_changed.connect(_queue_refresh)
-    if !inventory.occupied_space_changed.is_connected(_queue_refresh):
-        inventory.occupied_space_changed.connect(_queue_refresh)
+    Utils.safe_connect(inventory.capacity_changed, _queue_refresh)
+    Utils.safe_connect(inventory.occupied_space_changed, _queue_refresh)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -54,11 +51,8 @@ func _disconnect_inventory_signals() -> void:
         return
 
     super._disconnect_inventory_signals()
-
-    if !inventory.capacity_changed.is_connected(_queue_refresh):
-        inventory.capacity_changed.disconnect(_queue_refresh)
-    if !inventory.occupied_space_changed.is_connected(_queue_refresh):
-        inventory.occupied_space_changed.disconnect(_queue_refresh)
+    Utils.safe_disconnect(inventory.capacity_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.occupied_space_changed, _queue_refresh)
 
 
 func _refresh():

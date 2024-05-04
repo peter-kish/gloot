@@ -7,6 +7,7 @@ const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var item_slot: ItemSlot :
     set(new_item_slot):
@@ -85,21 +86,15 @@ var _ctrl_drop_zone: CtrlDropZone
 func _connect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
-
-    if !item_slot.item_equipped.is_connected(_refresh):
-        item_slot.item_equipped.connect(_refresh)
-    if !item_slot.cleared.is_connected(_refresh):
-        item_slot.cleared.connect(_refresh)
+    Utils.safe_connect(item_slot.item_equipped, _refresh)
+    Utils.safe_connect(item_slot.cleared, _refresh)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
-
-    if item_slot.item_equipped.is_connected(_refresh):
-        item_slot.item_equipped.disconnect(_refresh)
-    if item_slot.cleared.is_connected(_refresh):
-        item_slot.cleared.disconnect(_refresh)
+    Utils.safe_disconnect(item_slot.item_equipped, _refresh)
+    Utils.safe_disconnect(item_slot.cleared, _refresh)
 
 
 func _ready():

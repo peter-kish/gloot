@@ -11,6 +11,7 @@ signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 class GridControl extends Control:
     var color: Color = Color.BLACK :
@@ -176,32 +177,26 @@ func _connect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.connect(_on_item_property_changed)
+    Utils.safe_connect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
     var grid_constraint = inventory.get_grid_constraint()
-    if grid_constraint != null && !grid_constraint.item_moved.is_connected(_on_item_moved):
-        grid_constraint.item_moved.connect(_on_item_moved)
-        grid_constraint.size_changed.connect(_queue_refresh)
-    if !inventory.constraint_enabled.is_connected(_on_constraint_enabled):
-        inventory.constraint_enabled.connect(_on_constraint_enabled)
+    if grid_constraint != null:
+        Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
+        Utils.safe_connect(grid_constraint.size_changed, _queue_refresh)
+    Utils.safe_connect(inventory.constraint_enabled, _on_constraint_enabled)
 
 
 func _disconnect_inventory_signals() -> void:
     if !inventory:
         return
 
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.disconnect(_on_item_property_changed)
+    Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
     var grid_constraint = inventory.get_grid_constraint()
-    if grid_constraint != null && grid_constraint.item_moved.is_connected(_on_item_moved):
-        grid_constraint.item_moved.disconnect(_on_item_moved)
-        grid_constraint.size_changed.disconnect(_queue_refresh)
-    if inventory.constraint_enabled.is_connected(_on_constraint_enabled):
-        inventory.constraint_enabled.disconnect(_on_constraint_enabled)
+    if grid_constraint != null:
+        Utils.safe_disconnect(grid_constraint.item_moved, _on_item_moved)
+        Utils.safe_disconnect(grid_constraint.size_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.constraint_enabled, _on_constraint_enabled)
 
 
 func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
@@ -214,8 +209,7 @@ func _on_item_moved(_item: InventoryItem) -> void:
 
 func _on_constraint_enabled(constraint: int) -> void:
     if constraint == inventory.Constraint.GRID:
-        if !inventory.get_grid_constraint().item_moved.is_connected(_on_item_moved):
-            inventory.get_grid_constraint().item_moved.connect(_on_item_moved)
+        Utils.safe_connect(inventory.get_grid_constraint().item_moved, _on_item_moved)
 
 
 func _refresh() -> void:

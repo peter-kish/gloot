@@ -2,6 +2,7 @@
 extends Control
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var inventory: Inventory :
     set(new_inventory):
@@ -32,17 +33,17 @@ func _disconnect_inventory_signals() -> void:
 func _on_constraint_enabled(constraint: int) -> void:
     _enable_constraint_editing(constraint)
     if constraint == Inventory.Constraint.WEIGHT:
-        _safe_connect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
+        Utils.safe_connect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
     elif constraint == Inventory.Constraint.GRID:
-        _safe_connect(inventory.get_grid_constraint().size_changed, _on_size_changed)
+        Utils.safe_connect(inventory.get_grid_constraint().size_changed, _on_size_changed)
 
 
 func _on_pre_constraint_disabled(constraint: int) -> void:
     _disable_constraint_editing(constraint)
     if constraint == Inventory.Constraint.WEIGHT:
-        _safe_disconnect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
+        Utils.safe_disconnect(inventory.get_weight_constraint().capacity_changed, _on_capacity_changed)
     elif constraint == Inventory.Constraint.GRID:
-        _safe_disconnect(inventory.get_grid_constraint().size_changed, _on_size_changed)
+        Utils.safe_disconnect(inventory.get_grid_constraint().size_changed, _on_size_changed)
 
 
 func _enable_constraint_editing(constraint: int) -> void:
@@ -133,27 +134,27 @@ func _refresh() -> void:
 
 
 func _connect_ui_signals() -> void:
-    _safe_connect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
-    _safe_connect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
+    Utils.safe_connect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
+    Utils.safe_connect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
 
-    _safe_connect(%LineEditCapacity.text_submitted, _set_capacity)
-    _safe_connect(%LineEditCapacity.focus_exited, _on_capacity_focus_exited)
-    _safe_connect(%LineEditSizeX.text_submitted, _set_size_x)
-    _safe_connect(%LineEditSizeX.focus_exited, _on_size_x_focus_exited)
-    _safe_connect(%LineEditSizeY.text_submitted, _set_size_y)
-    _safe_connect(%LineEditSizeY.focus_exited, _on_size_y_focus_exited)
+    Utils.safe_connect(%LineEditCapacity.text_submitted, _set_capacity)
+    Utils.safe_connect(%LineEditCapacity.focus_exited, _on_capacity_focus_exited)
+    Utils.safe_connect(%LineEditSizeX.text_submitted, _set_size_x)
+    Utils.safe_connect(%LineEditSizeX.focus_exited, _on_size_x_focus_exited)
+    Utils.safe_connect(%LineEditSizeY.text_submitted, _set_size_y)
+    Utils.safe_connect(%LineEditSizeY.focus_exited, _on_size_y_focus_exited)
 
 
 func _disconnect_ui_signals() -> void:
-    _safe_disconnect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
-    _safe_disconnect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
+    Utils.safe_disconnect(%CheckBoxWeightConstraint.toggled, _on_weight_constraint_toggled)
+    Utils.safe_disconnect(%CheckBoxGridConstraint.toggled, _on_grid_constraint_toggled)
 
-    _safe_disconnect(%LineEditCapacity.text_submitted, _set_capacity)
-    _safe_disconnect(%LineEditCapacity.focus_exited, _on_capacity_focus_exited)
-    _safe_disconnect(%LineEditSizeX.text_submitted, _set_size_x)
-    _safe_disconnect(%LineEditSizeX.focus_exited, _on_size_x_focus_exited)
-    _safe_disconnect(%LineEditSizeY.text_submitted, _set_size_y)
-    _safe_disconnect(%LineEditSizeY.focus_exited, _on_size_y_focus_exited)
+    Utils.safe_disconnect(%LineEditCapacity.text_submitted, _set_capacity)
+    Utils.safe_disconnect(%LineEditCapacity.focus_exited, _on_capacity_focus_exited)
+    Utils.safe_disconnect(%LineEditSizeX.text_submitted, _set_size_x)
+    Utils.safe_disconnect(%LineEditSizeX.focus_exited, _on_size_x_focus_exited)
+    Utils.safe_disconnect(%LineEditSizeY.text_submitted, _set_size_y)
+    Utils.safe_disconnect(%LineEditSizeY.focus_exited, _on_size_y_focus_exited)
 
 
 func _on_weight_constraint_toggled(toggled_on: bool) -> void:
@@ -218,14 +219,3 @@ func _on_size_x_focus_exited() -> void:
 
 func _on_size_y_focus_exited() -> void:
     _set_size_y(%LineEditSizeY.text)
-
-
-func _safe_connect(s: Signal, c: Callable) -> void:
-    if !s.is_connected(c):
-        s.connect(c)
-
-
-func _safe_disconnect(s: Signal, c: Callable) -> void:
-    if s.is_connected(c):
-        s.disconnect(c)
-

@@ -13,6 +13,7 @@ const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
 
@@ -101,28 +102,22 @@ func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.connect(_on_item_property_changed)
-    # if !inventory.size_changed.is_connected(_on_inventory_resized):
-    #     inventory.size_changed.connect(_on_inventory_resized)
-    if !inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.connect(_on_item_removed)
+    Utils.safe_connect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
+    # TODO: Sort out constraint signals
+    # Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_connect(inventory.item_removed, _on_item_removed)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_property_changed.is_connected(_on_item_property_changed):
-        inventory.item_property_changed.disconnect(_on_item_property_changed)
-    # if inventory.size_changed.is_connected(_on_inventory_resized):
-    #     inventory.size_changed.disconnect(_on_inventory_resized)
-    if inventory.item_removed.is_connected(_on_item_removed):
-        inventory.item_removed.disconnect(_on_item_removed)
+    Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
+    Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
+    # TODO: Sort out constraint signals
+    # Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
+    Utils.safe_disconnect(inventory.item_removed, _on_item_removed)
 
 
 func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:

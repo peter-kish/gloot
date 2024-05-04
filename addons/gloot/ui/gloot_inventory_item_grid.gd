@@ -7,6 +7,7 @@ signal inventory_item_context_activated(item)
 
 const GlootInventoryFieldGrid = preload("res://addons/gloot/ui/gloot_inventory_field_grid.gd")
 const GlootInventoryItemRect = preload("res://addons/gloot/ui/gloot_inventory_item_rect.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var inventory: Inventory = null :
     set(new_inventory):
@@ -52,7 +53,7 @@ var _selected_item_rect: GlootInventoryItemRect = null
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
-        inventory.ready.connect(_refresh)
+        Utils.safe_connect(inventory.ready, _refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
@@ -62,8 +63,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    if inventory.ready.is_connected(_refresh):
-        inventory.ready.disconnect(_refresh)
+    Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)

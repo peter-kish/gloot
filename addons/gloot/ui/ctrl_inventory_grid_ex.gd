@@ -14,6 +14,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 
 class PriorityPanel extends Panel:
@@ -133,19 +134,17 @@ var _refresh_queued: bool = false
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-    if !inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.connect(_queue_refresh)
-    # if !inventory.size_changed.is_connected(_on_inventory_resized):
-    #     inventory.size_changed.connect(_on_inventory_resized)
+    Utils.safe_connect(inventory.contents_changed, _queue_refresh)
+    # TODO: Sort out constraint signals
+    # Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
-    if inventory.contents_changed.is_connected(_queue_refresh):
-        inventory.contents_changed.disconnect(_queue_refresh)
-    # if inventory.size_changed.is_connected(_on_inventory_resized):
-    #     inventory.size_changed.disconnect(_on_inventory_resized)
+    Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
+    # TODO: Sort out constraint signals
+    # Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
 
 
 func _process(_delta) -> void:
