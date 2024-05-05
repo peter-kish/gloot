@@ -26,8 +26,6 @@ var inventory: Inventory = null :
         if _grid_constraint != null:
             _grid_constraint.inventory = inventory
 
-enum Configuration {WG, W, G, VANILLA}
-
 
 func _init(inventory_: Inventory) -> void:
     inventory = inventory_
@@ -78,50 +76,34 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
         _grid_constraint._on_post_item_swap(item1, item2)
 
 
-func _enforce_constraints(item: InventoryItem) -> bool:
-    match get_configuration():
-        Configuration.G:
-            return _grid_constraint.move_item_to_free_spot(item)
-        Configuration.WG:
-            return _grid_constraint.move_item_to_free_spot(item)
+func _get_constraints() -> Array:
+    var result: Array = []
+    if _grid_constraint_enabled:
+        result.append(get_grid_constraint())
+    if _weight_constraint_enabled:
+        result.append(get_weight_constraint())
+    return result
 
+
+func _enforce_constraints(item: InventoryItem) -> bool:
+    for constraint in _get_constraints():
+        constraint.enforce(item)
     return true
 
 
-func get_configuration() -> int:
-    if _weight_constraint_enabled && _grid_constraint_enabled:
-        return Configuration.WG
-
-    if _weight_constraint_enabled:
-        return Configuration.W
-
-    if _grid_constraint_enabled:
-        return Configuration.G
-
-    return Configuration.VANILLA
-
-
 func get_space_for(item: InventoryItem) -> ItemCount:
-    match get_configuration():
-        Configuration.W:
-            return _weight_constraint.get_space_for(item)
-        Configuration.G:
-            return _grid_constraint.get_space_for(item)
-        Configuration.WG:
-            return ItemCount.min(_grid_constraint.get_space_for(item), _weight_constraint.get_space_for(item))
-
-    return ItemCount.inf()
+    var min := ItemCount.inf()
+    for constraint in _get_constraints():
+        var space_for_item: ItemCount = constraint.get_space_for(item)
+        if space_for_item.lt(min):
+            min = space_for_item
+    return min
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    match get_configuration():
-        Configuration.W:
-            return _weight_constraint.has_space_for(item)
-        Configuration.G:
-            return _grid_constraint.has_space_for(item)
-        Configuration.WG:
-            return _weight_constraint.has_space_for(item) && _grid_constraint.has_space_for(item)
-
+    for constraint in _get_constraints():
+        if !constraint.has_space_for(item):
+            return false
     return true
 
 

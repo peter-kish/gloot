@@ -25,6 +25,7 @@ func init_suite():
         "test_g_has_space_for",
         "test_wg_has_space_for",
         "test_g_enforce_constraints",
+        "test_sg_enforce_constraints",
         "test_wg_enforce_constraints",
     ]
 
@@ -138,6 +139,44 @@ func test_g_enforce_constraints() -> void:
         assert(add_item_result == data.expected)
         if add_item_result:
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(item), item))
+
+    inventory.remove_item(new_item)
+
+
+func test_sg_enforce_constraints() -> void:
+    inventory.prototree_json = TEST_PROTOTREE_G
+
+    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
+    var grid_constraint := constraint_manager.get_grid_constraint()
+    assert(grid_constraint != null)
+
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+    assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
+
+    # Test cases:
+    # 1. Grid space available and stack space available
+    # 2. No grid space available, but stack space available
+    # 3. Grid space available, but no stack space available
+    # 4. No grid space available and no stack space available
+    var test_data := [
+        {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
+        {input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
+        {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 1}, expected = true},
+        {input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 1}, expected = false},
+    ]
+
+    for data in test_data:
+        var test_item := InventoryItem.new(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
+
+        grid_constraint.size = data.input.inv_size
+        StackManager.set_item_max_stack_size(new_item, ItemCount.new(data.input.new_item_max_stack_size))
+        assert(StackManager.set_item_stack_size(new_item, ItemCount.new(data.input.new_item_stack_size)))
+        var add_item_result := inventory.add_item(test_item)
+        assert(add_item_result == data.expected)
+        if add_item_result && is_node_valid(test_item):
+            assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
+
+        inventory.remove_item(test_item)
 
     inventory.remove_item(new_item)
 

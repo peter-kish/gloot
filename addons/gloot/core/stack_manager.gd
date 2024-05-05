@@ -264,3 +264,10 @@ static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
 
     return stack_split
 
+
+static func inv_pack_stack(inv: Inventory, item: InventoryItem) -> void:
+    for mergable_item in inv.get_items():
+        if !can_merge_stacks(mergable_item, item, true):
+            continue
+        merge_stacks(mergable_item, item, true)
+

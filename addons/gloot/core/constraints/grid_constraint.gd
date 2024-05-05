@@ -451,6 +451,11 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
     return false
 
 
+func enforce(item: InventoryItem) -> void:
+    if !move_item_to_free_spot(item):
+        StackManager.inv_pack_stack(inventory, item)
+
+
 func reset() -> void:
     size = DEFAULT_SIZE
     _item_map.resize(size)
