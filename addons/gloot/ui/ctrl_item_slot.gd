@@ -8,6 +8,8 @@ const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
+signal item_mouse_entered
+signal item_mouse_exited
 
 @export var item_slot_path: NodePath :
     set(new_item_slot_path):
@@ -150,6 +152,8 @@ func _ready():
     _ctrl_inventory_item_rect.size_flags_vertical = SIZE_EXPAND_FILL
     _ctrl_inventory_item_rect.item_slot = item_slot
     _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
+    _ctrl_inventory_item_rect.mouse_entered.connect(_on_mouse_entered)
+    _ctrl_inventory_item_rect.mouse_exited.connect(_on_mouse_exited)
     _hbox_container.add_child(_ctrl_inventory_item_rect)
 
     _ctrl_drop_zone = CtrlDropZone.new()
@@ -228,6 +232,15 @@ func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
 
 func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
     _ctrl_drop_zone.deactivate()
+
+
+func _on_mouse_entered():
+    var item = item_slot.get_item()
+    emit_signal("item_mouse_entered", item)
+
+func _on_mouse_exited():
+    var item = item_slot.get_item()
+    emit_signal("item_mouse_exited", item)
 
 
 func _notification(what: int) -> void:
