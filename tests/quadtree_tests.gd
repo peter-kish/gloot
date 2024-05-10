@@ -82,7 +82,13 @@ func get_first_test() -> void:
     var quadtree := QuadTree.new(Vector2i(4, 4))
     quadtree.add(QuadTree.QtRect.new(Rect2i(0, 0, 1, 1), 42))
     quadtree.add(QuadTree.QtRect.new(Rect2i(1, 1, 1, 1), 43))
+
     var first := quadtree.get_first(Rect2i(0, 0, 2, 2))
+    assert(first != null)
+    assert(first.rect == Rect2i(0, 0, 1, 1))
+    assert(first.metadata == 42)
+    
+    first = quadtree.get_first(Vector2i(0, 0))
     assert(first != null)
     assert(first.rect == Rect2i(0, 0, 1, 1))
     assert(first.metadata == 42)
@@ -92,9 +98,15 @@ func get_all_test() -> void:
     var quadtree := QuadTree.new(Vector2i(4, 4))
     quadtree.add(QuadTree.QtRect.new(Rect2i(0, 0, 1, 1), 42))
     quadtree.add(QuadTree.QtRect.new(Rect2i(1, 1, 1, 1), 43))
+
     var all := quadtree.get_all(Rect2i(0, 0, 2, 2))
     assert(all.size() == 2)
     assert(all[0].rect == Rect2i(0, 0, 1, 1))
     assert(all[0].metadata == 42)
     assert(all[1].rect == Rect2i(1, 1, 1, 1))
     assert(all[1].metadata == 43)
+
+    all = quadtree.get_all(Vector2i(1, 1))
+    assert(all.size() == 1)
+    assert(all[0].rect == Rect2i(1, 1, 1, 1))
+    assert(all[0].metadata == 43)

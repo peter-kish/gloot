@@ -30,7 +30,7 @@ class QtNode:
         return qt_rects.is_empty()
 
 
-    func get_first(test_rect: Rect2i) -> QtRect:
+    func get_first_under_rect(test_rect: Rect2i) -> QtRect:
         for qtr in qt_rects:
             if qtr.rect.intersects(test_rect):
                 return qtr
@@ -40,14 +40,31 @@ class QtNode:
                 continue
             if !quadrant.rect.intersects(test_rect):
                 continue
-            var first = quadrant.get_first(test_rect)
+            var first = quadrant.get_first_under_rect(test_rect)
             if first != null:
                 return first
 
         return null
 
 
-    func get_all(test_rect: Rect2i) -> Array[QtRect]:
+    func get_first_containing_point(point: Vector2i) -> QtRect:
+        for qtr in qt_rects:
+            if qtr.rect.has_point(point):
+                return qtr
+
+        for quadrant in quadrants:
+            if quadrant == null:
+                continue
+            if !quadrant.rect.has_point(point):
+                continue
+            var first = quadrant.get_first_containing_point(point)
+            if first != null:
+                return first
+
+        return null
+
+
+    func get_all_under_rect(test_rect: Rect2i) -> Array[QtRect]:
         var result: Array[QtRect]
 
         for qtr in qt_rects:
@@ -59,7 +76,24 @@ class QtNode:
                 continue
             if !quadrant.rect.intersects(test_rect):
                 continue
-            result.append_array(quadrant.get_all(test_rect))
+            result.append_array(quadrant.get_all_under_rect(test_rect))
+
+        return result
+
+
+    func get_all_containing_point(point: Vector2i) -> Array[QtRect]:
+        var result: Array[QtRect]
+
+        for qtr in qt_rects:
+            if qtr.rect.has_point(point):
+                result.append(qtr)
+
+        for quadrant in quadrants:
+            if quadrant == null:
+                continue
+            if !quadrant.rect.has_point(point):
+                continue
+            result.append_array(quadrant.get_all_containing_point(point))
 
         return result
 
@@ -168,12 +202,22 @@ func _init(size: Vector2) -> void:
     _root = QtNode.new(Rect2i(Vector2i.ZERO, _size))
 
 
-func get_first(rect: Rect2i) -> QtRect:
-    return _root.get_first(rect)
+func get_first(at: Variant) -> QtRect:
+    assert(at is Rect2i || at is Vector2i)
+    if at is Rect2i:
+        return _root.get_first_under_rect(at)
+    if at is Vector2i:
+        return _root.get_first_containing_point(at)
+    return null
 
 
-func get_all(rect: Rect2i) -> Array[QtRect]:
-    return _root.get_all(rect)
+func get_all(at: Variant) -> Array[QtRect]:
+    assert(at is Rect2i || at is Vector2i)
+    if at is Rect2i:
+        return _root.get_all_under_rect(at)
+    if at is Vector2i:
+        return _root.get_all_containing_point(at)
+    return []
 
 
 func add(qt_rect: QtRect) -> void:
