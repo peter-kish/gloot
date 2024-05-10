@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://6ij3qlnr0qr3"]
+[gd_scene load_steps=16 format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" path="res://tests/item_definitions_test.gd" id="2"]
+[ext_resource type="Script" path="res://tests/quadtree_tests.gd" id="2_bbskb"]
 [ext_resource type="Script" path="res://tests/item_count_test.gd" id="2_e28iq"]
 [ext_resource type="Script" path="res://tests/prototree_tests.gd" id="2_ryngl"]
 [ext_resource type="Script" path="res://tests/inventory_stacked_tests.gd" id="3"]
@@ -17,6 +18,9 @@
 
 [node name="InventorySystemTests" type="Node"]
 script = ExtResource("15")
+
+[node name="QuadtreeTest" type="Node" parent="."]
+script = ExtResource("2_bbskb")
 
 [node name="PrototreeTest" type="Node" parent="."]
 script = ExtResource("2_ryngl")
