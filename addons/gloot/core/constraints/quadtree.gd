@@ -15,6 +15,7 @@ class QtRect:
 
 class QtNode:
     var quadrants: Array[QtNode] = [null, null, null, null]
+    var quadrant_count: int = 0
     var qt_rects: Array[QtRect]
     var rect: Rect2i
 
@@ -23,15 +24,18 @@ class QtNode:
         rect = r
 
 
+    func _to_string() -> String:
+        return "[R: %s]" % str(rect)
+
+
     func is_empty() -> bool:
-        for quadrant in quadrants:
-            if quadrant != null:
-                return false
-        return qt_rects.is_empty()
+        return (quadrant_count == 0) && qt_rects.is_empty()
 
 
-    func get_first_under_rect(test_rect: Rect2i) -> QtRect:
+    func get_first_under_rect(test_rect: Rect2i, exception_metadata: Variant = null) -> QtRect:
         for qtr in qt_rects:
+            if exception_metadata != null && qtr.metadata == exception_metadata:
+                continue
             if qtr.rect.intersects(test_rect):
                 return qtr
 
@@ -40,15 +44,17 @@ class QtNode:
                 continue
             if !quadrant.rect.intersects(test_rect):
                 continue
-            var first = quadrant.get_first_under_rect(test_rect)
+            var first = quadrant.get_first_under_rect(test_rect, exception_metadata)
             if first != null:
                 return first
 
         return null
 
 
-    func get_first_containing_point(point: Vector2i) -> QtRect:
+    func get_first_containing_point(point: Vector2i, exception_metadata: Variant = null) -> QtRect:
         for qtr in qt_rects:
+            if exception_metadata != null && qtr.metadata == exception_metadata:
+                continue
             if qtr.rect.has_point(point):
                 return qtr
 
@@ -57,17 +63,19 @@ class QtNode:
                 continue
             if !quadrant.rect.has_point(point):
                 continue
-            var first = quadrant.get_first_containing_point(point)
+            var first = quadrant.get_first_containing_point(point, exception_metadata)
             if first != null:
                 return first
 
         return null
 
 
-    func get_all_under_rect(test_rect: Rect2i) -> Array[QtRect]:
+    func get_all_under_rect(test_rect: Rect2i, exception_metadata: Variant = null) -> Array[QtRect]:
         var result: Array[QtRect]
 
         for qtr in qt_rects:
+            if exception_metadata != null && qtr.metadata == exception_metadata:
+                continue
             if qtr.rect.intersects(test_rect):
                 result.append(qtr)
 
@@ -76,15 +84,17 @@ class QtNode:
                 continue
             if !quadrant.rect.intersects(test_rect):
                 continue
-            result.append_array(quadrant.get_all_under_rect(test_rect))
+            result.append_array(quadrant.get_all_under_rect(test_rect, exception_metadata))
 
         return result
 
 
-    func get_all_containing_point(point: Vector2i) -> Array[QtRect]:
+    func get_all_containing_point(point: Vector2i, exception_metadata: Variant = null) -> Array[QtRect]:
         var result: Array[QtRect]
 
         for qtr in qt_rects:
+            if exception_metadata != null && qtr.metadata == exception_metadata:
+                continue
             if qtr.rect.has_point(point):
                 result.append(qtr)
 
@@ -93,7 +103,7 @@ class QtNode:
                 continue
             if !quadrant.rect.has_point(point):
                 continue
-            result.append_array(quadrant.get_all_containing_point(point))
+            result.append_array(quadrant.get_all_containing_point(point, exception_metadata))
 
         return result
 
@@ -114,6 +124,7 @@ class QtNode:
                 continue
             if quadrants[i] == null:
                 quadrants[i] = QtNode.new(quadrant_rect)
+                quadrant_count += 1
                 while !qt_rects.is_empty():
                     var qtr = qt_rects.pop_back()
                     
@@ -136,6 +147,7 @@ class QtNode:
                 result = true
             if quadrants[i].is_empty():
                 quadrants[i] = null
+                quadrant_count -= 1
 
         _collapse()
 
@@ -143,32 +155,23 @@ class QtNode:
 
 
     func _collapse() -> void:
-        var collapsable_quadrant_idx = _get_collapsable_quadrant_idx()
-        if collapsable_quadrant_idx < 0:
+        if quadrant_count == 0:
             return
-        for qt_rect in quadrants[collapsable_quadrant_idx].qt_rects:
-            qt_rects.append(qt_rect)
-        quadrants[collapsable_quadrant_idx] = null
-
-
-    func _get_collapsable_quadrant_idx() -> int:
-        var result: int = -1
-        for i in range(quadrants.size()):
+        var collapsing_into: QtRect = null
+        for i in quadrants.size():
             if quadrants[i] == null:
                 continue
-            if result >= 0:
-                # More than 1 non-null quadrants
-                return -1
-            result = i
+            if quadrants[i].quadrant_count != 0:
+                return
+            for qtr in quadrants[i].qt_rects:
+                if collapsing_into != null && collapsing_into != qtr:
+                    return
+                collapsing_into = qtr
 
-        if result < 0:
-            # No non-null quadrants
-            return -1
-        if quadrants[result].qt_rects.size() > 1:
-            # Quadrant contains more than 1 rects
-            return -1
-
-        return result
+        for i in quadrants.size():
+            quadrants[i] = null
+        quadrant_count = 0
+        qt_rects.append(collapsing_into)
 
 
     static func _can_subdivide(size: Vector2i) -> bool:
@@ -196,32 +199,30 @@ var _size: Vector2i
 
 
 func _init(size: Vector2) -> void:
-    assert(size.x > 1)
-    assert(size.y > 1)
     _size = size
     _root = QtNode.new(Rect2i(Vector2i.ZERO, _size))
 
 
-func get_first(at: Variant) -> QtRect:
+func get_first(at: Variant, exception_metadata: Variant = null) -> QtRect:
     assert(at is Rect2i || at is Vector2i)
     if at is Rect2i:
-        return _root.get_first_under_rect(at)
+        return _root.get_first_under_rect(at, exception_metadata)
     if at is Vector2i:
-        return _root.get_first_containing_point(at)
+        return _root.get_first_containing_point(at, exception_metadata)
     return null
 
 
-func get_all(at: Variant) -> Array[QtRect]:
+func get_all(at: Variant, exception_metadata: Variant = null) -> Array[QtRect]:
     assert(at is Rect2i || at is Vector2i)
     if at is Rect2i:
-        return _root.get_all_under_rect(at)
+        return _root.get_all_under_rect(at, exception_metadata)
     if at is Vector2i:
-        return _root.get_all_containing_point(at)
+        return _root.get_all_containing_point(at, exception_metadata)
     return []
 
 
-func add(qt_rect: QtRect) -> void:
-    _root.add(qt_rect)
+func add(rect: Rect2i, metadata: Variant) -> void:
+    _root.add(QtRect.new(rect, metadata))
 
 
 func remove(metadata: Variant) -> bool:
