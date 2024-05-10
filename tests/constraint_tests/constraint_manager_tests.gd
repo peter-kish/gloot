@@ -173,7 +173,7 @@ func test_sg_enforce_constraints() -> void:
         assert(StackManager.set_item_stack_size(new_item, ItemCount.new(data.input.new_item_stack_size)))
         var add_item_result := inventory.add_item(test_item)
         assert(add_item_result == data.expected)
-        if add_item_result && is_node_valid(test_item):
+        if add_item_result && (StackManager.get_item_stack_size(test_item).count > 0):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
 
         inventory.remove_item(test_item)
