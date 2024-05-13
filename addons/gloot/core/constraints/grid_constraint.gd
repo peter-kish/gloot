@@ -5,7 +5,7 @@ signal size_changed
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
-const ItemMap = preload("res://addons/gloot/core/constraints/item_map.gd")
+const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
 
 # TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
 const KEY_WIDTH: String = "width"
@@ -16,8 +16,8 @@ const KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
-var _item_map := ItemMap.new(Vector2i.ZERO)
 var _swap_position := Vector2i.ZERO
+var _quad_tree := QuadTree.new(size)
 
 @export var size: Vector2i = DEFAULT_SIZE :
     set(new_size):
@@ -30,36 +30,32 @@ var _swap_position := Vector2i.ZERO
             if _bounds_broken():
                 size = old_size
         if size != old_size:
-            _refresh_item_map()
+            _refresh_quad_tree()
             size_changed.emit()
 
 
-func _refresh_item_map() -> void:
-    _item_map.resize(size)
-    _fill_item_map()
-
-
-func _fill_item_map() -> void:
+func _refresh_quad_tree() -> void:
+    _quad_tree = QuadTree.new(size)
     for item in inventory.get_items():
-        _item_map.fill_rect(get_item_rect(item), item)
+        _quad_tree.add(get_item_rect(item), item)
 
 
 func _on_inventory_set() -> void:
-    _refresh_item_map()
+    _refresh_quad_tree()
 
 
 func _on_item_added(item: InventoryItem) -> void:
     if item == null:
         return
-    _item_map.fill_rect(get_item_rect(item), item)
+    _quad_tree.add(get_item_rect(item), item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    _item_map.clear_rect(get_item_rect(item))
+    _quad_tree.remove(item)
 
     
 func _on_item_modified(item: InventoryItem) -> void:
-    _refresh_item_map()
+    _refresh_quad_tree()
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
@@ -261,10 +257,10 @@ func create_and_add_item_at(prototype_id: String, position: Vector2i) -> Invento
 
 func get_item_at(position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
-    
-    if !_item_map.contains(position):
+    var first = _quad_tree.get_first(position)
+    if first == null:
         return null
-    return _item_map.get_field(position)
+    return first.metadata
 
 
 func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
@@ -362,12 +358,7 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     if rect.position.y + rect.size.y > size.y:
         return false
 
-    for i in range(rect.position.x, rect.position.x + rect.size.x):
-        for j in range(rect.position.y, rect.position.y + rect.size.y):
-            var field = _item_map.get_field(Vector2i(i, j))
-            if field != null && field != exception:
-                return false
-    return true
+    return _quad_tree.get_first(rect, exception) == null
 
 
 # TODO: Check if this is needed after adding find_free_space
@@ -419,8 +410,6 @@ func _sort_if_needed() -> void:
 func get_space_for(item: InventoryItem) -> ItemCount:
     var occupied_rects: Array[Rect2i]
     var item_size = get_item_size(item)
-    if item_size == Vector2i.ONE:
-        return ItemCount.new(_item_map.free_fields)
 
     var free_space := find_free_space(item_size, occupied_rects)
     while free_space.success:
@@ -430,10 +419,7 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    var item_size = get_item_size(item)
-    if item_size == Vector2i.ONE:
-        return _item_map.free_fields > 0
-        
+    var item_size = get_item_size(item)        
     return find_free_space(item_size).success
 
 

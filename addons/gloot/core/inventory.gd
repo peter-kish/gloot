@@ -68,10 +68,6 @@ func _enter_tree():
         _items.append(child)
 
 
-func _exit_tree():
-    _items.clear()  
-
-
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
 
@@ -160,10 +156,29 @@ func add_item(item: InventoryItem) -> bool:
     if item.get_parent():
         item.get_parent().remove_child(item)
 
-    add_child(item)
+    _add_child_outside_scene_tree(item)
+
     if Engine.is_editor_hint():
         item.owner = get_tree().edited_scene_root
     return true
+
+
+func _add_child_outside_scene_tree(child: Node) -> void:
+    # HACK: Adding an item and removing it immediately during the PARENTED notification causes errors because Godot
+    # still tries to call the ENTER_TREE notification. To prevent that we make sure that the inventory is not inside the
+    # scene tree when items are added.
+    var parent := get_parent()
+    var inv_idx := 0
+    if parent != null:
+        inv_idx = get_index()
+        parent.remove_child(self)
+
+    add_child(child)
+
+    # HACK: Now we can add the inventory back into the scene tree.
+    if parent != null:
+        parent.add_child(self)
+        parent.move_child(self, inv_idx)
 
 
 func can_add_item(item: InventoryItem) -> bool:
