@@ -207,12 +207,12 @@ func add_item(item: InventoryItem) -> bool:
     _items.append(item)
     _update_serialized_format()
     item._inventory = self
-    contents_changed.emit()
     _connect_item_signals(item)
     _constraint_manager._on_item_added(item)
     # Adding an item can result in the item being freed (e.g. when it's merged with another item stack)
     if !is_instance_valid(item):
         item = null
+    contents_changed.emit()
     item_added.emit(item)
     return true
 
@@ -249,9 +249,9 @@ func remove_item(item: InventoryItem) -> bool:
     _items.erase(item)
     _update_serialized_format()
     item._inventory = null
-    contents_changed.emit()
     _disconnect_item_signals(item)
     _constraint_manager._on_item_removed(item)
+    contents_changed.emit()
     item_removed.emit(item)
     return true
 
