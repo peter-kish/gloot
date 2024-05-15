@@ -4,43 +4,33 @@ const info_offset: Vector2 = Vector2(20, 0)
 
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
-@onready var ctrl_inventory_left := $"%CtrlInventoryGridLeft"
-@onready var ctrl_inventory_right := $"%CtrlInventoryGridRight"
-@onready var btn_sort_left: Button = $"%BtnSortLeft"
-@onready var btn_sort_right: Button = $"%BtnSortRight"
-@onready var btn_split_left: Button = $"%BtnSplitLeft"
-@onready var btn_split_right: Button = $"%BtnSplitRight"
-@onready var ctrl_slot: CtrlItemSlot = $"%CtrlItemSlot"
-@onready var btn_unequip: Button = $"%BtnUnequip"
-@onready var lbl_info: Label = $"%LblInfo"
-
 
 func _ready() -> void:
-    ctrl_inventory_left.item_mouse_entered.connect(_on_item_mouse_entered)
-    ctrl_inventory_left.item_mouse_exited.connect(_on_item_mouse_exited)
-    ctrl_inventory_right.item_mouse_entered.connect(_on_item_mouse_entered)
-    ctrl_inventory_right.item_mouse_exited.connect(_on_item_mouse_exited)
-    btn_sort_left.pressed.connect(_on_btn_sort.bind(ctrl_inventory_left))
-    btn_sort_right.pressed.connect(_on_btn_sort.bind(ctrl_inventory_right))
-    btn_split_left.pressed.connect(_on_btn_split.bind(ctrl_inventory_left))
-    btn_split_right.pressed.connect(_on_btn_split.bind(ctrl_inventory_right))
-    btn_unequip.pressed.connect(_on_btn_unequip)
+    %CtrlInventoryGridLeft.item_mouse_entered.connect(_on_item_mouse_entered)
+    %CtrlInventoryGridLeft.item_mouse_exited.connect(_on_item_mouse_exited)
+    %CtrlInventoryGridRight.item_mouse_entered.connect(_on_item_mouse_entered)
+    %CtrlInventoryGridRight.item_mouse_exited.connect(_on_item_mouse_exited)
+    %BtnSortLeft.pressed.connect(_on_btn_sort.bind(%CtrlInventoryGridLeft))
+    %BtnSortRight.pressed.connect(_on_btn_sort.bind(%CtrlInventoryGridRight))
+    %BtnSplitLeft.pressed.connect(_on_btn_split.bind(%CtrlInventoryGridLeft))
+    %BtnSplitRight.pressed.connect(_on_btn_split.bind(%CtrlInventoryGridRight))
+    %BtnUnequip.pressed.connect(_on_btn_unequip)
 
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:
-    lbl_info.show()
-    lbl_info.text = item.get_title()
+    %LblInfo.show()
+    %LblInfo.text = item.get_title()
 
 
 func _on_item_mouse_exited(_item: InventoryItem) -> void:
-    lbl_info.hide()
+    %LblInfo.hide()
 
 
 func _input(event: InputEvent) -> void:
     if !(event is InputEventMouseMotion):
         return
 
-    lbl_info.set_global_position(get_global_mouse_position() + info_offset)
+    %LblInfo.set_global_position(get_global_mouse_position() + info_offset)
 
 
 func _on_btn_sort(ctrl_inventory) -> void:
@@ -64,5 +54,5 @@ func _on_btn_split(ctrl_inventory) -> void:
 
 
 func _on_btn_unequip() -> void:
-    ctrl_slot.item_slot.clear()
+    %CtrlItemSlot.item_slot.clear()
 

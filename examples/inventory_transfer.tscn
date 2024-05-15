@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwu4vhba7uc2m"]
+[gd_scene load_steps=9 format=3 uid="uid://dwu4vhba7uc2m"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="1"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="2_yi3ph"]
+[ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="3_ibulh"]
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
-[ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
+[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="4_0by68"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
@@ -30,21 +31,29 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CtrlInventory" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="GlootInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1")
-inventory = NodePath("../../../Inventory")
-default_item_icon = ExtResource("5")
+item_count = 2
+item_0/text = "item 1"
+item_0/icon = ExtResource("2_yi3ph")
+item_1/text = "item 2"
+item_1/icon = ExtResource("3_ibulh")
+script = ExtResource("4_0by68")
+inventory = NodePath("../../../InventoryLeft")
 
-[node name="CtrlInventory2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="GlootInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1")
-inventory = NodePath("../../../Inventory2")
-default_item_icon = ExtResource("5")
+item_count = 2
+item_0/text = "item 1"
+item_0/icon = ExtResource("2_yi3ph")
+item_1/text = "item 2"
+item_1/icon = ExtResource("3_ibulh")
+script = ExtResource("4_0by68")
+inventory = NodePath("../../../InventoryRight")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -64,10 +73,12 @@ item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
 
 [node name="BtnEquipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Equip"
 
 [node name="BtnUnequipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Unequip"
 
@@ -80,16 +91,19 @@ Use the buttons below to transfer items from one inventory to the other."
 layout_mode = 2
 
 [node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "<<<"
 
 [node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = ">>>"
 
-[node name="Inventory" type="Node" parent="."]
+[node name="InventoryLeft" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("2")
 prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
@@ -101,11 +115,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/item1/item_2"
 }],
-"node_name": "Inventory",
+"node_name": "InventoryLeft",
 "prototree": "res://tests/data/prototree_basic.json"
 }
 
-[node name="Inventory2" type="Node" parent="."]
+[node name="InventoryRight" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("2")
 prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
@@ -117,11 +132,12 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/item1/item_2"
 }],
-"node_name": "Inventory2",
+"node_name": "InventoryRight",
 "prototree": "res://tests/data/prototree_basic.json"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("8_v60ia")
 prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {}
