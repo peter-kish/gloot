@@ -27,7 +27,6 @@ func init_test() -> void:
     inventory = create_inventory(TEST_PROTOTREE)
     slot = ItemSlot.new()
     slot.prototree_json = TEST_PROTOTREE
-    slot.remember_source_inventory = false
     item = inventory.create_and_add_item("minimal_item")
 
 
@@ -54,7 +53,6 @@ func test_swap() -> void:
     var item2 = inventory2.create_and_add_item("minimal_item")
     var slot2 = ItemSlot.new()
     slot2.prototree_json = TEST_PROTOTREE
-    slot2.remember_source_inventory = false
 
     # Swap items between two inventories
     assert(InventoryItem.swap(item, item2))

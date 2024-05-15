@@ -153,12 +153,7 @@ static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
         inventory.remove_item(item)
         return item_idx
     
-    # TODO: Consider removing/deprecating ItemSlot.remember_source_inventory
-    var item_slot := (item_owner as ItemSlot)
-    var temp_remember_source_inventory = item_slot.remember_source_inventory
-    item_slot.remember_source_inventory = false
-    item_slot.clear()
-    item_slot.remember_source_inventory = temp_remember_source_inventory
+    (item_owner as ItemSlot).clear()
     return 0
 
 

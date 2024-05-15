@@ -20,7 +20,6 @@ const KEY_ITEM: String = "item"
         _prototree.deserialize(prototree_json)
         prototree_json_changed.emit()
         update_configuration_warnings()
-@export var remember_source_inventory: bool = true
 
 var _prototree := ProtoTree.new()
 var _wr_source_inventory: WeakRef = weakref(null)
@@ -81,30 +80,16 @@ func equip(item: InventoryItem) -> bool:
 
 
 func clear() -> bool:
-    return _clear_impl(remember_source_inventory)
-
-
-func _clear_impl(return_item: bool) -> bool:
     if get_item() == null:
         return false
         
     var temp_item = _item
     _item._item_slot = null
     _item = null
-    if return_item:
-        _return_item_to_source_inventory(temp_item)
     _wr_source_inventory = weakref(null)
     cleared.emit()
     _update_serialized_format()
     return true
-
-
-func _return_item_to_source_inventory(item: InventoryItem) -> bool:
-    var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
-    if inventory != null:
-        if inventory.add_item(item):
-            return true
-    return false
 
 
 func get_item() -> InventoryItem:
@@ -122,7 +107,7 @@ func can_hold_item(item: InventoryItem) -> bool:
 
 
 func reset() -> void:
-    _clear_impl(false)
+    clear()
 
 
 func serialize() -> Dictionary:

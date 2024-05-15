@@ -14,7 +14,6 @@ func init_suite():
     tests = [
         "test_equip_item",
         "test_add_item_to_inventory",
-        "test_return_item_to_source_inventory",
         "test_equip_item_in_two_slots",
         "test_can_hold_item",
         "test_reset",
@@ -61,36 +60,6 @@ func test_add_item_to_inventory() -> void:
     assert(inventory.add_item(item))
     assert(slot.get_item() == null)
     assert(slot.equip(item))
-    assert(!inventory.has_item(item))
-
-
-func test_return_item_to_source_inventory() -> void:
-    assert(slot.equip(item))
-    assert(!inventory.has_item(item))
-    assert(slot.clear())
-    assert(inventory.has_item(item))
-
-    slot.remember_source_inventory = false
-    assert(slot.equip(item))
-    assert(slot.clear())
-    assert(!inventory.has_item(item))
-    slot.remember_source_inventory = true
-
-    assert(inventory.add_item(item))
-    assert(slot.equip(item))
-    assert(slot.equip(item2))
-    assert(inventory.has_item(item))
-
-    slot.remember_source_inventory = false
-    assert(inventory.add_item(item2))
-    assert(slot.equip(item))
-    assert(slot.equip(item2))
-    assert(!inventory.has_item(item))
-    slot.remember_source_inventory = true
-
-    assert(slot.equip(item))
-    assert(slot.clear())
-    assert(slot.get_item() == null)
     assert(!inventory.has_item(item))
 
 
