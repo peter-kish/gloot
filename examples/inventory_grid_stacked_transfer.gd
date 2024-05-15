@@ -54,5 +54,5 @@ func _on_btn_split(ctrl_inventory) -> void:
 
 
 func _on_btn_unequip() -> void:
-    %CtrlItemSlot.item_slot.clear()
+    %InventoryRight.add_item(%CtrlItemSlot.item_slot.get_item())
 

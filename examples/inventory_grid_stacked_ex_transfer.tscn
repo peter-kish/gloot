@@ -176,6 +176,7 @@ prototree_json = ExtResource("8_mr2pf")
 _serialized_format = {}
 
 [node name="InventoryLeft" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("9_a6m37")
 prototree_json = ExtResource("8_mr2pf")
 _serialized_format = {
@@ -219,6 +220,7 @@ _serialized_format = {
 }
 
 [node name="InventoryRight" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("9_a6m37")
 prototree_json = ExtResource("8_mr2pf")
 _serialized_format = {

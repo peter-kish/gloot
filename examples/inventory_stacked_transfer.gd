@@ -40,7 +40,6 @@ func _on_equip_pressed() -> void:
 
 
 func _on_unequip_pressed() -> void:
-    if %ItemSlot.get_item() != null && %InventoryLeft.has_place_for(%ItemSlot.get_item()):
-        %InventoryLeft.add_item_automerge(%ItemSlot.get_item())
-        %ItemSlot.clear()
+    if %ItemSlot.get_item() != null && %InventoryLeft.can_add_item(%ItemSlot.get_item()):
+        StackManager.inv_add_automerge(%InventoryLeft, %ItemSlot.get_item())
         
