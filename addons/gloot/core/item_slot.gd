@@ -22,7 +22,6 @@ const KEY_ITEM: String = "item"
         update_configuration_warnings()
 
 var _prototree := ProtoTree.new()
-var _wr_source_inventory: WeakRef = weakref(null)
 var _item: InventoryItem :
     set(new_item):
         _item = new_item
@@ -65,8 +64,6 @@ func equip(item: InventoryItem) -> bool:
     if get_item() != null && !clear():
         return false
 
-    _wr_source_inventory = weakref(item.get_inventory())
-
     if item.get_item_slot() != null:
         item.get_item_slot().clear()
     if item.get_inventory() != null:
@@ -83,10 +80,8 @@ func clear() -> bool:
     if get_item() == null:
         return false
         
-    var temp_item = _item
     _item._item_slot = null
     _item = null
-    _wr_source_inventory = weakref(null)
     cleared.emit()
     _update_serialized_format()
     return true
