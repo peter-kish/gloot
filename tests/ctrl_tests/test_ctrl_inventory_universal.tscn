@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b74caupvwsuxa"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_universal.gd" id="1_vwrjq"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_universal.gd" id="1_vwrjq"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_dake3"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="3_xu41k"]
 
@@ -8,7 +8,7 @@
 layout_mode = 3
 anchors_preset = 0
 
-[node name="GlootInventoryUniversal" type="VBoxContainer" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryUniversal" type="VBoxContainer" parent="." node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 367.0
 offset_bottom = 294.0
@@ -21,7 +21,7 @@ prototree_json = ExtResource("3_xu41k")
 _serialized_format = {
 "constraints": {
 "weight_constraint": {
-"capacity": 5.0
+"capacity": 10.0
 }
 },
 "items": [{

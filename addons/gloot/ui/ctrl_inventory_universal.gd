@@ -1,5 +1,5 @@
 @tool
-class_name  GlootInventoryUniversal
+class_name  CtrlInventoryUniversal
 extends VBoxContainer
 
 # TODO: Consider renaming to item_activated
@@ -16,7 +16,7 @@ signal inventory_item_context_activated(item)
         _refresh()
 
 var _inventory_control: Control = null
-var _capacity_control: GlootInventoryCapacity = null
+var _capacity_control: CtrlInventoryCapacity = null
 
 
 func connect_inventory_signals():
@@ -73,7 +73,7 @@ func _refresh() -> void:
         _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
         _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
     else:
-        _inventory_control = GlootInventory.new()
+        _inventory_control = CtrlInventory.new()
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
@@ -84,7 +84,7 @@ func _refresh() -> void:
         inventory_item_context_activated.emit(item)
     )
     if inventory.get_weight_constraint() != null:
-        _capacity_control = GlootInventoryCapacity.new()
+        _capacity_control = CtrlInventoryCapacity.new()
         _capacity_control.inventory = inventory
 
     if is_instance_valid(_inventory_control):

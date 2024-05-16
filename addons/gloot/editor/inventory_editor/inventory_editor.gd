@@ -76,14 +76,14 @@ func _create_inventory_container() -> Control:
     var vbox_container: Control = VBoxContainer.new()
     vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
     vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
-    var capacity_control: GlootInventoryCapacity = null
+    var capacity_control: CtrlInventoryCapacity = null
 
     if inventory.get_grid_constraint() != null:
         _inventory_control = CtrlInventoryGridEx.new()
         _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
         _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
     else:
-        _inventory_control = GlootInventory.new()
+        _inventory_control = CtrlInventory.new()
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
@@ -91,7 +91,7 @@ func _create_inventory_container() -> Control:
     _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
 
     if inventory.get_weight_constraint() != null:
-        capacity_control = GlootInventoryCapacity.new()
+        capacity_control = CtrlInventoryCapacity.new()
         capacity_control.inventory = inventory
 
     if _inventory_control:

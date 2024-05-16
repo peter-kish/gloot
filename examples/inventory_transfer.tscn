@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="2_yi3ph"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="3_ibulh"]
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
-[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="4_0by68"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="4_0by68"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
@@ -31,7 +31,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GlootInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -43,7 +43,7 @@ item_1/icon = ExtResource("3_ibulh")
 script = ExtResource("4_0by68")
 inventory = NodePath("../../../InventoryLeft")
 
-[node name="GlootInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

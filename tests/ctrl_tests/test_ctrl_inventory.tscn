@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="1_1ie5k"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
-[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="2_vyj5s"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_yg38y"]
 
 [node name="Control" type="Control"]
@@ -13,7 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GlootInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 350.0
 offset_bottom = 235.0

@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dcyi3nd2idb5j"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory_capacity.gd" id="2_6ia13"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="2_6ia13"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_25j36"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="4_ijkns"]
 [ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="4_uov1j"]
-[ext_resource type="Script" path="res://addons/gloot/ui/gloot_inventory.gd" id="5_b1fi0"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="5_b1fi0"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GlootInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 352.0
 offset_bottom = 240.0
@@ -25,7 +25,7 @@ item_1/icon = ExtResource("4_ijkns")
 script = ExtResource("5_b1fi0")
 inventory = NodePath("../Inventory")
 
-[node name="GlootInventoryCapacity" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryCapacity" type="Control" parent="." node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(0, 23)
 anchors_preset = 0
 offset_top = 240.0

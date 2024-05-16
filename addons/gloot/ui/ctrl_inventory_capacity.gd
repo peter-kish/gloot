@@ -1,5 +1,5 @@
 @tool
-class_name  GlootInventoryCapacity
+class_name  CtrlInventoryCapacity
 extends Control
 
 const Utils = preload("res://addons/gloot/core/utils.gd")

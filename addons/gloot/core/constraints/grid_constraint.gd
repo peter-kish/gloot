@@ -208,21 +208,6 @@ func _get_prototype_size(prototype_path: String) -> Vector2i:
     return size
 
 
-func _is_sorted() -> bool:
-    assert(inventory != null, "Inventory not set!")
-    for item1 in inventory.get_items():
-        for item2 in inventory.get_items():
-            if item1 == item2:
-                continue
-
-            var rect1: Rect2i = get_item_rect(item1)
-            var rect2: Rect2i = get_item_rect(item2)
-            if rect1.intersects(rect2):
-                return false;
-
-    return true
-
-
 func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     assert(inventory != null, "Inventory not set!")
 
@@ -376,11 +361,6 @@ func sort() -> bool:
         move_item_to(item, free_place.position)
 
     return true
-
-
-func _sort_if_needed() -> void:
-    if !_is_sorted() || _bounds_broken():
-        sort()
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:

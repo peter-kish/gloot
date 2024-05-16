@@ -161,6 +161,8 @@ func _queue_refresh() -> void:
 
 
 func _refresh_selection_panel() -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
     if !is_instance_valid(_selection_panels):
         return
 
@@ -183,6 +185,8 @@ func _refresh_selection_panel() -> void:
 
 
 func _refresh_field_background_grid() -> void:
+    if !is_instance_valid(_ctrl_inventory_grid_basic):
+        return
     if is_instance_valid(_field_background_grid):
         while _field_background_grid.get_child_count() > 0:
             _field_background_grid.get_children()[0].queue_free()
