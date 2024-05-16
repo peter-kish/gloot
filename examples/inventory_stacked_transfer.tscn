@@ -1,12 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://b2owv7hirds6s"]
+[gd_scene load_steps=10 format=3 uid="uid://b2owv7hirds6s"]
 
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="2_q4mul"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="3_54nof"]
 [ext_resource type="Script" path="res://examples/inventory_stacked_transfer.gd" id="4"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="4_nim7g"]
-[ext_resource type="Texture2D" uid="uid://bju6hohmp15ua" path="res://images/item_key.png" id="5"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="5_v7bum"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_otfc2"]
 [ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="6_v6n8v"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_worre"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_1flkn"]
@@ -84,12 +83,11 @@ layout_mode = 2
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-script = ExtResource("6")
+script = ExtResource("6_otfc2")
 item_slot = NodePath("../../../../ItemSlot")
-default_item_icon = ExtResource("5")
 label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]

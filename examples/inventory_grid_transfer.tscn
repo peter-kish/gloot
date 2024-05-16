@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="5_2bhnb"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="6_h2hjt"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_273xl"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="8_cfix6"]
@@ -81,10 +81,9 @@ layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-script = ExtResource("6")
+script = ExtResource("5_2bhnb")
 item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
 
@@ -108,6 +107,7 @@ offset_right = 40.0
 offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("8_273xl")
 prototree_json = ExtResource("6_h2hjt")
 _serialized_format = {}

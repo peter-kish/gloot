@@ -1,10 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfad61445qg3a"]
+[gd_scene load_steps=9 format=3 uid="uid://b4iegtrw2clvh"]
 
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="3"]
-[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_1rf0i"]
-[ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="5_ct3sj"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="1_64wxb"]
+[ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="2_h16kg"]
+[ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="3_th5bj"]
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="4_j3nko"]
+[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="5_46c6m"]
+[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="6_qj5xf"]
+
+[sub_resource type="StyleBoxTexture" id="1"]
+texture = ExtResource("2_h16kg")
+region_rect = Rect2(0, 0, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="2"]
+texture = ExtResource("3_th5bj")
+region_rect = Rect2(0, 0, 32, 32)
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -14,18 +23,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="." node_paths=PackedStringArray("item_slot")]
-layout_mode = 0
-offset_right = 4.0
-offset_bottom = 23.0
-script = ExtResource("3")
+[node name="CtrlItemSlot" type="Control" parent="." node_paths=PackedStringArray("item_slot")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+script = ExtResource("1_64wxb")
 item_slot = NodePath("../ItemSlot")
-default_item_icon = ExtResource("5")
 label_visible = false
+slot_style = SubResource("1")
+slot_highlighted_style = SubResource("2")
 
 [node name="Inventory" type="Node" parent="."]
-script = ExtResource("2")
-prototree_json = ExtResource("4_1rf0i")
+script = ExtResource("4_j3nko")
+prototree_json = ExtResource("5_46c6m")
 _serialized_format = {
 "constraints": {},
 "items": [{
@@ -40,8 +51,8 @@ _serialized_format = {
 }
 
 [node name="ItemSlot" type="Node" parent="."]
-script = ExtResource("5_ct3sj")
-prototree_json = ExtResource("4_1rf0i")
+script = ExtResource("6_qj5xf")
+prototree_json = ExtResource("5_46c6m")
 _serialized_format = {
 "item": {
 "prototree": "res://tests/data/prototree_basic.json",

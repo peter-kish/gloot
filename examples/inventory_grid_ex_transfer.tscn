@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid_ex.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
 [ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot_ex.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_kriwd"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="9"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_xnylc"]
@@ -129,14 +129,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
-slot_style = SubResource("7")
-slot_highlighted_style = SubResource("8")
 item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
+slot_style = SubResource("7")
+slot_highlighted_style = SubResource("8")
 
 [node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
 unique_name_in_owner = true
@@ -158,6 +157,7 @@ offset_right = 40.0
 offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("10_mbp7e")
 prototree_json = ExtResource("8_kriwd")
 _serialized_format = {}

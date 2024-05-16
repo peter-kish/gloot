@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="3_ibulh"]
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="4_0by68"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_bfwo4"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
@@ -65,10 +65,10 @@ size_flags_horizontal = 3
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
 layout_mode = 2
 
-[node name="CtrlItemSlot" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer" node_paths=PackedStringArray("item_slot")]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer" node_paths=PackedStringArray("item_slot")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-script = ExtResource("6")
+script = ExtResource("6_bfwo4")
 item_slot = NodePath("../../../../../ItemSlot")
 label_visible = false
 

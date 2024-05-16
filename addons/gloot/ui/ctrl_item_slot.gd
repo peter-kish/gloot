@@ -39,6 +39,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         label_visible = new_label_visible
         if is_instance_valid(_label):
             _label.visible = label_visible
+
 @export_group("Icon Behavior", "icon_")
 @export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
     set(new_icon_stretch_mode):
@@ -47,6 +48,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         icon_stretch_mode = new_icon_stretch_mode
         if is_instance_valid(_ctrl_inventory_item_rect):
             _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
+
 @export_group("Text Behavior", "label_")
 @export var label_horizontal_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER :
     set(new_label_horizontal_alignment):
@@ -77,6 +79,17 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         if is_instance_valid(_label):
             _label.clip_text = label_clip_text
 
+@export_group("Custom Styles")
+@export var slot_style: StyleBox :
+    set(new_slot_style):
+        slot_style = new_slot_style
+        _refresh()
+@export var slot_highlighted_style: StyleBox :
+    set(new_slot_highlighted_style):
+        slot_highlighted_style = new_slot_highlighted_style
+        _refresh()
+
+var _background_panel: Panel
 var _hbox_container: HBoxContainer
 var _ctrl_inventory_item_rect: CtrlInventoryItemRect
 var _label: Label
@@ -139,6 +152,8 @@ func _ready():
     _hbox_container.size = size
     resized.connect(func():
         _hbox_container.size = size
+        if is_instance_valid(_background_panel):
+            _background_panel.size = size
     )
 
     _refresh()
@@ -198,13 +213,15 @@ func _notification(what: int) -> void:
 func _refresh() -> void:
     _clear()
 
+    _update_background()
+
     if !is_instance_valid(item_slot):
-        return
-    
-    if item_slot.get_item() == null:
         return
 
     var item = item_slot.get_item()
+    if !is_instance_valid(item):
+        return
+        
     if is_instance_valid(_label):
         _label.text = item.get_property(InventoryItem.KEY_NAME, item.get_title())
     if is_instance_valid(_ctrl_inventory_item_rect):
@@ -220,3 +237,37 @@ func _clear() -> void:
         _ctrl_inventory_item_rect.item = null
         _ctrl_inventory_item_rect.texture = default_item_icon
 
+
+func _update_background() -> void:
+    if !is_instance_valid(_background_panel):
+        _background_panel = Panel.new()
+        add_child(_background_panel)
+        move_child(_background_panel, 0)
+        
+    _background_panel.size = size
+    _background_panel.show()
+    if slot_style:
+        _set_panel_style(_background_panel, slot_style)
+    else:
+        _background_panel.hide()
+
+
+func _set_panel_style(panel: Panel, style: StyleBox) -> void:
+    panel.remove_theme_stylebox_override("panel")
+    if style != null:
+        panel.add_theme_stylebox_override("panel", style)
+
+
+func _input(event) -> void:
+    if event is InputEventMouseMotion:
+        if !is_instance_valid(_background_panel):
+            return
+
+        if get_global_rect().has_point(get_global_mouse_position()) && slot_highlighted_style:
+            _set_panel_style(_background_panel, slot_highlighted_style)
+            return
+        
+        if slot_style:
+            _set_panel_style(_background_panel, slot_style)
+        else:
+            _background_panel.hide()
