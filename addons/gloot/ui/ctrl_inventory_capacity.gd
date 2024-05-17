@@ -33,18 +33,19 @@ func _connect_inventory_signals() -> void:
         Utils.safe_connect(inventory.ready, _refresh)
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
-    if inventory.get_constraint(WeightConstraint):
-        inventory.get_constraint(WeightConstraint).capacity_changed.connect(_refresh)
-        inventory.get_constraint(WeightConstraint).occupied_space_changed.connect(_refresh)
+    inventory.constraint_changed.connect(_on_constraint_changed)
 
 
 func _disconnect_inventory_signals() -> void:
     Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
-    if inventory.get_constraint(WeightConstraint):
-        inventory.get_constraint(WeightConstraint).capacity_changed.disconnect(_refresh)
-        inventory.get_constraint(WeightConstraint).occupied_space_changed.disconnect(_refresh)
+    inventory.constraint_changed.disconnect(_on_constraint_changed)
+
+
+func _on_constraint_changed(constraint: InventoryConstraint) -> void:
+    if constraint is WeightConstraint:
+        _refresh()
 
 
 func _refresh() -> void:

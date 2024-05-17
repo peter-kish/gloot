@@ -2,8 +2,6 @@ extends RefCounted
 
 signal constraint_changed(constraint)
 
-const InventoryConstraint = preload("res://addons/gloot/core/constraints/inventory_constraint.gd")
-
 var inventory: Inventory = null
 var _constraints: Array[InventoryConstraint] = []
 

@@ -8,21 +8,11 @@ signal item_removed(item)
 signal item_property_changed(item, property)
 signal contents_changed
 signal prototree_json_changed
-
 signal constraint_added(constraint)
 signal constraint_removed(constraint)
 signal constraint_changed(constraint)
 
-# TODO: Consider making these private:
-# Grid Constraint Signals
-signal size_changed
-signal item_moved(item)
-# Weight Constraint Signals
-signal capacity_changed
-signal occupied_space_changed
-
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
-const InventoryConstraint = preload("res://addons/gloot/core/constraints/inventory_constraint.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum Constraint {WEIGHT, GRID}
@@ -269,26 +259,6 @@ func _is_item_at_path(item: InventoryItem, path: String) -> bool:
 
 func has_item_with_prototype_path(prototype_path: String) -> bool:
     return get_item_with_prototype_path(prototype_path) != null
-
-
-func _on_item_moved(item: InventoryItem) -> void:
-    _update_serialized_format()
-    item_moved.emit(item)
-
-
-func _on_size_changed() -> void:
-    _update_serialized_format()
-    size_changed.emit()
-
-
-func _on_capacity_changed() -> void:
-    _update_serialized_format()
-    capacity_changed.emit()
-
-
-func _on_occupied_space_changed() -> void:
-    _update_serialized_format()
-    occupied_space_changed.emit()
 
 
 func _on_constraint_added(constraint: InventoryConstraint) -> void:

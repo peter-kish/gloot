@@ -1,4 +1,5 @@
 extends Node
+class_name InventoryConstraint
 
 signal changed
 

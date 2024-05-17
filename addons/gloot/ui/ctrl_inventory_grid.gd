@@ -134,15 +134,20 @@ var _refresh_queued: bool = false
 func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
+    inventory.constraint_changed.connect(_on_constraint_changed)
     Utils.safe_connect(inventory.contents_changed, _queue_refresh)
-    Utils.safe_connect(inventory.size_changed, _on_inventory_resized)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
+    inventory.constraint_changed.disconnect(_on_constraint_changed)
     Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
-    Utils.safe_disconnect(inventory.size_changed, _on_inventory_resized)
+
+
+func _on_constraint_changed(constraint: InventoryConstraint) -> void:
+    if constraint is GridConstraint:
+        _queue_refresh()
 
 
 func _process(_delta) -> void:
