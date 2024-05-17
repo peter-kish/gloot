@@ -1,7 +1,5 @@
 extends TestSuite
 
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
-
 var inventory: Inventory
 var item: InventoryItem
 var grid_constraint: GridConstraint
@@ -33,8 +31,7 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
     inventory = create_inventory(TEST_PROTOTREE)
-    inventory.enable_grid_constraint()
-    grid_constraint = inventory.get_grid_constraint()
+    grid_constraint = enable_grid_constraint(inventory)
 
 
 func cleanup_test() -> void:

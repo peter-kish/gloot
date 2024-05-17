@@ -2,7 +2,6 @@
 extends Window
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const DictEditor = preload("res://addons/gloot/editor/common/dict_editor.tscn")
 const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const COLOR_OVERRIDDEN = Color.GREEN

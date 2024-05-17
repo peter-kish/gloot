@@ -8,9 +8,10 @@ signal item_removed(item)
 signal item_property_changed(item, property)
 signal contents_changed
 signal prototree_json_changed
-signal constraint_enabled(constraint)
-signal constraint_disabled(constraint)
-signal pre_constraint_disabled(constraint)
+
+signal constraint_added(constraint)
+signal constraint_removed(constraint)
+signal constraint_changed(constraint)
 
 # TODO: Consider making these private:
 # Grid Constraint Signals
@@ -21,8 +22,7 @@ signal capacity_changed
 signal occupied_space_changed
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
-const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
+const InventoryConstraint = preload("res://addons/gloot/core/constraints/inventory_constraint.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum Constraint {WEIGHT, GRID}
@@ -104,39 +104,11 @@ static func _get_item_script() -> Script:
 
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
-    _constraint_manager.constraint_enabled.connect(_on_constraint_enabled)
-    _constraint_manager.constraint_disabled.connect(_on_constraing_disabled)
-    _constraint_manager.pre_constraint_disabled.connect(_on_pre_constraint_disabled)
+    _constraint_manager.constraint_changed.connect(_on_constraint_changed)
 
 
-func _on_constraint_enabled(constraint: int) -> void:
-    if constraint == Constraint.WEIGHT:
-        var weight_constraint := _constraint_manager.get_weight_constraint()
-        Utils.safe_connect(weight_constraint.capacity_changed, _on_capacity_changed)
-        Utils.safe_connect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
-    elif constraint == Constraint.GRID:
-        var grid_constraint := _constraint_manager.get_grid_constraint()
-        Utils.safe_connect(grid_constraint.size_changed, _on_size_changed)
-        Utils.safe_connect(grid_constraint.item_moved, _on_item_moved)
-    constraint_enabled.emit(constraint)
-    _update_serialized_format()
-
-
-func _on_pre_constraint_disabled(constraint: int) -> void:
-    if constraint == Constraint.WEIGHT:
-        var weight_constraint := _constraint_manager.get_weight_constraint()
-        Utils.safe_disconnect(weight_constraint.capacity_changed, _on_capacity_changed)
-        Utils.safe_disconnect(weight_constraint.occupied_space_changed, _on_occupied_space_changed)
-    elif constraint == Constraint.GRID:
-        var grid_constraint := _constraint_manager.get_grid_constraint()
-        Utils.safe_disconnect(grid_constraint.size_changed, _on_size_changed)
-        Utils.safe_disconnect(grid_constraint.item_moved, _on_item_moved)
-    pre_constraint_disabled.emit(constraint)
-
-
-func _on_constraing_disabled(constraint: int) -> void:
-    constraint_disabled.emit(constraint)
-    _update_serialized_format()
+func _on_constraint_changed(constraint: InventoryConstraint) -> void:
+    constraint_changed.emit(constraint)
 
 
 func _ready() -> void:
@@ -299,36 +271,6 @@ func has_item_with_prototype_path(prototype_path: String) -> bool:
     return get_item_with_prototype_path(prototype_path) != null
 
 
-func enable_weight_constraint(capacity: float = 0) -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.enable_weight_constraint(capacity)
-
-
-func enable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.enable_grid_constraint(size)
-
-
-func disable_weight_constraint(capacity: float = 0) -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.disable_weight_constraint()
-
-
-func disable_grid_constraint(size: Vector2i = GridConstraint.DEFAULT_SIZE) -> void:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    _constraint_manager.disable_grid_constraint()
-
-
-func get_weight_constraint() -> WeightConstraint:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    return _constraint_manager.get_weight_constraint()
-
-
-func get_grid_constraint() -> GridConstraint:
-    assert(_constraint_manager != null, "Missing constraint manager!")
-    return _constraint_manager.get_grid_constraint()
-
-
 func _on_item_moved(item: InventoryItem) -> void:
     _update_serialized_format()
     item_moved.emit(item)
@@ -349,10 +291,23 @@ func _on_occupied_space_changed() -> void:
     occupied_space_changed.emit()
 
 
+func _on_constraint_added(constraint: InventoryConstraint) -> void:
+    _constraint_manager.register_constraint(constraint)
+    constraint_added.emit(constraint)
+
+    
+func _on_constraint_removed(constraint: InventoryConstraint) -> void:
+    _constraint_manager.unregister_constraint(constraint)
+    constraint_removed.emit(constraint)
+
+
+func get_constraint(script: Script) -> InventoryConstraint:
+    return _constraint_manager.get_constraint(script)
+
+
 func reset() -> void:
     clear()
     prototree_json = null
-    _constraint_manager.reset()
 
 
 func clear() -> void:
@@ -365,12 +320,11 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    if prototree_json == null || _constraint_manager == null:
+    if prototree_json == null:
         return result
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
-    result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -409,8 +363,6 @@ func deserialize(source: Dictionary) -> bool:
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.get_title())
-    if source.has(KEY_CONSTRAINTS):
-        _constraint_manager.deserialize(source[KEY_CONSTRAINTS])
 
     return true
 

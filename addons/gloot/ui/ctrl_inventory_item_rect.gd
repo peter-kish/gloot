@@ -1,7 +1,6 @@
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 signal activated

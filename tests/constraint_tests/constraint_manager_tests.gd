@@ -1,8 +1,6 @@
 extends TestSuite
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
-const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 var inventory: Inventory
@@ -42,8 +40,8 @@ func cleanup_test() -> void:
 
 
 func test_init() -> void:
-    assert(constraint_manager.get_weight_constraint() == null)
-    assert(constraint_manager.get_grid_constraint() == null)
+    assert(constraint_manager.get_constraint(WeightConstraint) == null)
+    assert(constraint_manager.get_constraint(GridConstraint) == null)
     assert(constraint_manager.inventory == inventory)
 
 
@@ -56,8 +54,8 @@ func test_w_has_space_for() -> void:
     inventory.prototree_json = TEST_PROTOTREE_W
     var item = create_item(TEST_PROTOTREE_W, TEST_PROTOTYPE_PATH_W)
 
-    constraint_manager.enable_weight_constraint(10.0)
-    assert(constraint_manager.get_weight_constraint() != null)
+    enable_weight_constraint(inventory, 10.0)
+    assert(constraint_manager.get_constraint(WeightConstraint) != null)
 
     var test_data := [
         {input = 1.0, expected = {has_space = true, space = ItemCount.new(10)}},
@@ -75,8 +73,7 @@ func test_g_has_space_for() -> void:
     inventory.prototree_json = TEST_PROTOTREE_G
     var item = create_item(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
 
-    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    var grid_constraint = constraint_manager.get_grid_constraint()
+    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
     var test_data := [
@@ -96,10 +93,10 @@ func test_wg_has_space_for() -> void:
     inventory.prototree_json = TEST_PROTOTREE_W
     var item = create_item(TEST_PROTOTREE_W, TEST_PROTOTYPE_PATH_W)
 
-    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    constraint_manager.enable_weight_constraint(10.0)
-    var grid_constraint = constraint_manager.get_grid_constraint()
-    var weight_constraint = constraint_manager.get_weight_constraint()
+    enable_grid_constraint(inventory, Vector2i(3, 3))
+    enable_weight_constraint(inventory, 10.0)
+    var grid_constraint = constraint_manager.get_constraint(GridConstraint)
+    var weight_constraint = constraint_manager.get_constraint(WeightConstraint)
     assert(grid_constraint != null)
     assert(weight_constraint != null)
 
@@ -121,8 +118,7 @@ func test_g_enforce_constraints() -> void:
     inventory.prototree_json = TEST_PROTOTREE_G
     var item = create_item(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
 
-    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    var grid_constraint = constraint_manager.get_grid_constraint()
+    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
     var new_item = inventory.create_and_add_item("item_2x2")
@@ -146,8 +142,7 @@ func test_g_enforce_constraints() -> void:
 func test_sg_enforce_constraints() -> void:
     inventory.prototree_json = TEST_PROTOTREE_G
 
-    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    var grid_constraint := constraint_manager.get_grid_constraint()
+    var grid_constraint := enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
     var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
@@ -185,10 +180,8 @@ func test_wg_enforce_constraints() -> void:
     inventory.prototree_json = TEST_PROTOTREE_G
     var item = create_item(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
 
-    constraint_manager.enable_weight_constraint(10.0)
-    constraint_manager.enable_grid_constraint(Vector2i(3, 3))
-    var weight_constraint = constraint_manager.get_weight_constraint()
-    var grid_constraint = constraint_manager.get_grid_constraint()
+    var weight_constraint = enable_weight_constraint(inventory, 10.0)
+    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(weight_constraint != null)
     assert(grid_constraint != null)
 

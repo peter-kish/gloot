@@ -68,10 +68,8 @@ func _refresh() -> void:
     if !is_instance_valid(inventory):
         return
 
-    if inventory.get_grid_constraint() != null:
-        _inventory_control = CtrlInventoryGridEx.new()
-        _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
-        _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
+    if inventory.get_constraint(GridConstraint) != null:
+        _inventory_control = CtrlInventoryGrid.new()
     else:
         _inventory_control = CtrlInventory.new()
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -83,7 +81,7 @@ func _refresh() -> void:
     _inventory_control.inventory_item_context_activated.connect(func(item: InventoryItem):
         inventory_item_context_activated.emit(item)
     )
-    if inventory.get_weight_constraint() != null:
+    if inventory.get_constraint(WeightConstraint) != null:
         _capacity_control = CtrlInventoryCapacity.new()
         _capacity_control.inventory = inventory
 

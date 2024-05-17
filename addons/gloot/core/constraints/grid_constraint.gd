@@ -1,10 +1,7 @@
 extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
-
-signal size_changed
-signal item_moved(item)
+class_name GridConstraint
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
 
@@ -20,7 +17,6 @@ var _quad_tree := QuadTree.new(size)
 
 @export var size: Vector2i = DEFAULT_SIZE :
     set(new_size):
-        assert(inventory, "Inventory not set!")
         assert(new_size.x > 0, "Inventory width must be positive!")
         assert(new_size.y > 0, "Inventory height must be positive!")
         var old_size = size
@@ -30,11 +26,13 @@ var _quad_tree := QuadTree.new(size)
                 size = old_size
         if size != old_size:
             _refresh_quad_tree()
-            size_changed.emit()
+            changed.emit()
 
 
 func _refresh_quad_tree() -> void:
     _quad_tree = QuadTree.new(size)
+    if !is_instance_valid(inventory):
+        return
     for item in inventory.get_items():
         _quad_tree.add(get_item_rect(item), item)
 
@@ -67,11 +65,11 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     var pos1 = Vector2i.ZERO
     var pos2 = Vector2i.ZERO
     if is_instance_valid(inv1):
-        grid_constraint1 = inv1.get_grid_constraint()
+        grid_constraint1 = inv1.get_constraint(GridConstraint)
         if is_instance_valid(grid_constraint1):
             pos1 = grid_constraint1.get_item_position(item1)
     if is_instance_valid(inv2):
-        grid_constraint2 = inv2.get_grid_constraint()
+        grid_constraint2 = inv2.get_constraint(GridConstraint)
         if is_instance_valid(grid_constraint2):
             pos2 = grid_constraint2.get_item_position(item2)
     
@@ -84,13 +82,15 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     const ITEM1_IDX = 0
     const ITEM2_IDX = 1
-    if is_instance_valid(item1.get_inventory()) && is_instance_valid(item1.get_inventory().get_grid_constraint()):
-        item1.get_inventory().get_grid_constraint().set_item_position(item1, _swap_positions[ITEM2_IDX])
-    if is_instance_valid(item2.get_inventory()) && is_instance_valid(item2.get_inventory().get_grid_constraint()):
-        item2.get_inventory().get_grid_constraint().set_item_position(item2, _swap_positions[ITEM1_IDX])
+    if is_instance_valid(item1.get_inventory()) && is_instance_valid(item1.get_inventory().get_constraint(GridConstraint)):
+        item1.get_inventory().get_constraint(GridConstraint).set_item_position(item1, _swap_positions[ITEM2_IDX])
+    if is_instance_valid(item2.get_inventory()) && is_instance_valid(item2.get_inventory().get_constraint(GridConstraint)):
+        item2.get_inventory().get_constraint(GridConstraint).set_item_position(item2, _swap_positions[ITEM1_IDX])
 
 
 func _bounds_broken() -> bool:
+    if !is_instance_valid(inventory):
+        return false
     for item in inventory.get_items():
         if !rect_free(get_item_rect(item), item):
             return true
@@ -119,7 +119,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
 
     _item_positions[item] = new_position
     _refresh_quad_tree()
-    item_moved.emit(item)
+    changed.emit()
 
 
 func get_item_size(item: InventoryItem) -> Vector2i:

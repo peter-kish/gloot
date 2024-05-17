@@ -195,10 +195,11 @@ func _refresh_field_background_grid() -> void:
 
     if !is_instance_valid(inventory):
         return
-    if inventory.get_grid_constraint() == null:
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if grid_constraint == null:
         return
 
-    var inv_size := inventory.get_grid_constraint().size
+    var inv_size := grid_constraint.size
     for i in range(inv_size.x):
         _field_backgrounds.append([])
         for j in range(inv_size.y):
@@ -312,7 +313,8 @@ func _input(event) -> void:
 
 
 func _highlight_grabbed_item(style: StyleBox):
-    if inventory.get_grid_constraint() == null:
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if grid_constraint == null:
         return
     var grabbed_item: InventoryItem = _get_global_grabbed_item()
     if !grabbed_item:
@@ -326,9 +328,9 @@ func _highlight_grabbed_item(style: StyleBox):
     _fill_background(field_style, PriorityPanel.StylePriority.LOW)
 
     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
-    var item_size := inventory.get_grid_constraint().get_item_size(grabbed_item)
+    var item_size := grid_constraint.get_item_size(grabbed_item)
     var rect := Rect2i(grabbed_item_coords, item_size)
-    if !Rect2i(Vector2i.ZERO, inventory.get_grid_constraint().size).encloses(rect):
+    if !Rect2i(Vector2i.ZERO, grid_constraint.size).encloses(rect):
         return
     _set_rect_background(rect, style, PriorityPanel.StylePriority.LOW)
 
@@ -338,15 +340,17 @@ func _is_hovering(local_pos: Vector2) -> bool:
 
 
 func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
-    if !item || inventory.get_grid_constraint() == null:
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if !item || grid_constraint == null:
         return false
 
-    _set_rect_background(inventory.get_grid_constraint().get_item_rect(item), style, priority)
+    _set_rect_background(grid_constraint.get_item_rect(item), style, priority)
     return true
 
 
 func _set_rect_background(rect: Rect2i, style: StyleBox, priority: int) -> void:
-    var inv_size = inventory.get_grid_constraint().size
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    var inv_size = grid_constraint.size
     var h_range = min(rect.size.x + rect.position.x, inv_size.x)
     for i in range(rect.position.x, h_range):
         var v_range = min(rect.size.y + rect.position.y, inv_size.y)

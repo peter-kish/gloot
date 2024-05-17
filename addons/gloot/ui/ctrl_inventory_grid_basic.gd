@@ -150,10 +150,11 @@ func _refresh() -> void:
 
 
 func _get_inventory_size_px() -> Vector2:
-    if !is_instance_valid(inventory) || inventory.get_grid_constraint() == null:
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if !is_instance_valid(inventory) || grid_constraint == null:
         return Vector2.ZERO
 
-    var inv_size := inventory.get_grid_constraint().size
+    var inv_size := grid_constraint.size
     var result := Vector2(inv_size.x * field_dimensions.x, inv_size.y * field_dimensions.y)
 
     # Also take item spacing into consideration
@@ -172,7 +173,8 @@ func _clear_list() -> void:
 
 
 func _populate_list() -> void:
-    if !is_instance_valid(inventory) || (inventory.get_grid_constraint() == null) || !is_instance_valid(_ctrl_item_container):
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if !is_instance_valid(inventory) || (grid_constraint == null) || !is_instance_valid(_ctrl_item_container):
         return
         
     for item in inventory.get_items():
@@ -188,7 +190,7 @@ func _populate_list() -> void:
         ctrl_inventory_item.clicked.connect(_on_item_clicked.bind(ctrl_inventory_item))
         ctrl_inventory_item.size = _get_item_sprite_size(item)
 
-        ctrl_inventory_item.position = _get_field_position(inventory.get_grid_constraint().get_item_position(item))
+        ctrl_inventory_item.position = _get_field_position(grid_constraint.get_item_position(item))
         ctrl_inventory_item.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
         if stretch_item_sprites:
             ctrl_inventory_item.stretch_mode = TextureRect.STRETCH_SCALE
@@ -210,7 +212,8 @@ func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_it
 
 
 func _get_item_sprite_size(item: InventoryItem) -> Vector2:
-    var item_size := inventory.get_grid_constraint().get_item_size(item)
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    var item_size := grid_constraint.get_item_size(item)
     var sprite_size := Vector2(item_size) * field_dimensions
 
     # Also take item spacing into consideration
@@ -316,16 +319,17 @@ func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
 func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     var source_inventory: Inventory = item.get_inventory()
     
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     if source_inventory != null:
         if source_inventory.prototree_json != inventory.prototree_json:
             return
-        if inventory.get_grid_constraint().add_item_at(item, field_coords):
+        if grid_constraint.add_item_at(item, field_coords):
             return
         if _merge_item(item, field_coords):
             return
         _swap_items(item, field_coords)
-    elif !inventory.get_grid_constraint().add_item_at(item, field_coords):
+    elif !grid_constraint.add_item_at(item, field_coords):
         _swap_items(item, field_coords)
 
 
@@ -354,14 +358,15 @@ func get_selected_inventory_items() -> Array[InventoryItem]:
 
 
 func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
-    if !inventory.get_grid_constraint().rect_free(Rect2i(move_position, inventory.get_grid_constraint().get_item_size(item)), item):
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    if !grid_constraint.rect_free(Rect2i(move_position, grid_constraint.get_item_size(item)), item):
         return false
     if Engine.is_editor_hint():
         Undoables.exec_inventory_undoable([inventory], "Move Inventory Item", func(): 
-            return inventory.get_grid_constraint().move_item_to(item, move_position)
+            return grid_constraint.move_item_to(item, move_position)
         )
         return true
-    inventory.get_grid_constraint().move_item_to(item, move_position)
+    grid_constraint.move_item_to(item, move_position)
     return true
 
         
@@ -380,14 +385,16 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
-    var target_item := inventory.get_grid_constraint().get_item_at(position)
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    var target_item := grid_constraint.get_item_at(position)
     if StackManager.can_merge_stacks(target_item, item):
         return target_item
     return null
 
 
 func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
-    var item2 = inventory.get_grid_constraint().get_item_at(position)
+    var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+    var item2 := grid_constraint.get_item_at(position)
     if item2 == null:
         return false
 
@@ -425,7 +432,7 @@ func get_item_rect(item: InventoryItem) -> Rect2:
     if !is_instance_valid(item):
         return Rect2()
     return Rect2(
-        _get_field_position(inventory.get_grid_constraint().get_item_position(item)),
+        _get_field_position(inventory.get_constraint(GridConstraint).get_item_position(item)),
         _get_item_sprite_size(item)
     )
 

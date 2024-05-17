@@ -40,68 +40,69 @@ func cleanup_test() -> void:
 
 func test_add_item() -> void:
     assert(inventory_3x3.add_item(item_1x1))
-    assert(inventory_3x3.get_grid_constraint().get_item_position(item_1x1) == Vector2i(0, 0))
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(item_1x1) == Vector2i(0, 0))
     assert(inventory_3x3.add_item(item_2x2))
-    assert(inventory_3x3.get_grid_constraint().get_item_position(item_2x2) == Vector2i(0, 1))
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(item_2x2) == Vector2i(0, 1))
 
 
 func test_add_item_at() -> void:
-    assert(!inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(4, 4)))
-    assert(!inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(3, 3)))
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(!inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(0, 0)))
-    assert(!inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(2, 2)))
+    assert(!inventory_3x3.get_constraint(GridConstraint).add_item_at(item_1x1, Vector2i(4, 4)))
+    assert(!inventory_3x3.get_constraint(GridConstraint).add_item_at(item_1x1, Vector2i(3, 3)))
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_1x1, Vector2i(0, 0)))
+    assert(!inventory_3x3.get_constraint(GridConstraint).add_item_at(item_2x2, Vector2i(0, 0)))
+    assert(!inventory_3x3.get_constraint(GridConstraint).add_item_at(item_2x2, Vector2i(2, 2)))
 
 
 func test_find_free_place() -> void:
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(0, 0)))
+    var grid_constraint: GridConstraint = inventory_3x3.get_constraint(GridConstraint)
+    assert(grid_constraint.add_item_at(item_1x1, Vector2i(0, 0)))
     # Find place for an item that's already in the inventory
-    var free_place := inventory_3x3.get_grid_constraint().find_free_place(item_1x1)
+    var free_place := grid_constraint.find_free_place(item_1x1)
     assert(free_place.success)
     assert(free_place.position.x == 0)
     assert(free_place.position.y == 1)
 
     # Find place for an item that's not in the inventory
-    free_place = inventory_3x3.get_grid_constraint().find_free_place(item_2x2)
+    free_place = grid_constraint.find_free_place(item_2x2)
     assert(free_place.success)
     assert(free_place.position.x == 0)
     assert(free_place.position.y == 1)
 
 
 func test_change_size() -> void:
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(1, 0)))
-    inventory_3x3.get_grid_constraint().size.y = 2
-    assert(inventory_3x3.get_grid_constraint().size.y == 2)
-    inventory_3x3.get_grid_constraint().size.y = 3
-    assert(inventory_3x3.get_grid_constraint().size.y == 3)
-    inventory_3x3.get_grid_constraint().size.x = 2
-    assert(inventory_3x3.get_grid_constraint().size.x == 3)
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_1x1, Vector2i(0, 0)))
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_2x2, Vector2i(1, 0)))
+    inventory_3x3.get_constraint(GridConstraint).size.y = 2
+    assert(inventory_3x3.get_constraint(GridConstraint).size.y == 2)
+    inventory_3x3.get_constraint(GridConstraint).size.y = 3
+    assert(inventory_3x3.get_constraint(GridConstraint).size.y == 3)
+    inventory_3x3.get_constraint(GridConstraint).size.x = 2
+    assert(inventory_3x3.get_constraint(GridConstraint).size.x == 3)
 
 
 func test_create_and_add_item_at() -> void:
-    var new_item = inventory_3x3.get_grid_constraint().create_and_add_item_at("/item_1x1", Vector2i(1, 1))
+    var new_item = inventory_3x3.get_constraint(GridConstraint).create_and_add_item_at("/item_1x1", Vector2i(1, 1))
     assert(new_item)
     assert(inventory_3x3.get_item_count() == 1)
     assert(inventory_3x3.has_item(new_item))
     assert(inventory_3x3.has_item_with_prototype_path("/item_1x1"))
-    assert(inventory_3x3.get_grid_constraint().get_item_position(new_item) == Vector2i(1, 1))
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(new_item) == Vector2i(1, 1))
 
 
 func test_get_item_at() -> void:
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(1, 1)))
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(0, 0)) == null)
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(1, 1)) == item_2x2)
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(2, 2)) == item_2x2)
-    assert(inventory_3x3.get_grid_constraint().move_item_to(item_2x2, Vector2i(0, 0)))
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(2, 2)) == null)
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(0, 0)) == item_2x2)
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_2x2, Vector2i(1, 1)))
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(0, 0)) == null)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(1, 1)) == item_2x2)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(2, 2)) == item_2x2)
+    assert(inventory_3x3.get_constraint(GridConstraint).move_item_to(item_2x2, Vector2i(0, 0)))
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(2, 2)) == null)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(0, 0)) == item_2x2)
 
 
 func test_get_items_under() -> void:
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_2x2))
-    var items = inventory_3x3.get_grid_constraint().get_items_under(Rect2i(0, 0, 2, 2))
+    var items = inventory_3x3.get_constraint(GridConstraint).get_items_under(Rect2i(0, 0, 2, 2))
     assert(items.size() == 2)
     assert(item_1x1 in items)
     assert(item_2x2 in items)
@@ -111,49 +112,55 @@ func test_move_item_to() -> void:
     assert(inventory_3x3.add_item(item_1x1))
 
     # Move to the same location
-    assert(inventory_3x3.get_grid_constraint().move_item_to(item_1x1, Vector2i.ZERO))
+    assert(inventory_3x3.get_constraint(GridConstraint).move_item_to(item_1x1, Vector2i.ZERO))
     assert(inventory_3x3.get_item_count() == 1)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(item_1x1) == Vector2i.ZERO)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(item_1x1) == Vector2i.ZERO)
     
     # Move to a new location
-    assert(inventory_3x3.get_grid_constraint().move_item_to(item_1x1, Vector2i.ONE * 2))
+    assert(inventory_3x3.get_constraint(GridConstraint).move_item_to(item_1x1, Vector2i.ONE * 2))
     assert(inventory_3x3.get_item_count() == 1)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(item_1x1) == Vector2i.ONE * 2)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(item_1x1) == Vector2i.ONE * 2)
 
     # Move to an occupied location
     assert(inventory_3x3.add_item(item_2x2))
-    assert(!inventory_3x3.get_grid_constraint().move_item_to(item_1x1, Vector2i.ZERO))
+    assert(!inventory_3x3.get_constraint(GridConstraint).move_item_to(item_1x1, Vector2i.ZERO))
     assert(inventory_3x3.get_item_count() == 2)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(item_1x1) == Vector2i.ONE * 2)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_position(item_1x1) == Vector2i.ONE * 2)
 
 
 func test_sort() -> void:
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(1, 0)))
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(1, 1)))
-    assert(inventory_3x3.get_grid_constraint().sort())
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(0, 0)) == item_2x2)
-    assert(inventory_3x3.get_grid_constraint().get_item_at(Vector2i(0, 2)) == item_1x1)
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_1x1, Vector2i(1, 0)))
+    assert(inventory_3x3.get_constraint(GridConstraint).add_item_at(item_2x2, Vector2i(1, 1)))
+    assert(inventory_3x3.get_constraint(GridConstraint).sort())
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(0, 0)) == item_2x2)
+    assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(0, 2)) == item_1x1)
 
 
 func test_serialize():
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(1, 1)))
+    var grid_constraint: GridConstraint = inventory_3x3.get_constraint(GridConstraint)
+    assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
+    assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
     var inventory_data = inventory_3x3.serialize()
+    var constraint_data = grid_constraint.serialize()
+
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().is_empty())
-    assert(inventory_3x3.get_grid_constraint() == null)
+
     assert(inventory_3x3.deserialize(inventory_data))
+    assert(grid_constraint.deserialize(constraint_data))
     assert(inventory_3x3.get_item_count() == 2)
-    assert(inventory_3x3.get_grid_constraint().size.x == 3)
-    assert(inventory_3x3.get_grid_constraint().size.y == 3)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)
+    assert(grid_constraint.size.x == 3)
+    assert(grid_constraint.size.y == 3)
+    assert(grid_constraint.get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
+    assert(grid_constraint.get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)
     
 
 func test_serialize_json():
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_1x1, Vector2i(0, 0)))
-    assert(inventory_3x3.get_grid_constraint().add_item_at(item_2x2, Vector2i(1, 1)))
+    var grid_constraint: GridConstraint = inventory_3x3.get_constraint(GridConstraint)
+    assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
+    assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
     var inventory_data = inventory_3x3.serialize()
+    var constraint_data = grid_constraint.serialize()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)
@@ -163,11 +170,11 @@ func test_serialize_json():
 
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().is_empty())
-    assert(inventory_3x3.get_grid_constraint() == null)
 
     assert(inventory_3x3.deserialize(inventory_data))
+    assert(grid_constraint.deserialize(constraint_data))
     assert(inventory_3x3.get_item_count() == 2)
-    assert(inventory_3x3.get_grid_constraint().size.x == 3)
-    assert(inventory_3x3.get_grid_constraint().size.y == 3)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
-    assert(inventory_3x3.get_grid_constraint().get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)
+    assert(grid_constraint.size.x == 3)
+    assert(grid_constraint.size.y == 3)
+    assert(grid_constraint.get_item_position(inventory_3x3.get_items()[0]) == Vector2i.ZERO)
+    assert(grid_constraint.get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)

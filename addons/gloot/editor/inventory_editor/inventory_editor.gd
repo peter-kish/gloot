@@ -13,7 +13,6 @@ var inventory: Inventory :
         disconnect_inventory_signals()
         inventory = new_inventory
         connect_inventory_signals()
-        %InventoryConfigurationEditor.inventory = inventory
 
         _refresh()
 var _inventory_control: Control
@@ -78,10 +77,8 @@ func _create_inventory_container() -> Control:
     vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
     var capacity_control: CtrlInventoryCapacity = null
 
-    if inventory.get_grid_constraint() != null:
-        _inventory_control = CtrlInventoryGridEx.new()
-        _inventory_control.field_style = preload("res://addons/gloot/ui/default_grid_field.tres")
-        _inventory_control.selection_style = preload("res://addons/gloot/ui/default_grid_selection.tres")
+    if inventory.get_constraint(GridConstraint) != null:
+        _inventory_control = CtrlInventoryGrid.new()
     else:
         _inventory_control = CtrlInventory.new()
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
@@ -90,7 +87,7 @@ func _create_inventory_container() -> Control:
     _inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
     _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
 
-    if inventory.get_weight_constraint() != null:
+    if inventory.get_constraint(WeightConstraint) != null:
         capacity_control = CtrlInventoryCapacity.new()
         capacity_control.inventory = inventory
 
@@ -110,7 +107,7 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
 
 func _on_inventory_item_context_activated(item: InventoryItem) -> void:
     Undoables.exec_inventory_undoable([inventory], "Rotate Inventory Item", func():
-        var grid_constraint := inventory.get_grid_constraint()
+        var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
         if grid_constraint == null:
             return false
         var rotated = grid_constraint.is_item_rotated(item)

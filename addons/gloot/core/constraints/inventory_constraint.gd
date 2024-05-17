@@ -1,15 +1,34 @@
-extends Object
+extends Node
+
+signal changed
 
 var inventory: Inventory = null :
     set(new_inventory):
-        assert(new_inventory != null, "Can't set inventory to null!")
-        assert(inventory == null, "Inventory already set!")
         inventory = new_inventory
-        _on_inventory_set()
+        if is_instance_valid(inventory):
+            _on_inventory_set()
 
 
-func _init(inventory_: Inventory) -> void:
-    inventory = inventory_
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_PARENTED:
+        _on_parented(get_parent())
+    elif what == NOTIFICATION_UNPARENTED:
+        _on_unparented()
+
+
+func _on_parented(parent: Node) -> void:
+    if parent is Inventory:
+        inventory = parent
+        inventory._on_constraint_added(self)
+    else:
+        inventory = null
+
+
+func _on_unparented() -> void:
+    if inventory == null:
+        return
+    inventory._on_constraint_removed(self)
+    inventory = null
 
 
 # Override this

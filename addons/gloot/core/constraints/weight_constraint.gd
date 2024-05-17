@@ -1,7 +1,5 @@
 extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
-
-signal capacity_changed
-signal occupied_space_changed
+class_name WeightConstraint
 
 const KEY_WEIGHT: String = "weight"
 const KEY_CAPACITY: String = "capacity"
@@ -20,7 +18,7 @@ var capacity: float :
         if new_capacity > 0.0 && occupied_space > new_capacity:
             return
         capacity = new_capacity
-        capacity_changed.emit()
+        changed.emit()
 
 var _occupied_space: float
 var occupied_space: float :
@@ -28,10 +26,6 @@ var occupied_space: float :
         return _occupied_space
     set(new_occupied_space):
         assert(false, "occupied_space is read-only!")
-
-
-func _init(inventory: Inventory) -> void:
-    super._init(inventory)
     
     
 func _on_inventory_set() -> void:
@@ -60,7 +54,7 @@ static func _can_swap(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     if !is_instance_valid(inv):
         return true
 
-    var weight_constraint = inv._constraint_manager.get_weight_constraint()
+    var weight_constraint = inv._constraint_manager.get_constraint(WeightConstraint)
     if !is_instance_valid(weight_constraint):
         return true
 
@@ -92,7 +86,7 @@ func _calculate_occupied_space() -> void:
         _occupied_space += get_item_weight(item)
 
     if _occupied_space != old_occupied_space:
-        emit_signal("occupied_space_changed")
+        changed.emit()
 
     if !Engine.is_editor_hint():
         assert(has_unlimited_capacity() || _occupied_space <= capacity, "Inventory overflow!")

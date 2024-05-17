@@ -30,7 +30,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_btn_sort(ctrl_inventory) -> void:
-    if !ctrl_inventory.inventory.get_grid_constraint().sort():
+    if !ctrl_inventory.inventory.get_constraint(GridConstraint).sort():
         print("Warning: GridConstraint.sort() returned false!")
 
 

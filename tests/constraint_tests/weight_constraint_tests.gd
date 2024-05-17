@@ -1,7 +1,5 @@
 extends TestSuite
 
-const WeightConstraint = preload("res://addons/gloot/core/constraints/weight_constraint.gd")
-
 var inventory: Inventory
 var item: InventoryItem
 var weight_constraint: WeightConstraint
@@ -25,8 +23,7 @@ func init_suite():
 func init_test() -> void:
     item = create_item(TEST_PROTOTREE, "big_item")
     inventory = create_inventory(TEST_PROTOTREE)
-    inventory.enable_weight_constraint()
-    weight_constraint = inventory.get_weight_constraint()
+    weight_constraint = enable_weight_constraint(inventory)
 
 
 func cleanup_test() -> void:
@@ -98,7 +95,8 @@ func test_swap_items() -> void:
     
     var inv2 = Inventory.new()
     inv2.prototree_json = TEST_PROTOTREE
-    inv2._constraint_manager.enable_weight_constraint(20.0)
+    enable_weight_constraint(inv2, 20.0)
+
     var big_item = inv2.create_and_add_item("big_item")
 
     assert(!InventoryItem.swap(small_item, big_item))

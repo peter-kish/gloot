@@ -52,16 +52,32 @@ func create_inventory(prototree_json: JSON) -> Inventory:
 
 func create_inventory_stacked(prototree_json: JSON, capacity: float) -> Inventory:
     var inventory = Inventory.new()
-    inventory.enable_weight_constraint(capacity)
     inventory.prototree_json = prototree_json
+    enable_weight_constraint(inventory, capacity)
+
     return inventory
 
 
 func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> Inventory:
     var inventory = Inventory.new()
-    inventory.enable_grid_constraint(size)
     inventory.prototree_json = prototree_json
+    enable_grid_constraint(inventory, size)
+
     return inventory
+
+
+func enable_weight_constraint(inventory: Inventory, capacity: float = 0.0) -> WeightConstraint:
+    var weight_constraint = WeightConstraint.new()
+    weight_constraint.capacity = capacity
+    inventory.add_child(weight_constraint)
+    return weight_constraint
+
+
+func enable_grid_constraint(inventory: Inventory, size: Vector2i = GridConstraint.DEFAULT_SIZE) -> GridConstraint:
+    var grid_constraint = GridConstraint.new()
+    grid_constraint.size = size
+    inventory.add_child(grid_constraint)
+    return grid_constraint
 
 
 # Create an item with the given prototype ID from the given prototree
