@@ -1,4 +1,5 @@
-extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
+@tool
+extends InventoryConstraint
 class_name WeightConstraint
 
 const KEY_WEIGHT: String = "weight"
@@ -9,7 +10,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 
-var capacity: float :
+@export var capacity: float :
     set(new_capacity):
         if new_capacity < 0.0:
             new_capacity = 0.0

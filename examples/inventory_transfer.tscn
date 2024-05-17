@@ -107,7 +107,6 @@ unique_name_in_owner = true
 script = ExtResource("2")
 prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
-"constraints": {},
 "items": [{
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/item1"
@@ -124,7 +123,6 @@ unique_name_in_owner = true
 script = ExtResource("2")
 prototree_json = ExtResource("6_yy1r8")
 _serialized_format = {
-"constraints": {},
 "items": [{
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/item1"

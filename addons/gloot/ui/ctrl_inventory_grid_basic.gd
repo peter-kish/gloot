@@ -178,7 +178,7 @@ func _clear_list() -> void:
 
 func _populate_list() -> void:
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
-    if !is_instance_valid(inventory) || (grid_constraint == null) || !is_instance_valid(_ctrl_item_container):
+    if !is_instance_valid(inventory) || (!is_instance_valid(grid_constraint)) || !is_instance_valid(_ctrl_item_container):
         return
         
     for item in inventory.get_items():

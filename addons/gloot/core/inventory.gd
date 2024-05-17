@@ -102,6 +102,8 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 
 func _ready() -> void:
+    _constraint_manager.register_child_constraints()
+
     renamed.connect(_update_serialized_format)
 
     if !_serialized_format.is_empty():

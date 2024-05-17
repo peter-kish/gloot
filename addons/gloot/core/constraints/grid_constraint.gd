@@ -1,4 +1,5 @@
-extends "res://addons/gloot/core/constraints/inventory_constraint.gd"
+@tool
+extends InventoryConstraint
 class_name GridConstraint
 
 const Verify = preload("res://addons/gloot/core/verify.gd")

@@ -28,7 +28,6 @@ inventory = NodePath("../Inventory")
 script = ExtResource("2")
 prototree_json = ExtResource("4_yg38y")
 _serialized_format = {
-"constraints": {},
 "items": [{
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/minimal_item"

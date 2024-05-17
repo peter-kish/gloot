@@ -135,6 +135,8 @@ func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
     inventory.constraint_changed.connect(_on_constraint_changed)
+    inventory.constraint_added.connect(_on_constraint_changed)
+    inventory.constraint_removed.connect(_on_constraint_changed)
     Utils.safe_connect(inventory.contents_changed, _queue_refresh)
 
 
@@ -142,6 +144,8 @@ func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
     inventory.constraint_changed.disconnect(_on_constraint_changed)
+    inventory.constraint_added.disconnect(_on_constraint_changed)
+    inventory.constraint_removed.disconnect(_on_constraint_changed)
     Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
 
 

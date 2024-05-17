@@ -2,6 +2,8 @@ extends RefCounted
 
 signal constraint_changed(constraint)
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 var inventory: Inventory = null
 var _constraints: Array[InventoryConstraint] = []
 
@@ -10,6 +12,10 @@ func _init(inventory_: Inventory) -> void:
     inventory = inventory_
     if !is_instance_valid(inventory):
         return
+    register_child_constraints()
+
+
+func register_child_constraints() -> void:
     for node in inventory.get_children():
         if !(node is InventoryConstraint):
             continue
@@ -18,12 +24,12 @@ func _init(inventory_: Inventory) -> void:
 
 func register_constraint(constraint: InventoryConstraint) -> void:
     _constraints.append(constraint)
-    constraint.changed.connect(_on_constraint_changed.bind(constraint))
+    Utils.safe_connect(constraint.changed, _on_constraint_changed.bind(constraint))
 
 
 func unregister_constraint(constraint: InventoryConstraint) -> void:
     _constraints.erase(constraint)
-    constraint.changed.disconnect(_on_constraint_changed.bind(constraint))
+    Utils.safe_disconnect(constraint.changed, _on_constraint_changed.bind(constraint))
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:

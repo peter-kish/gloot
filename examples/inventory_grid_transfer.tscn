@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dkfn8qojbtud4"]
+[gd_scene load_steps=19 format=3 uid="uid://dkfn8qojbtud4"]
 
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3"]
 [ext_resource type="Script" path="res://examples/inventory_grid_transfer.gd" id="4"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="9"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_xnylc"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="10"]
+[ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_4n750"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_mbp7e"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
@@ -167,14 +168,6 @@ unique_name_in_owner = true
 script = ExtResource("9_xnylc")
 prototree_json = ExtResource("8_kriwd")
 _serialized_format = {
-"constraints": {
-"grid_constraint": {
-"item_positions": {
-"1": "Vector2i(0, 1)"
-},
-"size": "Vector2i(5, 5)"
-}
-},
 "items": [{
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_1x1"
@@ -186,19 +179,15 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_grid.json"
 }
 
+[node name="GridConstraint" type="Node" parent="InventoryLeft"]
+script = ExtResource("10_4n750")
+size = Vector2i(5, 5)
+
 [node name="InventoryRight" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_xnylc")
 prototree_json = ExtResource("8_kriwd")
 _serialized_format = {
-"constraints": {
-"grid_constraint": {
-"item_positions": {
-"1": "Vector2i(0, 1)"
-},
-"size": "Vector2i(5, 5)"
-}
-},
 "items": [{
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_1x1"
@@ -209,3 +198,7 @@ _serialized_format = {
 "node_name": "InventoryRight",
 "prototree": "res://tests/data/prototree_grid.json"
 }
+
+[node name="GridConstraint" type="Node" parent="InventoryRight"]
+script = ExtResource("10_4n750")
+size = Vector2i(5, 5)

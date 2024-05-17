@@ -25,6 +25,8 @@ func connect_inventory_signals():
 
     inventory.prototree_json_changed.connect(_refresh)
     inventory.constraint_changed.connect(_on_constraint_changed)
+    inventory.constraint_added.connect(_on_constraint_changed)
+    inventory.constraint_removed.connect(_on_constraint_changed)
 
     if !inventory.prototree_json:
         return
@@ -37,6 +39,8 @@ func disconnect_inventory_signals():
         
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.constraint_changed.disconnect(_on_constraint_changed)
+    inventory.constraint_added.disconnect(_on_constraint_changed)
+    inventory.constraint_removed.disconnect(_on_constraint_changed)
 
     if !inventory.prototree_json:
         return
