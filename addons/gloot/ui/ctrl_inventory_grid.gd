@@ -60,7 +60,7 @@ class PriorityPanel extends Panel:
             add_theme_stylebox_override("panel", style)
 
 
-class SelectionPanel extends Panel:
+class CustomizablePanel extends Panel:
     func set_style(style: StyleBox) -> void:
         remove_theme_stylebox_override("panel")
         if style != null:
@@ -107,7 +107,7 @@ class SelectionPanel extends Panel:
             _ctrl_inventory_grid_basic.select_mode = select_mode
 
 @export_group("Custom Styles")
-@export var field_style: StyleBox :
+@export var field_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_field_style_normal.tres") :
     set(new_field_style):
         field_style = new_field_style
         _queue_refresh()
@@ -119,9 +119,13 @@ class SelectionPanel extends Panel:
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()
-@export var selection_style: StyleBox :
+@export var selection_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_style_selection.tres"):
     set(new_selection_style):
         selection_style = new_selection_style
+        _queue_refresh()
+@export var background_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_style_background.tres"):
+    set(new_background_style):
+        background_style = new_background_style
         _queue_refresh()
 
 var _ctrl_inventory_grid_basic: CtrlInventoryGridBasic = null
@@ -129,6 +133,7 @@ var _field_background_grid: Control = null
 var _field_backgrounds: Array = []
 var _selection_panels: Control = null
 var _refresh_queued: bool = false
+var _background: CustomizablePanel = null
 
 
 func _connect_inventory_signals() -> void:
@@ -184,7 +189,7 @@ func _refresh_selection_panel() -> void:
         return
 
     for selected_item in selected_items:
-        var selection_panel := SelectionPanel.new()
+        var selection_panel := CustomizablePanel.new()
         var rect := _ctrl_inventory_grid_basic.get_item_rect(selected_item)
         selection_panel.position = rect.position
         selection_panel.size = rect.size
@@ -226,6 +231,11 @@ func _ready() -> void:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.queue_free()
             _field_background_grid.queue_free()
+
+    _background = CustomizablePanel.new()
+    _background.name = "Background"
+    _background.set_style(background_style)
+    add_child(_background)
 
     _field_background_grid = Control.new()
     _field_background_grid.name = "FieldBackgrounds"
@@ -275,6 +285,7 @@ func _notification(what: int) -> void:
 func _update_size() -> void:
     custom_minimum_size = _ctrl_inventory_grid_basic.size
     size = _ctrl_inventory_grid_basic.size
+    _background.size = _ctrl_inventory_grid_basic.size
 
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:
