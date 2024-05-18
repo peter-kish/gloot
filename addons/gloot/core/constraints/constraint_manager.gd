@@ -2,7 +2,11 @@ extends RefCounted
 
 signal constraint_changed(constraint)
 
+const Verify = preload("res://addons/gloot/core/verify.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
+
+const KEY_CONSTRAINT_NAME: String = "name"
+const KEY_CONSTRAINT_DATA: String = "data"
 
 var inventory: Inventory = null
 var _constraints: Array[InventoryConstraint] = []
@@ -13,6 +17,10 @@ func _init(inventory_: Inventory) -> void:
     if !is_instance_valid(inventory):
         return
     register_child_constraints()
+
+
+func is_empty() -> bool:
+    return _constraints.is_empty()
 
 
 func register_child_constraints() -> void:
@@ -103,3 +111,40 @@ func get_constraint(script: Script) -> InventoryConstraint:
             return constraint
     return null
 
+
+func reset() -> void:
+    while !_constraints.is_empty():
+        var constraint := _constraints.pop_back()
+        inventory.remove_child(constraint)
+        constraint.free()
+
+
+func serialize() -> Dictionary:
+    var result := {}
+
+    for constraint in _constraints:
+        result[constraint.get_script().resource_path] = {
+            KEY_CONSTRAINT_NAME: constraint.name,
+            KEY_CONSTRAINT_DATA: constraint.serialize()
+        }
+
+    return result
+
+
+func deserialize(source: Dictionary) -> bool:
+    for constraint_script_path in source:
+        if !Verify.dict(source[constraint_script_path], true, KEY_CONSTRAINT_NAME, [TYPE_STRING, TYPE_STRING_NAME]):
+            return false
+        if !Verify.dict(source[constraint_script_path], true, KEY_CONSTRAINT_DATA, TYPE_DICTIONARY):
+            return false
+
+    reset()
+
+    for constraint_script_path in source:
+        var constraint_script = load(constraint_script_path)
+        var new_constraint: InventoryConstraint = constraint_script.new()
+        new_constraint.name = source[constraint_script_path].name
+        inventory.add_child(new_constraint)
+        new_constraint.deserialize(source[constraint_script_path].data)
+
+    return true

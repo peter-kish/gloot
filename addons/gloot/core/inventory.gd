@@ -98,6 +98,7 @@ func _init() -> void:
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
+    _update_serialized_format()
     constraint_changed.emit(constraint)
 
 
@@ -292,11 +293,13 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    if prototree_json == null:
+    if prototree_json == null || _constraint_manager == null:
         return result
 
     result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
+    if !_constraint_manager.is_empty():
+        result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
         result[KEY_ITEMS] = []
         for item in get_items():
@@ -335,6 +338,9 @@ func deserialize(source: Dictionary) -> bool:
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.get_title())
+    if source.has(KEY_CONSTRAINTS):
+        if !_constraint_manager.deserialize(source[KEY_CONSTRAINTS]):
+            return false
 
     return true
 

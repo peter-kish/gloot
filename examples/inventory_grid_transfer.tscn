@@ -168,6 +168,17 @@ unique_name_in_owner = true
 script = ExtResource("9_xnylc")
 prototree_json = ExtResource("8_kriwd")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/grid_constraint.gd": {
+"data": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+},
+"name": &"GridConstraint"
+}
+},
 "items": [{
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_1x1"
@@ -188,6 +199,17 @@ unique_name_in_owner = true
 script = ExtResource("9_xnylc")
 prototree_json = ExtResource("8_kriwd")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/grid_constraint.gd": {
+"data": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+},
+"name": &"GridConstraint"
+}
+},
 "items": [{
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_1x1"

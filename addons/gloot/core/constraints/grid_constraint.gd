@@ -466,5 +466,5 @@ func _deserialize_item_positions(source: Dictionary) -> bool:
         var item := inventory.get_items()[item_index]
         var item_position = str_to_var(source[str_item_index])
         set_item_position_unsafe(item, item_position)
-    return false
+    return true
 

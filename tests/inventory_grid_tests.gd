@@ -141,13 +141,12 @@ func test_serialize():
     assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
     assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
     var inventory_data = inventory_3x3.serialize()
-    var constraint_data = grid_constraint.serialize()
 
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().is_empty())
 
     assert(inventory_3x3.deserialize(inventory_data))
-    assert(grid_constraint.deserialize(constraint_data))
+    grid_constraint = inventory_3x3.get_constraint(GridConstraint)
     assert(inventory_3x3.get_item_count() == 2)
     assert(grid_constraint.size.x == 3)
     assert(grid_constraint.size.y == 3)
@@ -160,7 +159,6 @@ func test_serialize_json():
     assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
     assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
     var inventory_data = inventory_3x3.serialize()
-    var constraint_data = grid_constraint.serialize()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)
@@ -172,7 +170,7 @@ func test_serialize_json():
     assert(inventory_3x3.get_items().is_empty())
 
     assert(inventory_3x3.deserialize(inventory_data))
-    assert(grid_constraint.deserialize(constraint_data))
+    grid_constraint = inventory_3x3.get_constraint(GridConstraint)
     assert(inventory_3x3.get_item_count() == 2)
     assert(grid_constraint.size.x == 3)
     assert(grid_constraint.size.y == 3)

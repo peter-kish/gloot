@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://i33jyh87gocu"]
+[gd_scene load_steps=4 format=3 uid="uid://i33jyh87gocu"]
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_up3cv"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3_0nl5x"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="3_3f0xc"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="4_h57xp"]
 
 [node name="Control" type="Control"]
@@ -17,6 +16,17 @@ grow_vertical = 2
 script = ExtResource("2_up3cv")
 prototree_json = ExtResource("4_h57xp")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/grid_constraint.gd": {
+"data": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+},
+"name": &"GridConstraint"
+}
+},
 "items": [{
 "prototree": "res://tests/data/prototree_grid.json",
 "prototype_path": "/item_1x1"
@@ -27,10 +37,6 @@ _serialized_format = {
 "node_name": "Inventory",
 "prototree": "res://tests/data/prototree_grid.json"
 }
-
-[node name="GridConstraint" type="Node" parent="Inventory"]
-script = ExtResource("3_3f0xc")
-size = Vector2i(5, 5)
 
 [node name="CtrlInventoryGrid" type="Control" parent="." node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(160, 160)

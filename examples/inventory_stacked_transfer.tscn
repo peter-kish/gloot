@@ -132,6 +132,14 @@ unique_name_in_owner = true
 script = ExtResource("9_1flkn")
 prototree_json = ExtResource("6_v6n8v")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/weight_constraint.gd": {
+"data": {
+"capacity": 50.0
+},
+"name": &"WeightConstraint"
+}
+},
 "items": [{
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/minimal_item"
@@ -161,6 +169,14 @@ unique_name_in_owner = true
 script = ExtResource("9_1flkn")
 prototree_json = ExtResource("6_v6n8v")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/weight_constraint.gd": {
+"data": {
+"capacity": 50.0
+},
+"name": &"WeightConstraint"
+}
+},
 "items": [{
 "prototree": "res://tests/data/prototree_stacks.json",
 "prototype_path": "/minimal_item"

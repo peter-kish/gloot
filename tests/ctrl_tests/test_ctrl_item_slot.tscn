@@ -38,7 +38,6 @@ slot_highlighted_style = SubResource("2")
 script = ExtResource("4_j3nko")
 prototree_json = ExtResource("5_46c6m")
 _serialized_format = {
-"constraints": {},
 "items": [{
 "prototree": "res://tests/data/prototree_basic.json",
 "prototype_path": "/item1"
