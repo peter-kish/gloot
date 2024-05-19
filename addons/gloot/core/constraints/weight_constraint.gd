@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_weight_constraint.svg")
 extends InventoryConstraint
 class_name WeightConstraint
 

@@ -1,4 +1,5 @@
 @tool
+@icon("res://addons/gloot/images/icon_grid_constraint.svg")
 extends InventoryConstraint
 class_name GridConstraint
 

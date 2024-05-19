@@ -145,6 +145,8 @@ func deserialize(source: Dictionary) -> bool:
         var new_constraint: InventoryConstraint = constraint_script.new()
         new_constraint.name = source[constraint_script_path].name
         inventory.add_child(new_constraint)
+        if Engine.is_editor_hint():
+            new_constraint.owner = inventory.get_tree().edited_scene_root
         new_constraint.deserialize(source[constraint_script_path].data)
 
     return true
