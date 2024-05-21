@@ -164,8 +164,6 @@ func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
 
-    if item.get_item_slot() != null:
-        item.get_item_slot().clear()
     if item.get_inventory() != null:
         item.get_inventory().remove_item(item)
 

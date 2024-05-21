@@ -45,11 +45,9 @@ func test_equip_item() -> void:
     assert(slot.get_item() == null)
     assert(slot.equip(item))
     assert(slot.get_item() == item)
-    assert(item.get_item_slot() == slot)
 
     assert(slot.equip(item2))
     assert(slot.get_item() == item2)
-    assert(item2.get_item_slot() == slot)
 
     slot.clear()
     assert(slot.get_item() == null)

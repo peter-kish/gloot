@@ -9,7 +9,6 @@ const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
 func init_suite() -> void:
     tests = [
         "test_get_inventory",
-        "test_get_item_slot",
         "test_swap",
         "test_get_property",
         "test_set_property",
@@ -41,13 +40,6 @@ func test_get_inventory() -> void:
     assert(item.get_inventory() == null)
 
 
-func test_get_item_slot() -> void:
-    assert(item.get_item_slot() == null)
-    inventory.remove_item(item)
-    slot.equip(item)
-    assert(item.get_item_slot() == slot)
-
-
 func test_swap() -> void:
     var inventory2 = create_inventory(TEST_PROTOTREE)
     var item2 = inventory2.create_and_add_item("minimal_item")
@@ -57,27 +49,7 @@ func test_swap() -> void:
     # Swap items between two inventories
     assert(InventoryItem.swap(item, item2))
     assert(item.get_inventory() == inventory2)
-    assert(item.get_item_slot() == null)
     assert(item2.get_inventory() == inventory)
-    assert(item2.get_item_slot() == null)
-
-    # Swap items between an inventory and a slot
-    inventory.add_item(item)
-    slot2.equip(item2)
-    assert(InventoryItem.swap(item, item2))
-    assert(item.get_inventory() == null)
-    assert(item.get_item_slot() == slot2)
-    assert(item2.get_inventory() == inventory)
-    assert(item2.get_item_slot() == null)
-
-    # Swap items between two slots
-    slot.equip(item)
-    slot2.equip(item2)
-    assert(InventoryItem.swap(item, item2))
-    assert(item.get_inventory() == null)
-    assert(item.get_item_slot() == slot2)
-    assert(item2.get_inventory() == null)
-    assert(item2.get_item_slot() == slot)
 
     # Swap within one inventory
     inventory.add_item(item)
@@ -86,9 +58,7 @@ func test_swap() -> void:
     var idx2 = inventory.get_item_index(item2)
     assert(InventoryItem.swap(item, item2))
     assert(item.get_inventory() == inventory)
-    assert(item.get_item_slot() == null)
     assert(item2.get_inventory() == inventory)
-    assert(item2.get_item_slot() == null)
     assert(inventory.get_item_index(item) == idx2)
     assert(inventory.get_item_index(item2) == idx)
 

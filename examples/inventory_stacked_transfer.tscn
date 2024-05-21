@@ -125,7 +125,6 @@ text = ">>>"
 unique_name_in_owner = true
 script = ExtResource("8_worre")
 prototree_json = ExtResource("6_v6n8v")
-_serialized_format = {}
 
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true

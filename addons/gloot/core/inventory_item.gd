@@ -30,7 +30,6 @@ var _inventory: Inventory :
         _inventory = new_inventory
         if _inventory:
             _prototree_json = _inventory.prototree_json
-var _item_slot: ItemSlot
 
 const KEY_PROTOTREE: String = "prototree"
 const KEY_PROTOTYE_PATH: String = "prototype_path"
@@ -103,45 +102,36 @@ func get_inventory() -> Inventory:
     return _inventory
 
 
-func get_item_slot() -> ItemSlot:
-    return _item_slot
-
-
 static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if item1 == null || item2 == null || item1 == item2:
         return false
 
-    var owner1 = item1.get_inventory()
-    if owner1 == null:
-        owner1 = item1.get_item_slot()
-    var owner2 = item2.get_inventory()
-    if owner2 == null:
-        owner2 = item2.get_item_slot()
-    if owner1 == null || owner2 == null:
+    var inv1 = item1.get_inventory()
+    var inv2 = item2.get_inventory()
+    if inv1 == null || inv2 == null:
         return false
 
-    if owner1 is Inventory:
-        if !owner1._constraint_manager._on_pre_item_swap(item1, item2):
-            return false
-    if owner2 is Inventory && owner1 != owner2:
-        if !owner2._constraint_manager._on_pre_item_swap(item1, item2):
+    if !inv1._constraint_manager._on_pre_item_swap(item1, item2):
+        return false
+    if inv1 != inv2:
+        if !inv2._constraint_manager._on_pre_item_swap(item1, item2):
             return false
 
-    var idx1 = _remove_item_from_owner(item1, owner1)
-    var idx2 = _remove_item_from_owner(item2, owner2)
-    if !_add_item_to_owner(item1, owner2, idx2):
-        _add_item_to_owner(item1, owner1, idx1)
-        _add_item_to_owner(item2, owner2, idx2)
+    var idx1 = _remove_item_from_owner(item1, inv1)
+    var idx2 = _remove_item_from_owner(item2, inv2)
+    if !_add_item_to_inventory(item1, inv2, idx2):
+        _add_item_to_inventory(item1, inv1, idx1)
+        _add_item_to_inventory(item2, inv2, idx2)
         return false
-    if !_add_item_to_owner(item2, owner1, idx1):
-        _add_item_to_owner(item1, owner1, idx1)
-        _add_item_to_owner(item2, owner2, idx2)
+    if !_add_item_to_inventory(item2, inv1, idx1):
+        _add_item_to_inventory(item1, inv1, idx1)
+        _add_item_to_inventory(item2, inv2, idx2)
         return false
 
-    if owner1 is Inventory:
-        owner1._constraint_manager._on_post_item_swap(item1, item2)
-    if owner2 is Inventory && owner1 != owner2:
-        owner2._constraint_manager._on_post_item_swap(item1, item2)
+    if inv1 is Inventory:
+        inv1._constraint_manager._on_post_item_swap(item1, item2)
+    if inv2 is Inventory && inv1 != inv2:
+        inv2._constraint_manager._on_post_item_swap(item1, item2)
 
     return true;
 
@@ -157,14 +147,11 @@ static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
     return 0
 
 
-static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> bool:
-    if item_owner is Inventory:
-        var inventory := (item_owner as Inventory)
-        if inventory.add_item(item):
-            inventory.move_item(inventory.get_item_index(item), index)
-            return true
-        return false
-    return (item_owner as ItemSlot).equip(item)
+static func _add_item_to_inventory(item: InventoryItem, inventory: Inventory, index: int) -> bool:
+    if inventory.add_item(item):
+        inventory.move_item(inventory.get_item_index(item), index)
+        return true
+    return false
 
     
 func has_property(property_name: String) -> bool:

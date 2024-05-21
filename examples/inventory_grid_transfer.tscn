@@ -161,7 +161,6 @@ offset_bottom = 14.0
 unique_name_in_owner = true
 script = ExtResource("10_mbp7e")
 prototree_json = ExtResource("8_kriwd")
-_serialized_format = {}
 
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true

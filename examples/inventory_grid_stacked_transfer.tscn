@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://o6g61xdkjii0"]
+[gd_scene load_steps=19 format=3 uid="uid://o6g61xdkjii0"]
 
 [ext_resource type="Script" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="2_ptyr5"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_mr2pf"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
+[ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_6njuc"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
@@ -173,7 +174,6 @@ offset_bottom = 14.0
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_lyc83")
 prototree_json = ExtResource("8_mr2pf")
-_serialized_format = {}
 
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true
@@ -222,6 +222,10 @@ _serialized_format = {
 "prototree": "res://tests/data/prototree_grid.json"
 }
 
+[node name="GridConstraint" type="Node" parent="InventoryLeft"]
+script = ExtResource("10_6njuc")
+size = Vector2i(5, 5)
+
 [node name="InventoryRight" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
@@ -268,3 +272,7 @@ _serialized_format = {
 "node_name": "InventoryRight",
 "prototree": "res://tests/data/prototree_grid.json"
 }
+
+[node name="GridConstraint" type="Node" parent="InventoryRight"]
+script = ExtResource("10_6njuc")
+size = Vector2i(5, 5)
