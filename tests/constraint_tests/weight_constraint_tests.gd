@@ -24,6 +24,7 @@ func init_test() -> void:
     item = create_item(TEST_PROTOTREE, "big_item")
     inventory = create_inventory(TEST_PROTOTREE)
     weight_constraint = enable_weight_constraint(inventory)
+    weight_constraint.capacity = 100.0
 
 
 func cleanup_test() -> void:
@@ -32,18 +33,15 @@ func cleanup_test() -> void:
 
 func test_init() -> void:
     assert(weight_constraint.inventory == inventory)
-    assert(weight_constraint.capacity == 0.0)
+    assert(weight_constraint.capacity == 100.0)
     assert(weight_constraint.occupied_space == 0.0)
 
 
 func test_capacity() -> void:
     weight_constraint.capacity = 10.0
     assert(weight_constraint.capacity == 10.0)
-    assert(!weight_constraint.has_unlimited_capacity())
-
     weight_constraint.capacity = -10.0
     assert(weight_constraint.capacity == 0.0)
-    assert(weight_constraint.has_unlimited_capacity())
 
 
 func test_occupied_space() -> void:
@@ -61,7 +59,7 @@ func test_occupied_space() -> void:
 
 
 func test_get_free_space() -> void:
-    assert(weight_constraint.get_free_space() == 0.0)
+    assert(weight_constraint.get_free_space() == 100.0)
     weight_constraint.capacity = 10.0
     assert(weight_constraint.get_free_space() == 10.0)
     weight_constraint.capacity = 100.0
@@ -70,23 +68,19 @@ func test_get_free_space() -> void:
 
 
 func test_get_space_for() -> void:
-    assert(weight_constraint.get_space_for(item).is_inf())
+    assert(weight_constraint.get_space_for(item).eq(ItemCount.new(5)))
 
     weight_constraint.capacity = 10.0
-    assert(!weight_constraint.get_space_for(item).is_inf())
-    assert(weight_constraint.get_space_for(item).count == 0)
+    assert(weight_constraint.get_space_for(item).eq(ItemCount.zero()))
 
     weight_constraint.capacity = 20.0
-    assert(!weight_constraint.get_space_for(item).is_inf())
-    assert(weight_constraint.get_space_for(item).count == 1)
+    assert(weight_constraint.get_space_for(item).eq(ItemCount.one()))
 
     weight_constraint.capacity = 40.0
-    assert(!weight_constraint.get_space_for(item).is_inf())
-    assert(weight_constraint.get_space_for(item).count == 2)
+    assert(weight_constraint.get_space_for(item).eq(ItemCount.new(2)))
 
     inventory.add_item(item)
-    assert(!weight_constraint.get_space_for(item).is_inf())
-    assert(weight_constraint.get_space_for(item).count == 1)
+    assert(weight_constraint.get_space_for(item).eq(ItemCount.one()))
 
 
 func test_swap_items() -> void:

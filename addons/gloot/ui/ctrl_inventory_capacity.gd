@@ -68,13 +68,8 @@ func _refresh() -> void:
         return
 
     _progress_bar.max_value = weight_constraint.capacity
-
-    if weight_constraint.has_unlimited_capacity():
-        _label.text = "%s/INF" % str(weight_constraint.occupied_space)
-        _progress_bar.value = 0
-    else:
-        _label.text = "%s/%s" % [str(weight_constraint.occupied_space), str(weight_constraint.capacity)]
-        _progress_bar.value = weight_constraint.occupied_space
+    _label.text = "%s/%s" % [str(weight_constraint.occupied_space), str(weight_constraint.capacity)]
+    _progress_bar.value = weight_constraint.occupied_space
 
 
 func _ready() -> void:

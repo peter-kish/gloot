@@ -3,6 +3,7 @@
 extends InventoryConstraint
 class_name WeightConstraint
 
+const DEFAULT_CAPACITY: float = 1.0
 const KEY_WEIGHT: String = "weight"
 const KEY_CAPACITY: String = "capacity"
 const KEY_OCCUPIED_SPACE: String = "occupied_space"
@@ -11,7 +12,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 
-@export var capacity: float :
+@export var capacity: float = DEFAULT_CAPACITY :
     set(new_capacity):
         if new_capacity < 0.0:
             new_capacity = 0.0
@@ -60,21 +61,11 @@ static func _can_swap(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     if !is_instance_valid(weight_constraint):
         return true
 
-    if weight_constraint.has_unlimited_capacity():
-        return true
-
     var space_needed: float = weight_constraint.occupied_space - get_item_weight(item_dst) + get_item_weight(item_src)
     return space_needed <= weight_constraint.capacity
 
 
-func has_unlimited_capacity() -> bool:
-    return capacity == 0.0
-
-
 func get_free_space() -> float:
-    if has_unlimited_capacity():
-        return capacity
-
     var free_space: float = capacity - _occupied_space
     if free_space < 0.0:
         free_space = 0.0
@@ -91,7 +82,7 @@ func _calculate_occupied_space() -> void:
         changed.emit()
 
     if !Engine.is_editor_hint():
-        assert(has_unlimited_capacity() || _occupied_space <= capacity, "Inventory overflow!")
+        assert(_occupied_space <= capacity, "Inventory overflow!")
 
 
 static func _get_item_unit_weight(item: InventoryItem) -> float:
@@ -112,15 +103,11 @@ static func set_item_weight(item: InventoryItem, weight: float) -> void:
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:
-    if has_unlimited_capacity():
-        return ItemCount.inf()
     var unit_weight := _get_item_unit_weight(item)
     return ItemCount.new(floor(get_free_space() / unit_weight))
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    if has_unlimited_capacity():
-        return true
     var item_weight := get_item_weight(item)
     return get_free_space() >= item_weight
 

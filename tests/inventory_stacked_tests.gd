@@ -18,7 +18,6 @@ func init_suite() -> void:
         "test_space",
         "test_big_item",
         "test_change_capacity",
-        "test_unlimited_capacity",
         "test_invalid_capacity",
         "test_stack_split_join",
         "test_automerge",
@@ -69,14 +68,6 @@ func test_change_capacity() -> void:
     inventory.get_constraint(WeightConstraint).capacity = 0.5
     assert(!inventory.can_add_item(item))
     assert(!inventory.add_item(item))
-
-
-func test_unlimited_capacity() -> void:
-    inventory.get_constraint(WeightConstraint).capacity = 0
-    assert(inventory.can_add_item(item))
-    assert(inventory.add_item(item))
-    assert(inventory.can_add_item(big_item))
-    assert(inventory.add_item(big_item))
 
 
 func test_invalid_capacity() -> void:

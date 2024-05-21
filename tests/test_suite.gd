@@ -66,7 +66,7 @@ func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> Inventory:
     return inventory
 
 
-func enable_weight_constraint(inventory: Inventory, capacity: float = 0.0) -> WeightConstraint:
+func enable_weight_constraint(inventory: Inventory, capacity: float = WeightConstraint.DEFAULT_CAPACITY) -> WeightConstraint:
     var weight_constraint = WeightConstraint.new()
     weight_constraint.capacity = capacity
     inventory.add_child(weight_constraint)
