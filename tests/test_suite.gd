@@ -80,6 +80,13 @@ func enable_grid_constraint(inventory: Inventory, size: Vector2i = GridConstrain
     return grid_constraint
 
 
+func enable_item_count_constraint(inventory: Inventory, capacity: int = ItemCountConstraint.DEFAULT_CAPACITY) -> ItemCountConstraint:
+    var item_count_constraint = ItemCountConstraint.new()
+    item_count_constraint.capacity = capacity
+    inventory.add_child(item_count_constraint)
+    return item_count_constraint
+
+
 # Create an item with the given prototype ID from the given prototree
 func create_item(prototree_json: JSON, prototype_path: String) -> InventoryItem:
     var item = InventoryItem.new(prototree_json, prototype_path)
