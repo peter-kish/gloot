@@ -179,7 +179,8 @@ func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> voi
     if _swap_items(item_slot.get_item(), item):
         return
         
-    item_slot.equip(item)
+    if item_slot.get_item() == null:
+        item_slot.equip(item)
 
 
 func _join_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
