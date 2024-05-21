@@ -52,10 +52,10 @@ func cleanup_test() -> void:
 func test_space() -> void:
     assert(inventory.get_constraint(WeightConstraint).capacity == 10.0)
     assert(inventory.get_constraint(WeightConstraint).get_free_space() == 10.0)
-    assert(inventory.get_constraint(WeightConstraint).occupied_space == 0.0)
+    assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == 0.0)
     assert(inventory.can_add_item(item))
     assert(inventory.add_item(item))
-    assert(inventory.get_constraint(WeightConstraint).occupied_space == 1.0)
+    assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == 1.0)
     assert(inventory.get_constraint(WeightConstraint).get_free_space() == 9.0)
 
 
@@ -164,7 +164,7 @@ func test_add_item_autosplitmerge() -> void:
     assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(10)))
     assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
     assert(inventory.get_item_count() == 1)
-    assert(inventory.get_constraint(WeightConstraint).occupied_space == 10)
+    assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == 10)
     assert(inventory_2.get_item_count() == 1)
 
 
@@ -172,20 +172,20 @@ func test_serialize() -> void:
     assert(inventory.add_item(item))
     var inventory_data = inventory.serialize()
     var capacity = inventory.get_constraint(WeightConstraint).capacity
-    var occupied_space = inventory.get_constraint(WeightConstraint).occupied_space
+    var occupied_space = inventory.get_constraint(WeightConstraint).get_occupied_space()
     inventory.reset()
     assert(inventory.get_items().is_empty())
     assert(inventory.deserialize(inventory_data))
     assert(inventory.get_item_count() == 1)
     assert(inventory.get_constraint(WeightConstraint).capacity == capacity)
-    assert(inventory.get_constraint(WeightConstraint).occupied_space == occupied_space)
+    assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == occupied_space)
     
 
 func test_serialize_json() -> void:
     assert(inventory.add_item(item))
     var inventory_data = inventory.serialize()
     var capacity = inventory.get_constraint(WeightConstraint).capacity
-    var occupied_space = inventory.get_constraint(WeightConstraint).occupied_space
+    var occupied_space = inventory.get_constraint(WeightConstraint).get_occupied_space()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)
@@ -198,5 +198,5 @@ func test_serialize_json() -> void:
     assert(inventory.deserialize(inventory_data))
     assert(inventory.get_item_count() == 1)
     assert(inventory.get_constraint(WeightConstraint).capacity == capacity)
-    assert(inventory.get_constraint(WeightConstraint).occupied_space == occupied_space)
+    assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == occupied_space)
 

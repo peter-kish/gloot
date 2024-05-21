@@ -68,8 +68,8 @@ func _refresh() -> void:
         return
 
     _progress_bar.max_value = weight_constraint.capacity
-    _label.text = "%s/%s" % [str(weight_constraint.occupied_space), str(weight_constraint.capacity)]
-    _progress_bar.value = weight_constraint.occupied_space
+    _label.text = "%s/%s" % [str(weight_constraint.get_occupied_space()), str(weight_constraint.capacity)]
+    _progress_bar.value = weight_constraint.get_occupied_space()
 
 
 func _ready() -> void:

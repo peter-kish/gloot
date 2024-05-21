@@ -18,17 +18,16 @@ const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
             new_capacity = 0.0
         if new_capacity == capacity:
             return
-        if new_capacity > 0.0 && occupied_space > new_capacity:
+        if new_capacity > 0.0 && _occupied_space > new_capacity:
             return
         capacity = new_capacity
         changed.emit()
 
 var _occupied_space: float
-var occupied_space: float :
-    get:
-        return _occupied_space
-    set(new_occupied_space):
-        assert(false, "occupied_space is read-only!")
+
+
+func get_occupied_space() -> float:
+    return _occupied_space
     
     
 func _on_inventory_set() -> void:
@@ -61,7 +60,7 @@ static func _can_swap(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     if !is_instance_valid(weight_constraint):
         return true
 
-    var space_needed: float = weight_constraint.occupied_space - get_item_weight(item_dst) + get_item_weight(item_src)
+    var space_needed: float = weight_constraint._occupied_space - get_item_weight(item_dst) + get_item_weight(item_src)
     return space_needed <= weight_constraint.capacity
 
 

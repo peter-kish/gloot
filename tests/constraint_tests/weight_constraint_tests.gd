@@ -34,7 +34,7 @@ func cleanup_test() -> void:
 func test_init() -> void:
     assert(weight_constraint.inventory == inventory)
     assert(weight_constraint.capacity == 100.0)
-    assert(weight_constraint.occupied_space == 0.0)
+    assert(weight_constraint.get_occupied_space() == 0.0)
 
 
 func test_capacity() -> void:
@@ -47,15 +47,15 @@ func test_capacity() -> void:
 func test_occupied_space() -> void:
     # Check if occupied_space is updated on item_added
     inventory.add_item(item)
-    assert(weight_constraint.occupied_space == WeightConstraint.get_item_weight(item))
+    assert(weight_constraint.get_occupied_space() == WeightConstraint.get_item_weight(item))
 
     # Check if occupied_space is updated on item_property_changed
     WeightConstraint.set_item_weight(item, 10.0)
-    assert(weight_constraint.occupied_space == 10.0)
+    assert(weight_constraint.get_occupied_space() == 10.0)
 
     # Check if occupied_space is updated on item_removed
     inventory.remove_item(item)
-    assert(weight_constraint.occupied_space == 0.0)
+    assert(weight_constraint.get_occupied_space() == 0.0)
 
 
 func test_get_free_space() -> void:
