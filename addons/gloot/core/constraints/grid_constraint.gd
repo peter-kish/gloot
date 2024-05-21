@@ -74,7 +74,7 @@ func _size_check(item1: InventoryItem, item2: InventoryItem) -> bool:
     var grid_constraint1: GridConstraint = null
     if is_instance_valid(inv1):
         grid_constraint1 = inv1._constraint_manager.get_grid_constraint()
-    var inv2 = item1.get_inventory()
+    var inv2 = item2.get_inventory()
     var grid_constraint2: GridConstraint = null
     if is_instance_valid(inv2):
         grid_constraint2 = inv2._constraint_manager.get_grid_constraint()
