@@ -78,6 +78,7 @@ class CustomizablePanel extends Panel:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.inventory = inventory
         _queue_refresh()
+        update_configuration_warnings()
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
@@ -134,6 +135,18 @@ var _field_backgrounds: Array = []
 var _selection_panels: Control = null
 var _refresh_queued: bool = false
 var _background: CustomizablePanel = null
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+    if !is_instance_valid(inventory):
+        return PackedStringArray([
+                "This CtrlInventoryGrid node has no inventory set. Set the 'inventory' field to be able to " \
+                + "display its contents."])
+    if inventory.get_constraint(GridConstraint) == null:
+        return PackedStringArray([
+                "The inventory has no GridConstraint child node. Add a GridConstraint to the inventory to be able" \
+                + " to display its contents on a grid."])
+    return PackedStringArray()
 
 
 func _connect_inventory_signals() -> void:

@@ -15,9 +15,18 @@ signal inventory_item_context_activated(item)
         inventory = new_inventory
         connect_inventory_signals()
         _refresh()
+        update_configuration_warnings()
 
 var _inventory_control: Control = null
 var _capacity_control: CtrlInventoryCapacity = null
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+    if !is_instance_valid(inventory):
+        return PackedStringArray([
+                "This CtrlInventoryUniversal node has no inventory set. Set the 'inventory' field to be able to " \
+                + "display its contents."])
+    return PackedStringArray()
 
 
 func connect_inventory_signals():

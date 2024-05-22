@@ -24,6 +24,7 @@ func _on_parented(parent: Node) -> void:
         inventory._on_constraint_added(self)
     else:
         inventory = null
+    update_configuration_warnings()
 
 
 func _on_unparented() -> void:
@@ -31,6 +32,15 @@ func _on_unparented() -> void:
         return
     inventory._on_constraint_removed(self)
     inventory = null
+    update_configuration_warnings()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+    if inventory == null:
+        return PackedStringArray([
+            "InventoryConstraint nodes only serve to provide constraints to Inventory nodes. Please only use them as "\
+            + "children of Inventory nodes."])
+    return PackedStringArray()
 
 
 # Override this

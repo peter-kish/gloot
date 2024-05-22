@@ -24,9 +24,22 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         if inventory != null:
             _connect_inventory_signals()
         _refresh()
+        update_configuration_warnings()
 
 var _progress_bar: ProgressBar
 var _label: Label
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+    if !is_instance_valid(inventory):
+        return PackedStringArray([
+                "This CtrlInventoryCapacity node has no inventory set. Set the 'inventory' field to be able to " \
+                + "display its capacity."])
+    if inventory.get_constraint(WeightConstraint) == null:
+        return PackedStringArray([
+                "The inventory has no WeightConstraint child node. Add a WeightConstraint to the inventory to be able" \
+                + " to display its capacity."])
+    return PackedStringArray()
 
 
 func _connect_inventory_signals() -> void:

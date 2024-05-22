@@ -18,12 +18,22 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
             _disconnect_inventory_signals()
             inventory = null
             _clear()
+            update_configuration_warnings()
             return
 
         inventory = new_inventory
         if inventory.is_node_ready():
             _refresh()
         _connect_inventory_signals()
+        update_configuration_warnings()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+    if !is_instance_valid(inventory):
+        return PackedStringArray([
+                "This CtrlInventory node has no inventory set. Set the 'inventory' field to be able to " \
+                + "display its contents."])
+    return PackedStringArray()
 
 
 func _connect_inventory_signals() -> void:
