@@ -102,9 +102,9 @@ func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    Utils.safe_connect(inventory.contents_changed, _queue_refresh)
     Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
     Utils.safe_connect(inventory.constraint_changed, _on_constraint_changed)
+    Utils.safe_connect(inventory.item_added, _on_item_added)
     Utils.safe_connect(inventory.item_removed, _on_item_removed)
 
 
@@ -112,9 +112,9 @@ func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    Utils.safe_disconnect(inventory.contents_changed, _queue_refresh)
     Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
     Utils.safe_disconnect(inventory.constraint_changed, _on_constraint_changed)
+    Utils.safe_disconnect(inventory.item_added, _on_item_added)
     Utils.safe_disconnect(inventory.item_removed, _on_item_removed)
 
 
@@ -122,16 +122,29 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
     _queue_refresh()
 
 
-func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
-    _queue_refresh()
+func _on_item_property_changed(_item: InventoryItem, property: String) -> void:
+    var relevant_properties := [
+        GridConstraint.KEY_SIZE,
+        GridConstraint.KEY_ROTATED,
+        GridConstraint.KEY_POSITIVE_ROTATION,
+        StackManager.KEY_STACK_SIZE,
+        InventoryItem.KEY_IMAGE,
+    ]
+    if property in relevant_properties:
+        _queue_refresh()
 
 
 func _on_inventory_resized() -> void:
     _queue_refresh()
 
 
+func _on_item_added(item: InventoryItem) -> void:
+    _queue_refresh()
+
+
 func _on_item_removed(item: InventoryItem) -> void:
     _deselect(item)
+    _queue_refresh()
 
 
 func _process(_delta) -> void:

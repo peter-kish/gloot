@@ -42,6 +42,9 @@ func _connect_inventory_signals() -> void:
     inventory.contents_changed.connect(_refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
+    inventory.item_added.connect(_on_item_manipulated)
+    inventory.item_removed.connect(_on_item_manipulated)
+    inventory.item_moved.connect(_on_item_manipulated)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -49,6 +52,9 @@ func _disconnect_inventory_signals() -> void:
     inventory.contents_changed.disconnect(_refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)
+    inventory.item_added.disconnect(_on_item_manipulated)
+    inventory.item_removed.disconnect(_on_item_manipulated)
+    inventory.item_moved.disconnect(_on_item_manipulated)
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
@@ -56,6 +62,10 @@ func _on_item_property_changed(item: InventoryItem, property: String) -> void:
         set_item_text(inventory.get_item_index(item), _get_item_title(item))
     if property == InventoryItem.KEY_IMAGE:
         set_item_icon(inventory.get_item_index(item), item.get_texture())
+
+
+func _on_item_manipulated(item: InventoryItem) -> void:
+    _refresh()
 
 
 func _ready() -> void:

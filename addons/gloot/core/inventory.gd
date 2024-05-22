@@ -6,7 +6,7 @@ class_name Inventory
 signal item_added(item)
 signal item_removed(item)
 signal item_property_changed(item, property)
-signal contents_changed
+signal item_moved(item)
 signal prototree_json_changed
 signal constraint_added(constraint)
 signal constraint_removed(constraint)
@@ -127,7 +127,7 @@ func move_item(from: int, to: int) -> void:
     _items.insert(to, item)
     _update_serialized_format()
 
-    contents_changed.emit()
+    item_moved.emit()
 
 
 func get_item_index(item: InventoryItem) -> int:
@@ -175,7 +175,6 @@ func add_item(item: InventoryItem) -> bool:
     # Adding an item can result in the item being freed (e.g. when it's merged with another item stack)
     if !is_instance_valid(item):
         item = null
-    contents_changed.emit()
     item_added.emit(item)
     return true
 
@@ -214,7 +213,6 @@ func remove_item(item: InventoryItem) -> bool:
     item._inventory = null
     _disconnect_item_signals(item)
     _constraint_manager._on_item_removed(item)
-    contents_changed.emit()
     item_removed.emit(item)
     return true
 

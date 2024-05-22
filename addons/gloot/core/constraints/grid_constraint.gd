@@ -265,7 +265,7 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     var rect := Rect2i(position, item_size)
     if rect_free(rect, item):
         set_item_position_unsafe(item, position)
-        inventory.contents_changed.emit()
+        changed.emit()
         return true
 
     return false
