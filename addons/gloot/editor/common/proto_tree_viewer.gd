@@ -61,3 +61,9 @@ func _ready() -> void:
     item_activated.connect(func():
         prototype_activated.emit(get_selected().get_metadata(0))
     )
+
+
+func get_selected_prototype() -> Prototype:
+    if get_selected() == null:
+        return null
+    return get_selected().get_metadata(0)

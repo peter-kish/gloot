@@ -114,16 +114,27 @@ func _on_inventory_item_context_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
+    %BtnAdd.icon = EditorIcons.get_icon("Add")
     %BtnEdit.icon = EditorIcons.get_icon("Edit")
     %BtnRemove.icon = EditorIcons.get_icon("Remove")
 
     %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
+    %BtnAdd.pressed.connect(_on_btn_add)
     %BtnEdit.pressed.connect(_on_btn_edit)
     %BtnRemove.pressed.connect(_on_btn_remove)
     _refresh()
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
+    Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
+        return (inventory.create_and_add_item(str(prototype.get_path())) != null)
+    )
+
+
+func _on_btn_add() -> void:
+    var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
+    if prototype == null:
+        return
     Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
         return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
