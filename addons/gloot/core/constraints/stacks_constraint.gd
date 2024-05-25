@@ -263,13 +263,13 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
 
     var item_count := _get_space_for_single_item(destination, item)
     assert(!item_count.eq(ItemCount.inf()), "Item count shouldn't be infinite!")
-    var count = item_count.count
 
-    if count <= 0:
+    if item_count.le(ItemCount.zero()):
         return null
 
-    var new_item: InventoryItem = split_stack(item, count)
+    var new_item: InventoryItem = split_stack(item, item_count.count)
     assert(new_item != null)
+
     assert(destination.add_item(new_item))
     return new_item
 
@@ -283,26 +283,28 @@ func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> It
 
 
 func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> bool:
-    assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
-    var new_item := transfer_autosplit(item, destination)
-    if new_item:
-        # Item could have been packed already
-        # TODO: Find a more elegant way of handling this
-        if new_item.is_queued_for_deletion():
-            return true
-        destination._constraint_manager.get_stacks_constraint().pack_item(new_item)
-        return true
-    return false
+    if destination._constraint_manager.has_space_for(item):
+        # No need for splitting
+        return transfer_automerge(item, destination)
+
+    var item_count := _get_space_for_single_item(destination, item)
+    if item_count.eq(ItemCount.zero()):
+        return false
+    var new_item: InventoryItem = split_stack(item, item_count.count)
+    assert(transfer_automerge(new_item, destination))
+    return true
 
 
 func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     assert(inventory._constraint_manager.get_configuration() == destination._constraint_manager.get_configuration())
-    if inventory.transfer(item, destination):
-        # Item could have been packed already
-        # TODO: Find a more elegant way of handling this
+
+    if !destination._constraint_manager.has_space_for(item):
+        return false
+    for i in destination.get_items():
+        join_stacks(i, item)
         if item.is_queued_for_deletion():
+            # Stack size reached 0
             return true
-        destination._constraint_manager.get_stacks_constraint().pack_item(item)
-        return true
-    return false
+    assert(destination.add_item(item))
+    return true
 

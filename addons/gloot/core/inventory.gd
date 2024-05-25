@@ -156,29 +156,22 @@ func add_item(item: InventoryItem) -> bool:
     if item.get_parent():
         item.get_parent().remove_child(item)
 
-    _add_child_outside_scene_tree(item)
+    # HACK: In case of InventoryGridStacked we can end up adding the item and
+    # removing it immediately, after a successful pack() call (in case the grid
+    # constraint has no space for the item). This causes some errors because
+    # Godot still tries to call the ENTER_TREE notification. To avoid that, we
+    # call transfer_automerge(), which should be able to pack the item without 
+    # adding it first.
+    var gc := _constraint_manager.get_grid_constraint()
+    var sc := _constraint_manager.get_stacks_constraint()
+    if gc != null && sc != null && !gc.has_space_for(item):
+        assert(sc.transfer_automerge(item, self))
+    else:
+        add_child(item)
 
-    if Engine.is_editor_hint():
+    if Engine.is_editor_hint() && !item.is_queued_for_deletion():
         item.owner = get_tree().edited_scene_root
     return true
-
-
-func _add_child_outside_scene_tree(child: Node) -> void:
-    # HACK: Adding an item and removing it immediately during the PARENTED notification causes errors because Godot
-    # still tries to call the ENTER_TREE notification. To prevent that we make sure that the inventory is not inside the
-    # scene tree when items are added.
-    var parent := get_parent()
-    var inv_idx := 0
-    if parent != null:
-        inv_idx = get_index()
-        parent.remove_child(self)
-
-    add_child(child)
-
-    # HACK: Now we can add the inventory back into the scene tree.
-    if parent != null:
-        parent.add_child(self)
-        parent.move_child(self, inv_idx)
 
 
 func can_add_item(item: InventoryItem) -> bool:
