@@ -9,6 +9,8 @@ var _properties: Dictionary
 var _parent: Prototype
 var _prototypes: Dictionary
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 
 func _init(id: String) -> void:
     _id = id
@@ -163,7 +165,7 @@ func _deserialize_from_dict(data: Dictionary) -> bool:
     if data.has(KEY_PROPERTIES):
         for property in data[KEY_PROPERTIES].keys():
             if typeof(data[KEY_PROPERTIES][property]) == TYPE_STRING:
-                var value = str_to_var(data[KEY_PROPERTIES][property])
+                var value = Utils.str_to_var(data[KEY_PROPERTIES][property])
                 if value == null:
                     set_property(property, data[KEY_PROPERTIES][property])
                 else:

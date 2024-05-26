@@ -41,6 +41,7 @@ const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 
 func _connect_prototree_json_signals() -> void:
@@ -279,7 +280,7 @@ func deserialize(source: Dictionary) -> bool:
 
 func _deserialize_property(data: Dictionary):
     # Properties are stored as strings for JSON support.
-    var result = str_to_var(data[KEY_VALUE])
+    var result = Utils.str_to_var(data[KEY_VALUE])
     var expected_type: int = data[KEY_TYPE]
     var property_type: int = typeof(result)
     if property_type != expected_type:

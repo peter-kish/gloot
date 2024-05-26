@@ -3,6 +3,7 @@ extends MarginContainer
 signal value_changed
 
 const MultivalueEditor = preload("res://addons/gloot/editor/common/multivalue_editor.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 var value :
     set(new_value):
@@ -73,7 +74,7 @@ func _on_line_edit_value_entered(_text: String, line_edit: LineEdit) -> void:
 
 
 func _on_line_edit_focus_exited(line_edit: LineEdit) -> void:
-    var new_value = str_to_var(line_edit.text)
+    var new_value = Utils.str_to_var(line_edit.text)
     if typeof(new_value) != typeof(value):
         line_edit.text = var_to_str(value)
         return

@@ -6,6 +6,7 @@ class_name GridConstraint
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 const KEY_SIZE: String = "size"
 const KEY_ROTATED: String = "rotated"
@@ -456,16 +457,16 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
     _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
-    size = str_to_var(source[KEY_SIZE])
+    size = Utils.str_to_var(source[KEY_SIZE])
 
     return true
 
 
 func _deserialize_item_positions(source: Dictionary) -> bool:
     for str_item_index in source.keys():
-        var item_index: int = str_to_var(str_item_index)
+        var item_index: int = Utils.str_to_var(str_item_index)
         var item := inventory.get_items()[item_index]
-        var item_position = str_to_var(source[str_item_index])
+        var item_position = Utils.str_to_var(source[str_item_index])
         set_item_position_unsafe(item, item_position)
     return true
 

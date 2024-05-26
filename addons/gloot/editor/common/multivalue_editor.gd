@@ -2,6 +2,7 @@ extends GridContainer
 
 signal value_changed(value_index)
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 var values: Array = [] :
     set(new_values):
@@ -44,7 +45,7 @@ func _on_line_edit_value_entered(_text: String, line_edit: LineEdit, idx: int) -
 
 
 func _on_line_edit_focus_exited(line_edit: LineEdit, idx: int) -> void:
-    var value = str_to_var(line_edit.text)
+    var value = Utils.str_to_var(line_edit.text)
     if typeof(value) != type:
         line_edit.text = var_to_str(values[idx])
         return
