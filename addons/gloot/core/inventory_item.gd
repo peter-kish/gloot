@@ -11,6 +11,8 @@ signal removed_from_inventory(inventory)
 signal equipped_in_slot(item_slot)
 signal removed_from_slot(item_slot)
 
+const Utils = preload("res://addons/gloot/core/utils.gd")
+
 @export var protoset: ItemProtoset :
     set(new_protoset):
         if new_protoset == protoset:
@@ -330,7 +332,7 @@ func deserialize(source: Dictionary) -> bool:
 
 func _deserialize_property(data: Dictionary):
     # Properties are stored as strings for JSON support.
-    var result = str_to_var(data[KEY_VALUE])
+    var result = Utils.str_to_var(data[KEY_VALUE])
     var expected_type: int = data[KEY_TYPE]
     var property_type: int = typeof(result)
     if property_type != expected_type:

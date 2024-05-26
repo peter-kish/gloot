@@ -6,6 +6,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 # TODO: Replace KEY_WIDTH and KEY_HEIGHT with KEY_SIZE
 const KEY_WIDTH: String = "width"
@@ -463,7 +464,7 @@ func deserialize(source: Dictionary) -> bool:
 
     reset()
 
-    var s: Vector2i = str_to_var(source[KEY_SIZE])
+    var s: Vector2i = Utils.str_to_var(source[KEY_SIZE])
     self.size = s
 
     return true
