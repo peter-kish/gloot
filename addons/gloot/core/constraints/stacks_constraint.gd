@@ -237,15 +237,15 @@ func get_free_stack_space_for(item: InventoryItem) -> ItemCount:
     return item_count
 
 
-func pack_item(item: InventoryItem) -> void:
-    var free_stack_space := get_free_stack_space_for(item)
-    if free_stack_space.eq(ItemCount.zero()):
+static func pack_item(item: InventoryItem) -> void:
+    if !is_instance_valid(item.get_inventory()):
         return
-    var stacks_size := ItemCount.new(get_item_stack_size(item))
-    if stacks_size.gt(free_stack_space):
-        item = split_stack(item, free_stack_space.count)
+        
+    var sc := item.get_inventory()._constraint_manager.get_stacks_constraint()
+    if sc == null:
+        return
 
-    var mergable_items = get_mergable_items(item)
+    var mergable_items = sc.get_mergable_items(item)
     for mergable_item in mergable_items:
         var merge_result := _merge_stacks(mergable_item, item)
         if merge_result == MergeResult.SUCCESS:

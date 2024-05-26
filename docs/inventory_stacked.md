@@ -28,6 +28,7 @@ Inventory that has a limited item capacity in terms of weight.
 * `transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, splitting it if there is not enough space for the whole stack.
 * `transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, joining it with any available item stacks with the same prototype ID.
 * `transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool` - A combination of `transfer_autosplit()` and `transfer_automerge`. Transfers the given item stack into the given inventory, splitting it up and joining it with available item stacks, as needed.
+* `static pack(item: InventoryItem) -> void:` - Merges the given item with all compatible items in the same inventory.
 
 ## Signals
 
