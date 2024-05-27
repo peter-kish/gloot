@@ -136,6 +136,7 @@ func add_item_automerge(
 static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> int:
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
+    assert(items_mergable(item_dst, item_src), "Items must be mergable!")
 
     var src_size: int = get_item_stack_size(item_src)
     assert(src_size > 0, "Item stack size must be greater than 0!")
@@ -301,7 +302,7 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if !destination._constraint_manager.has_space_for(item):
         return false
     for i in destination.get_items():
-        join_stacks(i, item)
+        _merge_stacks(i, item)
         if item.is_queued_for_deletion():
             # Stack size reached 0
             return true
