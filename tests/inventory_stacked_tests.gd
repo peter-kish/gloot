@@ -142,8 +142,8 @@ func test_automerge_max_stack_size() -> void:
     assert(inventory.get_item_count() == 1)
     assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
     assert(inventory.get_item_count() == 2)
-    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(2)))
-    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
+    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(3)))
+    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(1)))
 
 
 func test_add_item() -> void:

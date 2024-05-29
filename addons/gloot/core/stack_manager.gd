@@ -92,6 +92,9 @@ static func can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, s
 static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
+    
+    if item_dst == item_src:
+        return false
 
     if !_can_merge_stacks(item_dst, item_src):
         return false
@@ -121,8 +124,6 @@ static func _merge_stacks_split_source(item_dst: InventoryItem, item_src: Invent
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
 
-    if !_stacks_compatible(item_dst, item_src):
-        return false
     if !_can_merge_stacks_split_source(item_dst, item_src):
         return false
     if _merge_stacks(item_dst, item_src):
@@ -137,6 +138,10 @@ static func _merge_stacks_split_source(item_dst: InventoryItem, item_src: Invent
 static func _can_merge_stacks_split_source(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(item_dst != null, "item_dst is null!")
     assert(item_src != null, "item_src is null!")
+    if item_dst == item_src:
+        return false
+    if !_stacks_compatible(item_dst, item_src):
+        return false
     return !get_free_stack_space(item_dst).eq(ItemCount.zero())
 
 
@@ -208,6 +213,10 @@ static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryIte
         return merge_stacks(item_dst, item_src, true)
 
     # item_dst and item_src are in different inventories
+    if inv._constraint_manager.has_space_for(item_src):
+        _merge_stacks_split_source(item_dst, item_src)
+        return true
+
     var receivable_stack_size := ItemCount.min(get_free_stack_space(item_dst), inv._constraint_manager.get_space_for(item_src))
     if receivable_stack_size.eq(ItemCount.zero()):
         return false
@@ -227,20 +236,21 @@ static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryIte
 static func inv_add_automerge(inv: Inventory, item: InventoryItem) -> bool:
     assert(!inv.has_item(item), "Inventory must not contain item!")
 
-    for i in inv.get_items():
-        if _inv_merge_stack(inv, i, item):
-            return true
-    return inv.add_item(item)
+    if !inv._constraint_manager.has_space_for(item):
+        return false
+    assert(inv.add_item(item))
+    inv_pack_stack(inv, item)
+    return true
 
 
-static func inv_add_split_source(inv: Inventory, item: InventoryItem) -> bool:
+static func inv_add_autosplit(inv: Inventory, item: InventoryItem) -> bool:
+    if inv.add_item(item):
+        return true
+
     var space_for_item := inv._constraint_manager.get_space_for(item)
     if space_for_item.eq(ItemCount.zero()):
         return false
-    var stack_size := get_item_stack_size(item)
-    if space_for_item.ge(stack_size):
-        assert(inv.add_item(item))
-        return true
+
     var new_stack := split_stack(item, space_for_item)
     assert(new_stack)
     assert(inv.add_item(new_stack))
@@ -249,20 +259,27 @@ static func inv_add_split_source(inv: Inventory, item: InventoryItem) -> bool:
 
 static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
     assert(!inv.has_item(item), "Inventory must not contain item!")
-    
-    var stack_split := false
-    for i in inv.get_items():
-        if _inv_merge_stack_split_source(inv, i, item):
-            stack_split = true
 
-    if inv.has_item(item):
+    if inv._constraint_manager.has_space_for(item):
+        inv.add_item(item)
+        inv_pack_stack(inv, item)
         return true
 
-    if get_item_stack_size(item).gt(ItemCount.zero()):
-        if inv_add_split_source(inv, item):
-            stack_split = true
+    if !_inv_has_space_for_single_item(inv, item):
+        return false
 
-    return stack_split
+    for i in inv.get_items():
+        _merge_stacks_split_source(i, item)
+        if get_item_stack_size(item).eq(ItemCount.zero()):
+            return true
+    inv.add_item(item)
+    return true
+
+
+static func _inv_has_space_for_single_item(inv: Inventory, item: InventoryItem) -> bool:
+    var test_item := item.duplicate()
+    set_item_stack_size(test_item, ItemCount.one())
+    return inv._constraint_manager.has_space_for(test_item)
 
 
 static func inv_pack_stack(inv: Inventory, item: InventoryItem) -> void:
