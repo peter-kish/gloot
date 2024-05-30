@@ -6,6 +6,7 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
+signal property_changed(property_name)
 signal added_to_inventory(inventory)
 signal removed_from_inventory(inventory)
 signal equipped_in_slot(item_slot)
@@ -261,17 +262,17 @@ func get_property(property_name: String, default_value = null) -> Variant:
 
 
 func set_property(property_name: String, value) -> void:
-    var old_property = null
-    if properties.has(property_name):
-        old_property = properties[property_name]
+    if properties.has(property_name) && properties[property_name] == value:
+        return
     properties[property_name] = value
-    if old_property != properties[property_name]:
-        properties_changed.emit()
+    property_changed.emit(property_name)
+    properties_changed.emit()
 
 
 func clear_property(property_name: String) -> void:
     if properties.has(property_name):
         properties.erase(property_name)
+        property_changed.emit(property_name)
         properties_changed.emit()
 
 

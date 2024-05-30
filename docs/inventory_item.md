@@ -31,4 +31,4 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 * `protoset_changed` - Emitted when the item protoset changes.
 * `prototype_id_changed` - Emitted when the item prototype ID changes.
 * `properties_changed` - Emitted when the item properties change.
-* `predelete()` - Emitted before the engine deletes the inventory.
+* `property_changed(property_name)` - Emitted when an item property has changed.

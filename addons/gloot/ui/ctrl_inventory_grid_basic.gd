@@ -128,8 +128,8 @@ func _connect_inventory_signals() -> void:
 
     if !inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.connect(_on_item_modified)
+    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.connect(_on_item_property_changed)
     if !inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.connect(_on_inventory_resized)
     if !inventory.item_removed.is_connected(_on_item_removed):
@@ -142,16 +142,25 @@ func _disconnect_inventory_signals() -> void:
 
     if inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.disconnect(_on_item_property_changed)
     if inventory.size_changed.is_connected(_on_inventory_resized):
         inventory.size_changed.disconnect(_on_inventory_resized)
     if inventory.item_removed.is_connected(_on_item_removed):
         inventory.item_removed.disconnect(_on_item_removed)
 
 
-func _on_item_modified(_item: InventoryItem) -> void:
-    _queue_refresh()
+func _on_item_property_changed(_item: InventoryItem, property_name: String) -> void:
+    var relevant_properties = [
+        GridConstraint.KEY_WIDTH,
+        GridConstraint.KEY_HEIGHT,
+        GridConstraint.KEY_SIZE,
+        GridConstraint.KEY_ROTATED,
+        GridConstraint.KEY_GRID_POSITION,
+        InventoryItem.KEY_IMAGE,
+    ]
+    if property_name in relevant_properties:
+        _queue_refresh()
 
 
 func _on_inventory_resized() -> void:
