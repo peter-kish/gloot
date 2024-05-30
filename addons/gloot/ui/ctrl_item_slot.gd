@@ -238,6 +238,7 @@ func _on_mouse_entered():
     var item = item_slot.get_item()
     emit_signal("item_mouse_entered", item)
 
+
 func _on_mouse_exited():
     var item = item_slot.get_item()
     emit_signal("item_mouse_exited", item)
