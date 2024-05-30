@@ -259,7 +259,7 @@ func _refresh() -> void:
 
     var item = item_slot.get_item()
     if is_instance_valid(_label):
-        _label.text = item.get_property(CtrlInventory.KEY_NAME, item.prototype_id)
+        _label.text = item.get_property(InventoryItem.KEY_NAME, item.prototype_id)
     if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = item
         if item.get_texture():
