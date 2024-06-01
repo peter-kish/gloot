@@ -422,7 +422,7 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
 
 func enforce(item: InventoryItem) -> void:
     if !move_item_to_free_spot(item):
-        inventory.pack_stack(item)
+        inventory.pack_item(item)
 
 
 func reset() -> void:

@@ -15,7 +15,7 @@ func _on_ltor_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        %InventoryRight.add_autosplitmerge(selected_item)
+        %InventoryRight.add_item_autosplitmerge(selected_item)
 
 
 func _on_rtol_pressed() -> void:
@@ -24,7 +24,7 @@ func _on_rtol_pressed() -> void:
         return
 
     for selected_item in selected_items:
-        %InventoryLeft.add_autosplitmerge(selected_item)
+        %InventoryLeft.add_item_autosplitmerge(selected_item)
 
 
 func _on_equip_pressed() -> void:
@@ -39,5 +39,5 @@ func _on_equip_pressed() -> void:
 
 func _on_unequip_pressed() -> void:
     if %ItemSlot.get_item() != null && %InventoryLeft.can_add_item(%ItemSlot.get_item()):
-        %InventoryLeft.add_automerge(%ItemSlot.get_item())
+        %InventoryLeft.add_item_automerge(%ItemSlot.get_item())
         

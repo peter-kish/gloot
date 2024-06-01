@@ -436,21 +436,21 @@ func merge_inv_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_so
 
 ## Adds the given item to the inventory and merges it with all compatible items. Returns `false` if the item cannot be
 ## added.
-func add_automerge(item: InventoryItem) -> bool:
+func add_item_automerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_automerge(self, item)
 
 
 ## Adds the given item to the inventory, splitting it if there is not enough space for the whole stack.
-func add_autosplit(item: InventoryItem) -> bool:
+func add_item_autosplit(item: InventoryItem) -> bool:
     return StackManager.inv_add_autosplit(self, item)
 
 
-## A combination of `add_autosplit` and `add_automerge`. Adds the given item stack into the inventory, splitting it up
+## A combination of `add_item_autosplit` and `add_item_automerge`. Adds the given item stack into the inventory, splitting it up
 ## and joining it with available item stacks, as needed.
-func add_autosplitmerge(item: InventoryItem) -> bool:
+func add_item_autosplitmerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_autosplitmerge(self, item)
 
 
 ## Merges the given item with all compatible items in the same inventory.
-func pack_stack(item: InventoryItem) -> void:
+func pack_item(item: InventoryItem) -> void:
     return StackManager.inv_pack_stack(self, item)

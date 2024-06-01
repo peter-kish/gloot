@@ -61,11 +61,11 @@ func test_add_item_automerge() -> void:
     Inventory.set_item_max_stack_size(item_2x2_2, ItemCount.new(100))
 
     # Empty inventory
-    assert(inventory_3x3.add_automerge(item_2x2))
+    assert(inventory_3x3.add_item_automerge(item_2x2))
     assert(inventory_3x3.get_item_count() == 1)
     
     # Inventory containing 2x2 item
-    assert(inventory_3x3.add_automerge(item_2x2_2))
+    assert(inventory_3x3.add_item_automerge(item_2x2_2))
     assert(inventory_3x3.get_item_count() == 1)
     assert(!inventory_3x3.has_item(item_2x2_2));
 
@@ -74,10 +74,10 @@ func test_add_item_automerge() -> void:
     # No stack space, no grid space
     assert(Inventory.set_item_stack_size(item_2x2,
         Inventory.get_item_max_stack_size(item_2x2)))
-    assert(!inventory_3x3.add_automerge(item_2x2_2))
+    assert(!inventory_3x3.add_item_automerge(item_2x2_2))
 
     # No stack space but grid space available
-    assert(inventory_3x3.add_automerge(item_1x1))
+    assert(inventory_3x3.add_item_automerge(item_1x1))
 
 
 func test_stack_split() -> void:
@@ -127,11 +127,11 @@ func test_automerge() -> void:
     assert(inventory_3x3_2.add_item(item_2x2_2))
     
     # Not enough space
-    assert(!inventory_3x3.add_automerge(item_2x2_2))
+    assert(!inventory_3x3.add_item_automerge(item_2x2_2))
 
     # Enough space
     assert(Inventory.set_item_stack_size(item_2x2_2, ItemCount.new(2)))
-    assert(inventory_3x3.add_automerge(item_2x2_2))
+    assert(inventory_3x3.add_item_automerge(item_2x2_2))
     assert(Inventory.get_item_stack_size(item_2x2).eq(ItemCount.new(3)))
     assert(!inventory_3x3_2.has_item(item_2x2_2))
 
@@ -139,12 +139,12 @@ func test_automerge() -> void:
 func test_autosplitmerge() -> void:
     Inventory.set_item_max_stack_size(item_2x2, ItemCount.new(3))
     assert(Inventory.set_item_stack_size(item_2x2, ItemCount.new(1)))
-    assert(inventory_3x3.add_autosplitmerge(item_2x2))
+    assert(inventory_3x3.add_item_autosplitmerge(item_2x2))
     Inventory.set_item_max_stack_size(item_2x2_2, ItemCount.new(3))
     assert(Inventory.set_item_stack_size(item_2x2_2, ItemCount.new(3)))
-    assert(inventory_3x3_2.add_autosplitmerge(item_2x2_2))
+    assert(inventory_3x3_2.add_item_autosplitmerge(item_2x2_2))
 
-    assert(inventory_3x3.add_autosplitmerge(item_2x2_2))
+    assert(inventory_3x3.add_item_autosplitmerge(item_2x2_2))
     assert(Inventory.get_item_stack_size(item_2x2).eq(ItemCount.new(3)))
     assert(Inventory.get_item_stack_size(item_2x2_2).eq(ItemCount.new(1)))
 
