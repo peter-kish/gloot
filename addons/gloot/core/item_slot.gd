@@ -2,14 +2,18 @@
 @icon("res://addons/gloot/images/icon_item_slot.svg")
 class_name ItemSlot
 extends Node
+## An item slot that can hold an inventory item.
+##
+## An item slot that can hold an inventory item.
 
-signal prototree_json_changed
-signal item_equipped
-signal cleared
+signal prototree_json_changed   ## Emitted when the prototree_json property has been changed.
+signal item_equipped            ## Emitted when an item is placed in the slot.
+signal cleared                  ## Emitted when the slot is cleared.Emitted when the slot is cleared.
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
+# TODO: Make this private
 @export var prototree_json: JSON:
     set(new_prototree_json):
         if new_prototree_json == prototree_json:
@@ -65,6 +69,9 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
+## Equips the given inventory item in the slot. If the slot already contains an item, clear() will be called first.
+## Returns false if the clear call fails, the slot can't hold the given item, or already holds the given item. Returns
+## true otherwise.
 func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false
@@ -79,6 +86,7 @@ func equip(item: InventoryItem) -> bool:
     return true
 
 
+## Clears the item slot. Returns false if there's no item in the slot.
 func clear() -> bool:
     if get_item() == null:
         return false
@@ -87,12 +95,15 @@ func clear() -> bool:
     return true
 
 
+## Returns the equipped item or `null` if there's no item in the slot.
 func get_item() -> InventoryItem:
     if _inventory.get_item_count() == 0:
         return null
     return _inventory.get_items()[0]
 
 
+## Checks if the slot can hold the given item, i.e. the slot uses the same prototree as the item and the item is not
+## `null`.
 func can_hold_item(item: InventoryItem) -> bool:
     assert(prototree_json != null, "Item prototree not set!")
     if item == null:
@@ -103,10 +114,7 @@ func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 
-func reset() -> void:
-    clear()
-
-
+## Serializes the item slot into a `Dictionary`.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -116,11 +124,12 @@ func serialize() -> Dictionary:
     return result
 
 
+## Loads the item slot data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, false, KEY_ITEM, [TYPE_DICTIONARY]):
         return false
 
-    reset()
+    clear()
 
     if source.has(KEY_ITEM):
         var item := InventoryItem.new()
