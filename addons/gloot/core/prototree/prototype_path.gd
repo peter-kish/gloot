@@ -1,5 +1,8 @@
 class_name PrototypePath
 extends RefCounted
+## A pre-parsed prototype path.
+##
+## A pre-parsed relative or absolute path of a prototype within a prototype tree (prototree).
 
 const DELIMITER = "/"
 var _path: PackedStringArray

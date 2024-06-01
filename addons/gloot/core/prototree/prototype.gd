@@ -1,5 +1,9 @@
 class_name Prototype
 extends RefCounted
+## An item prototype.
+##
+## An item prototype contains a set of properties and is identified with an ID string. It can also contain other "child"
+## prototypes as part of a prototype tree (prototree).
 
 const KEY_PROPERTIES = "properties"
 const KEY_PROTOTYPES = "prototypes"
@@ -16,14 +20,17 @@ func _init(id: String) -> void:
     _id = id
 
 
+## Returns the prototype ID string.
 func get_id() -> String:
     return _id
 
 
+## Checks if the prototype overrides the given property.
 func overrides_property(property: String) -> bool:
     return _properties.has(property)
 
 
+## Checks if the prototype has the given property defined.
 func has_property(property: String) -> bool:
     if overrides_property(property):
         return true
@@ -32,6 +39,8 @@ func has_property(property: String) -> bool:
     return false
 
 
+## Returns the value of the given property. If the prototype does not have the property defined, `default_value` is
+## returned.
 func get_property(property: String, default_value: Variant = null) -> Variant:
     if _properties.has(property):
         return _properties[property]
@@ -40,6 +49,7 @@ func get_property(property: String, default_value: Variant = null) -> Variant:
     return default_value
 
 
+## Returns a `Dictionary` of all properties defined for the prototype.
 func get_properties() -> Dictionary:
     var result := _properties.duplicate()
     if !is_instance_valid(_parent):
@@ -49,17 +59,21 @@ func get_properties() -> Dictionary:
     return result
 
 
+## Sets the given property for the prototype.
 func set_property(property: String, value: Variant):
     if get_property(property) == value:
         return
     _properties[property] = value
 
 
+## Checks if the prototype contains the prototype at the given path (as a `String` or a `PrototypePath`) within the
+## prototype tree.
 func has_prototype(path) -> bool:
     path = _to_path(path)
     return get_prototype(path) != null
 
 
+## Checks if the prototype at the given path (as a `String` or a `PrototypePath`) has the given property defined.
 func has_prototype_property(path: Variant, property: String) -> bool:
     if !has_prototype(path):
         return false
@@ -67,6 +81,8 @@ func has_prototype_property(path: Variant, property: String) -> bool:
     return get_prototype(path).has_property(property)
 
 
+## Returns the given property of the prototype at the given path (as a `String` or a `PrototypePath`). If the prototype
+## does not have the property defined, `default_value` is returned.
 func get_prototype_property(path: Variant, property: String, default_value: Variant = null) -> Variant:
     if has_prototype(path):
         var prototype = get_prototype(path)
@@ -76,6 +92,7 @@ func get_prototype_property(path: Variant, property: String, default_value: Vari
     return default_value
 
 
+## Creates a child prototype with the given ID.
 func create_prototype(prototype_id: String) -> Prototype:
     # TODO: Consider using a prototype path as input
     # TODO: Consider using a prototype as input
@@ -87,6 +104,7 @@ func create_prototype(prototype_id: String) -> Prototype:
     return new_prototype
 
 
+## Returns the prototype at the given path (as a `String` or a `PrototypePath`).
 func get_prototype(path) -> Prototype:
     path = _to_path(path)
     if path.is_empty():
@@ -101,6 +119,7 @@ func get_prototype(path) -> Prototype:
     return prototype
 
 
+## Returns the path of the prototype within the prototype tree.
 func get_path() -> PrototypePath:
     return PrototypePath.new(_get_str_path())
 
@@ -115,10 +134,12 @@ func _is_root() -> bool:
     return !is_instance_valid(_parent)
 
 
+## Returns an array of all child prototypes.
 func get_prototypes() -> Array:
     return _prototypes.values().duplicate()
 
 
+## Removes the prototype at the given path (as a `String` or a `PrototypePath`).
 func remove_prototype(path) -> void:
     path = _to_path(path)
     var prototype = get_prototype(path)
@@ -146,11 +167,13 @@ func _get_root() -> Prototype:
     return root
 
 
+## Clears the prototype by clearing its properties and removing all child prototypes.
 func clear() -> void:
     _properties.clear()
     _prototypes.clear()
 
 
+## Parses the given JSON resource into a prototype. Returns `false` if parsing fails.
 func deserialize(json: JSON) -> bool:
     clear()
     if !is_instance_valid(json):
