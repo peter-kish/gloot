@@ -2,22 +2,24 @@
 @icon("res://addons/gloot/images/icon_inventory.svg")
 extends Node
 class_name Inventory
+## Basic stack-based inventory class.
+##
+## Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of item stacks.
 
-signal item_added(item)
-signal item_removed(item)
-signal item_property_changed(item, property)
-signal item_moved(item)
-signal prototree_json_changed
-signal constraint_added(constraint)
-signal constraint_removed(constraint)
-signal constraint_changed(constraint)
+signal item_added(item)                         ## Emitted when an item has been added to the inventory.
+signal item_removed(item)                       ## Emitted when an item has been removed from the inventory.
+signal item_property_changed(item, property)    ## Emitted when a property of an item inside the inventory has been changed.
+signal item_moved(item)                         ## Emitted when an item has moved to a new index.
+signal prototree_json_changed                   ## Emitted when the prototree_json property has changed.
+signal constraint_added(constraint)             ## Emitted when a new constraint has been added to the inventory.
+signal constraint_removed(constraint)           ## Emitted when a constraint has been removed from the inventory.
+signal constraint_changed(constraint)           ## Emitted when an inventory constraint has changed.
 
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
-enum Constraint {WEIGHT, GRID}
-
+## A JSON resource containing prototree information.
 @export var prototree_json: JSON :
     set(new_prototree_json):
         if new_prototree_json == prototree_json:
@@ -47,6 +49,7 @@ const KEY_MAX_STACK_SIZE = StackManager.KEY_MAX_STACK_SIZE
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
+## Returns the inventory prototree parsed from the prototree_json JSON resource.
 func get_prototree() -> ProtoTree:
     # TODO: Consider returning null when prototree_json is null
     return _prototree
@@ -117,6 +120,7 @@ func _ready() -> void:
         _connect_item_signals(item)
 
 
+## Moves the item at the given index in the inventory to a new index.
 func move_item(from: int, to: int) -> void:
     assert(from >= 0)
     assert(from < _items.size())
@@ -133,10 +137,12 @@ func move_item(from: int, to: int) -> void:
     item_moved.emit()
 
 
+## Returns the index of the given item in the inventory.
 func get_item_index(item: InventoryItem) -> int:
     return _items.find(item)
 
 
+## Returns the number of items in the inventory.
 func get_item_count() -> int:
     return _items.size()
 
@@ -155,14 +161,17 @@ func _on_item_property_changed(property: String, item: InventoryItem) -> void:
     item_property_changed.emit(item, property)
 
 
+## Returns an array containing all the items in the inventory.
 func get_items() -> Array[InventoryItem]:
     return _items
 
 
+## Checks if the inventory contains the given item.
 func has_item(item: InventoryItem) -> bool:
     return item in _items
 
 
+## Adds the given item to the inventory.
 func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
@@ -182,11 +191,9 @@ func add_item(item: InventoryItem) -> bool:
     return true
 
 
+## Checks if the given item can be added to the inventory.
 func can_add_item(item: InventoryItem) -> bool:
     if item == null || has_item(item):
-        return false
-        
-    if !can_hold_item(item):
         return false
         
     if !_constraint_manager.has_space_for(item):
@@ -195,10 +202,8 @@ func can_add_item(item: InventoryItem) -> bool:
     return true
 
 
-func can_hold_item(item: InventoryItem) -> bool:
-    return true
-
-
+## Creates an `InventoryItem` based on the given prototype path adds it to the inventory. Returns `null` if the item
+## cannot be added.
 func create_and_add_item(prototype_path: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new(prototree_json, prototype_path)
     if add_item(item):
@@ -207,6 +212,7 @@ func create_and_add_item(prototype_path: String) -> InventoryItem:
         return null
 
 
+## Removes the given item from the inventory. Returns `false` if the item is not inside the inventory.
 func remove_item(item: InventoryItem) -> bool:
     if !_can_remove_item(item):
         return false
@@ -224,6 +230,7 @@ func _can_remove_item(item: InventoryItem) -> bool:
     return item != null && has_item(item)
 
 
+## Returns the first found item with the given prototype path. 
 func get_item_with_prototype_path(prototype_path: String) -> InventoryItem:
     for item in get_items():
         if _is_item_at_path(item, prototype_path):
@@ -232,6 +239,7 @@ func get_item_with_prototype_path(prototype_path: String) -> InventoryItem:
     return null
 
 
+## Returns an array of all the items with the given prototype path.
 func get_items_with_prototype_path(prototype_path: String) -> Array[InventoryItem]:
     var result: Array[InventoryItem] = []
 
@@ -252,6 +260,7 @@ func _is_item_at_path(item: InventoryItem, path: String) -> bool:
     return abs_item_path.equal(prototype_path)
 
 
+## Checks if the inventory has an item with the given prototype path.
 func has_item_with_prototype_path(prototype_path: String) -> bool:
     return get_item_with_prototype_path(prototype_path) != null
 
@@ -266,21 +275,26 @@ func _on_constraint_removed(constraint: InventoryConstraint) -> void:
     constraint_removed.emit(constraint)
 
 
+## Returns the inventory constraint of the given type (script). Returns `null` if the inventory has no constraints of
+## that type.
 func get_constraint(script: Script) -> InventoryConstraint:
     return _constraint_manager.get_constraint(script)
 
 
+## Removes all items from the inventory and sets its proto tree to `null`.
 func reset() -> void:
     clear()
     prototree_json = null
 
 
+## Removes all the items from the inventory.
 func clear() -> void:
     while _items.size() > 0:
         remove_item(_items[0])
     _update_serialized_format()
 
 
+## Serializes the inventory into a `Dictionary`.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -308,6 +322,7 @@ static func _serialize_prototree_json(prototree_json: JSON) -> String:
         return prototree_json.resource_path
 
 
+## Loads the inventory data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
@@ -347,69 +362,95 @@ static func _deserialize_prototree_json(data: String) -> JSON:
         return prototree
 
 
+## Returns the stack size of the given item.
 static func get_item_stack_size(item: InventoryItem) -> ItemCount:
     return StackManager.get_item_stack_size(item)
 
 
+## Returns the maximum stack size of the given item.
 static func get_item_max_stack_size(item: InventoryItem) -> ItemCount:
     return StackManager.get_item_max_stack_size(item)
 
 
+## Sets the stack size of the given item.
 static func set_item_stack_size(item: InventoryItem, stack_size: ItemCount) -> bool:
     return StackManager.set_item_stack_size(item, stack_size)
 
 
+## Sets the maximum stack size of the given item.
 static func set_item_max_stack_size(item: InventoryItem, max_stack_size: ItemCount) -> void:
     StackManager.set_item_max_stack_size(item, max_stack_size)
 
-
+## Returns the stack size of the given item prototype.
 static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
     return StackManager.get_prototype_stack_size(prototree, prototype_path)
 
 
+## Returns the maximum stack size of the given item prototype.
 static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
     return StackManager.get_prototype_max_stack_size(prototree, prototype_path)
 
 
+## Merges the `item_src` item stack into the `item_dst` stack. If `item_dst` doesn't have eough stack space and
+## `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns `false` if the merge
+## cannot be performed.
 static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
     return StackManager.merge_stacks(item_dst, item_src, split_source)
 
 
+## Checks if the `item_src` item stack can be merged into `item_dst` with, or without splitting (`split_source`
+## parameter).
 static func can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
     return StackManager.can_merge_stacks(item_dst, item_src, split_source)
 
 
+## Returns the free stack space in the given item stack (maximum_stack_size - stack_size).
 static func get_free_stack_space(item: InventoryItem) -> ItemCount:
     return StackManager.get_free_stack_space(item)
 
 
+## Splits the given item stack into two and returns a reference to the new stack. `new_stack_size` defines the size of
+## the new stack. Returns `null` if the split cannot be performed.
 static func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
     return StackManager.split_stack(item, new_stack_size)
 
 
+## Checks if the given item stack can be split using the given new stack size.
 static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> bool:
     return StackManager.can_split_stack(item, new_stack_size)
 
 
+## Splits the given item stack into two within the inventory. `new_stack_size` defines the size of the new stack,
+# which is added to the inventory. Returns `null` if the split cannot be performed or if the new stack cannot be added
+## to the inventory.
 func split_inv_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
     return StackManager.inv_split_stack(self, item, new_stack_size)
 
 
+## Merges the `item_src` item stack into the `item_dst` stack which is inside the inventory. If `item_dst` doesn't have
+## eough stack space and `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns
+## `false` if the merge cannot be performed.
 func merge_inv_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
     return StackManager.inv_merge_stack(self, item_dst, item_src, split_source)
 
 
+## Adds the given item to the inventory and merges it with all compatible items. Returns `false` if the item cannot be
+## added.
 func add_automerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_automerge(self, item)
 
 
+## Adds the given item to the inventory, splitting it if there is not enough space for the whole stack.
 func add_autosplit(item: InventoryItem) -> bool:
     return StackManager.inv_add_autosplit(self, item)
 
 
+## A combination of `add_autosplit` and `add_automerge`. Adds the given item stack into the inventory, splitting it up
+## and joining it with available item stacks, as needed.
 func add_autosplitmerge(item: InventoryItem) -> bool:
     return StackManager.inv_add_autosplitmerge(self, item)
 
 
+## Merges the given item with all compatible items in the same inventory.
 func pack_stack(item: InventoryItem) -> void:
     return StackManager.inv_pack_stack(self, item)
