@@ -7,7 +7,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 
 const KEY_ID: String = "id"
 
-@export_multiline var json_data :
+@export_multiline var json_data: String :
     set(new_json_data):
         json_data = new_json_data
         if !json_data.is_empty():
