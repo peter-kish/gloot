@@ -52,8 +52,8 @@ func _connect_item_signals(new_item: InventoryItem) -> void:
         new_item.protoset_changed.connect(_refresh)
     if !new_item.prototype_id_changed.is_connected(_refresh):
         new_item.prototype_id_changed.connect(_refresh)
-    if !new_item.properties_changed.is_connected(_refresh):
-        new_item.properties_changed.connect(_refresh)
+    if !new_item.property_changed.is_connected(_on_item_property_changed):
+        new_item.property_changed.connect(_on_item_property_changed)
 
 
 func _disconnect_item_signals() -> void:
@@ -64,8 +64,22 @@ func _disconnect_item_signals() -> void:
         item.protoset_changed.disconnect(_refresh)
     if item.prototype_id_changed.is_connected(_refresh):
         item.prototype_id_changed.disconnect(_refresh)
-    if item.properties_changed.is_connected(_refresh):
-        item.properties_changed.disconnect(_refresh)
+    if item.property_changed.is_connected(_on_item_property_changed):
+        item.property_changed.disconnect(_on_item_property_changed)
+
+
+func _on_item_property_changed(property_name: String) -> void:
+    var relevant_properties = [
+        StacksConstraint.KEY_STACK_SIZE, 
+        GridConstraint.KEY_WIDTH,
+        GridConstraint.KEY_HEIGHT,
+        GridConstraint.KEY_SIZE,
+        GridConstraint.KEY_ROTATED,
+        GridConstraint.KEY_GRID_POSITION,
+        InventoryItem.KEY_IMAGE,
+    ]
+    if property_name in relevant_properties:
+        _refresh()
 
 
 func _ready() -> void:

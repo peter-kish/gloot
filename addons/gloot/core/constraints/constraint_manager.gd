@@ -34,6 +34,11 @@ func _init(inventory_: Inventory) -> void:
 
 func _on_item_added(item: InventoryItem) -> void:
     assert(_enforce_constraints(item), "Failed to enforce constraints!")
+
+    # Enforcing constraints can result in the item being removed from the inventory
+    # (e.g. when it's merged with another item stack)
+    if !is_instance_valid(item.get_inventory()) || item.is_queued_for_deletion():
+        item = null
     
     if _weight_constraint != null:
         _weight_constraint._on_item_added(item)
@@ -52,13 +57,13 @@ func _on_item_removed(item: InventoryItem) -> void:
         _grid_constraint._on_item_removed(item)
 
 
-func _on_item_modified(item: InventoryItem) -> void:
+func _on_item_property_changed(item: InventoryItem, property_name: String) -> void:
     if _weight_constraint != null:
-        _weight_constraint._on_item_modified(item)
+        _weight_constraint._on_item_property_changed(item, property_name)
     if _stacks_constraint != null:
-        _stacks_constraint._on_item_modified(item)
+        _stacks_constraint._on_item_property_changed(item, property_name)
     if _grid_constraint != null:
-        _grid_constraint._on_item_modified(item)
+        _grid_constraint._on_item_property_changed(item, property_name)
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:

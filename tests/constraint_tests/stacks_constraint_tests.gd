@@ -28,6 +28,7 @@ func init_suite():
         "test_stacks_joinable",
         "test_join_stacks",
         "test_get_space_for",
+        "test_pack_item",
     ]
 
 
@@ -173,3 +174,19 @@ func test_get_space_for() -> void:
     var inf = ItemCount.inf()
     stacks_constraint.get_space_for(item).eq(inf)
     stacks_constraint.get_space_for(item_2).eq(inf)
+
+
+func test_pack_item() -> void:
+    assert(StacksConstraint.set_item_stack_size(item, 4))
+    assert(StacksConstraint.set_item_stack_size(item_2, 2))
+    assert(inventory.add_item(item))
+    assert(inventory.add_item(item_2))
+    StacksConstraint.pack_item(item_2)
+    assert(StacksConstraint.get_item_stack_size(item) == 5)
+    assert(StacksConstraint.get_item_stack_size(item_2) == 1)
+
+    assert(StacksConstraint.set_item_stack_size(item, 4))
+    StacksConstraint.pack_item(item_2)
+    assert(StacksConstraint.get_item_stack_size(item) == 5)
+    assert(inventory.get_item_count() == 1)
+    assert(!is_node_valid(item_2))

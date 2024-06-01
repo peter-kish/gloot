@@ -47,13 +47,15 @@ func _set_panel_style(panel: Panel, style: StyleBox) -> void:
         panel.add_theme_stylebox_override("panel", style)
 
 
-func _input(event) -> void:
-    if event is InputEventMouseMotion:
-        if get_global_rect().has_point(get_global_mouse_position()) && slot_highlighted_style:
-            _set_panel_style(_background_panel, slot_highlighted_style)
-            return
-        
-        if slot_style:
-            _set_panel_style(_background_panel, slot_style)
-        else:
-            _background_panel.hide()
+func _on_mouse_entered():
+    if slot_highlighted_style:
+        _set_panel_style(_background_panel, slot_highlighted_style)
+    super._on_mouse_entered()
+
+
+func _on_mouse_exited():
+    if slot_style:
+        _set_panel_style(_background_panel, slot_style)
+    else:
+        _background_panel.hide()
+    super._on_mouse_exited()

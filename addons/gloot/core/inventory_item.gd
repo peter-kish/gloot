@@ -6,10 +6,13 @@ class_name InventoryItem
 signal protoset_changed
 signal prototype_id_changed
 signal properties_changed
+signal property_changed(property_name)
 signal added_to_inventory(inventory)
 signal removed_from_inventory(inventory)
 signal equipped_in_slot(item_slot)
 signal removed_from_slot(item_slot)
+
+const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var protoset: ItemProtoset :
     set(new_protoset):
@@ -259,17 +262,17 @@ func get_property(property_name: String, default_value = null) -> Variant:
 
 
 func set_property(property_name: String, value) -> void:
-    var old_property = null
-    if properties.has(property_name):
-        old_property = properties[property_name]
+    if properties.has(property_name) && properties[property_name] == value:
+        return
     properties[property_name] = value
-    if old_property != properties[property_name]:
-        properties_changed.emit()
+    property_changed.emit(property_name)
+    properties_changed.emit()
 
 
 func clear_property(property_name: String) -> void:
     if properties.has(property_name):
         properties.erase(property_name)
+        property_changed.emit(property_name)
         properties_changed.emit()
 
 
@@ -330,7 +333,7 @@ func deserialize(source: Dictionary) -> bool:
 
 func _deserialize_property(data: Dictionary):
     # Properties are stored as strings for JSON support.
-    var result = str_to_var(data[KEY_VALUE])
+    var result = Utils.str_to_var(data[KEY_VALUE])
     var expected_type: int = data[KEY_TYPE]
     var property_type: int = typeof(result)
     if property_type != expected_type:

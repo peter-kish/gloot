@@ -94,3 +94,7 @@ func transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> b
 
 func transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool:
     return _constraint_manager.get_stacks_constraint().transfer_autosplitmerge(item, destination)
+
+
+static func pack(item: InventoryItem) -> void:
+    return StacksConstraint.pack_item(item)

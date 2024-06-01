@@ -59,6 +59,10 @@ func transfer_autosplitmerge(item: InventoryItem, destination: Inventory) -> boo
     return _constraint_manager.get_stacks_constraint().transfer_autosplitmerge(item, destination)
 
 
+static func pack(item: InventoryItem) -> void:
+    return StacksConstraint.pack_item(item)
+
+
 func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i) -> bool:
     return _constraint_manager.get_grid_constraint().transfer_to(item, destination._constraint_manager.get_grid_constraint(), position)
 

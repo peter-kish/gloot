@@ -46,9 +46,6 @@ var _vbox_container: VBoxContainer
 var _item_list: ItemList
 var _refresh_queued: bool = false
 
-const KEY_IMAGE = "image"
-const KEY_NAME = "name"
-
 
 func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
@@ -91,8 +88,8 @@ func _connect_inventory_signals() -> void:
 
     if !inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.connect(_queue_refresh)
-    if !inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.connect(_on_item_modified)
+    if !inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.connect(_on_item_property_changed)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -101,8 +98,8 @@ func _disconnect_inventory_signals() -> void:
 
     if inventory.contents_changed.is_connected(_queue_refresh):
         inventory.contents_changed.disconnect(_queue_refresh)
-    if inventory.item_modified.is_connected(_on_item_modified):
-        inventory.item_modified.disconnect(_on_item_modified)
+    if inventory.item_property_changed.is_connected(_on_item_property_changed):
+        inventory.item_property_changed.disconnect(_on_item_property_changed)
 
 
 func _on_list_item_activated(index: int) -> void:
@@ -114,8 +111,9 @@ func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index:
         inventory_item_context_activated.emit(_get_inventory_item(index))
 
 
-func _on_item_modified(_item: InventoryItem) -> void:
-    _queue_refresh()
+func _on_item_property_changed(_item: InventoryItem, property_name: String) -> void:
+    if property_name in [InventoryItem.KEY_NAME, InventoryItem.KEY_IMAGE]:
+        _queue_refresh()
 
 
 func _process(_delta) -> void:

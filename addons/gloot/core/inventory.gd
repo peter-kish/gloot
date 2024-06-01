@@ -6,6 +6,7 @@ class_name Inventory
 signal item_added(item)
 signal item_removed(item)
 signal item_modified(item)
+signal item_property_changed(item, property_name)
 signal contents_changed
 signal protoset_changed
 
@@ -68,10 +69,6 @@ func _enter_tree():
         _items.append(child)
 
 
-func _exit_tree():
-    _items.clear()  
-
-
 func _init() -> void:
     _constraint_manager = ConstraintManager.new(self)
 
@@ -129,6 +126,8 @@ func _connect_item_signals(item: InventoryItem) -> void:
         item.prototype_id_changed.connect(_emit_item_modified.bind(item))
     if !item.properties_changed.is_connected(_emit_item_modified):
         item.properties_changed.connect(_emit_item_modified.bind(item))
+    if !item.property_changed.is_connected(_on_item_property_changed):
+        item.property_changed.connect(_on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
@@ -138,11 +137,17 @@ func _disconnect_item_signals(item:InventoryItem) -> void:
         item.prototype_id_changed.disconnect(_emit_item_modified)
     if item.properties_changed.is_connected(_emit_item_modified):
         item.properties_changed.disconnect(_emit_item_modified)
+    if item.property_changed.is_connected(_on_item_property_changed):
+        item.property_changed.disconnect(_on_item_property_changed.bind(item))
 
 
 func _emit_item_modified(item: InventoryItem) -> void:
-    _constraint_manager._on_item_modified(item)
     item_modified.emit(item)
+
+
+func _on_item_property_changed(property_name: String, item: InventoryItem) -> void:
+    _constraint_manager._on_item_property_changed(item, property_name)
+    item_property_changed.emit(item, property_name)
 
 
 func get_items() -> Array[InventoryItem]:
@@ -160,8 +165,20 @@ func add_item(item: InventoryItem) -> bool:
     if item.get_parent():
         item.get_parent().remove_child(item)
 
-    add_child(item)
-    if Engine.is_editor_hint():
+    # HACK: In case of InventoryGridStacked we can end up adding the item and
+    # removing it immediately, after a successful pack() call (in case the grid
+    # constraint has no space for the item). This causes some errors because
+    # Godot still tries to call the ENTER_TREE notification. To avoid that, we
+    # call transfer_automerge(), which should be able to pack the item without 
+    # adding it first.
+    var gc := _constraint_manager.get_grid_constraint()
+    var sc := _constraint_manager.get_stacks_constraint()
+    if gc != null && sc != null && !gc.has_space_for(item):
+        assert(sc.transfer_automerge(item, self))
+    else:
+        add_child(item)
+
+    if Engine.is_editor_hint() && !item.is_queued_for_deletion():
         item.owner = get_tree().edited_scene_root
     return true
 
