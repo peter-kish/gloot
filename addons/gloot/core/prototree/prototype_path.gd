@@ -16,22 +16,27 @@ func _init(path: String) -> void:
         _path[i] = _path[i].strip_edges()
 
 
+## Checks if the path is absolute.
 func is_absolute() -> bool:
     return _absolute
 
 
+## Gets the number of path component names which make up the prototype path.
 func get_name_count() -> int:
     return _path.size()
 
 
+## Gets the prototype path component name indicated by `idx`.
 func get_name(idx: int) -> StringName:
     return _path[idx]
 
 
+## Checks if the prototype path is empty.
 func is_empty() -> bool:
     return _path.is_empty()
 
 
+## Checks if the prototype path is equal to the given prototype path.
 func equal(other: PrototypePath) -> bool:
     if _path.size() != other._path.size():
         return false
@@ -44,6 +49,7 @@ func equal(other: PrototypePath) -> bool:
     return true
 
 
+## Checks if the two prototype paths are equal (in string format).
 static func str_paths_equal(path1: String, path2: String) -> bool:
     var p1 := PrototypePath.new(path1)
     var p2 := PrototypePath.new(path2)
