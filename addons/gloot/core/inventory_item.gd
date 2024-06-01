@@ -2,8 +2,13 @@
 @icon("res://addons/gloot/images/icon_item.svg")
 extends RefCounted
 class_name InventoryItem
+## Stack-based inventory item class.
+##
+## It is based on an item prototype from an prototree. Can hold additional properties. The default stack size and 
+## maximum stack size is 1, which can be changed by setting the `stack_size` and `maximum_stack_size` properties inside
+## the prototype or directly inside the item.
 
-signal property_changed(property_name)
+signal property_changed(property_name)  ## Emitted when an item property has changed.
 
 var _prototree_json: JSON :
     set(new_prototree_json):
@@ -85,24 +90,29 @@ func _on_prototree_changed() -> void:
     _prototype = _prototree.get_prototype(_prototype.get_path())
 
 
+## Returns the inventory prototree parsed from the prototree_json JSON resource.
 func get_prototree() -> ProtoTree:
     return _prototree
 
 
+## Returns the item prototype.
 func get_prototype() -> Prototype:
     return _prototype
 
 
+## Returns a duplicate of the item.
 func duplicate() -> InventoryItem:
     var result := InventoryItem.new(_prototree_json, _prototype.get_path())
     result._properties = _properties.duplicate()
     return result
 
 
+## Returns the `Inventory` this item belongs to, or `null` if it is not inside an inventory.
 func get_inventory() -> Inventory:
     return _inventory
 
 
+## Swaps the two given items. Returns `false` if the items cannot be swapped.
 static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if item1 == null || item2 == null || item1 == item2:
         return false
@@ -154,7 +164,8 @@ static func _add_item_to_inventory(item: InventoryItem, inventory: Inventory, in
         return true
     return false
 
-    
+
+## Checks if the item has the given property defined.
 func has_property(property_name: String) -> bool:
     if _properties.has(property_name):
         return true
@@ -163,6 +174,7 @@ func has_property(property_name: String) -> bool:
     return false
 
 
+## Returns the given item property. If the item does not define the item property, `default_value` is returned.
 func get_property(property_name: String, default_value = null) -> Variant:
     if _properties.has(property_name):
         var value = _properties[property_name]
@@ -183,6 +195,7 @@ func get_property(property_name: String, default_value = null) -> Variant:
     return default_value
 
 
+## Sets the given item property to the given value.
 func set_property(property_name: String, value) -> void:
     if get_property(property_name) == value:
         return
@@ -202,16 +215,19 @@ func set_property(property_name: String, value) -> void:
         property_changed.emit(property_name)
 
 
+## Clears (undefines) the given item property.
 func clear_property(property_name: String) -> void:
     if _properties.has(property_name):
         _properties.erase(property_name)
         property_changed.emit(property_name)
 
 
+## Returns an array of overridden item properties.
 func get_overridden_properties() -> Array:
     return _properties.keys().duplicate()
 
 
+## Returns an array of item properties.
 func get_properties() -> Array:
     if _prototype != null:
         return _properties.keys() + _prototype.get_properties().keys()
@@ -219,15 +235,18 @@ func get_properties() -> Array:
         return _properties.keys()
 
 
+## Checks if the item overrides the given property.
 func is_property_overridden(property_name) -> bool:
     return _properties.has(property_name)
 
 
+## Resets item data. Clears its properties and sets its prototree to `null`.
 func reset() -> void:
     _prototree_json = null
     _properties = {}
 
 
+## Serializes the item into a `Dictionary`.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -256,6 +275,7 @@ func _serialize_property(property_name: String) -> Dictionary:
     return result;
 
 
+## Loads the item data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_PROTOTYE_PATH, TYPE_STRING) ||\
@@ -290,6 +310,8 @@ func _deserialize_property(data: Dictionary):
     return result
 
 
+## Helper function for retrieving the item texture. It checks the image item property and loads it as a texture, if
+## available.
 func get_texture() -> Texture2D:
     var texture_path = get_property(KEY_IMAGE)
     if texture_path && texture_path != "" && ResourceLoader.exists(texture_path):
@@ -299,6 +321,8 @@ func get_texture() -> Texture2D:
     return null
 
 
+## Helper function for retrieving the item title. It checks the name item property and uses it as the title, if
+## available. Otherwise, prototype_id is returned as title.
 func get_title() -> String:
     var title = get_property(KEY_NAME, null)
     if !(title is String):

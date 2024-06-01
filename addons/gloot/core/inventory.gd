@@ -281,7 +281,7 @@ func get_constraint(script: Script) -> InventoryConstraint:
     return _constraint_manager.get_constraint(script)
 
 
-## Removes all items from the inventory and sets its proto tree to `null`.
+## Removes all items from the inventory and sets its prototree to `null`.
 func reset() -> void:
     clear()
     prototree_json = null
