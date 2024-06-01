@@ -3,8 +3,8 @@ extends Control
 
 signal item_dropped(item, offset)
 signal selection_changed
-signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
+signal item_activated(item)
+signal item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -244,7 +244,7 @@ func _on_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     if !item:
         return
 
-    inventory_item_activated.emit(item)
+    item_activated.emit(item)
 
 
 func _on_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
@@ -252,7 +252,7 @@ func _on_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> v
     if !item:
         return
 
-    inventory_item_context_activated.emit(item)
+    item_context_activated.emit(item)
 
 
 func _on_item_mouse_entered(ctrl_inventory_item) -> void:

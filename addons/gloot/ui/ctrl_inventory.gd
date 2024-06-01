@@ -3,8 +3,8 @@
 class_name CtrlInventory
 extends ItemList
 
-signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
+signal item_activated(item)
+signal item_context_activated(item)
 
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
@@ -75,12 +75,12 @@ func _ready() -> void:
 
 
 func _on_list_item_activated(index: int) -> void:
-    inventory_item_activated.emit(_get_inventory_item(index))
+    item_activated.emit(_get_inventory_item(index))
 
 
 func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
     if mouse_button_index == MOUSE_BUTTON_RIGHT:
-        inventory_item_context_activated.emit(_get_inventory_item(index))
+        item_context_activated.emit(_get_inventory_item(index))
 
 
 func get_selected_inventory_item() -> InventoryItem:

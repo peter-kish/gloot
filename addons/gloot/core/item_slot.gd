@@ -83,7 +83,7 @@ func clear() -> bool:
     if get_item() == null:
         return false
         
-    _inventory.remove_all_items()
+    _inventory.clear()
     return true
 
 

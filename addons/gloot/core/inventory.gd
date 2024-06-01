@@ -221,13 +221,6 @@ func _can_remove_item(item: InventoryItem) -> bool:
     return item != null && has_item(item)
 
 
-func remove_all_items() -> void:
-    while _items.size() > 0:
-        remove_item(_items[0])
-    # TODO: Check if this is neccessary:
-    _update_serialized_format()
-
-
 func get_item_with_prototype_path(prototype_path: String) -> InventoryItem:
     for item in get_items():
         if _is_item_at_path(item, prototype_path):
@@ -281,8 +274,7 @@ func reset() -> void:
 
 func clear() -> void:
     while _items.size() > 0:
-        var item = _items[0]
-        remove_item(item)
+        remove_item(_items[0])
     _update_serialized_format()
 
 
