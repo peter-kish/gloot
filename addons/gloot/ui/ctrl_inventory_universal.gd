@@ -3,9 +3,9 @@
 class_name  CtrlInventoryUniversal
 extends VBoxContainer
 
-# TODO: Consider renaming to item_activated
-signal item_activated(item)
-signal item_context_activated(item)
+# TODO: Consider renaming to inventory_item_activated
+signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 
 @export var inventory: Inventory = null :
     set(new_inventory):
@@ -83,11 +83,11 @@ func _refresh() -> void:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
-    _inventory_control.item_activated.connect(func(item: InventoryItem):
-        item_activated.emit(item)
+    _inventory_control.inventory_item_activated.connect(func(item: InventoryItem):
+        inventory_item_activated.emit(item)
     )
-    _inventory_control.item_context_activated.connect(func(item: InventoryItem):
-        item_context_activated.emit(item)
+    _inventory_control.inventory_item_context_activated.connect(func(item: InventoryItem):
+        inventory_item_context_activated.emit(item)
     )
     if inventory.get_constraint(WeightConstraint) != null:
         _capacity_control = CtrlInventoryCapacity.new()

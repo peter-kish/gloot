@@ -4,7 +4,6 @@ extends InventoryConstraint
 class_name ItemCountConstraint
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 const DEFAULT_CAPACITY = 1
 const KEY_CAPACITY: String = "capacity"
@@ -34,11 +33,11 @@ func get_occupied_space() -> int:
 func get_space_for(item: InventoryItem) -> ItemCount:
     var free_stack_space := ItemCount.zero()
     for i in inventory.get_items():
-        if StackManager.can_merge_stacks(i, item):
-            free_stack_space.add(StackManager.get_free_stack_space(i))
+        if Inventory.can_merge_stacks(i, item):
+            free_stack_space.add(Inventory.get_free_stack_space(i))
     
     var free_space = ItemCount.new(get_free_space())
-    free_space.mul(StackManager.get_item_max_stack_size(item))
+    free_space.mul(Inventory.get_item_max_stack_size(item))
     return free_stack_space.add(free_space)
 
 

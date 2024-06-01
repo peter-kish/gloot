@@ -1,7 +1,6 @@
 extends TestSuite
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 var inventory: Inventory
 var inventory2: Inventory
@@ -164,11 +163,11 @@ func test_sg_enforce_constraints() -> void:
         var test_item := InventoryItem.new(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
 
         grid_constraint.size = data.input.inv_size
-        StackManager.set_item_max_stack_size(new_item, ItemCount.new(data.input.new_item_max_stack_size))
-        assert(StackManager.set_item_stack_size(new_item, ItemCount.new(data.input.new_item_stack_size)))
+        Inventory.set_item_max_stack_size(new_item, ItemCount.new(data.input.new_item_max_stack_size))
+        assert(Inventory.set_item_stack_size(new_item, ItemCount.new(data.input.new_item_stack_size)))
         var add_item_result := inventory.add_item(test_item)
         assert(add_item_result == data.expected)
-        if add_item_result && (StackManager.get_item_stack_size(test_item).count > 0):
+        if add_item_result && (Inventory.get_item_stack_size(test_item).count > 0):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
 
         inventory.remove_item(test_item)
@@ -199,7 +198,7 @@ func test_wg_enforce_constraints() -> void:
         WeightConstraint.set_item_weight(item, data.input.item_weight)
         var add_item_result := inventory.add_item(item)
         assert(add_item_result == data.expected)
-        if add_item_result && (StackManager.get_item_stack_size(item).count > 0):
+        if add_item_result && (Inventory.get_item_stack_size(item).count > 0):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(item), item))
         
     inventory.remove_item(new_item)

@@ -12,6 +12,7 @@ signal constraint_added(constraint)
 signal constraint_removed(constraint)
 signal constraint_changed(constraint)
 
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -41,6 +42,8 @@ const KEY_NODE_NAME: String = "node_name"
 const KEY_PROTOTREE: String = "prototree"
 const KEY_CONSTRAINTS: String = "constraints"
 const KEY_ITEMS: String = "items"
+const KEY_STACK_SIZE = StackManager.KEY_STACK_SIZE
+const KEY_MAX_STACK_SIZE = StackManager.KEY_MAX_STACK_SIZE
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
@@ -343,3 +346,70 @@ static func _deserialize_prototree_json(data: String) -> JSON:
         prototree.parse(data)
         return prototree
 
+
+static func get_item_stack_size(item: InventoryItem) -> ItemCount:
+    return StackManager.get_item_stack_size(item)
+
+
+static func get_item_max_stack_size(item: InventoryItem) -> ItemCount:
+    return StackManager.get_item_max_stack_size(item)
+
+
+static func set_item_stack_size(item: InventoryItem, stack_size: ItemCount) -> bool:
+    return StackManager.set_item_stack_size(item, stack_size)
+
+
+static func set_item_max_stack_size(item: InventoryItem, max_stack_size: ItemCount) -> void:
+    StackManager.set_item_max_stack_size(item, max_stack_size)
+
+
+static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
+    return StackManager.get_prototype_stack_size(prototree, prototype_path)
+
+
+static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
+    return StackManager.get_prototype_max_stack_size(prototree, prototype_path)
+
+
+static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
+    return StackManager.merge_stacks(item_dst, item_src, split_source)
+
+
+static func can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
+    return StackManager.can_merge_stacks(item_dst, item_src, split_source)
+
+
+static func get_free_stack_space(item: InventoryItem) -> ItemCount:
+    return StackManager.get_free_stack_space(item)
+
+
+static func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+    return StackManager.split_stack(item, new_stack_size)
+
+
+static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> bool:
+    return StackManager.can_split_stack(item, new_stack_size)
+
+
+func split_inv_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+    return StackManager.inv_split_stack(self, item, new_stack_size)
+
+
+func merge_inv_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
+    return StackManager.inv_merge_stack(self, item_dst, item_src, split_source)
+
+
+func add_automerge(item: InventoryItem) -> bool:
+    return StackManager.inv_add_automerge(self, item)
+
+
+func add_autosplit(item: InventoryItem) -> bool:
+    return StackManager.inv_add_autosplit(self, item)
+
+
+func add_autosplitmerge(item: InventoryItem) -> bool:
+    return StackManager.inv_add_autosplitmerge(self, item)
+
+
+func pack_stack(item: InventoryItem) -> void:
+    return StackManager.inv_pack_stack(self, item)

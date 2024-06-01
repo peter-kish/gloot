@@ -6,7 +6,6 @@ extends Control
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var item_slot: ItemSlot :
@@ -188,7 +187,7 @@ func _join_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
         return false
     if !is_instance_valid(item_dst.get_inventory()):
         return false
-    return StackManager.merge_stacks(item_dst, item_src)
+    return Inventory.merge_stacks(item_dst, item_src)
 
 
 func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:

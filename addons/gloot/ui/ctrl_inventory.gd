@@ -3,10 +3,9 @@
 class_name CtrlInventory
 extends ItemList
 
-signal item_activated(item)
-signal item_context_activated(item)
+signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var inventory: Inventory = null :
@@ -58,7 +57,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == InventoryItem.KEY_NAME || property == StackManager.KEY_STACK_SIZE:
+    if property == InventoryItem.KEY_NAME || property == Inventory.KEY_STACK_SIZE:
         set_item_text(inventory.get_item_index(item), _get_item_title(item))
     if property == InventoryItem.KEY_IMAGE:
         set_item_icon(inventory.get_item_index(item), item.get_texture())
@@ -75,12 +74,12 @@ func _ready() -> void:
 
 
 func _on_list_item_activated(index: int) -> void:
-    item_activated.emit(_get_inventory_item(index))
+    inventory_item_activated.emit(_get_inventory_item(index))
 
 
 func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
     if mouse_button_index == MOUSE_BUTTON_RIGHT:
-        item_context_activated.emit(_get_inventory_item(index))
+        inventory_item_context_activated.emit(_get_inventory_item(index))
 
 
 func get_selected_inventory_item() -> InventoryItem:
@@ -128,7 +127,7 @@ func _get_item_title(item: InventoryItem) -> String:
         return ""
 
     var title = item.get_title()
-    var stack_size := StackManager.get_item_stack_size(item)
+    var stack_size := Inventory.get_item_stack_size(item)
     if stack_size.gt(ItemCount.one()):
         title = "%s (x%d)" % [title, stack_size.count]
 

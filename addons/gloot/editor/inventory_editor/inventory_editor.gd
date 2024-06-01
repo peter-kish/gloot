@@ -82,8 +82,8 @@ func _create_inventory_container() -> Control:
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
-    _inventory_control.item_activated.connect(_on_item_activated)
-    _inventory_control.item_context_activated.connect(_on_item_context_activated)
+    _inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
+    _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
 
     if inventory.get_constraint(WeightConstraint) != null:
         capacity_control = CtrlInventoryCapacity.new()
@@ -97,13 +97,13 @@ func _create_inventory_container() -> Control:
     return vbox_container
 
 
-func _on_item_activated(item: InventoryItem) -> void:
+func _on_inventory_item_activated(item: InventoryItem) -> void:
     Undoables.exec_inventory_undoable([inventory], "Remove Inventory Item", func():
         return inventory.remove_item(item)
     )
 
 
-func _on_item_context_activated(item: InventoryItem) -> void:
+func _on_inventory_item_context_activated(item: InventoryItem) -> void:
     Undoables.exec_inventory_undoable([inventory], "Rotate Inventory Item", func():
         var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
         if grid_constraint == null:

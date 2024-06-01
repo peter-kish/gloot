@@ -5,8 +5,8 @@ extends Control
 
 signal item_dropped(item, offset)
 signal selection_changed
-signal item_activated(item)
-signal item_context_activated(item)
+signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -282,11 +282,11 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.item_dropped.connect(func(item: InventoryItem, drop_position: Vector2):
         item_dropped.emit(item, drop_position)
     )
-    _ctrl_inventory_grid_basic.item_activated.connect(func(item: InventoryItem):
-        item_activated.emit(item)
+    _ctrl_inventory_grid_basic.inventory_item_activated.connect(func(item: InventoryItem):
+        inventory_item_activated.emit(item)
     )
-    _ctrl_inventory_grid_basic.item_context_activated.connect(func(item: InventoryItem):
-        item_context_activated.emit(item)
+    _ctrl_inventory_grid_basic.inventory_item_context_activated.connect(func(item: InventoryItem):
+        inventory_item_context_activated.emit(item)
     )
     _ctrl_inventory_grid_basic.item_mouse_entered.connect(_on_item_mouse_entered)
     _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)

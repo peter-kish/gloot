@@ -2,9 +2,6 @@ extends Control
 
 const info_offset: Vector2 = Vector2(20, 0)
 
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
-
-
 func _ready() -> void:
     %CtrlInventoryGridLeft.item_mouse_entered.connect(_on_item_mouse_entered)
     %CtrlInventoryGridLeft.item_mouse_exited.connect(_on_item_mouse_exited)
@@ -44,13 +41,13 @@ func _on_btn_split(ctrl_inventory) -> void:
         return
 
     for selected_item in selected_items:
-        var stack_size := StackManager.get_item_stack_size(selected_item)
+        var stack_size := Inventory.get_item_stack_size(selected_item)
         if stack_size.lt(ItemCount.new(2)):
             return
 
         # All this floor/float jazz just to do integer division without warnings
         var new_stack_size: int = floor(float(stack_size.count) / 2)
-        StackManager.inv_split_stack(ctrl_inventory.inventory, selected_item, ItemCount.new(new_stack_size))
+        ctrl_inventory.inventory.split_inv_stack(selected_item, ItemCount.new(new_stack_size))
 
 
 func _on_btn_unequip() -> void:

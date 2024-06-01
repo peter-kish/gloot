@@ -3,8 +3,8 @@ extends Control
 
 signal item_dropped(item, offset)
 signal selection_changed
-signal item_activated(item)
-signal item_context_activated(item)
+signal inventory_item_activated(item)
+signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -12,7 +12,6 @@ const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
@@ -127,7 +126,7 @@ func _on_item_property_changed(_item: InventoryItem, property: String) -> void:
         GridConstraint.KEY_SIZE,
         GridConstraint.KEY_ROTATED,
         GridConstraint.KEY_POSITIVE_ROTATION,
-        StackManager.KEY_STACK_SIZE,
+        Inventory.KEY_STACK_SIZE,
         InventoryItem.KEY_IMAGE,
     ]
     if property in relevant_properties:
@@ -200,8 +199,8 @@ func _populate_list() -> void:
         ctrl_inventory_item.item = item
         ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
-        ctrl_inventory_item.activated.connect(_on_item_activated.bind(ctrl_inventory_item))
-        ctrl_inventory_item.context_activated.connect(_on_item_context_activated.bind(ctrl_inventory_item))
+        ctrl_inventory_item.activated.connect(_on_inventory_item_activated.bind(ctrl_inventory_item))
+        ctrl_inventory_item.context_activated.connect(_on_inventory_item_context_activated.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_inventory_item))
         ctrl_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_inventory_item))
         ctrl_inventory_item.clicked.connect(_on_item_clicked.bind(ctrl_inventory_item))
@@ -239,20 +238,20 @@ func _get_item_sprite_size(item: InventoryItem) -> Vector2:
     return sprite_size
 
 
-func _on_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_inventory_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     var item = ctrl_inventory_item.item
     if !item:
         return
 
-    item_activated.emit(item)
+    inventory_item_activated.emit(item)
 
 
-func _on_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_inventory_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
     var item = ctrl_inventory_item.item
     if !item:
         return
 
-    item_context_activated.emit(item)
+    inventory_item_context_activated.emit(item)
 
 
 func _on_item_mouse_entered(ctrl_inventory_item) -> void:
@@ -394,17 +393,17 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
 
     if Engine.is_editor_hint():
         Undoables.exec_inventory_undoable([inventory], "Merge Inventory Items", func(): 
-            return StackManager.inv_merge_stack(inventory, item_dst, item_src)
+            return inventory.merge_inv_stacks(item_dst, item_src)
         )
     else:
-        StackManager.inv_merge_stack(inventory, item_dst, item_src)
+        inventory.merge_inv_stacks(item_dst, item_src)
     return true
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
     var target_item := grid_constraint.get_item_at(position)
-    if StackManager.can_merge_stacks(target_item, item):
+    if Inventory.can_merge_stacks(target_item, item):
         return target_item
     return null
 

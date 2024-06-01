@@ -4,7 +4,6 @@ extends InventoryConstraint
 class_name GridConstraint
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -288,14 +287,14 @@ func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vecto
     if item_dst == null:
         return false
 
-    return StackManager.merge_stacks(item_dst, item)
+    return Inventory.merge_stacks(item_dst, item)
     
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if StackManager.can_merge_stacks(mergable_item, item):
+        if Inventory.can_merge_stacks(mergable_item, item):
             return mergable_item
     return null
 
@@ -306,7 +305,7 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     for item_dst in get_items_under(rect):
         if item_dst == item:
             continue
-        if StackManager.can_merge_stacks(item_dst, item):
+        if Inventory.can_merge_stacks(item_dst, item):
             result.append(item_dst)
 
     return result
@@ -367,11 +366,11 @@ func sort() -> bool:
 
 
 func get_space_for(item: InventoryItem) -> ItemCount:
-    var result = _get_free_space_for(item).mul(StackManager.get_item_max_stack_size(item))
+    var result = _get_free_space_for(item).mul(Inventory.get_item_max_stack_size(item))
 
     for i in inventory.get_items():
-        if StackManager.can_merge_stacks(i, item, true):
-            result.add(StackManager.get_free_stack_space(i))
+        if Inventory.can_merge_stacks(i, item, true):
+            result.add(Inventory.get_free_stack_space(i))
 
     return result
 
@@ -396,8 +395,8 @@ func has_space_for(item: InventoryItem) -> bool:
 
     var total_free_stack_space = ItemCount.zero()
     for i in inventory.get_items():
-        total_free_stack_space.add(StackManager.get_free_stack_space(i))
-    return total_free_stack_space.ge(StackManager.get_item_stack_size(item))
+        total_free_stack_space.add(Inventory.get_free_stack_space(i))
+    return total_free_stack_space.ge(Inventory.get_item_stack_size(item))
 
 
 # TODO: Check if find_free_place is needed
@@ -423,7 +422,7 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
 
 func enforce(item: InventoryItem) -> void:
     if !move_item_to_free_spot(item):
-        StackManager.inv_pack_stack(inventory, item)
+        inventory.pack_stack(item)
 
 
 func reset() -> void:

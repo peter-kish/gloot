@@ -4,7 +4,6 @@ class_name  CtrlInventoryCapacity
 extends Control
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 @export var show_label = true :
     set(new_show_label):
@@ -76,7 +75,7 @@ func _on_item_manipulated(item: InventoryItem) -> void:
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == StackManager.KEY_STACK_SIZE || property == WeightConstraint.KEY_WEIGHT:
+    if property in [Inventory.KEY_STACK_SIZE, WeightConstraint.KEY_WEIGHT]:
         _refresh()
 
 

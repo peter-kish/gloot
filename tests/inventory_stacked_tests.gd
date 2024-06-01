@@ -9,7 +9,6 @@ var stackable_item_2: InventoryItem
 var limited_stackable_item: InventoryItem
 var limited_stackable_item_2: InventoryItem
 
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const TEST_PROTOTREE = preload("res://tests/data/prototree_stacks.json")
 
 
@@ -79,71 +78,71 @@ func test_invalid_capacity() -> void:
 
 func test_stack_split_join() -> void:
     assert(inventory.add_item(stackable_item))
-    assert(StackManager.inv_split_stack(inventory, stackable_item, ItemCount.new(5)) != null)
+    assert(inventory.split_inv_stack(stackable_item, ItemCount.new(5)) != null)
     assert(inventory.get_item_count() == 2)
     var item1 = inventory.get_items()[0]
     var item2 = inventory.get_items()[1]
-    assert(StackManager.get_item_stack_size(item1).eq(ItemCount.new(5)))
-    assert(StackManager.get_item_stack_size(item2).eq(ItemCount.new(5)))
-    var joined = StackManager.merge_stacks(item1, item2)
+    assert(Inventory.get_item_stack_size(item1).eq(ItemCount.new(5)))
+    assert(Inventory.get_item_stack_size(item2).eq(ItemCount.new(5)))
+    var joined = Inventory.merge_stacks(item1, item2)
     assert(joined)
-    assert(StackManager.get_item_stack_size(item1).eq(ItemCount.new(10)))
+    assert(Inventory.get_item_stack_size(item1).eq(ItemCount.new(10)))
     assert(inventory.get_item_count() == 1)
 
 
 func test_automerge() -> void:
-    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
-    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item))
+    assert(Inventory.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    assert(Inventory.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(inventory.add_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(is_node_valid(stackable_item))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
+    assert(inventory.add_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 1)
     
     
 func test_automerge_custom_dst_properties() -> void:
-    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
-    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(Inventory.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    assert(Inventory.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
     stackable_item_2.set_property("custom_property", "custom_value")
-    assert(StackManager.inv_add_automerge(inventory, stackable_item))
+    assert(inventory.add_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
+    assert(inventory.add_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
 func test_automerge_custom_src_properties() -> void:
-    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    assert(Inventory.set_item_stack_size(stackable_item, ItemCount.new(2)))
     stackable_item.set_property("custom_property", "custom_value")
-    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item))
+    assert(Inventory.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(inventory.add_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
     assert(inventory.has_item(stackable_item))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
+    assert(inventory.add_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
     assert(inventory.has_item(stackable_item_2))
 
 
 func test_max_stack_size() -> void:
-    assert(StackManager.set_item_stack_size(limited_stackable_item, ItemCount.new(3)))
+    assert(Inventory.set_item_stack_size(limited_stackable_item, ItemCount.new(3)))
     assert(inventory.add_item(limited_stackable_item))
-    assert(StackManager.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(3)))
-    assert(StackManager.inv_add_autosplitmerge(inventory, limited_stackable_item_2))
-    assert(StackManager.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(5)))
-    assert(StackManager.get_item_stack_size(limited_stackable_item_2).eq(ItemCount.new(3)))
+    assert(Inventory.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(3)))
+    assert(inventory.add_autosplitmerge(limited_stackable_item_2))
+    assert(Inventory.get_item_stack_size(limited_stackable_item).eq(ItemCount.new(5)))
+    assert(Inventory.get_item_stack_size(limited_stackable_item_2).eq(ItemCount.new(3)))
 
 
 func test_automerge_max_stack_size() -> void:
-    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(2)))
-    StackManager.set_item_max_stack_size(stackable_item, ItemCount.new(3))
-    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
-    assert(StackManager.inv_add_automerge(inventory, stackable_item))
+    assert(Inventory.set_item_stack_size(stackable_item, ItemCount.new(2)))
+    Inventory.set_item_max_stack_size(stackable_item, ItemCount.new(3))
+    assert(Inventory.set_item_stack_size(stackable_item_2, ItemCount.new(2)))
+    assert(inventory.add_automerge(stackable_item))
     assert(inventory.get_item_count() == 1)
-    assert(StackManager.inv_add_automerge(inventory, stackable_item_2))
+    assert(inventory.add_automerge(stackable_item_2))
     assert(inventory.get_item_count() == 2)
-    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(3)))
-    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(1)))
+    assert(Inventory.get_item_stack_size(stackable_item).eq(ItemCount.new(3)))
+    assert(Inventory.get_item_stack_size(stackable_item_2).eq(ItemCount.new(1)))
 
 
 func test_add_item() -> void:
@@ -156,13 +155,13 @@ func test_add_item() -> void:
 
 
 func test_add_item_autosplitmerge() -> void:
-    assert(StackManager.set_item_stack_size(stackable_item, ItemCount.new(7)))
-    assert(StackManager.set_item_stack_size(stackable_item_2, ItemCount.new(5)))
+    assert(Inventory.set_item_stack_size(stackable_item, ItemCount.new(7)))
+    assert(Inventory.set_item_stack_size(stackable_item_2, ItemCount.new(5)))
     assert(inventory.add_item(stackable_item))
     assert(inventory_2.add_item(stackable_item_2))
-    assert(StackManager.inv_add_autosplitmerge(inventory, stackable_item_2))
-    assert(StackManager.get_item_stack_size(stackable_item).eq(ItemCount.new(10)))
-    assert(StackManager.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
+    assert(inventory.add_autosplitmerge(stackable_item_2))
+    assert(Inventory.get_item_stack_size(stackable_item).eq(ItemCount.new(10)))
+    assert(Inventory.get_item_stack_size(stackable_item_2).eq(ItemCount.new(2)))
     assert(inventory.get_item_count() == 1)
     assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == 10)
     assert(inventory_2.get_item_count() == 1)
