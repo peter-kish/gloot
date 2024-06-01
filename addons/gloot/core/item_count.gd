@@ -1,7 +1,11 @@
 class_name ItemCount
+## A helper class representing item counts.
+##
+## ItemCount represents item counts using non-negative integers, including infinity.
 
 const Inf: int = -1
 
+## The item count as an integer (-1 equals infinity).
 @export var count: int = 0 :
     set(new_count):
         if new_count < 0:
@@ -15,10 +19,12 @@ func _init(count_: int = 0) -> void:
     count = count_
 
 
+## Checks if the count is infinite.
 func is_inf() -> bool:
     return count < 0
 
 
+## Adds the given ItemCount to the current one and returns the result.
 func add(item_count_: ItemCount) -> ItemCount:
     if item_count_.is_inf():
         count = Inf
@@ -28,6 +34,7 @@ func add(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+## Subtracts the given ItemCount from the current one and returns the result.
 func sub(item_count_: ItemCount) -> ItemCount:
     assert(!item_count_.gt(self), "Can't subtract a count greater than self!")
     if item_count_.is_inf():
@@ -38,6 +45,7 @@ func sub(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+## Multiplies the given ItemCount with the current one and returns the result.
 func mul(item_count_: ItemCount) -> ItemCount:
     if (count == 0):
         return self
@@ -54,6 +62,7 @@ func mul(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+## Divides the current ItemCount with the given one and returns the result.
 func div(item_count_: ItemCount) -> ItemCount:
     assert(item_count_.count > 0 || item_count_.is_inf(), "Can't devide by zero!")
     if (count == 0):
@@ -71,10 +80,12 @@ func div(item_count_: ItemCount) -> ItemCount:
     return self
 
 
+## Check if the item count is equal with the given item count.
 func eq(item_count_: ItemCount) -> bool:
     return item_count_.count == count
 
 
+## Check if the item count is less than the given item count.
 func lt(item_count_: ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
@@ -87,10 +98,12 @@ func lt(item_count_: ItemCount) -> bool:
     return count < item_count_.count
 
 
+## Check if the item count is less or equal than the given item count.
 func le(item_count_: ItemCount) -> bool:
     return self.lt(item_count_) || self.eq(item_count_)
 
 
+## Check if the item count is greater than the given item count.
 func gt(item_count_: ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
@@ -103,24 +116,29 @@ func gt(item_count_: ItemCount) -> bool:
     return count > item_count_.count
 
 
+## Check if the item count is greater or equal than the given item count.
 func ge(item_count_: ItemCount) -> bool:
     return self.gt(item_count_) || self.eq(item_count_)
 
 
+## Returns the smaller item count out of the two.
 static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
     if item_count_l.lt(item_count_r):
         return item_count_l
     return item_count_r
 
 
+## Returns an infinite item count.
 static func inf() -> ItemCount:
     return ItemCount.new(Inf)
 
 
+## Returns an item count if 0.
 static func zero() -> ItemCount:
     return ItemCount.new(0)
 
 
+## Returns an item count if 1.
 static func one() -> ItemCount:
     return ItemCount.new(1)
 
