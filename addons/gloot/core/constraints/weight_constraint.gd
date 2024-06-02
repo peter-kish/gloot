@@ -2,6 +2,10 @@
 @icon("res://addons/gloot/images/icon_weight_constraint.svg")
 extends InventoryConstraint
 class_name WeightConstraint
+## A constraint that limits the inventory to a given weight capacity.
+##
+## The constraint implements a weight-based inventory where the total sum of the item weights cannot exceed the
+## configured capacity of the inventory.
 
 const DEFAULT_CAPACITY: float = 1.0
 const KEY_WEIGHT: String = "weight"
@@ -11,6 +15,7 @@ const KEY_OCCUPIED_SPACE: String = "occupied_space"
 const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
+## Maximum weight the inventory can hold.
 @export var capacity: float = DEFAULT_CAPACITY :
     set(new_capacity):
         if new_capacity < 0.0:
@@ -25,6 +30,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 var _occupied_space: float
 
 
+## Returns the total sum of the item weights.
 func get_occupied_space() -> float:
     return _occupied_space
     
@@ -63,6 +69,7 @@ static func _can_swap(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     return space_needed <= weight_constraint.capacity
 
 
+## Returns the available space in the inventory.
 func get_free_space() -> float:
     var free_space: float = capacity - _occupied_space
     if free_space < 0.0:
@@ -88,6 +95,7 @@ static func _get_item_unit_weight(item: InventoryItem) -> float:
     return weight
 
 
+## Returns the weight of the given item.
 static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
@@ -95,25 +103,30 @@ static func get_item_weight(item: InventoryItem) -> float:
     return Inventory.get_item_stack_size(item).count * _get_item_unit_weight(item)
 
 
+## Sets the weight of the given item.
 static func set_item_weight(item: InventoryItem, weight: float) -> void:
     assert(weight >= 0.0, "Item weight must be greater or equal to 0!")
     item.set_property(KEY_WEIGHT, weight)
 
 
+## Returns the number of times this constraint can receive the given item.
 func get_space_for(item: InventoryItem) -> ItemCount:
     var unit_weight := _get_item_unit_weight(item)
     return ItemCount.new(floor(get_free_space() / unit_weight))
 
 
+## Checks if the constraint can receive the given item.
 func has_space_for(item: InventoryItem) -> bool:
     var item_weight := get_item_weight(item)
     return get_free_space() >= item_weight
 
 
+## Resets the constraint, i.e. sets its capacity to default (`1.0`).
 func reset() -> void:
-    capacity = 0.0
+    capacity = DEFAULT_CAPACITY
 
 
+## Serializes the constraint into a `Dictionary`.
 func serialize() -> Dictionary:
     var result := {}
 
@@ -122,6 +135,7 @@ func serialize() -> Dictionary:
     return result
 
 
+## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT):
         return false

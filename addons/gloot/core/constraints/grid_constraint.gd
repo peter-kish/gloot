@@ -2,6 +2,9 @@
 @icon("res://addons/gloot/images/icon_grid_constraint.svg")
 extends InventoryConstraint
 class_name GridConstraint
+## A constraint that limits the inventory to a 2d grid of a given size.
+##
+## The constraint implements a grid-based inventory of a configurable size.
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
@@ -17,6 +20,7 @@ var _swap_positions: Array[Vector2i]
 var _item_positions := {}
 var _quad_tree := QuadTree.new(size)
 
+## The size of the 2d grid.
 @export var size: Vector2i = DEFAULT_SIZE :
     set(new_size):
         assert(new_size.x > 0, "Inventory width must be positive!")
@@ -100,12 +104,14 @@ func _bounds_broken() -> bool:
     return false
 
 
+## Returns the position of the given item on the 2d grid.
 func get_item_position(item: InventoryItem) -> Vector2i:
     if !_item_positions.has(item):
         return Vector2i.ZERO
     return _item_positions[item]
 
 
+## Sets the position of the given item on the 2d grid.
 func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
     var new_rect := Rect2i(new_position, get_item_size(item))
     if inventory.has_item(item) and !rect_free(new_rect, item):
@@ -115,6 +121,8 @@ func set_item_position(item: InventoryItem, new_position: Vector2i) -> bool:
     return true
 
 
+## Sets the position of the given item on the 2d grid without any validity checks (somewhat faster than
+## set_item_position).
 func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> void:
     if new_position == get_item_position(item):
         return
@@ -124,6 +132,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
     changed.emit()
 
 
+## Returns the size of the given item.
 func get_item_size(item: InventoryItem) -> Vector2i:
     var result: Vector2i = item.get_property(KEY_SIZE, Vector2i.ONE)
     if is_item_rotated(item):
@@ -133,15 +142,18 @@ func get_item_size(item: InventoryItem) -> Vector2i:
     return result
 
 
+## Checks wether the given item is rotated.
 static func is_item_rotated(item: InventoryItem) -> bool:
     return item.get_property(KEY_ROTATED, false)
 
 
+## Checks wether the given item has positive rotation.
 static func is_item_rotation_positive(item: InventoryItem) -> bool:
     return item.get_property(KEY_POSITIVE_ROTATION, false)
 
 
 # TODO: Consider making a static "unsafe" version of this
+## Sets the size of the given item.
 func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if new_size.x < 1 || new_size.y < 1:
         return false
@@ -154,6 +166,7 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     return true
 
 
+## Returns the rotation of the given item.
 func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
     if is_item_rotated(item) == rotated:
         return false
@@ -168,10 +181,12 @@ func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
     return true
 
 
+## Rotates the given item.
 func rotate_item(item: InventoryItem) -> bool:
     return set_item_rotation(item, !is_item_rotated(item))
 
 
+## Sets the rotation direction of the given item (positive or negative).
 static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
     if positive:
         item.set_property(KEY_POSITIVE_ROTATION, true)
@@ -179,6 +194,7 @@ static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> 
         item.clear_property(KEY_POSITIVE_ROTATION)
 
 
+## Checks if the given item can be rotated.
 func can_rotate_item(item: InventoryItem) -> bool:
     var rotated_rect := get_item_rect(item)
     var temp := rotated_rect.size.x
@@ -187,12 +203,15 @@ func can_rotate_item(item: InventoryItem) -> bool:
     return rect_free(rotated_rect, item)
 
 
+## Returns a rectangle constructed from the position and size of the given item.
 func get_item_rect(item: InventoryItem) -> Rect2i:
     var item_pos := get_item_position(item)
     var item_size := get_item_size(item)
     return Rect2i(item_pos, item_size)
 
 
+## Sets the position and size of the given item based on the given rectangle. Returns `false` if the new position and
+## size cannot be applied to the item.
 func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
     if !rect_free(new_rect, item):
         return false
@@ -210,6 +229,7 @@ func _get_prototype_size(prototype_path: String) -> Vector2i:
     return size
 
 
+## Adds the given item to the inventory and sets its position.
 func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     assert(inventory != null, "Inventory not set!")
 
@@ -224,6 +244,7 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
     return false
 
 
+## Creates and adds the given item to the inventory and sets its position.
 func create_and_add_item_at(prototype_path: String, position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
     var item_rect := Rect2i(position, _get_prototype_size(prototype_path))
@@ -241,6 +262,7 @@ func create_and_add_item_at(prototype_path: String, position: Vector2i) -> Inven
     return item
 
 
+## Returns the item at the given grid position. Returns `null` if no item can be found at that position.
 func get_item_at(position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
     var first = _quad_tree.get_first(position)
@@ -249,6 +271,7 @@ func get_item_at(position: Vector2i) -> InventoryItem:
     return first.metadata
 
 
+## Returns an array of items under the given rectangle.
 func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
     assert(inventory != null, "Inventory not set!")
     var result: Array[InventoryItem]
@@ -259,6 +282,7 @@ func get_items_under(rect: Rect2i) -> Array[InventoryItem]:
     return result
 
 
+## Moves the given item to a new position. Returns `false` if the item cannot be moved.
 func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     assert(inventory != null, "Inventory not set!")
     var item_size := get_item_size(item)
@@ -271,6 +295,7 @@ func move_item_to(item: InventoryItem, position: Vector2i) -> bool:
     return false
 
 
+## Moves the given item to a free spot. Returns `false` if no free spot can be found.
 func move_item_to_free_spot(item: InventoryItem) -> bool:
     if rect_free(get_item_rect(item), item):
         return true
@@ -311,6 +336,8 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     return result
 
 
+## Checks if the given rectangle is free (i.e. no items can be found under it). The `exception` item will be disregarded
+## during the check, if set.
 func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     assert(inventory != null, "Inventory not set!")
 
@@ -325,6 +352,9 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
 
 
 # TODO: Check if this is needed after adding find_free_space
+## Finds a place for the given item. The `exception` item will be disregarded during the search, if set. Returns a
+## dictionary containing two fields: `success` and `position`. `success` will be set to `false` if not free place can be
+## found and to `true` otherwise. If `success` is true the `position` field contains the resulting coordinates. 
 func find_free_place(item: InventoryItem, exception: InventoryItem = null) -> Dictionary:
     var result := {success = false, position = Vector2i(-1, -1)}
     var item_size = get_item_size(item)
@@ -345,6 +375,7 @@ func _compare_items(item1: InventoryItem, item2: InventoryItem) -> bool:
     return rect1.get_area() > rect2.get_area()
 
 
+## Sorts the inventory based on item size.
 func sort() -> bool:
     assert(inventory != null, "Inventory not set!")
 
@@ -365,6 +396,7 @@ func sort() -> bool:
     return true
 
 
+## Returns the number of times this constraint can receive the given item.
 func get_space_for(item: InventoryItem) -> ItemCount:
     var result = _get_free_space_for(item).mul(Inventory.get_item_max_stack_size(item))
 
@@ -387,6 +419,7 @@ func _get_free_space_for(item: InventoryItem) -> ItemCount:
     
 
 
+## Checks if the constraint can receive the given item. 
 func has_space_for(item: InventoryItem) -> bool:
     var item_size = get_item_size(item)
 
@@ -400,6 +433,9 @@ func has_space_for(item: InventoryItem) -> bool:
 
 
 # TODO: Check if find_free_place is needed
+## Finds a place for the given item with regard to the given occupied rectangles. Returns a dictionary containing two
+## fields: `success` and `position`. `success` will be set to `false` if not free place can be found and to `true`
+## otherwise. If `success` is true the `position` field contains the resulting coordinates. 
 func find_free_space(item_size: Vector2i, occupied_rects: Array[Rect2i] = []) -> Dictionary:
     var result := {success = false, position = Vector2i(-1, -1)}
     for x in range(size.x - (item_size.x - 1)):
@@ -420,17 +456,21 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
     return false
 
 
+## Enforces the grid constraint. Attempts to move all items to free spots, or pack the items together so that no two
+## items occupy the same field on the grid.
 func enforce(item: InventoryItem) -> void:
     if !move_item_to_free_spot(item):
         inventory.pack_item(item)
 
 
+## Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).
 func reset() -> void:
     size = DEFAULT_SIZE
     _quad_tree = QuadTree.new(size)
     _item_positions.clear()
 
 
+## Serializes the constraint into a `Dictionary`.
 func serialize() -> Dictionary:
     var result := {}
 
@@ -450,6 +490,7 @@ func _serialize_item_positions() -> Dictionary:
     return result
 
 
+## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
         return false

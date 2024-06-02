@@ -1,9 +1,14 @@
 @tool
 extends Node
 class_name InventoryConstraint
+## Base inventory constraint class.
+##
+## Base inventory constraint class which implements some basic constraint functionality and defines methods that can be
+## overridden.
 
 signal changed
 
+## Reference to an inventory that this constraint belings to.
 var inventory: Inventory = null :
     set(new_inventory):
         inventory = new_inventory
@@ -43,62 +48,57 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
-# Override this
+## Returns the number of times this constraint can receive the given item.
 func get_space_for(item: InventoryItem) -> ItemCount:
     return ItemCount.zero()
 
 
-# Override this
+## Checks if the constraint can receive the given item.
 func has_space_for(item:InventoryItem) -> bool:
     return false
 
 
-# Override this
-func reset() -> void:
-    pass
-
-
-# Override this
+## Serializes the constraint into a `Dictionary`.
 func serialize() -> Dictionary:
     return {}
 
 
-# Override this
+## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     return true
     
     
-# Override this
+## Called when constraint inventory is set/changed.
 func _on_inventory_set() -> void:
     pass
 
 
-# Override this
+## Called when an item is added to the inventory.
 func _on_item_added(item: InventoryItem) -> void:
     pass
 
 
-# Override this
+## Called when an item is removed from the inventory.
 func _on_item_removed(item: InventoryItem) -> void:
     pass
 
 
-# Override this
+## Called when an item property has changed.
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
     pass
 
 
-# Override this
+## Called before the two given items are swapped.
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     return true
 
 
-# Override this
+## Called after the two given items have been swapped.
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     pass
 
 
-# Override this
+## Enforce any constraint rules.
 func enforce(item: InventoryItem) -> void:
     pass
     
