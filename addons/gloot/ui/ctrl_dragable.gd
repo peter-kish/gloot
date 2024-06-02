@@ -31,6 +31,8 @@ var _enabled: bool = true
 
 
 static func get_grabbed_dragable() -> CtrlDragable:
+    if !is_instance_valid(_grabbed_dragable):
+        return null
     return _grabbed_dragable
 
 
