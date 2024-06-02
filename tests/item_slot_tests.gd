@@ -16,7 +16,6 @@ func init_suite():
         "test_add_item_to_inventory",
         "test_equip_item_in_two_slots",
         "test_can_hold_item",
-        "test_reset",
         "test_serialize",
         "test_serialize_json",
     ]
@@ -73,12 +72,6 @@ func test_can_hold_item() -> void:
     assert(!slot.can_hold_item(null))
 
 
-func test_reset() -> void:
-    assert(slot.equip(item))
-    slot.reset()
-    assert(slot.get_item() == null)
-
-
 func test_serialize() -> void:
     assert(slot.equip(item))
     var expected_prototree_json := item._prototree_json
@@ -86,7 +79,7 @@ func test_serialize() -> void:
     var expected_properties := item.get_properties()
 
     var item_slot_data = slot.serialize()
-    slot.reset()
+    slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item()._prototree_json == expected_prototree_json)
@@ -108,7 +101,7 @@ func test_serialize_json() -> void:
     assert(test_json_conv.parse(json_string) == OK)
     item_slot_data = test_json_conv.data
 
-    slot.reset()
+    slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item()._prototree_json == expected_prototree_json)

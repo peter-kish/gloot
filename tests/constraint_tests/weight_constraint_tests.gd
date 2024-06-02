@@ -108,7 +108,7 @@ func test_serialize() -> void:
     var capacity = weight_constraint.capacity
 
     weight_constraint.reset()
-    assert(weight_constraint.capacity == 0)
+    assert(weight_constraint.capacity == WeightConstraint.DEFAULT_CAPACITY)
 
     assert(weight_constraint.deserialize(constraint_data))
     assert(weight_constraint.capacity == capacity)
@@ -126,7 +126,7 @@ func test_serialize_json() -> void:
     constraint_data = test_json_conv.data
 
     weight_constraint.reset()
-    assert(weight_constraint.capacity == 0)
+    assert(weight_constraint.capacity == WeightConstraint.DEFAULT_CAPACITY)
     
     assert(weight_constraint.deserialize(constraint_data))
     assert(weight_constraint.capacity == capacity)
