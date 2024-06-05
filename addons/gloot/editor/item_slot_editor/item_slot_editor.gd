@@ -57,10 +57,12 @@ func _refresh() -> void:
 func _ready() -> void:
     _apply_editor_settings()
 
+    %BtnAdd.icon = EditorIcons.get_icon("Add")
     %BtnEdit.icon = EditorIcons.get_icon("Edit")
     %BtnClear.icon = EditorIcons.get_icon("Remove")
 
     %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
+    %BtnAdd.pressed.connect(_on_btn_add)
     %BtnEdit.pressed.connect(_on_btn_edit)
     %BtnClear.pressed.connect(_on_btn_clear)
 
@@ -73,6 +75,16 @@ func _apply_editor_settings() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
+    var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
+    Undoables.exec_slot_undoable(item_slot, "Equip item", func():
+        return item_slot.equip(item)
+    )
+
+
+func _on_btn_add() -> void:
+    var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
+    if prototype == null:
+        return
     var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
     Undoables.exec_slot_undoable(item_slot, "Equip item", func():
         return item_slot.equip(item)
