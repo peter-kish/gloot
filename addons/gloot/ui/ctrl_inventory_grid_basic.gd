@@ -11,7 +11,7 @@ signal item_mouse_exited(item)
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
-const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
@@ -79,13 +79,13 @@ func _ready() -> void:
     add_child(_ctrl_item_container)
 
     _ctrl_drop_zone = CtrlDropZone.new()
-    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
+    _ctrl_drop_zone.draggable_dropped.connect(_on_draggable_dropped)
     _ctrl_drop_zone.size = size
     resized.connect(func(): _ctrl_drop_zone.size = size)
-    CtrlDragable.dragable_grabbed.connect(func(dragable: CtrlDragable, grab_position: Vector2):
+    CtrlDraggable.draggable_grabbed.connect(func(draggable: CtrlDraggable, grab_position: Vector2):
         _ctrl_drop_zone.activate()
     )
-    CtrlDragable.dragable_dropped.connect(func(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
+    CtrlDraggable.draggable_dropped.connect(func(draggable: CtrlDraggable, zone: CtrlDropZone, drop_position: Vector2):
         _ctrl_drop_zone.deactivate()
     )
     add_child(_ctrl_drop_zone)
@@ -310,8 +310,8 @@ func _clear_selection() -> void:
     selection_changed.emit()
 
 
-func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
-    var item: InventoryItem = dragable.item
+func _on_draggable_dropped(draggable: CtrlDraggable, drop_position: Vector2) -> void:
+    var item: InventoryItem = draggable.item
     if item == null:
         return
 

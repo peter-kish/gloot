@@ -1,4 +1,4 @@
-extends "res://addons/gloot/ui/ctrl_dragable.gd"
+extends "res://addons/gloot/ui/ctrl_draggable.gd"
 
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 

@@ -5,7 +5,7 @@ extends Control
 
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
-const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var item_slot: ItemSlot :
@@ -131,11 +131,11 @@ func _ready():
     _hbox_container.add_child(_ctrl_inventory_item_rect)
 
     _ctrl_drop_zone = CtrlDropZone.new()
-    _ctrl_drop_zone.dragable_dropped.connect(_on_dragable_dropped)
+    _ctrl_drop_zone.draggable_dropped.connect(_on_draggable_dropped)
     _ctrl_drop_zone.size = size
     resized.connect(func(): _ctrl_drop_zone.size = size)
-    CtrlDragable.dragable_grabbed.connect(_on_any_dragable_grabbed)
-    CtrlDragable.dragable_dropped.connect(_on_any_dragable_dropped)
+    CtrlDraggable.draggable_grabbed.connect(_on_any_draggable_grabbed)
+    CtrlDraggable.draggable_dropped.connect(_on_any_draggable_dropped)
     add_child(_ctrl_drop_zone)
     _ctrl_drop_zone.deactivate()
 
@@ -159,8 +159,8 @@ func _ready():
     _refresh()
 
 
-func _on_dragable_dropped(dragable: CtrlDragable, drop_position: Vector2) -> void:
-    var item = (dragable as CtrlInventoryItemRect).item
+func _on_draggable_dropped(draggable: CtrlDraggable, drop_position: Vector2) -> void:
+    var item = (draggable as CtrlInventoryItemRect).item
 
     if !item:
         return
@@ -198,11 +198,11 @@ func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
     return InventoryItem.swap(item1, item2)
 
 
-func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
+func _on_any_draggable_grabbed(draggable: CtrlDraggable, grab_position: Vector2):
     _ctrl_drop_zone.activate()
 
 
-func _on_any_dragable_dropped(dragable: CtrlDragable, zone: CtrlDropZone, drop_position: Vector2):
+func _on_any_draggable_dropped(draggable: CtrlDraggable, zone: CtrlDropZone, drop_position: Vector2):
     _ctrl_drop_zone.deactivate()
 
 

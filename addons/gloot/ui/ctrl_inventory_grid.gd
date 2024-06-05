@@ -13,7 +13,7 @@ signal item_mouse_exited(item)
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
-const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 
@@ -299,7 +299,7 @@ func _ready() -> void:
     _selection_panels.name = "SelectionPanels"
     add_child(_selection_panels)
 
-    CtrlDragable.dragable_dropped.connect(func(_grabbed_dragable, _zone, _local_drop_position):
+    CtrlDraggable.draggable_dropped.connect(func(_grabbed_draggable, _zone, _local_drop_position):
         _fill_background(field_style, PriorityPanel.StylePriority.LOW)
     )
 
@@ -414,14 +414,14 @@ func _fill_background(style: StyleBox, priority: int) -> void:
 
 
 func _get_global_grabbed_item() -> InventoryItem:
-    if CtrlDragable.get_grabbed_dragable() == null:
+    if CtrlDraggable.get_grabbed_draggable() == null:
         return null
-    return (CtrlDragable.get_grabbed_dragable() as CtrlInventoryItemRect).item
+    return (CtrlDraggable.get_grabbed_draggable() as CtrlInventoryItemRect).item
 
 
 func _get_global_grabbed_item_local_pos() -> Vector2:
-    if CtrlDragable.get_grabbed_dragable():
-        return get_local_mouse_position() - CtrlDragable.get_grab_offset_local_to(self)
+    if CtrlDraggable.get_grabbed_draggable():
+        return get_local_mouse_position() - CtrlDraggable.get_grab_offset_local_to(self)
     return Vector2(-1, -1)
 
 
