@@ -112,8 +112,9 @@ func _disconnect_item_slot_signals() -> void:
 func _ready():
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if is_instance_valid(_hbox_container):
-            _hbox_container.queue_free()
+        for c in get_children():
+            remove_child(c)
+            c.queue_free()
 
     _hbox_container = HBoxContainer.new()
     _hbox_container.size_flags_horizontal = SIZE_EXPAND_FILL

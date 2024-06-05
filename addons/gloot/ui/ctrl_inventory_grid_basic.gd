@@ -66,8 +66,9 @@ var _refresh_queued: bool = false
 func _ready() -> void:
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if is_instance_valid(_ctrl_item_container):
-            _ctrl_item_container.queue_free()
+        for c in get_children():
+            remove_child(c)
+            c.queue_free()
 
     mouse_filter = Control.MOUSE_FILTER_IGNORE
 

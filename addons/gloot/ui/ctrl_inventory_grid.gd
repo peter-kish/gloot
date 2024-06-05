@@ -25,7 +25,7 @@ class PriorityPanel extends Panel:
     var _styles: Array[StyleBox] = [null, null, null]
 
 
-    func _init(regular_style_: StyleBox, hover_style_: StyleBox) -> void:
+    func _init(regular_style_: StyleBox = null, hover_style_: StyleBox = null) -> void:
         regular_style = regular_style_
         hover_style = hover_style_
 
@@ -258,9 +258,9 @@ func _refresh_field_background_grid() -> void:
 func _ready() -> void:
     if Engine.is_editor_hint():
         # Clean up, in case it is duplicated in the editor
-        if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.queue_free()
-            _field_background_grid.queue_free()
+        for c in get_children():
+            remove_child(c)
+            c.queue_free()
 
     _background = CustomizablePanel.new()
     _background.name = "Background"
