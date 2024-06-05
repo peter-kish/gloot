@@ -128,8 +128,10 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
         if !inv2._constraint_manager._on_pre_item_swap(item1, item2):
             return false
 
-    var idx1 = _remove_item_from_owner(item1, inv1)
-    var idx2 = _remove_item_from_owner(item2, inv2)
+    var idx1 = inv1.get_item_index(item1)
+    var idx2 = inv2.get_item_index(item2)
+    inv1.remove_item(item1)
+    inv2.remove_item(item2)
     if !_add_item_to_inventory(item1, inv2, idx2):
         _add_item_to_inventory(item1, inv1, idx1)
         _add_item_to_inventory(item2, inv2, idx2)
@@ -145,17 +147,6 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
         inv2._constraint_manager._on_post_item_swap(item1, item2)
 
     return true;
-
-
-static func _remove_item_from_owner(item: InventoryItem, item_owner) -> int:
-    if item_owner is Inventory:
-        var inventory := (item_owner as Inventory)
-        var item_idx = inventory.get_item_index(item)
-        inventory.remove_item(item)
-        return item_idx
-    
-    (item_owner as ItemSlot).clear()
-    return 0
 
 
 static func _add_item_to_inventory(item: InventoryItem, inventory: Inventory, index: int) -> bool:
