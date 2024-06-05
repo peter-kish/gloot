@@ -108,7 +108,7 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.select_mode = select_mode
 
 @export_group("Custom Styles")
-@export var field_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_field_style_normal.tres") :
+@export var field_style: StyleBox = null:
     set(new_field_style):
         field_style = new_field_style
         _queue_refresh()
@@ -120,11 +120,11 @@ class CustomizablePanel extends Panel:
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()
-@export var selection_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_style_selection.tres"):
+@export var selection_style: StyleBox = null:
     set(new_selection_style):
         selection_style = new_selection_style
         _queue_refresh()
-@export var background_style: StyleBox = preload("res://addons/gloot/ui/ctrl_inventory_grid_style_background.tres"):
+@export var background_style: StyleBox = null:
     set(new_background_style):
         background_style = new_background_style
         _queue_refresh()
@@ -135,6 +135,32 @@ var _field_backgrounds: Array = []
 var _selection_panels: Control = null
 var _refresh_queued: bool = false
 var _background: CustomizablePanel = null
+
+
+func _get_field_style() -> StyleBox:
+    if field_style:
+        return field_style
+    return preload("res://addons/gloot/ui/ctrl_inventory_grid_field_style_normal.tres")
+
+
+func _get_selection_style() -> StyleBox:
+    if selection_style:
+        return selection_style
+    return preload("res://addons/gloot/ui/ctrl_inventory_grid_style_selection.tres")
+
+
+func _get_background_style() -> StyleBox:
+    if background_style:
+        return background_style
+    return preload("res://addons/gloot/ui/ctrl_inventory_grid_style_background.tres")
+
+
+func _get_field_highlighted_style() -> StyleBox:
+    return field_highlighted_style
+
+
+func _get_field_selected_style() -> StyleBox:
+    return field_selected_style
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -214,7 +240,7 @@ func _refresh_selection_panel() -> void:
         child.queue_free()
 
     var selected_items := _ctrl_inventory_grid_basic.get_selected_inventory_items()
-    _selection_panels.visible = (!selected_items.is_empty()) && (selection_style != null)
+    _selection_panels.visible = (!selected_items.is_empty()) && (_get_selection_style() != null)
     if selected_items.is_empty():
         return
 
@@ -223,7 +249,7 @@ func _refresh_selection_panel() -> void:
         var rect := _ctrl_inventory_grid_basic.get_item_rect(selected_item)
         selection_panel.position = rect.position
         selection_panel.size = rect.size
-        selection_panel.set_style(selection_style)
+        selection_panel.set_style(_get_selection_style())
         selection_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
         _selection_panels.add_child(selection_panel)
 
@@ -247,8 +273,7 @@ func _refresh_field_background_grid() -> void:
     for i in range(inv_size.x):
         _field_backgrounds.append([])
         for j in range(inv_size.y):
-            var field_panel: PriorityPanel = PriorityPanel.new(field_style, field_highlighted_style)
-            field_panel.visible = (field_style != null)
+            var field_panel: PriorityPanel = PriorityPanel.new(_get_field_style(), _get_field_highlighted_style())
             field_panel.size = field_dimensions
             field_panel.position = _ctrl_inventory_grid_basic._get_field_position(Vector2i(i, j))
             _field_background_grid.add_child(field_panel)
@@ -264,7 +289,7 @@ func _ready() -> void:
 
     _background = CustomizablePanel.new()
     _background.name = "Background"
-    _background.set_style(background_style)
+    _background.set_style(_get_background_style())
     add_child(_background)
 
     _field_background_grid = Control.new()
@@ -300,7 +325,7 @@ func _ready() -> void:
     add_child(_selection_panels)
 
     CtrlDraggable.draggable_dropped.connect(func(_grabbed_draggable, _zone, _local_drop_position):
-        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+        _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
     )
 
     _update_size()
@@ -309,7 +334,7 @@ func _ready() -> void:
 
 func _notification(what: int) -> void:
     if what == NOTIFICATION_DRAG_END:
-        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+        _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
 
 
 func _update_size() -> void:
@@ -319,7 +344,7 @@ func _update_size() -> void:
 
 
 func _on_item_mouse_entered(item: InventoryItem) -> void:
-    _set_item_background(item, field_highlighted_style, PriorityPanel.StylePriority.MEDIUM)
+    _set_item_background(item, _get_field_highlighted_style(), PriorityPanel.StylePriority.MEDIUM)
     item_mouse_entered.emit(item)
 
 
@@ -338,11 +363,11 @@ func _handle_selection_change() -> void:
         return
     _refresh_selection_panel()
 
-    if !field_selected_style:
+    if !_get_field_selected_style():
         return
     for item in inventory.get_items():
         if item in _ctrl_inventory_grid_basic.get_selected_inventory_items():
-            _set_item_background(item, field_selected_style, PriorityPanel.StylePriority.HIGH)
+            _set_item_background(item, _get_field_selected_style(), PriorityPanel.StylePriority.HIGH)
         else:
             _set_item_background(item, null, PriorityPanel.StylePriority.HIGH)
 
@@ -357,9 +382,9 @@ func _input(event) -> void:
     if !is_instance_valid(inventory):
         return
     
-    if !field_highlighted_style:
+    if !_get_field_highlighted_style():
         return
-    _highlight_grabbed_item(field_highlighted_style)
+    _highlight_grabbed_item(_get_field_highlighted_style())
 
 
 func _highlight_grabbed_item(style: StyleBox):
@@ -372,10 +397,10 @@ func _highlight_grabbed_item(style: StyleBox):
 
     var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
     if !_is_hovering(global_grabbed_item_pos):
-        _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+        _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
         return
 
-    _fill_background(field_style, PriorityPanel.StylePriority.LOW)
+    _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
 
     var grabbed_item_coords := _ctrl_inventory_grid_basic.get_field_coords(global_grabbed_item_pos + (field_dimensions / 2))
     var item_size := grid_constraint.get_item_size(grabbed_item)
