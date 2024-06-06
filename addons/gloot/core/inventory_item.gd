@@ -37,7 +37,7 @@ var _inventory: Inventory :
             _prototree_json = _inventory.prototree_json
 
 const KEY_PROTOTREE: String = "prototree"
-const KEY_PROTOTYE_PATH: String = "prototype_path"
+const KEY_PROTOTYPE_PATH: String = "prototype_path"
 const KEY_PROPERTIES: String = "properties"
 const KEY_TYPE: String = "type"
 const KEY_VALUE: String = "value"
@@ -206,7 +206,7 @@ func set_property(property_name: String, value) -> void:
         property_changed.emit(property_name)
 
 
-## Clears (undefines) the given item property.
+## Clears (un-defines) the given item property.
 func clear_property(property_name: String) -> void:
     if _properties.has(property_name):
         _properties.erase(property_name)
@@ -243,9 +243,9 @@ func serialize() -> Dictionary:
 
     result[KEY_PROTOTREE] = Inventory._serialize_prototree_json(_prototree_json)
     if _prototype != null:
-        result[KEY_PROTOTYE_PATH] = str(_prototype.get_path())
+        result[KEY_PROTOTYPE_PATH] = str(_prototype.get_path())
     else:
-        result[KEY_PROTOTYE_PATH] = ""
+        result[KEY_PROTOTYPE_PATH] = ""
     if !_properties.is_empty():
         result[KEY_PROPERTIES] = {}
         for property_name in _properties.keys():
@@ -269,7 +269,7 @@ func _serialize_property(property_name: String) -> Dictionary:
 ## Loads the item data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOTYE_PATH, TYPE_STRING) ||\
+        !Verify.dict(source, true, KEY_PROTOTYPE_PATH, TYPE_STRING) ||\
         !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
@@ -277,7 +277,7 @@ func deserialize(source: Dictionary) -> bool:
     
     # TODO: Check return values
     _prototree_json = Inventory._deserialize_prototree_json(source[KEY_PROTOTREE])
-    _prototype = _prototree.get_prototype(source[KEY_PROTOTYE_PATH])
+    _prototype = _prototree.get_prototype(source[KEY_PROTOTYPE_PATH])
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():
             var value = _deserialize_property(source[KEY_PROPERTIES][key])
