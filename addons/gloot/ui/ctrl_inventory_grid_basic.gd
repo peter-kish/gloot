@@ -404,7 +404,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
     var target_item := grid_constraint.get_item_at(position)
-    if Inventory.can_merge_stacks(target_item, item):
+    if target_item != null && Inventory.can_merge_stacks(target_item, item):
         return target_item
     return null
 
