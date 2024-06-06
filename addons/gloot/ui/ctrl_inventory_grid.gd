@@ -12,7 +12,7 @@ signal item_mouse_exited(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
-const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlInventoryItem = preload("res://addons/gloot/ui/ctrl_inventory_item.gd")
 const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -79,11 +79,6 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.inventory = inventory
         _queue_refresh()
         update_configuration_warnings()
-@export var default_item_texture: Texture2D :
-    set(new_default_item_texture):
-        if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
-        default_item_texture = new_default_item_texture
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
         if is_instance_valid(_ctrl_inventory_grid_basic):
@@ -300,7 +295,6 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.inventory = inventory
     _ctrl_inventory_grid_basic.field_dimensions = field_dimensions
     _ctrl_inventory_grid_basic.item_spacing = item_spacing
-    _ctrl_inventory_grid_basic.default_item_texture = default_item_texture
     _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
@@ -441,7 +435,7 @@ func _fill_background(style: StyleBox, priority: int) -> void:
 func _get_global_grabbed_item() -> InventoryItem:
     if CtrlDraggable.get_grabbed_draggable() == null:
         return null
-    return (CtrlDraggable.get_grabbed_draggable() as CtrlInventoryItemRect).item
+    return (CtrlDraggable.get_grabbed_draggable() as CtrlInventoryItem).item
 
 
 func _get_global_grabbed_item_local_pos() -> Vector2:

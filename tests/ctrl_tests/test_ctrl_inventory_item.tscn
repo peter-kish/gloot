@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://co0a204jccbdd"]
+
+[ext_resource type="Script" path="res://tests/ctrl_tests/test_ctrl_inventory_item.gd" id="1_81cec"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_item.gd" id="2_peirl"]
+
+[node name="TestCtrlInventoryItem" type="Node2D"]
+script = ExtResource("1_81cec")
+
+[node name="CtrlInventoryItem" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+script = ExtResource("2_peirl")

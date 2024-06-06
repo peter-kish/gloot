@@ -9,7 +9,7 @@ signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
 const Undoables = preload("res://addons/gloot/editor/undoables.gd")
-const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlInventoryItem = preload("res://addons/gloot/ui/ctrl_inventory_item.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
@@ -39,12 +39,6 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
         if new_item_spacing == item_spacing:
             return
         item_spacing = new_item_spacing
-        _queue_refresh()
-@export var default_item_texture: Texture2D :
-    set(new_default_item_texture):
-        if new_default_item_texture == default_item_texture:
-            return
-        default_item_texture = new_default_item_texture
         _queue_refresh()
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
@@ -195,8 +189,7 @@ func _populate_list() -> void:
         return
         
     for item in inventory.get_items():
-        var ctrl_inventory_item = CtrlInventoryItemRect.new()
-        ctrl_inventory_item.texture = default_item_texture
+        var ctrl_inventory_item = CtrlInventoryItem.new()
         ctrl_inventory_item.item = item
         ctrl_inventory_item.grabbed.connect(_on_item_grab.bind(ctrl_inventory_item))
         ctrl_inventory_item.dropped.connect(_on_item_drop.bind(ctrl_inventory_item))
@@ -208,18 +201,18 @@ func _populate_list() -> void:
         ctrl_inventory_item.size = _get_item_sprite_size(item)
 
         ctrl_inventory_item.position = _get_field_position(grid_constraint.get_item_position(item))
-        ctrl_inventory_item.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+        ctrl_inventory_item.icon_stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
         if stretch_item_sprites:
-            ctrl_inventory_item.stretch_mode = TextureRect.STRETCH_SCALE
+            ctrl_inventory_item.icon_stretch_mode = TextureRect.STRETCH_SCALE
 
         _ctrl_item_container.add_child(ctrl_inventory_item)
 
 
-func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItem) -> void:
     _clear_selection()
 
 
-func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_item_drop(zone: CtrlDropZone, drop_position: Vector2, ctrl_inventory_item: CtrlInventoryItem) -> void:
     var item: InventoryItem = ctrl_inventory_item.item
     # The item might have been freed in case the item stack has been moved and merged with another
     # stack.
@@ -239,7 +232,7 @@ func _get_item_sprite_size(item: InventoryItem) -> Vector2:
     return sprite_size
 
 
-func _on_inventory_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_inventory_item_activated(ctrl_inventory_item: CtrlInventoryItem) -> void:
     var item = ctrl_inventory_item.item
     if !item:
         return
@@ -247,7 +240,7 @@ func _on_inventory_item_activated(ctrl_inventory_item: CtrlInventoryItemRect) ->
     inventory_item_activated.emit(item)
 
 
-func _on_inventory_item_context_activated(ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+func _on_inventory_item_context_activated(ctrl_inventory_item: CtrlInventoryItem) -> void:
     var item = ctrl_inventory_item.item
     if !item:
         return

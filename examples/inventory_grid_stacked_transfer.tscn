@@ -1,10 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://o6g61xdkjii0"]
+[gd_scene load_steps=18 format=3 uid="uid://o6g61xdkjii0"]
 
 [ext_resource type="Script" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="2_ptyr5"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="3_lwfya"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
-[ext_resource type="Texture2D" uid="uid://b2hkcwwq10cut" path="res://icon.png" id="5_igoy6"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
 [ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_mr2pf"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
@@ -83,7 +82,6 @@ custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
 inventory = NodePath("../../../../../InventoryLeft")
-default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
 selection_style = SubResource("5")
@@ -113,7 +111,6 @@ custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 script = ExtResource("2_ptyr5")
 inventory = NodePath("../../../../../InventoryRight")
-default_item_texture = ExtResource("5_igoy6")
 field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
 selection_style = SubResource("6")

@@ -3,7 +3,7 @@
 class_name CtrlItemSlot
 extends Control
 
-const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
+const CtrlInventoryItem = preload("res://addons/gloot/ui/ctrl_inventory_item.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
@@ -17,12 +17,6 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         item_slot = new_item_slot
         _connect_item_slot_signals()
         
-        _refresh()
-@export var default_item_icon: Texture2D :
-    set(new_default_item_icon):
-        if default_item_icon == new_default_item_icon:
-            return
-        default_item_icon = new_default_item_icon
         _refresh()
 @export var item_texture_visible: bool = true :
     set(new_item_texture_visible):
@@ -90,7 +84,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 
 var _background_panel: Panel
 var _hbox_container: HBoxContainer
-var _ctrl_inventory_item_rect: CtrlInventoryItemRect
+var _ctrl_inventory_item_rect: CtrlInventoryItem
 var _label: Label
 var _ctrl_drop_zone: CtrlDropZone
 
@@ -122,12 +116,11 @@ func _ready():
     add_child(_hbox_container)
     _hbox_container.resized.connect(func(): size = _hbox_container.size)
 
-    _ctrl_inventory_item_rect = CtrlInventoryItemRect.new()
+    _ctrl_inventory_item_rect = CtrlInventoryItem.new()
     _ctrl_inventory_item_rect.visible = item_texture_visible
     _ctrl_inventory_item_rect.size_flags_horizontal = SIZE_EXPAND_FILL
     _ctrl_inventory_item_rect.size_flags_vertical = SIZE_EXPAND_FILL
-    _ctrl_inventory_item_rect.item_slot = item_slot
-    _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
+    _ctrl_inventory_item_rect.icon_stretch_mode = icon_stretch_mode
     _hbox_container.add_child(_ctrl_inventory_item_rect)
 
     _ctrl_drop_zone = CtrlDropZone.new()
@@ -160,7 +153,7 @@ func _ready():
 
 
 func _on_draggable_dropped(draggable: CtrlDraggable, drop_position: Vector2) -> void:
-    var item = (draggable as CtrlInventoryItemRect).item
+    var item = (draggable as CtrlInventoryItem).item
 
     if !item:
         return
@@ -227,8 +220,6 @@ func _refresh() -> void:
         _label.text = item.get_property(InventoryItem.KEY_NAME, item.get_title())
     if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = item
-        if item.get_texture():
-            _ctrl_inventory_item_rect.texture = item.get_texture()
 
 
 func _clear() -> void:
@@ -236,7 +227,6 @@ func _clear() -> void:
         _label.text = ""
     if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = null
-        _ctrl_inventory_item_rect.texture = default_item_icon
 
 
 func _update_background() -> void:
