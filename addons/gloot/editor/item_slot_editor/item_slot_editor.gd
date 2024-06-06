@@ -76,7 +76,7 @@ func _apply_editor_settings() -> void:
 
 func _on_prototype_activated(prototype: Prototype) -> void:
     var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
-    Undoables.exec_slot_undoable(item_slot, "Equip item", func():
+    Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )
 
@@ -86,7 +86,7 @@ func _on_btn_add() -> void:
     if prototype == null:
         return
     var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
-    Undoables.exec_slot_undoable(item_slot, "Equip item", func():
+    Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )
     
@@ -103,7 +103,7 @@ func _on_btn_edit() -> void:
 
 func _on_btn_clear() -> void:
     if item_slot.get_item() != null:
-        Undoables.exec_slot_undoable(item_slot, "Clear slot", func():
+        Undoables.undoable_action(item_slot, "Clear slot", func():
             return item_slot.clear()
         )
 

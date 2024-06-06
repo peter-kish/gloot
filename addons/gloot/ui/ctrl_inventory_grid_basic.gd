@@ -379,7 +379,7 @@ func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
     if !grid_constraint.rect_free(Rect2i(move_position, grid_constraint.get_item_size(item)), item):
         return false
     if Engine.is_editor_hint():
-        Undoables.exec_inventory_undoable([inventory], "Move Inventory Item", func(): 
+        Undoables.undoable_action(inventory, "Move Inventory Item", func(): 
             return grid_constraint.move_item_to(item, move_position)
         )
         return true
@@ -393,7 +393,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
         return false
 
     if Engine.is_editor_hint():
-        Undoables.exec_inventory_undoable([inventory], "Merge Inventory Items", func(): 
+        Undoables.undoable_action(inventory, "Merge Inventory Items", func(): 
             return inventory.merge_inv_stacks(item_dst, item_src)
         )
     else:
@@ -421,7 +421,7 @@ func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
             inventories.append(item.get_inventory())
         if is_instance_valid(item2.get_inventory()):
             inventories.append(item2.get_inventory())
-        Undoables.exec_inventory_undoable(inventories, "Swap Inventory Items", func():
+        Undoables.undoable_action(inventories, "Swap Inventory Items", func():
             InventoryItem.swap(item, item2)
             return true
         )

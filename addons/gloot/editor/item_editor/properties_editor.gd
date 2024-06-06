@@ -26,7 +26,7 @@ func _ready() -> void:
 
 
 func _on_value_changed(key: String, new_value) -> void:
-    Undoables.exec_item_undoable(item, "Set Item Property", func():
+    Undoables.undoable_action(item, "Set Item Property", func():
         item.set_property(key, new_value)
         return true
     )
@@ -35,7 +35,7 @@ func _on_value_changed(key: String, new_value) -> void:
 
 
 func _on_value_removed(key: String) -> void:
-    Undoables.exec_item_undoable(item, "Clear Item Property", func():
+    Undoables.undoable_action(item, "Clear Item Property", func():
         item.clear_property(key)
         return true
     )

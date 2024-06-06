@@ -98,13 +98,13 @@ func _create_inventory_container() -> Control:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    Undoables.exec_inventory_undoable([inventory], "Remove Inventory Item", func():
+    Undoables.undoable_action(inventory, "Remove Inventory Item", func():
         return inventory.remove_item(item)
     )
 
 
 func _on_inventory_item_context_activated(item: InventoryItem) -> void:
-    Undoables.exec_inventory_undoable([inventory], "Rotate Inventory Item", func():
+    Undoables.undoable_action(inventory, "Rotate Inventory Item", func():
         var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
         if grid_constraint == null:
             return false
@@ -126,7 +126,7 @@ func _ready() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
-    Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
+    Undoables.undoable_action(inventory, "Add Inventory Item", func():
         return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
 
@@ -135,7 +135,7 @@ func _on_btn_add() -> void:
     var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
     if prototype == null:
         return
-    Undoables.exec_inventory_undoable([inventory], "Add Inventory Item", func():
+    Undoables.undoable_action(inventory, "Add Inventory Item", func():
         return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
     
@@ -155,7 +155,7 @@ func _on_btn_remove() -> void:
     var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
     for selected_item in selected_items:
         if selected_item != null:
-            Undoables.exec_inventory_undoable([inventory], "Remove Inventory Item", func():
+            Undoables.undoable_action(inventory, "Remove Inventory Item", func():
                 return inventory.remove_item(selected_item)
             )
 
