@@ -2,12 +2,16 @@
 @icon("res://addons/gloot/images/icon_ctrl_inventory.svg")
 class_name CtrlInventory
 extends ItemList
+## Control node for displaying inventories.
+##
+## Displays inventories as an `ItemList`.
 
-signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
+signal inventory_item_activated(item)           ## Emitted when an inventory item double-clicked.
+signal inventory_item_context_activated(item)   ## Emitted when an inventory item right-clicked.
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
+## Reference to the inventory that is being displayed.
 @export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -80,6 +84,7 @@ func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index:
         inventory_item_context_activated.emit(_get_inventory_item(index))
 
 
+## Returns the selected inventory item. If multiple items are selected, it returns the first one.
 func get_selected_inventory_item() -> InventoryItem:
     if get_selected_items().is_empty():
         return null
@@ -87,6 +92,7 @@ func get_selected_inventory_item() -> InventoryItem:
     return _get_inventory_item(get_selected_items()[0])
 
 
+## Returns an array of selected inventory items.
 func get_selected_inventory_items() -> Array[InventoryItem]:
     var result: Array[InventoryItem]
     var indexes = get_selected_items()
@@ -132,10 +138,12 @@ func _get_item_title(item: InventoryItem) -> String:
     return title
 
 
-func deselect_inventory_item() -> void:
+## Deselects all selected inventory items.
+func deselect_inventory_items() -> void:
     deselect_all()
 
 
+## Selects the given inventory item.
 func select_inventory_item(item: InventoryItem) -> void:
     deselect_all()
     for index in item_count:

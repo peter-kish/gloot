@@ -2,12 +2,17 @@
 @icon("res://addons/gloot/images/icon_ctrl_item_slot.svg")
 class_name CtrlItemSlot
 extends Control
+## A control node representing an inventory slot (`ItemSlot`).
+##
+## A control node representing an inventory slot (`ItemSlot`).
+
 
 const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
+## Reference to the item slot that is being displayed.
 @export var item_slot: ItemSlot :
     set(new_item_slot):
         if new_item_slot == item_slot:
@@ -18,6 +23,8 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         _connect_item_slot_signals()
         
         _refresh()
+
+## If set to `true`, the item icon is displayed.
 @export var item_texture_visible: bool = true :
     set(new_item_texture_visible):
         if item_texture_visible == new_item_texture_visible:
@@ -25,6 +32,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         item_texture_visible = new_item_texture_visible
         if is_instance_valid(_ctrl_draggable_inventory_item):
             _ctrl_draggable_inventory_item.visible = item_texture_visible
+## If set to `true`, the item name label is displayed.
 @export var label_visible: bool = true :
     set(new_label_visible):
         if label_visible == new_label_visible:
@@ -34,6 +42,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
             _label.visible = label_visible
 
 @export_group("Icon Behavior", "icon_")
+## Controls the item icon behavior when resizing the node's bounding rectangle.
 @export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
     set(new_icon_stretch_mode):
         if icon_stretch_mode == new_icon_stretch_mode:
@@ -43,6 +52,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
             _ctrl_draggable_inventory_item.stretch_mode = icon_stretch_mode
 
 @export_group("Text Behavior", "label_")
+## Controls the label's horizontal alignment.
 @export var label_horizontal_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER :
     set(new_label_horizontal_alignment):
         if label_horizontal_alignment == new_label_horizontal_alignment:
@@ -50,6 +60,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         label_horizontal_alignment = new_label_horizontal_alignment
         if is_instance_valid(_label):
             _label.horizontal_alignment = label_horizontal_alignment
+## Controls the label's vertical alignment.
 @export var label_vertical_alignment: VerticalAlignment = VERTICAL_ALIGNMENT_CENTER :
     set(new_label_vertical_alignment):
         if label_vertical_alignment == new_label_vertical_alignment:
@@ -57,6 +68,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         label_vertical_alignment = new_label_vertical_alignment
         if is_instance_valid(_label):
             _label.vertical_alignment = label_vertical_alignment
+## Sets the clipping behavior when the text exceeds the node's bounding rectangle.
 @export var label_text_overrun_behavior: TextServer.OverrunBehavior :
     set(new_label_text_overrun_behavior):
         if label_text_overrun_behavior == new_label_text_overrun_behavior:
@@ -64,6 +76,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         label_text_overrun_behavior = new_label_text_overrun_behavior
         if is_instance_valid(_label):
             _label.text_overrun_behavior = label_text_overrun_behavior
+## If `true`, the label only shows the text that fits inside its bounding rectangle and will clip text horizontally.
 @export var label_clip_text: bool :
     set(new_label_clip_text):
         if label_clip_text == new_label_clip_text:
@@ -73,10 +86,12 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
             _label.clip_text = label_clip_text
 
 @export_group("Custom Styles")
+## The slot background style.
 @export var slot_style: StyleBox :
     set(new_slot_style):
         slot_style = new_slot_style
         _refresh()
+## The slot background style when the mouse cursor hovers over the slot.
 @export var slot_highlighted_style: StyleBox :
     set(new_slot_highlighted_style):
         slot_highlighted_style = new_slot_highlighted_style

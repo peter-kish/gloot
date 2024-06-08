@@ -2,13 +2,16 @@
 @icon("res://addons/gloot/images/icon_ctrl_inventory_grid.svg")
 class_name CtrlInventoryGrid
 extends Control
+## Control node for displaying inventories with a GridConstraint.
+##
+## Displays the inventory contents on a 2D grid. The grid style, size and item icons are customizable.
 
-signal item_dropped(item, offset)
-signal selection_changed
-signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
-signal item_mouse_entered(item)
-signal item_mouse_exited(item)
+signal item_dropped(item, offset)               ## Emitted when an item has been dropped onto the 2D grid.
+signal selection_changed                        ## Emitted when the item selection has changed.
+signal inventory_item_activated(item)           ## Emitted when an inventory item double-clicked.
+signal inventory_item_context_activated(item)   ## Emitted when an inventory item right-clicked.
+signal item_mouse_entered(item)                 ## Emitted when the mouse cursor has entered the visible area of an item.
+signal item_mouse_exited(item)                  ## Emitted when the mouse cursor has exited the visible area of an item.
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
@@ -66,6 +69,7 @@ class CustomizablePanel extends Panel:
         if style != null:
             add_theme_stylebox_override("panel", style)
 
+## Reference to an inventory with a GridConstraint that is being displayed.
 @export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -79,23 +83,27 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.inventory = inventory
         _queue_refresh()
         update_configuration_warnings()
-@export var stretch_item_sprites: bool = true :
-    set(new_stretch_item_sprites):
+## If enabled, stretches the icons based on `field_dimensions`.
+@export var stretch_item_icons: bool = true :
+    set(new_stretch_item_icons):
         if is_instance_valid(_ctrl_inventory_grid_basic):
-            _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
-        stretch_item_sprites = new_stretch_item_sprites
+            _ctrl_inventory_grid_basic.stretch_item_icons = new_stretch_item_icons
+        stretch_item_icons = new_stretch_item_icons
+## Size of individual fields in the grid.
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
         _queue_refresh()
+## Spacing between grid fields.
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
         _queue_refresh()
+## Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL.
 @export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
@@ -103,6 +111,8 @@ class CustomizablePanel extends Panel:
         select_mode = new_select_mode
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.select_mode = select_mode
+## Custom control scene representing an `InventoryItem` (must inherit `CtrlInventoryItemBase`). If set to `null`,
+## `CtrlInventoryItem` will be used to represent the item.
 @export var custom_item_control_scene: PackedScene = null :
     set(new_custom_item_control_scene):
         if new_custom_item_control_scene == custom_item_control_scene:
@@ -112,22 +122,31 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
 
 @export_group("Custom Styles")
+## The default grid field background style. Unlike `background_style`, this style is used when displaying each
+## individual field in the 2D grid.
 @export var field_style: StyleBox = null:
     set(new_field_style):
         field_style = new_field_style
         _queue_refresh()
+## The grid field style used when hovering over it with the mouse.
 @export var field_highlighted_style: StyleBox :
     set(new_field_highlighted_style):
         field_highlighted_style = new_field_highlighted_style
         _queue_refresh()
+## The grid field style used for selected items. Unlike `selection_style`, this style is used as field background behind
+## selected items.
 @export var field_selected_style: StyleBox :
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()
+## The style used for displaying item selections. Unlike `field_selected_style`, this style is used when displaying
+## rectangles over the selected items.
 @export var selection_style: StyleBox = null:
     set(new_selection_style):
         selection_style = new_selection_style
         _queue_refresh()
+## The style used for the inventory background. Unlike `field_style`, this style is used when displaying a rectangle
+## behind the 2D grid.
 @export var background_style: StyleBox = null:
     set(new_background_style):
         background_style = new_background_style
@@ -305,7 +324,7 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.inventory = inventory
     _ctrl_inventory_grid_basic.field_dimensions = field_dimensions
     _ctrl_inventory_grid_basic.item_spacing = item_spacing
-    _ctrl_inventory_grid_basic.stretch_item_sprites = stretch_item_sprites
+    _ctrl_inventory_grid_basic.stretch_item_icons = stretch_item_icons
     _ctrl_inventory_grid_basic.name = "CtrlInventoryGridBasic"
     _ctrl_inventory_grid_basic.resized.connect(_update_size)
     _ctrl_inventory_grid_basic.item_dropped.connect(func(item: InventoryItem, drop_position: Vector2):
@@ -454,24 +473,28 @@ func _get_global_grabbed_item_local_pos() -> Vector2:
     return Vector2(-1, -1)
 
 
-func deselect_inventory_item() -> void:
+## Deselects all selected inventory items.
+func deselect_inventory_items() -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
-    _ctrl_inventory_grid_basic.deselect_inventory_item()
+    _ctrl_inventory_grid_basic.deselect_inventory_items()
 
 
+## Selects the given inventory item.
 func select_inventory_item(item: InventoryItem) -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
     _ctrl_inventory_grid_basic.select_inventory_item(item)
 
 
+## Returns the selected inventory item. If multiple items are selected, it returns the first one.
 func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     return _ctrl_inventory_grid_basic.get_selected_inventory_item()
 
 
+## Returns an array of selected inventory items.
 func get_selected_inventory_items() -> Array[InventoryItem]:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return []

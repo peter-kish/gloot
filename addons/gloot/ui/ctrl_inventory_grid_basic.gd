@@ -40,9 +40,9 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
             return
         item_spacing = new_item_spacing
         _queue_refresh()
-@export var stretch_item_sprites: bool = true :
-    set(new_stretch_item_sprites):
-        stretch_item_sprites = new_stretch_item_sprites
+@export var stretch_item_icons: bool = true :
+    set(new_stretch_item_icons):
+        stretch_item_icons = new_stretch_item_icons
         _queue_refresh()
 @export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
     set(new_select_mode):
@@ -209,7 +209,7 @@ func _populate_list() -> void:
 
         ctrl_draggable_inventory_item.position = _get_field_position(grid_constraint.get_item_position(item))
         ctrl_draggable_inventory_item.icon_stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
-        if stretch_item_sprites:
+        if stretch_item_icons:
             ctrl_draggable_inventory_item.icon_stretch_mode = TextureRect.STRETCH_SCALE
 
         _ctrl_item_container.add_child(ctrl_draggable_inventory_item)
@@ -437,7 +437,7 @@ func _get_field_position(field_coords: Vector2i) -> Vector2:
     return field_position
 
 
-func deselect_inventory_item() -> void:
+func deselect_inventory_items() -> void:
     _clear_selection()
 
 

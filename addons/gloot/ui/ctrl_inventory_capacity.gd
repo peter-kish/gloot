@@ -2,9 +2,13 @@
 @icon("res://addons/gloot/images/icon_ctrl_capacity.svg")
 class_name  CtrlInventoryCapacity
 extends Control
+## Control node for displaying inventory capacity.
+##
+## Displays the inventory capacity as a progress bar.
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
+## Includes a label displaying inventory capacity if enabled.
 @export var show_label = true :
     set(new_show_label):
         if new_show_label == show_label:
@@ -13,6 +17,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         if _label != null:
             _label.visible = show_label
 
+## Reference to an inventory with a WeightConstraint.
 @export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:

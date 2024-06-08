@@ -2,10 +2,10 @@
 @icon("res://addons/gloot/images/icon_ctrl_inventory_item.svg")
 class_name CtrlInventoryItem
 extends CtrlInventoryItemBase
-
-signal activated
-signal clicked
-signal context_activated
+## Control node for displaying inventory items.
+##
+## Displays an `InventoryItem` icon and its stack size. Consists of a `TextureRect` (the icon) a `Label` (the stack
+## size).
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -118,17 +118,3 @@ func _update_stack_size() -> void:
 func _refresh() -> void:
     _update_texture()
     _update_stack_size()
-
-
-func _on_gui_event(event: InputEvent) -> void:
-    if !(event is InputEventMouseButton):
-        return
-
-    var mb_event: InputEventMouseButton = event
-    if mb_event.button_index == MOUSE_BUTTON_LEFT:
-        if mb_event.double_click:
-            activated.emit()
-        else:
-            clicked.emit()
-    elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT:
-        context_activated.emit()
