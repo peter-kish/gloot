@@ -89,11 +89,13 @@ class CustomizablePanel extends Panel:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
+        _queue_refresh()
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
+        _queue_refresh()
 @export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
