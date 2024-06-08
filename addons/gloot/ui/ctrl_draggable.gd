@@ -28,6 +28,12 @@ static var _grabbed_draggable: CtrlDraggable = null
 static var _grab_offset: Vector2
 
 var _enabled: bool = true
+var create_preview: Callable = _create_null_preview
+var metadata: Variant = null
+
+
+static func _create_null_preview() -> Control:
+    return null
 
 
 static func get_grabbed_draggable() -> CtrlDraggable:
@@ -44,7 +50,7 @@ static func get_grab_offset_local_to(control: Control) -> Vector2:
     return CtrlDraggable.get_grab_offset() / control.get_global_transform().get_scale()
 
 
-func _get_drag_data(at_position: Vector2):
+func _get_drag_data(at_position: Vector2) -> Variant:
     if !_enabled:
         return null
 
@@ -53,16 +59,15 @@ func _get_drag_data(at_position: Vector2):
     draggable_grabbed.emit(_grabbed_draggable, _grab_offset)
     grabbed.emit(_grab_offset)
 
+    var sub_preview: Control = null
+    sub_preview = create_preview.call()
+    if sub_preview == null:
+        return null
     var preview = Control.new()
-    var sub_preview = create_preview()
     sub_preview.position = -get_grab_offset()
     preview.add_child(sub_preview)
     set_drag_preview(preview)
     return self
-
-
-func create_preview() -> Control:
-    return null
 
 
 func activate() -> void:

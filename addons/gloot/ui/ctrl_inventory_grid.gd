@@ -12,8 +12,8 @@ signal item_mouse_exited(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
-const CtrlInventoryItem = preload("res://addons/gloot/ui/ctrl_inventory_item.gd")
 const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
+const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 
@@ -101,6 +101,13 @@ class CustomizablePanel extends Panel:
         select_mode = new_select_mode
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.select_mode = select_mode
+@export var custom_item_control_scene: PackedScene = null :
+    set(new_custom_item_control_scene):
+        if new_custom_item_control_scene == custom_item_control_scene:
+            return
+        custom_item_control_scene = new_custom_item_control_scene
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
 
 @export_group("Custom Styles")
 @export var field_style: StyleBox = null:
@@ -292,6 +299,7 @@ func _ready() -> void:
     add_child(_field_background_grid)
 
     _ctrl_inventory_grid_basic = CtrlInventoryGridBasic.new()
+    _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
     _ctrl_inventory_grid_basic.inventory = inventory
     _ctrl_inventory_grid_basic.field_dimensions = field_dimensions
     _ctrl_inventory_grid_basic.item_spacing = item_spacing
@@ -435,7 +443,7 @@ func _fill_background(style: StyleBox, priority: int) -> void:
 func _get_global_grabbed_item() -> InventoryItem:
     if CtrlDraggable.get_grabbed_draggable() == null:
         return null
-    return (CtrlDraggable.get_grabbed_draggable() as CtrlInventoryItem).item
+    return (CtrlDraggable.get_grabbed_draggable().metadata as CtrlDraggableInventoryItem).item
 
 
 func _get_global_grabbed_item_local_pos() -> Vector2:

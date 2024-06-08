@@ -1,7 +1,7 @@
 @tool
 @icon("res://addons/gloot/images/icon_ctrl_inventory_item.svg")
 class_name CtrlInventoryItem
-extends "res://addons/gloot/ui/ctrl_draggable.gd"
+extends CtrlInventoryItemBase
 
 signal activated
 signal clicked
@@ -9,40 +9,8 @@ signal context_activated
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
-var item: InventoryItem :
-    set(new_item):
-        if item == new_item:
-            return
-
-        _disconnect_item_signals()
-        _connect_item_signals(new_item)
-
-        item = new_item
-        if item:
-            _texture = item.get_texture()
-            activate()
-        else:
-            _texture = null
-            deactivate()
-        _update_stack_size()
-@export_group("Icon Behavior", "icon_")
-@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE :
-    set(new_stretch_mode):
-        if icon_stretch_mode == new_stretch_mode:
-            return
-        icon_stretch_mode = new_stretch_mode
-        if is_instance_valid(_texture_rect):
-            _texture_rect.stretch_mode = icon_stretch_mode
-var _texture: Texture2D :
-    set(new_texture):
-        if new_texture == _texture:
-            return
-        _texture = new_texture
-        _update_texture()
 var _texture_rect: TextureRect
 var _stack_size_label: Label
-static var _stored_preview_size: Vector2
-static var _stored_preview_offset: Vector2
 
 
 func _connect_item_signals(new_item: InventoryItem) -> void:
@@ -68,14 +36,20 @@ func _get_item_position() -> Vector2:
 
 
 func _ready() -> void:
+    pre_item_changed.connect(_on_pre_item_changed)
+    item_changed.connect(_on_item_changed)
+    icon_stretch_mode_changed.connect(_on_icon_stretch_mode_changed)
+
     _texture_rect = TextureRect.new()
     _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
     _texture_rect.stretch_mode = icon_stretch_mode
+
     _stack_size_label = Label.new()
     _stack_size_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _stack_size_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
     _stack_size_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+
     add_child(_texture_rect)
     add_child(_stack_size_label)
 
@@ -84,16 +58,34 @@ func _ready() -> void:
         _stack_size_label.size = size
     )
 
-    if item == null:
-        deactivate()
-
     _refresh()
+
+
+func _on_pre_item_changed() -> void:
+    _disconnect_item_signals()
+
+
+func _on_item_changed() -> void:
+    _connect_item_signals(item)
+    _update_texture()
+    _update_stack_size()
+
+
+func _on_icon_stretch_mode_changed() -> void:
+    if is_instance_valid(_texture_rect):
+        _texture_rect.stretch_mode = icon_stretch_mode
 
 
 func _update_texture() -> void:
     if !is_instance_valid(_texture_rect):
         return
-    _texture_rect.texture = _texture
+
+    if is_instance_valid(item):
+        _texture_rect.texture = item.get_texture()
+    else:
+        _texture_rect.texture = null
+        return
+
     if is_instance_valid(item) && GridConstraint.is_item_rotated(item):
         _texture_rect.size = Vector2(size.y, size.x)
         if GridConstraint.is_item_rotation_positive(item):
@@ -128,16 +120,7 @@ func _refresh() -> void:
     _update_stack_size()
 
 
-func create_preview() -> Control:
-    var preview = CtrlInventoryItem.new()
-    preview.item = item
-    preview._texture = _texture
-    preview.size = size
-    preview.icon_stretch_mode = icon_stretch_mode
-    return preview
-
-
-func _gui_input(event: InputEvent) -> void:
+func _on_gui_event(event: InputEvent) -> void:
     if !(event is InputEventMouseButton):
         return
 
