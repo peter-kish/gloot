@@ -77,7 +77,11 @@ func _on_dropped(zone: CtrlDropZone, position: Vector2) -> void:
 
 
 func _create_preview() -> Control:
-    var preview = CtrlInventoryItem.new()
+    var preview: CtrlInventoryItemBase
+    if ctrl_inventory_item_scene == null:
+        preview = CtrlInventoryItem.new()
+    else:
+        preview = ctrl_inventory_item_scene.instantiate()
     preview.item = item
     preview.size = size
     preview.icon_stretch_mode = icon_stretch_mode
