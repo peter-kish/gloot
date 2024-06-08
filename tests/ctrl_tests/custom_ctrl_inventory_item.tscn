@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdfttlpuiy8me"]
+
+[ext_resource type="Script" path="res://tests/ctrl_tests/custom_ctrl_inventory_item.gd" id="1_r7i11"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_item.gd" id="2_b0bd7"]
+
+[node name="CustomCtrlInventoryItem" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+script = ExtResource("1_r7i11")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 64.0
+offset_bottom = 64.0
+color = Color(1, 1, 1, 0)
+
+[node name="CtrlInventoryItem" type="Control" parent="."]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_right = 64.0
+offset_bottom = 64.0
+script = ExtResource("2_b0bd7")
