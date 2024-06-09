@@ -14,8 +14,6 @@ const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
-enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
-
 @export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -44,7 +42,7 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
     set(new_stretch_item_icons):
         stretch_item_icons = new_stretch_item_icons
         _queue_refresh()
-@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
@@ -268,7 +266,7 @@ func _on_item_clicked(ctrl_draggable_inventory_item) -> void:
     if !is_instance_valid(item):
         return
 
-    if select_mode == SelectMode.SELECT_MULTI && Input.is_key_pressed(KEY_CTRL):
+    if select_mode == ItemList.SelectMode.SELECT_MULTI && Input.is_key_pressed(KEY_CTRL):
         if !_is_item_selected(item):
             _select(item)
         else:

@@ -42,7 +42,8 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
             _label.visible = label_visible
 
 @export_group("Icon Behavior", "icon_")
-## Controls the item icon behavior when resizing the node's bounding rectangle.
+## Controls the item icon behavior when resizing the node's bounding rectangle. See the `TextureRect.StretchMode`
+## constants for details.
 @export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
     set(new_icon_stretch_mode):
         if icon_stretch_mode == new_icon_stretch_mode:

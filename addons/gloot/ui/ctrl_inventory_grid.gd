@@ -103,8 +103,9 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
         _queue_refresh()
-## Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL.
-@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
+## Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL. See the
+## `ItemList.SelectMode` constants for details.
+@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
