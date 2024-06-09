@@ -134,7 +134,6 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6")
 item_slot = NodePath("../../../../../ItemSlot")
-label_visible = false
 slot_style = SubResource("7")
 slot_highlighted_style = SubResource("8")
 

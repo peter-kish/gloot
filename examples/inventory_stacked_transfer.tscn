@@ -89,7 +89,6 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6_otfc2")
 item_slot = NodePath("../../../../ItemSlot")
-label_visible = false
 
 [node name="BtnEquip" type="Button" parent="VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true

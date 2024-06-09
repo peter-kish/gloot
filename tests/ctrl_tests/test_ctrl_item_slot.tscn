@@ -30,7 +30,6 @@ offset_right = 32.0
 offset_bottom = 32.0
 script = ExtResource("1_64wxb")
 item_slot = NodePath("../ItemSlot")
-label_visible = false
 slot_style = SubResource("1")
 slot_highlighted_style = SubResource("2")
 
