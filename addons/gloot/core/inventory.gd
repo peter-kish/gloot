@@ -109,8 +109,6 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 
 func _ready() -> void:
-    _constraint_manager.register_child_constraints()
-
     renamed.connect(_update_serialized_format)
 
     if !_serialized_format.is_empty():
@@ -428,7 +426,7 @@ func split_inv_stack(item: InventoryItem, new_stack_size: ItemCount) -> Inventor
 
 
 ## Merges the `item_src` item stack into the `item_dst` stack which is inside the inventory. If `item_dst` doesn't have
-## eough stack space and `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns
+## enough stack space and `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns
 ## `false` if the merge cannot be performed.
 func merge_inv_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
     return StackManager.inv_merge_stack(self, item_dst, item_src, split_source)

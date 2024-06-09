@@ -19,6 +19,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 var _swap_positions: Array[Vector2i]
 var _item_positions := {}
 var _quad_tree := QuadTree.new(size)
+var _inventory_set_stack: Array[Callable]
 
 ## The size of the 2d grid.
 @export var size: Vector2i = DEFAULT_SIZE :
@@ -35,6 +36,10 @@ var _quad_tree := QuadTree.new(size)
             changed.emit()
 
 
+func _push_inventory_set_operation(c: Callable) -> void:
+    _inventory_set_stack.push_back(c)
+
+
 func _refresh_quad_tree() -> void:
     _quad_tree = QuadTree.new(size)
     if !is_instance_valid(inventory):
@@ -44,6 +49,9 @@ func _refresh_quad_tree() -> void:
 
 
 func _on_inventory_set() -> void:
+    _item_positions.clear()
+    while !_inventory_set_stack.is_empty():
+        _inventory_set_stack.pop_back().call()
     _refresh_quad_tree()
 
 
@@ -496,7 +504,13 @@ func deserialize(source: Dictionary) -> bool:
         return false
 
     reset()
-    _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
+
+    # Queue this part of the deserialization for later if the inventory is still not set
+    if is_instance_valid(inventory):
+        _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
+    else:
+        _push_inventory_set_operation(_deserialize_item_positions.bind(source[KEY_ITEM_POSITIONS].duplicate()))
+
     size = Utils.str_to_var(source[KEY_SIZE])
 
     return true

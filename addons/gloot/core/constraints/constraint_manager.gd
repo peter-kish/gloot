@@ -16,18 +16,10 @@ func _init(inventory_: Inventory) -> void:
     inventory = inventory_
     if !is_instance_valid(inventory):
         return
-    register_child_constraints()
 
 
 func is_empty() -> bool:
     return _constraints.is_empty()
-
-
-func register_child_constraints() -> void:
-    for node in inventory.get_children():
-        if !(node is InventoryConstraint):
-            continue
-        register_constraint(node)
 
 
 func register_constraint(constraint: InventoryConstraint) -> void:
@@ -144,9 +136,9 @@ func deserialize(source: Dictionary) -> bool:
         var constraint_script = load(constraint_script_path)
         var new_constraint: InventoryConstraint = constraint_script.new()
         new_constraint.name = source[constraint_script_path].name
+        new_constraint.deserialize(source[constraint_script_path].data)
         inventory.add_child(new_constraint)
         if Engine.is_editor_hint():
             new_constraint.owner = inventory.get_tree().edited_scene_root
-        new_constraint.deserialize(source[constraint_script_path].data)
 
     return true
