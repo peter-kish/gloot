@@ -101,7 +101,7 @@ static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
     # TODO: Handle infinity?
-    return Inventory.get_item_stack_size(item).count * _get_item_unit_weight(item)
+    return item.get_stack_size().count * _get_item_unit_weight(item)
 
 
 ## Sets the weight of the given item.

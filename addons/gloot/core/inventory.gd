@@ -360,75 +360,17 @@ static func _deserialize_prototree_json(data: String) -> JSON:
         return prototree
 
 
-## Returns the stack size of the given item.
-static func get_item_stack_size(item: InventoryItem) -> ItemCount:
-    return StackManager.get_item_stack_size(item)
-
-
-## Returns the maximum stack size of the given item.
-static func get_item_max_stack_size(item: InventoryItem) -> ItemCount:
-    return StackManager.get_item_max_stack_size(item)
-
-
-## Sets the stack size of the given item.
-static func set_item_stack_size(item: InventoryItem, stack_size: ItemCount) -> bool:
-    return StackManager.set_item_stack_size(item, stack_size)
-
-
-## Sets the maximum stack size of the given item.
-static func set_item_max_stack_size(item: InventoryItem, max_stack_size: ItemCount) -> void:
-    StackManager.set_item_max_stack_size(item, max_stack_size)
-
-## Returns the stack size of the given item prototype.
-static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
-    return StackManager.get_prototype_stack_size(prototree, prototype_path)
-
-
-## Returns the maximum stack size of the given item prototype.
-static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
-    return StackManager.get_prototype_max_stack_size(prototree, prototype_path)
-
-
-## Merges the `item_src` item stack into the `item_dst` stack. If `item_dst` doesn't have eough stack space and
-## `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns `false` if the merge
-## cannot be performed.
-static func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
-    return StackManager.merge_stacks(item_dst, item_src, split_source)
-
-
-## Checks if the `item_src` item stack can be merged into `item_dst` with, or without splitting (`split_source`
-## parameter).
-static func can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
-    return StackManager.can_merge_stacks(item_dst, item_src, split_source)
-
-
-## Returns the free stack space in the given item stack (maximum_stack_size - stack_size).
-static func get_free_stack_space(item: InventoryItem) -> ItemCount:
-    return StackManager.get_free_stack_space(item)
-
-
-## Splits the given item stack into two and returns a reference to the new stack. `new_stack_size` defines the size of
-## the new stack. Returns `null` if the split cannot be performed.
-static func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
-    return StackManager.split_stack(item, new_stack_size)
-
-
-## Checks if the given item stack can be split using the given new stack size.
-static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> bool:
-    return StackManager.can_split_stack(item, new_stack_size)
-
-
 ## Splits the given item stack into two within the inventory. `new_stack_size` defines the size of the new stack,
 # which is added to the inventory. Returns `null` if the split cannot be performed or if the new stack cannot be added
 ## to the inventory.
-func split_inv_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
     return StackManager.inv_split_stack(self, item, new_stack_size)
 
 
 ## Merges the `item_src` item stack into the `item_dst` stack which is inside the inventory. If `item_dst` doesn't have
 ## enough stack space and `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns
 ## `false` if the merge cannot be performed.
-func merge_inv_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
+func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
     return StackManager.inv_merge_stack(self, item_dst, item_src, split_source)
 
 

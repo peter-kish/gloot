@@ -392,17 +392,17 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
 
     if Engine.is_editor_hint():
         Undoables.undoable_action(inventory, "Merge Inventory Items", func(): 
-            return inventory.merge_inv_stacks(item_dst, item_src)
+            return inventory.merge_stacks(item_dst, item_src)
         )
     else:
-        inventory.merge_inv_stacks(item_dst, item_src)
+        inventory.merge_stacks(item_dst, item_src)
     return true
 
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
     var target_item := grid_constraint.get_item_at(position)
-    if target_item != null && Inventory.can_merge_stacks(target_item, item):
+    if target_item != null && item.can_merge_into(target_item):
         return target_item
     return null
 

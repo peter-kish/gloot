@@ -45,6 +45,7 @@ const KEY_VALUE: String = "value"
 const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
+const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -320,3 +321,50 @@ func get_title() -> String:
         title = _prototype.get_id()
 
     return title
+
+
+## Returns the stack size.
+func get_stack_size() -> ItemCount:
+    return StackManager.get_item_stack_size(self)
+
+
+## Returns the maximum stack size.
+func get_max_stack_size() -> ItemCount:
+    return StackManager.get_item_max_stack_size(self)
+
+
+## Sets the stack size.
+func set_stack_size(stack_size: ItemCount) -> bool:
+    return StackManager.set_item_stack_size(self, stack_size)
+
+
+## Sets the maximum stack size.
+func set_max_stack_size(max_stack_size: ItemCount) -> void:
+    StackManager.set_item_max_stack_size(self, max_stack_size)
+
+
+## Merges the item stack into the `item_dst` stack. If `item_dst` doesn't have enough stack space and `split` is set to
+## `true`, the stack will be split and only partially merged. Returns `false` if the merge cannot be performed.
+func merge_into(item_dst: InventoryItem, split: bool = false) -> bool:
+    return StackManager.merge_stacks(item_dst, self, split)
+
+
+## Checks if the item stack can be merged into `item_dst` with, or without splitting (`split` parameter).
+func can_merge_into(item_dst: InventoryItem, split: bool = false) -> bool:
+    return StackManager.can_merge_stacks(item_dst, self, split)
+
+
+## Returns the free stack space in the item stack (maximum_stack_size - stack_size).
+func get_free_stack_space() -> ItemCount:
+    return StackManager.get_free_stack_space(self)
+
+
+## Splits the item stack into two and returns a reference to the new stack. `new_stack_size` defines the size of the new
+## stack. Returns `null` if the split cannot be performed.
+func split(new_stack_size: ItemCount) -> InventoryItem:
+    return StackManager.split_stack(self, new_stack_size)
+
+
+## Checks if the item stack can be split using the given new stack size.
+func can_split(new_stack_size: ItemCount) -> bool:
+    return StackManager.can_split_stack(self, new_stack_size)

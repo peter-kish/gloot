@@ -320,14 +320,14 @@ func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vecto
     if item_dst == null:
         return false
 
-    return Inventory.merge_stacks(item_dst, item)
+    return item.merge_into(item_dst)
     
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     var rect := Rect2i(position, get_item_size(item))
     var mergable_items := _get_mergable_items_under(item, rect)
     for mergable_item in mergable_items:
-        if Inventory.can_merge_stacks(mergable_item, item):
+        if item.can_merge_into(mergable_item):
             return mergable_item
     return null
 
@@ -338,7 +338,7 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     for item_dst in get_items_under(rect):
         if item_dst == item:
             continue
-        if Inventory.can_merge_stacks(item_dst, item):
+        if item.can_merge_into(item_dst):
             result.append(item_dst)
 
     return result
@@ -406,11 +406,11 @@ func sort() -> bool:
 
 ## Returns the number of times this constraint can receive the given item.
 func get_space_for(item: InventoryItem) -> ItemCount:
-    var result = _get_free_space_for(item).mul(Inventory.get_item_max_stack_size(item))
+    var result = _get_free_space_for(item).mul(item.get_max_stack_size())
 
     for i in inventory.get_items():
-        if Inventory.can_merge_stacks(i, item, true):
-            result.add(Inventory.get_free_stack_space(i))
+        if item.can_merge_into(i, true):
+            result.add(i.get_free_stack_space())
 
     return result
 
@@ -436,8 +436,8 @@ func has_space_for(item: InventoryItem) -> bool:
 
     var total_free_stack_space = ItemCount.zero()
     for i in inventory.get_items():
-        total_free_stack_space.add(Inventory.get_free_stack_space(i))
-    return total_free_stack_space.ge(Inventory.get_item_stack_size(item))
+        total_free_stack_space.add(i.get_free_stack_space())
+    return total_free_stack_space.ge(item.get_stack_size())
 
 
 # TODO: Check if find_free_place is needed

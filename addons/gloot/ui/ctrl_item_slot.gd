@@ -136,7 +136,7 @@ func _join_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
         return false
     if !is_instance_valid(item_dst.get_inventory()):
         return false
-    return Inventory.merge_stacks(item_dst, item_src)
+    return item_src.merge_into(item_dst)
 
 
 func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
