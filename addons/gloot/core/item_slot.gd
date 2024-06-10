@@ -13,7 +13,6 @@ signal cleared                  ## Emitted when the slot is cleared.Emitted when
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
-# TODO: Make this private
 @export var prototree_json: JSON:
     set(new_prototree_json):
         if new_prototree_json == prototree_json:

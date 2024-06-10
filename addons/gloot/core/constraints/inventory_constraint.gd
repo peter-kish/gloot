@@ -8,7 +8,7 @@ class_name InventoryConstraint
 
 signal changed
 
-## Reference to an inventory that this constraint belings to.
+## Reference to an inventory that this constraint belongs to.
 var inventory: Inventory = null :
     set(new_inventory):
         inventory = new_inventory

@@ -1,6 +1,6 @@
 @tool
 @icon("res://addons/gloot/images/icon_ctrl_capacity.svg")
-class_name  CtrlInventoryCapacity
+class_name CtrlInventoryCapacity
 extends Control
 ## Control node for displaying inventory capacity.
 ##
