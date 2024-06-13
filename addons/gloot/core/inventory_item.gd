@@ -355,6 +355,11 @@ func can_merge_into(item_dst: InventoryItem, split: bool = false) -> bool:
     return StackManager.can_merge_stacks(item_dst, self, split)
 
 
+## Checks if the item stack is compatible for merging with `item_dst`.
+func compatible_with(item_dst: InventoryItem) -> bool:
+    return StackManager.stacks_compatible(self, item_dst)
+
+
 ## Returns the free stack space in the item stack (maximum_stack_size - stack_size).
 func get_free_stack_space() -> int:
     return StackManager.get_free_stack_space(self).count

@@ -50,7 +50,7 @@ static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: S
     return ItemCount.new(max_stack_size)
 
 
-static func _stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> bool:
+static func stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> bool:
     # Two item stacks are compatible for mergine if they have the same prototype and neither of the two contain
     # overridden properties that the other one doesn't have (except for "stack_size", "max_stack_size").
     assert(item_1 != null, "item_1 is null!")
@@ -108,7 +108,7 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> b
 
 
 static func _can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
-    if !_stacks_compatible(item_dst, item_src):
+    if !stacks_compatible(item_dst, item_src):
         return false
 
     var src_size: ItemCount = get_item_stack_size(item_src)
@@ -142,7 +142,7 @@ static func _can_merge_stacks_split_source(item_dst: InventoryItem, item_src: In
     assert(item_src != null, "item_src is null!")
     if item_dst == item_src:
         return false
-    if !_stacks_compatible(item_dst, item_src):
+    if !stacks_compatible(item_dst, item_src):
         return false
     return !get_free_stack_space(item_dst).eq(ItemCount.zero())
 
@@ -207,7 +207,7 @@ static func _inv_merge_stack(inv: Inventory, item_dst: InventoryItem, item_src: 
 static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     assert(inv.has_item(item_dst), "Inventory must contain item_dst!")
 
-    if !_stacks_compatible(item_dst, item_src):
+    if !stacks_compatible(item_dst, item_src):
         return false
 
     # item_dst and item_src are in the same inventory

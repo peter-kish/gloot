@@ -24,6 +24,7 @@ func init_suite():
         "test_wg_has_space_for",
         "test_g_enforce_constraints",
         "test_sg_enforce_constraints",
+        "test_sg_wrong_stack_type",
         "test_wg_enforce_constraints",
     ]
 
@@ -173,6 +174,25 @@ func test_sg_enforce_constraints() -> void:
 
         inventory.remove_item(test_item)
 
+    inventory.remove_item(new_item)
+
+
+func test_sg_wrong_stack_type() -> void:
+    inventory.prototree_json = TEST_PROTOTREE_G
+
+    var grid_constraint := enable_grid_constraint(inventory, Vector2i(2, 2))
+    assert(grid_constraint != null)
+
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+    assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
+
+    var test_item := InventoryItem.new(TEST_PROTOTREE_G, "/item_1x1")
+    new_item.set_max_stack_size(2)
+    assert(new_item.set_stack_size(1))
+    assert(!inventory.can_add_item(test_item))
+    assert(!inventory.add_item(test_item))
+
+    inventory.remove_item(test_item)
     inventory.remove_item(new_item)
 
 

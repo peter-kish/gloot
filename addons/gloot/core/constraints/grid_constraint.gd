@@ -436,7 +436,8 @@ func has_space_for(item: InventoryItem) -> bool:
 
     var total_free_stack_space = 0
     for i in inventory.get_items():
-        total_free_stack_space += i.get_free_stack_space()
+        if item.compatible_with(i):
+            total_free_stack_space += i.get_free_stack_space()
     return total_free_stack_space >= item.get_stack_size()
 
 
