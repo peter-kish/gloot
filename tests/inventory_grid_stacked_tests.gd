@@ -19,6 +19,7 @@ func init_suite():
         "test_stack_cant_join",
         "test_automerge",
         "test_autosplitmerge",
+        "test_wrong_stack_type",
     ]
 
 
@@ -144,3 +145,11 @@ func test_autosplitmerge() -> void:
     assert(InventoryGridStacked.get_item_stack_size(item_2x2) == 3)
     assert(InventoryGridStacked.get_item_stack_size(item_2x2_2) == 1)
 
+
+func test_wrong_stack_type() -> void:
+    InventoryGridStacked.set_item_max_stack_size(item_1x1, 3)
+    assert(InventoryGridStacked.set_item_stack_size(item_1x1, 1))
+    assert(inventory_3x3.add_item(item_1x1))
+    assert(InventoryGridStacked.set_item_stack_size(item_2x2, 2))
+    assert(inventory_3x3_2.add_item(item_2x2))
+    assert(inventory_3x3_2.transfer_automerge(item_2x2, inventory_3x3))

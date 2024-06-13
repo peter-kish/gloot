@@ -302,7 +302,8 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     if !destination._constraint_manager.has_space_for(item):
         return false
     for i in destination.get_items():
-        _merge_stacks(i, item)
+        if items_mergable(i, item):
+            _merge_stacks(i, item)
         if item.is_queued_for_deletion():
             # Stack size reached 0
             return true
