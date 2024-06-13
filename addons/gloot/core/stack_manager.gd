@@ -1,3 +1,5 @@
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+
 const KEY_STACK_SIZE: String = "stack_size"
 const KEY_MAX_STACK_SIZE: String = "max_stack_size"
 

@@ -1,6 +1,7 @@
 extends TestSuite
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 var inventory: Inventory
 var inventory2: Inventory

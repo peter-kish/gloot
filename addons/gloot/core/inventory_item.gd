@@ -48,6 +48,7 @@ const KEY_NAME: String = "name"
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 
 func _connect_prototree_json_signals() -> void:

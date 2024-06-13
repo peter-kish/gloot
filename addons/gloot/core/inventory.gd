@@ -18,6 +18,7 @@ signal constraint_changed(constraint)           ## Emitted when an inventory con
 const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 ## A JSON resource containing prototree information.
 @export var prototree_json: JSON :

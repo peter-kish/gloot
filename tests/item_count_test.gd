@@ -1,5 +1,7 @@
 extends TestSuite
 
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+
 const Inf = ItemCount.Inf
 
 

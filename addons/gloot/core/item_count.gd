@@ -1,7 +1,4 @@
-class_name ItemCount
-## A helper class representing item counts.
-##
-## ItemCount represents item counts using non-negative integers, including infinity.
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 const Inf: int = -1
 

@@ -4,6 +4,7 @@ signal constraint_changed(constraint)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
+const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 const KEY_CONSTRAINT_NAME: String = "name"
 const KEY_CONSTRAINT_DATA: String = "data"
