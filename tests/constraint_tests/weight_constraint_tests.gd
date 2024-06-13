@@ -68,19 +68,19 @@ func test_get_free_space() -> void:
 
 
 func test_get_space_for() -> void:
-    assert(weight_constraint.get_space_for(item).eq(ItemCount.new(5)))
+    assert(weight_constraint.get_space_for(item) == 5)
 
     weight_constraint.capacity = 10.0
-    assert(weight_constraint.get_space_for(item).eq(ItemCount.zero()))
+    assert(weight_constraint.get_space_for(item) == 0)
 
     weight_constraint.capacity = 20.0
-    assert(weight_constraint.get_space_for(item).eq(ItemCount.one()))
+    assert(weight_constraint.get_space_for(item) == 1)
 
     weight_constraint.capacity = 40.0
-    assert(weight_constraint.get_space_for(item).eq(ItemCount.new(2)))
+    assert(weight_constraint.get_space_for(item) == 2)
 
     inventory.add_item(item)
-    assert(weight_constraint.get_space_for(item).eq(ItemCount.one()))
+    assert(weight_constraint.get_space_for(item) == 1)
 
 
 func test_swap_items() -> void:

@@ -42,12 +42,12 @@ func _on_btn_split(ctrl_inventory) -> void:
 
     for selected_item in selected_items:
         var stack_size = selected_item.get_stack_size()
-        if stack_size.lt(ItemCount.new(2)):
+        if stack_size < 2:
             return
 
         # All this floor/float jazz just to do integer division without warnings
-        var new_stack_size: int = floor(float(stack_size.count) / 2)
-        ctrl_inventory.inventory.split_stack(selected_item, ItemCount.new(new_stack_size))
+        var new_stack_size: int = floor(float(stack_size) / 2)
+        ctrl_inventory.inventory.split_stack(selected_item, new_stack_size)
 
 
 func _on_btn_unequip() -> void:

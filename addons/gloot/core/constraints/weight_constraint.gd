@@ -101,7 +101,7 @@ static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
     # TODO: Handle infinity?
-    return item.get_stack_size().count * _get_item_unit_weight(item)
+    return item.get_stack_size() * _get_item_unit_weight(item)
 
 
 ## Sets the weight of the given item.
@@ -111,9 +111,8 @@ static func set_item_weight(item: InventoryItem, weight: float) -> void:
 
 
 ## Returns the number of times this constraint can receive the given item.
-func get_space_for(item: InventoryItem) -> ItemCount:
-    var unit_weight := _get_item_unit_weight(item)
-    return ItemCount.new(floor(get_free_space() / unit_weight))
+func get_space_for(item: InventoryItem) -> int:
+    return floor(get_free_space() / _get_item_unit_weight(item))
 
 
 ## Checks if the constraint can receive the given item.

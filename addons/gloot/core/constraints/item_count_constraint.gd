@@ -38,15 +38,14 @@ func get_occupied_space() -> int:
 
 
 ## Returns the number of times this constraint can receive the given item.
-func get_space_for(item: InventoryItem) -> ItemCount:
-    var free_stack_space := ItemCount.zero()
+func get_space_for(item: InventoryItem) -> int:
+    var free_stack_space := 0
     for i in inventory.get_items():
         if item.can_merge_into(i):
-            free_stack_space.add(i.get_free_stack_space())
+            free_stack_space += i.get_free_stack_space()
     
-    var free_space = ItemCount.new(get_free_space())
-    free_space.mul(item.get_max_stack_size())
-    return free_stack_space.add(free_space)
+    var free_space = get_free_space() * item.get_max_stack_size()
+    return free_stack_space + free_space
 
 
 ## Checks if the constraint can receive the given item.

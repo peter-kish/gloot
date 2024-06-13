@@ -49,8 +49,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 ## Returns the number of times this constraint can receive the given item.
-func get_space_for(item: InventoryItem) -> ItemCount:
-    return ItemCount.zero()
+func get_space_for(item: InventoryItem) -> int:
+    return 0
 
 
 ## Checks if the constraint can receive the given item.

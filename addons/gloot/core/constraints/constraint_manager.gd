@@ -84,7 +84,7 @@ func _enforce_constraints(item: InventoryItem) -> bool:
 func get_space_for(item: InventoryItem) -> ItemCount:
     var min := ItemCount.inf()
     for constraint in _constraints:
-        var space_for_item: ItemCount = constraint.get_space_for(item)
+        var space_for_item: ItemCount = ItemCount.new(constraint.get_space_for(item))
         if space_for_item.lt(min):
             min = space_for_item
     return min

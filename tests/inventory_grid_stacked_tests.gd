@@ -46,19 +46,19 @@ func test_has_place_for() -> void:
     assert(inventory_3x3.can_add_item(item_2x2))
     
     # Inventory containing 2x2 item
-    item_2x2.set_max_stack_size(ItemCount.new(1))
+    item_2x2.set_max_stack_size(1)
     assert(inventory_3x3.add_item(item_2x2))
     assert(!inventory_3x3.can_add_item(item_2x2_2))
 
     # Inventory containing 2x2 item with extended max_stack_size
-    item_2x2.set_max_stack_size(ItemCount.new(10))
+    item_2x2.set_max_stack_size(10)
     assert(inventory_3x3.can_add_item(item_2x2_2))
 
 
 func test_add_item_automerge() -> void:
-    item_1x1.set_max_stack_size(ItemCount.new(100))
-    item_2x2.set_max_stack_size(ItemCount.new(100))
-    item_2x2_2.set_max_stack_size(ItemCount.new(100))
+    item_1x1.set_max_stack_size(100)
+    item_2x2.set_max_stack_size(100)
+    item_2x2_2.set_max_stack_size(100)
 
     # Empty inventory
     assert(inventory_3x3.add_item_automerge(item_2x2))
@@ -81,9 +81,9 @@ func test_add_item_automerge() -> void:
 
 func test_stack_split() -> void:
     assert(inventory_3x3.add_item(item_1x1))
-    item_1x1.set_max_stack_size(ItemCount.new(2))
-    assert(item_1x1.set_stack_size(ItemCount.new(2)))
-    var new_item = inventory_3x3.split_stack(item_1x1, ItemCount.new(1))
+    item_1x1.set_max_stack_size(2)
+    assert(item_1x1.set_stack_size(2))
+    var new_item = inventory_3x3.split_stack(item_1x1, 1)
     assert(new_item != null)
     assert(inventory_3x3.get_item_count() == 2)
     assert(inventory_3x3.has_item(new_item))
@@ -92,15 +92,15 @@ func test_stack_split() -> void:
 func test_stack_cant_split() -> void:
     # TODO: FIX
     # assert(inventory_3x3.add_item(item_2x2))
-    # assert(item_2x2.set_stack_size(ItemCount.new(2)))
-    # var new_item = inventory_3x3.split_inv_tack(item_2x2, ItemCount.new(1))
+    # assert(item_2x2.set_stack_size(2))
+    # var new_item = inventory_3x3.split_inv_tack(item_2x2, 1)
     # assert(new_item == null)
     # assert(inventory_3x3.get_item_count() == 1)
     pass
 
 
 func test_stack_join() -> void:
-    item_1x1.set_max_stack_size(ItemCount.new(2))
+    item_1x1.set_max_stack_size(2)
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))
@@ -115,35 +115,35 @@ func test_stack_cant_join() -> void:
 
 
 func test_automerge() -> void:
-    item_1x1.set_max_stack_size(ItemCount.new(100))
-    item_2x2.set_max_stack_size(ItemCount.new(100))
-    item_2x2_2.set_max_stack_size(ItemCount.new(100))
+    item_1x1.set_max_stack_size(100)
+    item_2x2.set_max_stack_size(100)
+    item_2x2_2.set_max_stack_size(100)
 
-    item_2x2.set_max_stack_size(ItemCount.new(3))
-    assert(item_2x2.set_stack_size(ItemCount.new(1)))
+    item_2x2.set_max_stack_size(3)
+    assert(item_2x2.set_stack_size(1))
     assert(inventory_3x3.add_item(item_2x2))
-    assert(item_2x2_2.set_stack_size(ItemCount.new(3)))
+    assert(item_2x2_2.set_stack_size(3))
     assert(inventory_3x3_2.add_item(item_2x2_2))
     
     # Not enough space
     assert(!inventory_3x3.add_item_automerge(item_2x2_2))
 
     # Enough space
-    assert(item_2x2_2.set_stack_size(ItemCount.new(2)))
+    assert(item_2x2_2.set_stack_size(2))
     assert(inventory_3x3.add_item_automerge(item_2x2_2))
-    assert(item_2x2.get_stack_size().eq(ItemCount.new(3)))
+    assert(item_2x2.get_stack_size() == 3)
     assert(!inventory_3x3_2.has_item(item_2x2_2))
 
 
 func test_autosplitmerge() -> void:
-    item_2x2.set_max_stack_size(ItemCount.new(3))
-    assert(item_2x2.set_stack_size(ItemCount.new(1)))
+    item_2x2.set_max_stack_size(3)
+    assert(item_2x2.set_stack_size(1))
     assert(inventory_3x3.add_item_autosplitmerge(item_2x2))
-    item_2x2_2.set_max_stack_size(ItemCount.new(3))
-    assert(item_2x2_2.set_stack_size(ItemCount.new(3)))
+    item_2x2_2.set_max_stack_size(3)
+    assert(item_2x2_2.set_stack_size(3))
     assert(inventory_3x3_2.add_item_autosplitmerge(item_2x2_2))
 
     assert(inventory_3x3.add_item_autosplitmerge(item_2x2_2))
-    assert(item_2x2.get_stack_size().eq(ItemCount.new(3)))
-    assert(item_2x2_2.get_stack_size().eq(ItemCount.new(1)))
+    assert(item_2x2.get_stack_size() == 3)
+    assert(item_2x2_2.get_stack_size() == 1)
 

@@ -405,17 +405,17 @@ func sort() -> bool:
 
 
 ## Returns the number of times this constraint can receive the given item.
-func get_space_for(item: InventoryItem) -> ItemCount:
-    var result = _get_free_space_for(item).mul(item.get_max_stack_size())
+func get_space_for(item: InventoryItem) -> int:
+    var result = _get_free_space_for(item) * item.get_max_stack_size()
 
     for i in inventory.get_items():
         if item.can_merge_into(i, true):
-            result.add(i.get_free_stack_space())
+            result += i.get_free_stack_space()
 
     return result
 
 
-func _get_free_space_for(item: InventoryItem) -> ItemCount:
+func _get_free_space_for(item: InventoryItem) -> int:
     var item_size = get_item_size(item)
     var occupied_rects: Array[Rect2i]
     var free_space := find_free_space(item_size, occupied_rects)
@@ -423,7 +423,7 @@ func _get_free_space_for(item: InventoryItem) -> ItemCount:
     while free_space.success:
         occupied_rects.append(Rect2i(free_space.position, item_size))
         free_space = find_free_space(item_size, occupied_rects)
-    return ItemCount.new(occupied_rects.size())
+    return occupied_rects.size()
     
 
 
@@ -434,10 +434,10 @@ func has_space_for(item: InventoryItem) -> bool:
     if find_free_space(item_size).success:
         return true
 
-    var total_free_stack_space = ItemCount.zero()
+    var total_free_stack_space = 0
     for i in inventory.get_items():
-        total_free_stack_space.add(i.get_free_stack_space())
-    return total_free_stack_space.ge(item.get_stack_size())
+        total_free_stack_space += i.get_free_stack_space()
+    return total_free_stack_space >= item.get_stack_size()
 
 
 # TODO: Check if find_free_place is needed

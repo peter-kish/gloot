@@ -163,11 +163,11 @@ func test_sg_enforce_constraints() -> void:
         var test_item := InventoryItem.new(TEST_PROTOTREE_G, TEST_PROTOTYPE_PATH_G)
 
         grid_constraint.size = data.input.inv_size
-        new_item.set_max_stack_size(ItemCount.new(data.input.new_item_max_stack_size))
-        assert(new_item.set_stack_size(ItemCount.new(data.input.new_item_stack_size)))
+        new_item.set_max_stack_size(data.input.new_item_max_stack_size)
+        assert(new_item.set_stack_size(data.input.new_item_stack_size))
         var add_item_result := inventory.add_item(test_item)
         assert(add_item_result == data.expected)
-        if add_item_result && (test_item.get_stack_size().count > 0):
+        if add_item_result && (test_item.get_stack_size() > 0):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(test_item), test_item))
 
         inventory.remove_item(test_item)
@@ -198,7 +198,7 @@ func test_wg_enforce_constraints() -> void:
         WeightConstraint.set_item_weight(item, data.input.item_weight)
         var add_item_result := inventory.add_item(item)
         assert(add_item_result == data.expected)
-        if add_item_result && (item.get_stack_size().count > 0):
+        if add_item_result && (item.get_stack_size() > 0):
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(item), item))
         
     inventory.remove_item(new_item)

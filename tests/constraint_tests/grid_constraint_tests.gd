@@ -250,28 +250,28 @@ func test_sort() -> void:
 func test_get_space_for() -> void:
     # Empty inventory
     var test_data := [
-        {input = Vector2i.ONE, expected = ItemCount.zero()},
-        {input = Vector2i(2, 2), expected = ItemCount.new(1)},
-        {input = Vector2i(3, 3), expected = ItemCount.new(1)},
-        {input = Vector2i(4, 4), expected = ItemCount.new(4)},
+        {input = Vector2i.ONE, expected = 0},
+        {input = Vector2i(2, 2), expected = 1},
+        {input = Vector2i(3, 3), expected = 1},
+        {input = Vector2i(4, 4), expected = 4},
     ]
 
     for data in test_data:
         grid_constraint.size = data.input
-        assert(grid_constraint.get_space_for(item).eq(data.expected))
+        assert(grid_constraint.get_space_for(item) == data.expected)
 
     # One item in inventory
     grid_constraint.size = Vector2i(2, 2)
     var item2 = inventory.create_and_add_item(TEST_PROTOTYPE_PATH)
     test_data = [
-        {input = Vector2i(2, 2), expected = ItemCount.zero()},
-        {input = Vector2i(3, 3), expected = ItemCount.zero()},
-        {input = Vector2i(4, 4), expected = ItemCount.new(3)},
+        {input = Vector2i(2, 2), expected = 0},
+        {input = Vector2i(3, 3), expected = 0},
+        {input = Vector2i(4, 4), expected = 3},
     ]
 
     for data in test_data:
         grid_constraint.size = data.input
-        assert(grid_constraint.get_space_for(item).eq(data.expected))
+        assert(grid_constraint.get_space_for(item) == data.expected)
 
     inventory.remove_item(item2)
 

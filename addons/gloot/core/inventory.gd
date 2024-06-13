@@ -363,8 +363,8 @@ static func _deserialize_prototree_json(data: String) -> JSON:
 ## Splits the given item stack into two within the inventory. `new_stack_size` defines the size of the new stack,
 # which is added to the inventory. Returns `null` if the split cannot be performed or if the new stack cannot be added
 ## to the inventory.
-func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
-    return StackManager.inv_split_stack(self, item, new_stack_size)
+func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
+    return StackManager.inv_split_stack(self, item, ItemCount.new(new_stack_size))
 
 
 ## Merges the `item_src` item stack into the `item_dst` stack which is inside the inventory. If `item_dst` doesn't have

@@ -107,7 +107,7 @@ func _update_stack_size() -> void:
     if !is_instance_valid(item):
         _stack_size_label.text = ""
         return
-    var stack_size: int = item.get_stack_size().count
+    var stack_size: int = item.get_stack_size()
     if stack_size <= 1:
         _stack_size_label.text = ""
     else:
