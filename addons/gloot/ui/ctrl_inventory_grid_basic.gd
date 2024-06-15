@@ -157,10 +157,12 @@ func _queue_refresh() -> void:
 
 func _refresh() -> void:
     _ctrl_drop_zone.deactivate()
+    _clear_list()
+    if !is_instance_valid(inventory):
+        return
+
     custom_minimum_size = _get_inventory_size_px()
     size = custom_minimum_size
-
-    _clear_list()
     _populate_list()
 
 
