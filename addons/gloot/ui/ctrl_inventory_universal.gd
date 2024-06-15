@@ -1,6 +1,5 @@
 @tool
 @icon("res://addons/gloot/images/icon_ctrl_inventory.svg")
-class_name  CtrlInventoryUniversal
 extends VBoxContainer
 
 # TODO: Consider renaming to inventory_item_activated
