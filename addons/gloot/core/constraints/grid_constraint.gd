@@ -97,9 +97,9 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     const ITEM1_IDX = 0
     const ITEM2_IDX = 1
     if is_instance_valid(item1.get_inventory()) && is_instance_valid(item1.get_inventory().get_constraint(GridConstraint)):
-        item1.get_inventory().get_constraint(GridConstraint).set_item_position(item1, _swap_positions[ITEM2_IDX])
+        item1.get_inventory().get_constraint(GridConstraint).set_item_position_unsafe(item1, _swap_positions[ITEM2_IDX])
     if is_instance_valid(item2.get_inventory()) && is_instance_valid(item2.get_inventory().get_constraint(GridConstraint)):
-        item2.get_inventory().get_constraint(GridConstraint).set_item_position(item2, _swap_positions[ITEM1_IDX])
+        item2.get_inventory().get_constraint(GridConstraint).set_item_position_unsafe(item2, _swap_positions[ITEM1_IDX])
 
 
 func _bounds_broken() -> bool:

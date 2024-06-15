@@ -134,14 +134,21 @@ static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     var idx2 = inv2.get_item_index(item2)
     inv1.remove_item(item1)
     inv2.remove_item(item2)
-    if !_add_item_to_inventory(item1, inv2, idx2):
-        _add_item_to_inventory(item1, inv1, idx1)
-        _add_item_to_inventory(item2, inv2, idx2)
+
+    if !inv2.add_item(item1):
+        inv1.add_item(item1)
+        inv1.move_item(inv1.get_item_index(item1), idx1)
+        inv2.add_item(item2)
+        inv2.move_item(inv2.get_item_index(item2), idx2)
         return false
-    if !_add_item_to_inventory(item2, inv1, idx1):
-        _add_item_to_inventory(item1, inv1, idx1)
-        _add_item_to_inventory(item2, inv2, idx2)
+    if !inv1.add_item(item2):
+        inv1.add_item(item1)
+        inv1.move_item(inv1.get_item_index(item1), idx1)
+        inv2.add_item(item2)
+        inv2.move_item(inv2.get_item_index(item2), idx2)
         return false
+    inv2.move_item(inv2.get_item_index(item1), idx2)
+    inv1.move_item(inv1.get_item_index(item2), idx1)
 
     if inv1 is Inventory:
         inv1._constraint_manager._on_post_item_swap(item1, item2)
