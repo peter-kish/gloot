@@ -17,7 +17,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         if _label != null:
             _label.visible = show_label
 
-## Reference to an inventory with a WeightConstraint.
+## Reference to an inventory with a WeightConstraint or an ItemCountConstraint.
 @export var inventory: Inventory = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -40,10 +40,10 @@ func _get_configuration_warnings() -> PackedStringArray:
         return PackedStringArray([
                 "This CtrlInventoryCapacity node has no inventory set. Set the 'inventory' field to be able to " \
                 + "display its capacity."])
-    if inventory.get_constraint(WeightConstraint) == null:
+    if inventory.get_constraint(WeightConstraint) == null && inventory.get_constraint(ItemCountConstraint) == null:
         return PackedStringArray([
-                "The inventory has no WeightConstraint child node. Add a WeightConstraint to the inventory to be able" \
-                + " to display its capacity."])
+                "The inventory has no WeightConstraint or ItemCountConstraint child node. Add a WeightConstraint or" \
+                + "an ItemCountConstraint to the inventory to be able to display its capacity."])
     return PackedStringArray()
 
 
@@ -71,7 +71,7 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
-    if constraint is WeightConstraint:
+    if (constraint is WeightConstraint) or (constraint is ItemCountConstraint):
         _refresh()
 
 
@@ -95,12 +95,18 @@ func _refresh() -> void:
         return
 
     var weight_constraint := inventory.get_constraint(WeightConstraint)
-    if weight_constraint == null:
+    if weight_constraint != null:
+        _progress_bar.max_value = weight_constraint.capacity
+        _label.text = "%s/%s" % [str(weight_constraint.get_occupied_space()), str(weight_constraint.capacity)]
+        _progress_bar.value = weight_constraint.get_occupied_space()
         return
 
-    _progress_bar.max_value = weight_constraint.capacity
-    _label.text = "%s/%s" % [str(weight_constraint.get_occupied_space()), str(weight_constraint.capacity)]
-    _progress_bar.value = weight_constraint.get_occupied_space()
+    var item_count_constraint := inventory.get_constraint(ItemCountConstraint)
+    if item_count_constraint != null:
+        _progress_bar.max_value = item_count_constraint.capacity
+        _label.text = "%s/%s" % [str(inventory.get_item_count()), str(item_count_constraint.capacity)]
+        _progress_bar.value = inventory.get_item_count()
+        return
 
 
 func _ready() -> void:

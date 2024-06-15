@@ -1,0 +1,83 @@
+[gd_scene load_steps=7 format=3 uid="uid://dphh30kym6h7f"]
+
+[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_ykodk"]
+[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="2_8vr37"]
+[ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="3_16p24"]
+[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_uiaq5"]
+[ext_resource type="Script" path="res://addons/gloot/core/constraints/item_count_constraint.gd" id="5_7dr5d"]
+[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="6_40sow"]
+
+[node name="TestCtrlCapacity" type="Node2D"]
+
+[node name="InventoryWeightConstraint" type="Node" parent="."]
+script = ExtResource("1_ykodk")
+prototree_json = ExtResource("2_8vr37")
+_serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/weight_constraint.gd": {
+"data": {
+"capacity": 50.0
+},
+"name": &"WeightConstraint"
+}
+},
+"items": [{
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/minimal_item"
+}, {
+"prototree": "res://tests/data/prototree_stacks.json",
+"prototype_path": "/big_item"
+}],
+"node_name": "InventoryWeightConstraint",
+"prototree": "res://tests/data/prototree_stacks.json"
+}
+
+[node name="WeightConstraint" type="Node" parent="InventoryWeightConstraint"]
+script = ExtResource("3_16p24")
+capacity = 50.0
+
+[node name="InventoryItemCountConstraint" type="Node" parent="."]
+script = ExtResource("1_ykodk")
+prototree_json = ExtResource("4_uiaq5")
+_serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/item_count_constraint.gd": {
+"data": {
+"capacity": 3
+},
+"name": &"ItemCountConstraint"
+}
+},
+"items": [{
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/minimal_item"
+}, {
+"prototree": "res://tests/data/prototree_basic.json",
+"prototype_path": "/minimal_item_2"
+}],
+"node_name": "InventoryItemCountConstraint",
+"prototree": "res://tests/data/prototree_basic.json"
+}
+
+[node name="ItemCountConstraint" type="Node" parent="InventoryItemCountConstraint"]
+script = ExtResource("5_7dr5d")
+capacity = 3
+
+[node name="CtrlInventoryCapacity" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 182.0
+offset_bottom = 23.0
+script = ExtResource("6_40sow")
+inventory = NodePath("../InventoryWeightConstraint")
+
+[node name="CtrlInventoryCapacity2" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 3
+anchors_preset = 0
+offset_top = 23.0
+offset_right = 182.0
+offset_bottom = 46.0
+script = ExtResource("6_40sow")
+inventory = NodePath("../InventoryItemCountConstraint")
