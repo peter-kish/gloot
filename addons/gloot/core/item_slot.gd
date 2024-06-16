@@ -3,11 +3,16 @@
 class_name ItemSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
+## Holds an inventory item.
+
+## Emitted when the [member item_protoset] property has been changed.
 signal protoset_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
+## An [ItemProtoset] resource containing item prototypes that the slot
+## can receive.
 @export var item_protoset: ItemProtoset:
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
@@ -17,6 +22,9 @@ const KEY_ITEM: String = "item"
         item_protoset = new_item_protoset
         protoset_changed.emit()
         update_configuration_warnings()
+
+## If set to [code]true[/code], the [method clear] method will try to
+## return the item to its original inventory.
 @export var remember_source_inventory: bool = true
 
 var _wr_source_inventory: WeakRef = weakref(null)
@@ -29,7 +37,10 @@ func _get_configuration_warnings() -> PackedStringArray:
                 "This item slot has no protoset. Set the 'item_protoset' field to be able to equip items."])
     return PackedStringArray()
 
-
+## Equips the given inventory item in the slot. If the slot already contains
+## an item, [method clear] will be called first. Returns [code]false[/code]
+## if the [method clear] call fails, the slot can't hold the given item,
+## or already holds the given item. Returns [code]true[/code] otherwise.
 func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false
@@ -55,7 +66,13 @@ func _on_item_added(item: InventoryItem) -> void:
     _item = item
     item_equipped.emit()
 
-
+## Clears the item slot. If [member remember_source_inventory] is [code]true[/code],
+## the method will try to return the item to its original inventory. Returns
+## [code]false[/code] if the item can't be returned, or if the slot is already
+## empty.
+## [br]
+## [b]Note:[/b] this method will not free the item if [member remember_source_inventory]
+## is [code]false[/code].
 func clear() -> bool:
     return _clear_impl(remember_source_inventory)
 
@@ -84,11 +101,13 @@ func _on_item_removed() -> void:
     _wr_source_inventory = weakref(null)
     cleared.emit()
 
-
+## Returns the equipped item.
 func get_item() -> InventoryItem:
     return _item
 
-
+## Checks if the slot can hold the given item, i.e. the item has the same
+## protoset as the slot and is not [code]null[/code]. This method can be
+## overridden to implement item slots that can only hold specific items.
 func can_hold_item(item: InventoryItem) -> bool:
     assert(item_protoset != null, "Item protoset not set!")
     if item == null:
@@ -98,13 +117,13 @@ func can_hold_item(item: InventoryItem) -> bool:
 
     return true
 
-
+## Clears the item slot and queues the contained item (if any) for deletion.
 func reset() -> void:
     if _item:
         _item.queue_free()
     _clear_impl(false)
 
-
+## Serializes the item slot into a dictionary.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -113,7 +132,10 @@ func serialize() -> Dictionary:
 
     return result
 
-
+## Loads the item slot data from the given dictionary.
+## [br]
+## [b]Note:[/b] If the slot contains an item prior to deserialization, it will
+## be queued for deletion.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, false, KEY_ITEM, [TYPE_DICTIONARY]):
         return false

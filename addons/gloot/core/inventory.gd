@@ -3,15 +3,28 @@
 extends Node
 class_name Inventory
 
+## Basic inventory class.
+##
+## Supports basic inventory operations (adding, removing, transferring items
+## etc.).
+## Can contain an unlimited amount of items.
+
+## Emitted when an item has been added to the inventory.
 signal item_added(item)
+## Emitted when an item has been removed from the inventory.
 signal item_removed(item)
+## Emitted when an item from the inventory has been modified.
 signal item_modified(item)
+## Emitted when a property of an item from the inventory has been changed.
 signal item_property_changed(item, property_name)
+## Emitted when the contents of the inventory have changed.
 signal contents_changed
+## Emitted when the [member item_protoset] property has been changed.
 signal protoset_changed
 
 const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
 
+## An [ItemProtoset] resource containing item prototypes.
 @export var item_protoset: ItemProtoset:
     set(new_item_protoset):
         if new_item_protoset == item_protoset:
@@ -95,7 +108,7 @@ func _on_item_removed(item: InventoryItem) -> void:
         _constraint_manager._on_item_removed(item)
     item_removed.emit(item)
 
-
+## Moves the item at index [param from] to the index [param to].
 func move_item(from: int, to: int) -> void:
     assert(from >= 0)
     assert(from < _items.size())
@@ -110,11 +123,12 @@ func move_item(from: int, to: int) -> void:
 
     contents_changed.emit()
 
-
+## Returns the internal item index of the given item. Returns [code]-1[/code]
+## if the item is not inside the inventory.
 func get_item_index(item: InventoryItem) -> int:
     return _items.find(item)
 
-
+## Returns the number of items in the inventory.
 func get_item_count() -> int:
     return _items.size()
 
@@ -149,15 +163,15 @@ func _on_item_property_changed(property_name: String, item: InventoryItem) -> vo
     _constraint_manager._on_item_property_changed(item, property_name)
     item_property_changed.emit(item, property_name)
 
-
+## Returns an array containing all the items in the inventory.
 func get_items() -> Array[InventoryItem]:
     return _items
 
-
+## Checks if the inventory contains the given item.
 func has_item(item: InventoryItem) -> bool:
     return item in _items
 
-
+## Adds the given item to the inventory.
 func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
@@ -182,7 +196,9 @@ func add_item(item: InventoryItem) -> bool:
         item.owner = get_tree().edited_scene_root
     return true
 
-
+## Checks if the given item can be added to the inventory taking inventory
+## constraints (capacity, grid space etc.) and the result of [method can_hold_item]
+## into account.
 func can_add_item(item: InventoryItem) -> bool:
     if item == null || has_item(item):
         return false
@@ -195,11 +211,16 @@ func can_add_item(item: InventoryItem) -> bool:
 
     return true
 
-
+## Checks if the inventory can hold the given item.
+## Always returns [code]true[/code] and can be overriden to make the inventory
+## only accept items with specific properties. Does not check inventory
+## constraints such as capacity or grid space. Those checks are done by
+## [method can_add_item].
 func can_hold_item(item: InventoryItem) -> bool:
     return true
 
-
+## Creates an [InventoryItem] based on the given prototype ID and adds it to
+## the inventory. Returns [code]null[/code] if the item cannot be added.
 func create_and_add_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
     item.protoset = item_protoset
@@ -210,7 +231,7 @@ func create_and_add_item(prototype_id: String) -> InventoryItem:
         item.free()
         return null
 
-
+## Removes the given item from the inventory.
 func remove_item(item: InventoryItem) -> bool:
     if !_can_remove_item(item):
         return false
@@ -222,13 +243,13 @@ func remove_item(item: InventoryItem) -> bool:
 func _can_remove_item(item: InventoryItem) -> bool:
     return item != null && has_item(item)
 
-
+## Removes all the items from the inventory.
 func remove_all_items() -> void:
     while get_child_count() > 0:
         remove_child(get_child(0))
     _items = []
 
-
+## Returns the first found item with the given prototype ID.
 func get_item_by_id(prototype_id: String) -> InventoryItem:
     for item in get_items():
         if item.prototype_id == prototype_id:
@@ -236,7 +257,7 @@ func get_item_by_id(prototype_id: String) -> InventoryItem:
             
     return null
 
-
+## Returns an array of items with the given prototype ID.
 func get_items_by_id(prototype_id: String) -> Array[InventoryItem]:
     var result: Array[InventoryItem] = []
 
@@ -246,27 +267,28 @@ func get_items_by_id(prototype_id: String) -> Array[InventoryItem]:
             
     return result
 
-
+## Checks if the inventory contains an item with the given prototype ID.
 func has_item_by_id(prototype_id: String) -> bool:
     return get_item_by_id(prototype_id) != null
 
-
+## Transfers the given item into the given inventory.
 func transfer(item: InventoryItem, destination: Inventory) -> bool:
     return destination.add_item(item)
 
-
+## Resets the inventory to its default state.
+## This includes clearing its contents and resetting all properties.
 func reset() -> void:
     clear()
     item_protoset = null
     _constraint_manager.reset()
 
-
+## Clears all items from the inventory.
 func clear() -> void:
     for item in get_items():
         item.queue_free()
     remove_all_items()
 
-
+## Serializes the inventory into a dictionary.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -289,7 +311,7 @@ static func _serialize_item_protoset(item_protoset: ItemProtoset) -> String:
     else:
         return item_protoset.resource_path
 
-
+## Loads the inventory data from the given dictionary.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\

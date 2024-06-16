@@ -3,11 +3,24 @@
 class_name CtrlInventoryGridEx
 extends Control
 
+## A UI control similar to [CtrlInventoryGrid] but with extended options for
+## customization.
+
+## Emitted when a grabbed [InventoryItem] is dropped.
 signal item_dropped(item, offset)
+## Emitted when the selection has changed. Use [method get_selected_inventory_item]
+## to obtain the currently selected item.
 signal selection_changed
+## Emitted when an [InventoryItem] is activated (i.e. double clicked).
 signal inventory_item_activated(item)
+## Emitted when the context menu of an [InventoryItem] is activated
+## (i.e. right clicked).
 signal inventory_item_context_activated(item)
+## Emitted when the mouse enters the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_entered(item)
+## Emitted when the mouse leaves the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_exited(item)
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
@@ -65,7 +78,7 @@ class SelectionPanel extends Panel:
         if style != null:
             add_theme_stylebox_override("panel", style)
 
-
+## Path to an [Inventory] node.
 @export var inventory_path: NodePath :
     set(new_inv_path):
         if new_inv_path == inventory_path:
@@ -81,26 +94,38 @@ class SelectionPanel extends Panel:
             
         inventory = node
         update_configuration_warnings()
+
+## The default texture that will be used for items with no [code]image[/code]
+## property.
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
         default_item_texture = new_default_item_texture
+
+## If true, the inventory item sprites will be stretched to fit the inventory
+## fields they are positioned on.
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
         stretch_item_sprites = new_stretch_item_sprites
+
+## The size of each inventory field in pixels.
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
+
+## The spacing between items in pixels.
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
+
+## Single or multi select mode (hold CTRL to select multiple items).
 @export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
@@ -110,23 +135,31 @@ class SelectionPanel extends Panel:
             _ctrl_inventory_grid_basic.select_mode = select_mode
 
 @export_group("Custom Styles")
+## Style of a single inventory field.
 @export var field_style: StyleBox :
     set(new_field_style):
         field_style = new_field_style
         _queue_refresh()
+
+## Style of a single inventory field when the mouse hovers over it.
 @export var field_highlighted_style: StyleBox :
     set(new_field_highlighted_style):
         field_highlighted_style = new_field_highlighted_style
         _queue_refresh()
+
+## Style of a single inventory field when the item on top of it is selected.
 @export var field_selected_style: StyleBox :
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()
+
+## Style of a rectangle that will be drawn on top of the selected item.
 @export var selection_style: StyleBox :
     set(new_selection_style):
         selection_style = new_selection_style
         _queue_refresh()
 
+## The [Inventory] node linked to this control.
 var inventory: InventoryGrid = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -382,25 +415,26 @@ func _get_global_grabbed_item_local_pos() -> Vector2:
         return get_local_mouse_position() - CtrlDragable.get_grab_offset_local_to(self)
     return Vector2(-1, -1)
 
-
+## Deselects the selected item.
 func deselect_inventory_item() -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
     _ctrl_inventory_grid_basic.deselect_inventory_item()
 
-
+## Selects the given item.
 func select_inventory_item(item: InventoryItem) -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
     _ctrl_inventory_grid_basic.select_inventory_item(item)
 
-
+## Returns the currently selected item. In case multiple items are selected,
+## the first one is returned.
 func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     return _ctrl_inventory_grid_basic.get_selected_inventory_item()
 
-
+## Returns all the currently selected items.
 func get_selected_inventory_items() -> Array[InventoryItem]:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return []

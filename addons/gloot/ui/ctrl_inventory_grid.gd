@@ -3,11 +3,27 @@
 class_name CtrlInventoryGrid
 extends Control
 
+## A UI control representing a grid-based inventory ([InventoryGrid]).
+##
+## Displays a grid based on the inventory capacity (width and height) and the
+## contained items on the grid. The items can be moved around in the inventory
+## by dragging.
+
+## Emitted when a grabbed [InventoryItem] is dropped.
 signal item_dropped(item, offset)
+## Emitted when the selection has changed. Use [method get_selected_inventory_item]
+## to obtain the currently selected item.
 signal selection_changed
+## Emitted when an [InventoryItem] is activated (i.e. double clicked).
 signal inventory_item_activated(item)
+## Emitted when the context menu of an [InventoryItem] is activated
+## (i.e. right clicked).
 signal inventory_item_context_activated(item)
+## Emitted when the mouse enters the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_entered(item)
+## Emitted when the mouse leaves the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_exited(item)
 
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
@@ -47,6 +63,7 @@ class GridControl extends Control:
             draw_line(from, to, color)
         
 
+## Path to an [Inventory] node.
 @export var inventory_path: NodePath :
     set(new_inv_path):
         if new_inv_path == inventory_path:
@@ -62,50 +79,70 @@ class GridControl extends Control:
             
         inventory = node
         update_configuration_warnings()
+
+## The default texture that will be used for items with no [code]image[/code]
+## property.
 @export var default_item_texture: Texture2D :
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
         default_item_texture = new_default_item_texture
+
+## If true, the inventory item sprites will be stretched to fit the inventory
+## fields they are positioned on.
 @export var stretch_item_sprites: bool = true :
     set(new_stretch_item_sprites):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
         stretch_item_sprites = new_stretch_item_sprites
+
+## The size of each inventory field in pixels.
 @export var field_dimensions: Vector2 = Vector2(32, 32) :
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
+
+## The spacing between items in pixels.
 @export var item_spacing: int = 0 :
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
+
+## Displays a grid if true.
 @export var draw_grid: bool = true :
     set(new_draw_grid):
         if new_draw_grid == draw_grid:
             return
         draw_grid = new_draw_grid
         _queue_refresh()
+
+## The color of the grid.
 @export var grid_color: Color = Color.BLACK :
     set(new_grid_color):
         if(new_grid_color == grid_color):
             return
         grid_color = new_grid_color
         _queue_refresh()
+
+## Draws a rectangle behind the selected item if true.
 @export var draw_selections: bool = false :
     set(new_draw_selections):
         if new_draw_selections == draw_selections:
             return
         draw_selections = new_draw_selections
         _queue_refresh()
+
+## The color of the selection.
 @export var selection_color: Color = Color.GRAY :
     set(new_selection_color):
         if(new_selection_color == selection_color):
             return
         selection_color = new_selection_color
         _queue_refresh()
+
+## Single or multi select mode (hold CTRL to select multiple items).
 @export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
     set(new_select_mode):
         if select_mode == new_select_mode:
@@ -114,6 +151,7 @@ class GridControl extends Control:
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.select_mode = select_mode
 
+## The [InventoryGrid] node linked to this control.
 var inventory: InventoryGrid = null :
     set(new_inventory):
         if inventory == new_inventory:
@@ -268,25 +306,26 @@ func _get_inventory() -> InventoryGrid:
         return null
     return _ctrl_inventory_grid_basic.inventory
 
-
+## Deselects the selected item.
 func deselect_inventory_item() -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
     _ctrl_inventory_grid_basic.deselect_inventory_item()
 
-
+## Selects the given item.
 func select_inventory_item(item: InventoryItem) -> void:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return
     _ctrl_inventory_grid_basic.select_inventory_item(item)
 
-
+## Returns the currently selected item. In case multiple items are selected,
+## the first one is returned.
 func get_selected_inventory_item() -> InventoryItem:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return null
     return _ctrl_inventory_grid_basic.get_selected_inventory_item()
 
-
+## Returns all the currently selected items.
 func get_selected_inventory_items() -> Array[InventoryItem]:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return []

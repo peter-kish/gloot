@@ -3,12 +3,15 @@
 class_name ItemRefSlot
 extends "res://addons/gloot/core/item_slot_base.gd"
 
+## Holds a reference to an inventory item.
+
 signal inventory_changed
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM_INDEX: String = "item_index"
 const EMPTY_SLOT = -1
 
+## Path to an [Inventory] node. Sets the [member inventory] property.
 @export var inventory_path: NodePath :
     set(new_inv_path):
         if inventory_path == new_inv_path:
@@ -20,6 +23,7 @@ const EMPTY_SLOT = -1
 var _wr_item: WeakRef = weakref(null)
 var _wr_inventory: WeakRef = weakref(null)
 @export var _equipped_item: int = EMPTY_SLOT : set = _set_equipped_item_index
+## Reference to an [Inventory] node.
 var inventory: Inventory = null :
     get = _get_inventory, set = _set_inventory
 
@@ -97,7 +101,10 @@ func _on_item_removed(item: InventoryItem) -> void:
 func _get_inventory() -> Inventory:
     return _wr_inventory.get_ref()
 
-
+## Equips the given inventory item in the slot. If the slot already holds an
+## item, [method clear] will be called first. Returns [code]false[/code] if the
+## [method clear] call fails, the slot can't hold the given item, or already
+## holds the given item. Returns [code]true[/code] otherwise.
 func equip(item: InventoryItem) -> bool:
     if !can_hold_item(item):
         return false
@@ -123,7 +130,7 @@ func equip_by_index(index: int) -> bool:
         return false
     return equip(_get_inventory().get_items()[index])
 
-
+## Clears the item slot.
 func clear() -> bool:
     if get_item() == null:
         return false
@@ -133,11 +140,13 @@ func clear() -> bool:
     cleared.emit()
     return true
 
-
+## Returns the equipped item.
 func get_item() -> InventoryItem:
     return _wr_item.get_ref()
 
-
+## Checks if the slot can hold the given item, i.e. [member inventory] contains
+## the given item and the item is not [code]null[/code]. This method can
+## be overriden to implement item slots that can only hold specific items.
 func can_hold_item(item: InventoryItem) -> bool:
     if item == null:
         return false
@@ -147,11 +156,11 @@ func can_hold_item(item: InventoryItem) -> bool:
 
     return true
 
-
+## Clears the item slot.
 func reset() -> void:
     clear()
 
-
+## Serializes the item slot into a dictionary.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
     var item : InventoryItem = _wr_item.get_ref()
@@ -161,7 +170,10 @@ func serialize() -> Dictionary:
 
     return result
 
-
+## Loads the item slot data from the given dictionary.
+## [br]
+## [b]Note:[/b] [param inventory] must be set prior to the
+## [method deserialize] call!
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, false, KEY_ITEM_INDEX, [TYPE_INT, TYPE_FLOAT]):
         return false
