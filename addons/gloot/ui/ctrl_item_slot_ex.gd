@@ -3,10 +3,16 @@
 class_name CtrlItemSlotEx
 extends CtrlItemSlot
 
+## A UI control similar to [CtrlItemSlot] but with extended options for
+## customization.
+
+## Style of the slot background.
 @export var slot_style: StyleBox :
     set(new_slot_style):
         slot_style = new_slot_style
         _refresh()
+
+## Style of the slot background when the mouse hovers over it.
 @export var slot_highlighted_style: StyleBox :
     set(new_slot_highlighted_style):
         slot_highlighted_style = new_slot_highlighted_style

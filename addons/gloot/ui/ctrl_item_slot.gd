@@ -3,14 +3,24 @@
 class_name CtrlItemSlot
 extends Control
 
+## A UI control representing an inventory slot ([ItemSlot]).
+##
+## Displays the texture of the set item and its name. If not item is set,
+## it displays the given default texture.
+
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
+## Emitted when the mouse enters the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_entered
+## Emitted when the mouse leaves the [Rect2] area of the control representing
+## the given [InventoryItem].
 signal item_mouse_exited
 
+## Path to an [ItemSlot] node.
 @export var item_slot_path: NodePath :
     set(new_item_slot_path):
         if item_slot_path == new_item_slot_path:
@@ -28,12 +38,17 @@ signal item_mouse_exited
         item_slot = node
         _refresh()
         update_configuration_warnings()
+
+## The default icon that will be used for items with no [code]image[/code]
+## property.
 @export var default_item_icon: Texture2D :
     set(new_default_item_icon):
         if default_item_icon == new_default_item_icon:
             return
         default_item_icon = new_default_item_icon
         _refresh()
+
+## The item texture is displayed if set to true.
 @export var item_texture_visible: bool = true :
     set(new_item_texture_visible):
         if item_texture_visible == new_item_texture_visible:
@@ -41,6 +56,8 @@ signal item_mouse_exited
         item_texture_visible = new_item_texture_visible
         if is_instance_valid(_ctrl_inventory_item_rect):
             _ctrl_inventory_item_rect.visible = item_texture_visible
+
+## The item name label is displayed if set to true.
 @export var label_visible: bool = true :
     set(new_label_visible):
         if label_visible == new_label_visible:
@@ -48,6 +65,7 @@ signal item_mouse_exited
         label_visible = new_label_visible
         if is_instance_valid(_label):
             _label.visible = label_visible
+
 @export_group("Icon Behavior", "icon_")
 @export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
     set(new_icon_stretch_mode):
@@ -85,6 +103,8 @@ signal item_mouse_exited
         label_clip_text = new_label_clip_text
         if is_instance_valid(_label):
             _label.clip_text = label_clip_text
+
+## The [ItemSlot] node linked to this control.
 var item_slot: ItemSlotBase :
     set(new_item_slot):
         if new_item_slot == item_slot:

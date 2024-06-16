@@ -3,9 +3,18 @@
 extends Node
 class_name InventoryItem
 
+## Inventory item class.
+##
+## It is based on an item prototype from an [ItemProtoset] resource. Can hold
+## additional properties.
+
+## Emitted when the items protoset changes.
 signal protoset_changed
+## Emitted when the item prototype ID changes.
 signal prototype_id_changed
+## Emitted when the item properties change.
 signal properties_changed
+## Emitted when an item property has changed.
 signal property_changed(property_name)
 signal added_to_inventory(inventory)
 signal removed_from_inventory(inventory)
@@ -14,6 +23,7 @@ signal removed_from_slot(item_slot)
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
+## An [ItemProtoset] resource containing item prototypes.
 @export var protoset: ItemProtoset :
     set(new_protoset):
         if new_protoset == protoset:
@@ -35,6 +45,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         protoset_changed.emit()
         update_configuration_warnings()
 
+## ID of the prototype from [member protoset] this item is based on.
 @export var prototype_id: String :
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
@@ -48,6 +59,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         update_configuration_warnings()
         prototype_id_changed.emit()
 
+## Additional item properties.
 @export var properties: Dictionary :
     set(new_properties):
         properties = new_properties
@@ -169,15 +181,18 @@ func _unlink_from_slot() -> void:
     temp_slot._on_item_removed()
     removed_from_slot.emit(temp_slot)
 
-
+## Returns the [Inventory] this item belongs to.
 func get_inventory() -> Inventory:
     return _inventory
 
-
+## Returns the [ItemSlot] this item is equipped in.
 func get_item_slot() -> ItemSlot:
     return _item_slot
 
-
+## Swaps the two given items contained in an [Inventory] or [ItemSlot].
+## [br]
+## [b]NOTE:[/b] In the current version only two items of the same
+## size can be swapped.
 static func swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if item1 == null || item2 == null || item1 == item2:
         return false
@@ -242,7 +257,8 @@ static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> b
         return false
     return (item_owner as ItemSlot).equip(item)
 
-
+## Returns the value of the property with the given name. In case the property
+## can not be found, the default value is returned.
 func get_property(property_name: String, default_value = null) -> Variant:
     # Note: The protoset editor still doesn't support arrays and dictionaries,
     # but those can still be added via JSON definitions or via code.
@@ -260,7 +276,7 @@ func get_property(property_name: String, default_value = null) -> Variant:
 
     return default_value
 
-
+## Sets the property with the given name for this item.
 func set_property(property_name: String, value) -> void:
     if properties.has(property_name) && properties[property_name] == value:
         return
@@ -268,20 +284,20 @@ func set_property(property_name: String, value) -> void:
     property_changed.emit(property_name)
     properties_changed.emit()
 
-
+## Clears the property with the given name for this item.
 func clear_property(property_name: String) -> void:
     if properties.has(property_name):
         properties.erase(property_name)
         property_changed.emit(property_name)
         properties_changed.emit()
 
-
+## Resets all properties to default values.
 func reset() -> void:
     protoset = null
     prototype_id = ""
     properties = {}
 
-
+## Serializes the item into a dictionary.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
@@ -307,7 +323,7 @@ func _serialize_property(property_name: String) -> Dictionary:
     }
     return result;
 
-
+## Deserializes the item from a given dictionary.
 func deserialize(source: Dictionary) -> bool:
     if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
         !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
@@ -342,7 +358,8 @@ func _deserialize_property(data: Dictionary):
         return null
     return result
 
-
+## Helper function for retrieving the item texture. It checks the
+## [code]image[/code] item property and loads it as a texture, if available.
 func get_texture() -> Texture2D:
     var texture_path = get_property(KEY_IMAGE)
     if texture_path && texture_path != "" && ResourceLoader.exists(texture_path):
@@ -351,7 +368,9 @@ func get_texture() -> Texture2D:
             return texture
     return null
 
-
+## Helper function for retrieving the item title. It checks the [code]name[/code]
+## item property and uses it as the title, if available. Otherwise,
+## [code]prototype_id[/code] is returned as title.
 func get_title() -> String:
     var title = get_property(KEY_NAME, prototype_id)
     if !(title is String):

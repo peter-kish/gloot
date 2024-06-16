@@ -3,10 +3,13 @@
 class_name ItemProtoset
 extends Resource
 
+## A resource type holding a set of inventory item prototypes in JSON format.
+
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 const KEY_ID: String = "id"
 
+## JSON string containing item prototypes.
 @export_multiline var json_data: String :
     set(new_json_data):
         json_data = new_json_data
@@ -20,7 +23,8 @@ var _prototypes: Dictionary = {} :
         _update_json_data()
         _save()
 
-
+## Parses the given json string and generates a new [code]prototypes[/code]
+## dictionary.
 func parse(json: String) -> void:
     _prototypes.clear()
 
@@ -89,26 +93,26 @@ func _save() -> void:
     if !resource_path.is_empty():
         ResourceSaver.save(self)
 
-
+## Returns the prototype with the given ID.
 func get_prototype(id: StringName) -> Variant:
     assert(has_prototype(id), "No prototype with ID: %s" % id)
     return _prototypes[id]
 
-
+## Adds a prototype with the given ID.
 func add_prototype(id: String) -> void:
     assert(!has_prototype(id), "Prototype with ID already exists")
     _prototypes[id] = {KEY_ID: id}
     _update_json_data()
     _save()
 
-
+## Removes the prototype with the given ID.
 func remove_prototype(id: String) -> void:
     assert(has_prototype(id), "No prototype with ID: %s" % id)
     _prototypes.erase(id)
     _update_json_data()
     _save()
 
-
+## Duplicates the prototype with the given ID.
 func duplicate_prototype(id: String) -> void:
     assert(has_prototype(id), "No prototype with ID: %s" % id)
     var new_id = "%s_duplicate" % id
@@ -118,7 +122,7 @@ func duplicate_prototype(id: String) -> void:
     _update_json_data()
     _save()
 
-
+## Renames the prototype with the given ID to a new ID.
 func rename_prototype(id: String, new_id: String) -> void:
     assert(has_prototype(id), "No prototype with ID: %s" % id)
     assert(!has_prototype(new_id), "Prototype with ID already exists")
@@ -129,23 +133,25 @@ func rename_prototype(id: String, new_id: String) -> void:
     _update_json_data()
     _save()
 
-
 func set_prototype_properties(id: String, new_properties: Dictionary) -> void:
     _prototypes[id] = new_properties
     _update_json_data()
     _save()
 
-
+## Checks if a prototype with the given ID exists.
 func has_prototype(id: String) -> bool:
     return _prototypes.has(id)
 
-
+## Sets the property with the given value for the prototype with the
+## given ID.
 func set_prototype_property(id: String, property_name: String, value) -> void:
     assert(has_prototype(id), "No prototype with ID: %s" % id)
     var prototype = get_prototype(id)
     prototype[property_name] = value
 
-
+## Returns the value of the property with the given name from the prototype
+## with the given ID. In case the value can not be found, the default value
+## is returned.
 func get_prototype_property(id: String, property_name: String, default_value = null) -> Variant:
     if has_prototype(id):
         var prototype = get_prototype(id)
@@ -154,7 +160,7 @@ func get_prototype_property(id: String, property_name: String, default_value = n
     
     return default_value
 
-
+## Checks if the given prototype has the given property.
 func prototype_has_property(id: String, property_name: String) -> bool:
     if has_prototype(id):
         return get_prototype(id).has(property_name)
