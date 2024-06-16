@@ -15,7 +15,6 @@ signal item_mouse_exited(item)                  ## Emitted when the mouse cursor
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
-const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -341,6 +340,7 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)
     _ctrl_inventory_grid_basic.selection_changed.connect(_on_selection_changed)
     _ctrl_inventory_grid_basic.select_mode = select_mode
+    _ctrl_inventory_grid_basic.mouse_filter = Control.MOUSE_FILTER_IGNORE
     add_child(_ctrl_inventory_grid_basic)
 
     _selection_panels = Control.new()
@@ -348,16 +348,15 @@ func _ready() -> void:
     _selection_panels.name = "SelectionPanels"
     add_child(_selection_panels)
 
-    CtrlDraggable.draggable_dropped.connect(func(_grabbed_draggable, _zone, _local_drop_position):
-        _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
-    )
-
     _update_size()
     _queue_refresh()
 
 
 func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_BEGIN:
+        _ctrl_inventory_grid_basic.mouse_filter = Control.MOUSE_FILTER_PASS
     if what == NOTIFICATION_DRAG_END:
+        _ctrl_inventory_grid_basic.mouse_filter = Control.MOUSE_FILTER_IGNORE
         _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
 
 
@@ -463,14 +462,17 @@ func _fill_background(style: StyleBox, priority: int) -> void:
 
 
 func _get_global_grabbed_item() -> InventoryItem:
-    if CtrlDraggable.get_grabbed_draggable() == null:
+    var drag_data := get_viewport().gui_get_drag_data()
+    if !is_instance_valid(drag_data):
         return null
-    return (CtrlDraggable.get_grabbed_draggable().metadata as CtrlDraggableInventoryItem).item
+    if !(drag_data is InventoryItem):
+        return null
+    return drag_data as InventoryItem
 
 
 func _get_global_grabbed_item_local_pos() -> Vector2:
-    if CtrlDraggable.get_grabbed_draggable():
-        return get_local_mouse_position() - CtrlDraggable.get_grab_offset_local_to(self)
+    if _get_global_grabbed_item() != null:
+        return get_local_mouse_position() - CtrlDraggableInventoryItem.get_grab_offset_local_to(self)
     return Vector2(-1, -1)
 
 

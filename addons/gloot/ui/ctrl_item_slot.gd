@@ -8,8 +8,6 @@ extends Control
 
 
 const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
-const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
-const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Reference to the item slot that is being displayed.
@@ -53,7 +51,6 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 
 var _background_panel: Panel
 var _ctrl_draggable_inventory_item: CtrlDraggableInventoryItem
-var _ctrl_drop_zone: CtrlDropZone
 
 
 func _connect_item_slot_signals() -> void:
@@ -79,6 +76,7 @@ func _ready():
 
     _background_panel = Panel.new()
     _background_panel.size = size
+    _background_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _set_panel_style(_background_panel, slot_style)
     add_child(_background_panel)
 
@@ -87,19 +85,9 @@ func _ready():
     _ctrl_draggable_inventory_item.size = size
     add_child(_ctrl_draggable_inventory_item)
 
-    _ctrl_drop_zone = CtrlDropZone.new()
-    _ctrl_drop_zone.draggable_dropped.connect(_on_draggable_dropped)
-    _ctrl_drop_zone.size = size
-    CtrlDraggable.draggable_grabbed.connect(_on_any_draggable_grabbed)
-    CtrlDraggable.draggable_dropped.connect(_on_any_draggable_dropped)
-    add_child(_ctrl_drop_zone)
-    _ctrl_drop_zone.deactivate()
-
     resized.connect(func():
         if is_instance_valid(_background_panel):
             _background_panel.size = size
-        if is_instance_valid(_ctrl_drop_zone):
-            _ctrl_drop_zone.size = size
         if is_instance_valid(_ctrl_draggable_inventory_item):
             _ctrl_draggable_inventory_item.size = size
     )
@@ -107,9 +95,24 @@ func _ready():
     _refresh()
 
 
-func _on_draggable_dropped(draggable: CtrlDraggable, drop_position: Vector2) -> void:
-    var item = (draggable.metadata as CtrlDraggableInventoryItem).item
+func _can_drop_data(at_position: Vector2, data) -> bool:
+    return data is InventoryItem
 
+
+func _drop_data(at_position: Vector2, data) -> void:
+    var item := (data as InventoryItem)
+    if is_instance_valid(item):
+        _on_item_dropped(item, at_position)
+
+
+func _notification(what):
+    if what == NOTIFICATION_DRAG_BEGIN:
+        _ctrl_draggable_inventory_item.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    elif what == NOTIFICATION_DRAG_END:
+        _ctrl_draggable_inventory_item.mouse_filter = Control.MOUSE_FILTER_PASS
+
+
+func _on_item_dropped(item: InventoryItem, drop_position: Vector2) -> void:
     if !item:
         return
     if !is_instance_valid(item_slot):
@@ -144,19 +147,6 @@ func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
         return false
 
     return InventoryItem.swap(item1, item2)
-
-
-func _on_any_draggable_grabbed(draggable: CtrlDraggable, grab_position: Vector2):
-    _ctrl_drop_zone.activate()
-
-
-func _on_any_draggable_dropped(draggable: CtrlDraggable, zone: CtrlDropZone, drop_position: Vector2):
-    _ctrl_drop_zone.deactivate()
-
-
-func _notification(what: int) -> void:
-    if what == NOTIFICATION_DRAG_END:
-        _ctrl_drop_zone.deactivate()
 
 
 func _refresh() -> void:

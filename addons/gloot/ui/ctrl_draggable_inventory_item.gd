@@ -4,11 +4,6 @@ extends Control
 signal activated
 signal clicked
 signal context_activated
-signal grabbed(position)
-signal dropped(zone, position)
-
-const CtrlDraggable = preload("res://addons/gloot/ui/ctrl_draggable.gd")
-const CtrlDropZone = preload("res://addons/gloot/ui/ctrl_drop_zone.gd")
 
 var item: InventoryItem :
     set(new_item):
@@ -18,11 +13,6 @@ var item: InventoryItem :
         item = new_item
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.item = item
-        if is_instance_valid(_ctrl_draggable):
-            if item:
-                _ctrl_draggable.activate()
-            else:
-                _ctrl_draggable.deactivate()
 var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE :
     set(new_stretch_mode):
         if icon_stretch_mode == new_stretch_mode:
@@ -31,8 +21,8 @@ var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.stretch_mode = icon_stretch_mode
 var ctrl_inventory_item_scene: PackedScene = null
-var _ctrl_draggable: CtrlDraggable
 var _ctrl_inventory_item: CtrlInventoryItemBase
+static var _grab_offset: Vector2
 
 
 func _ready() -> void:
@@ -44,36 +34,32 @@ func _ready() -> void:
     _ctrl_inventory_item.size = size
     _ctrl_inventory_item.item = item
     _ctrl_inventory_item.icon_stretch_mode = icon_stretch_mode
-
-    _ctrl_draggable = CtrlDraggable.new()
-    _ctrl_draggable.name = "CtrlDraggable"
-    _ctrl_draggable.size = size
-    _ctrl_draggable.create_preview = func(): return _create_preview()
-    _ctrl_draggable.gui_input.connect(_on_draggable_gui_event)
-    _ctrl_draggable.metadata = self
-    _ctrl_draggable.grabbed.connect(_on_grabbed)
-    _ctrl_draggable.dropped.connect(_on_dropped)
-    _ctrl_draggable.mouse_entered.connect(func(): mouse_entered.emit())
-    _ctrl_draggable.mouse_exited.connect(func(): mouse_exited.emit())
+    _ctrl_inventory_item.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
     add_child(_ctrl_inventory_item)
-    add_child(_ctrl_draggable)
 
     resized.connect(func():
         _ctrl_inventory_item.size = size
-        _ctrl_draggable.size = size
     )
 
-    if item == null:
-        _ctrl_draggable.deactivate()
+
+func _get_drag_data(at_position: Vector2) -> Variant:
+    _grab_offset = at_position * get_global_transform().get_scale()
+
+    var sub_preview: Control = null
+    sub_preview = _create_preview()
+    if sub_preview == null:
+        return null
+    var preview = Control.new()
+    sub_preview.position = -_grab_offset
+    preview.add_child(sub_preview)
+    set_drag_preview(preview)
+
+    return item
 
 
-func _on_grabbed(position: Vector2) -> void:
-    grabbed.emit(position)
-
-
-func _on_dropped(zone: CtrlDropZone, position: Vector2) -> void:
-    dropped.emit(zone, position)
+static func get_grab_offset_local_to(control: Control) -> Vector2:
+    return _grab_offset / control.get_global_transform().get_scale()
 
 
 func _create_preview() -> Control:
@@ -88,7 +74,7 @@ func _create_preview() -> Control:
     return preview
 
 
-func _on_draggable_gui_event(event: InputEvent) -> void:
+func _gui_input(event: InputEvent) -> void:
     if !(event is InputEventMouseButton):
         return
 
