@@ -120,6 +120,7 @@ func _ready() -> void:
 func _notification(what: int) -> void:
     if what == NOTIFICATION_DRAG_END:
         _ctrl_drop_zone.deactivate()
+        CtrlDragable.get_grabbed_dragable().show()
 
 
 func _connect_inventory_signals() -> void:
@@ -238,6 +239,7 @@ func _populate_list() -> void:
 
 
 func _on_item_grab(offset: Vector2, ctrl_inventory_item: CtrlInventoryItemRect) -> void:
+    CtrlDragable.get_grabbed_dragable().hide()
     _clear_selection()
 
 
