@@ -98,11 +98,25 @@ func _ready() -> void:
         _texture_rect.size = size
         _stack_size_label.size = size
     )
+    grabbed.connect(func(_offset):
+        if _texture_rect:
+            _texture_rect.hide()
+        if _stack_size_label:
+            _stack_size_label.hide()
+    )
 
     if item == null:
         deactivate()
 
     _refresh()
+
+
+func _notification(what) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        if _texture_rect:
+            _texture_rect.show()
+        if _stack_size_label:
+            _stack_size_label.show()
 
 
 func _update_texture() -> void:
