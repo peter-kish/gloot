@@ -247,6 +247,7 @@ func _swap_items(item1: InventoryItem, item2: InventoryItem) -> bool:
 
 
 func _on_any_dragable_grabbed(dragable: CtrlDragable, grab_position: Vector2):
+    CtrlDragable.get_grabbed_dragable().show()
     _ctrl_drop_zone.activate()
 
 
@@ -266,6 +267,7 @@ func _on_mouse_exited():
 
 func _notification(what: int) -> void:
     if what == NOTIFICATION_DRAG_END:
+        CtrlDragable.get_grabbed_dragable().hide()
         _ctrl_drop_zone.deactivate()
 
 
