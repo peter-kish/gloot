@@ -1,37 +1,40 @@
 # `CtrlInventoryGrid`
 
-Inherits: [Control](https://docs.godotengine.org/en/stable/classes/class_control.html)
+Inherits: `Control`
 
 ## Description
 
-A UI control representing a grid based inventory (`InventoryGrid`). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging.
+Control node for displaying inventories with a GridConstraint.
+
+Displays the inventory contents on a 2D grid. The grid style, size and item icons are customizable.
 
 ## Properties
 
-* `field_dimensions: Vector2` - The size of each inventory field in pixels.
-* `item_spacing: int` - The spacing between items in pixels.
-* `draw_grid: bool` - Displays a grid if true.
-* `grid_color: Color` - The color of the grid.
-* `draw_selections: bool` - Draws a rectangle behind the selected item if true.
-* `selection_color: Color` - The color of the selection.
-* `inventory_path: NodePath` - Path to an `Inventory` node.
-* `default_item_texture: Texture` - The default texture that will be used for items with no `image` property.
-* `stretch_item_sprites: bool` - If true, the inventory item sprites will be stretched to fit the inventory fields they are positioned on.
-* `inventory: InventoryGrid` - The `Inventory` node linked to this control.
-* `select_mode: int` - Single or multi select mode (hold CTRL to select multiple items).
+* `background_style: StyleBox` - The style used for the inventory background. Unlike `field_style`, this style is used when displaying a rectangle behind the 2D grid.
+* `custom_item_control_scene: PackedScene` - Custom control scene representing an `InventoryItem` (must inherit `CtrlInventoryItemBase`). If set to `null`, `CtrlInventoryItem` will be used to represent the item.
+* `field_dimensions: Vector2` - Size of individual fields in the grid.
+* `field_highlighted_style: StyleBox` - The grid field style used when hovering over it with the mouse.
+* `field_selected_style: StyleBox` - The grid field style used for selected items. Unlike `selection_style`, this style is used as field background behind selected items.
+* `field_style: StyleBox` - The default grid field background style. Unlike `background_style`, this style is used when displaying each individual field in the 2D grid.
+* `inventory: Inventory` - Reference to an inventory with a GridConstraint that is being displayed.
+* `item_spacing: int` - Spacing between grid fields.
+* `select_mode: int` - Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL. See the `ItemList.SelectMode` constants for details.
+* `selection_style: StyleBox` - The style used for displaying item selections. Unlike `field_selected_style`, this style is used when displaying rectangles over the selected items.
+* `stretch_item_icons: bool` - If enabled, stretches the icons based on `field_dimensions`.
 
 ## Methods
 
-* `get_selected_inventory_item() -> InventoryItem` - Returns the currently selected item. In case multiple items are selected, the first one is returned.
-* `get_selected_inventory_items() -> Array[InventoryItem]` - Returns all the currently selected items.
-* `select_inventory_item(item: InventoryItem) -> void` - Selects the given item.
-* `deselect_inventory_item() -> void` - Deselects the selected item.
+* `deselect_inventory_items() -> void` - Deselects all selected inventory items.
+* `get_selected_inventory_item() -> InventoryItem` - Returns the selected inventory item. If multiple items are selected, it returns the first one.
+* `get_selected_inventory_items() -> InventoryItem[]` - Returns an array of selected inventory items.
+* `select_inventory_item(item: InventoryItem) -> void` - Selects the given inventory item.
 
 ## Signals
 
-* `item_dropped(InventoryItem, Vector2)` - Emitted when a grabbed `InventoryItem` is dropped.
-* `inventory_item_activated(InventoryItem)` - Emitted when an `InventoryItem` is activated (i.e. double clicked).
-* `inventory_item_context_activated(InventoryItem)` - Emitted when the context menu of an `InventoryItem` is activated (i.e. right clicked).
-* `selection_changed` - Emitted when the selection has changed. Use `get_selected_inventory_item()` to obtain the currently selected item.
-* `item_mouse_entered(InventoryItem)` - Emitted when the mouse enters the `Rect` area of the control representing the given `InventoryItem`.
-* `item_mouse_exited(InventoryItem)` - Emitted when the mouse leaves the `Rect` area of the control representing the given `InventoryItem`.
+* `inventory_item_activated(item)` - Emitted when an inventory item double-clicked.
+* `inventory_item_context_activated(item)` - Emitted when an inventory item right-clicked.
+* `item_dropped(item, offset)` - Emitted when an item has been dropped onto the 2D grid.
+* `item_mouse_entered(item)` - Emitted when the mouse cursor has entered the visible area of an item.
+* `item_mouse_exited(item)` - Emitted when the mouse cursor has exited the visible area of an item.
+* `selection_changed()` - Emitted when the item selection has changed.
+
