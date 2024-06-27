@@ -24,6 +24,9 @@ mono_crash.*.json
 # Editor debugger plugin
 addons/zylann.editor_debugger/*
 
+# Python cache
+__pycache__
+
 .vscode
 
 addons/zylann.editor_debugger
