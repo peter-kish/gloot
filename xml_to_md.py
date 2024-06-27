@@ -12,15 +12,23 @@ def load_xml(xml_file: str) -> dict:
     get_attrib_to_dict(root, "inherits", class_data)
     for e in root:
         if e.tag == "brief_description":
-            class_data["brief_description"] = e.text.strip()
+            if len(e.text) > 0:
+                class_data["brief_description"] = e.text.strip()
         elif e.tag == "description":
-            class_data["description"] = e.text.strip()
+            if len(e.text) > 0:
+                class_data["description"] = e.text.strip()
         elif e.tag == "methods":
-            class_data["methods"] = extract_methods(e)
+            methods = extract_methods(e)
+            if len(methods) > 0:
+                class_data["methods"] = methods
         elif e.tag == "members":
-            class_data["members"] = extract_members(e)
+            members = extract_members(e)
+            if len(members) > 0:
+                class_data["members"] = members
         elif e.tag == "signals":
-            class_data["signals"] = extract_signals(e)
+            signals = extract_signals(e)
+            if len(signals) > 0:
+                class_data["signals"] = signals
 
     return class_data
 

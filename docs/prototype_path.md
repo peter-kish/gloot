@@ -8,9 +8,6 @@ A pre-parsed prototype path.
 
 A pre-parsed relative or absolute path of a prototype within a prototype tree (prototree).
 
-## Properties
-
-
 ## Methods
 
 * `equal(other: PrototypePath) -> bool` - Checks if the prototype path is equal to the given prototype path.

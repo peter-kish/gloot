@@ -8,9 +8,6 @@ A prototype tree (prototree).
 
 A tree structure of prototypes with a root prototype that can have a number of child prototypes.
 
-## Properties
-
-
 ## Methods
 
 * `clear() -> void` - Clears the prototree by clearing the roots properties and child prototypes.

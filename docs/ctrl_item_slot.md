@@ -15,6 +15,3 @@ A control node representing an inventory slot (`ItemSlot`).
 * `slot_highlighted_style: StyleBox` - The slot background style when the mouse cursor hovers over the slot.
 * `slot_style: StyleBox` - The slot background style.
 
-## Methods
-
-

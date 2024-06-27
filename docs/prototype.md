@@ -8,9 +8,6 @@ An item prototype.
 
 An item prototype contains a set of properties and is identified with an ID string. It can also contain other "child" prototypes as part of a prototype tree (prototree).
 
-## Properties
-
-
 ## Methods
 
 * `clear() -> void` - Clears the prototype by clearing its properties and removing all child prototypes.
