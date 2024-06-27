@@ -89,7 +89,7 @@ Prototrees are defined as JSON resources. The prototree is defined as a JSON obj
 2. `properties` - Contains the prototype properties
 
 Below is an example of a minimal prototree in JSON format:
-```json
+```javascript
 {
     // The root prototype has only one prototype and no properties:
     "prototypes": {
@@ -109,7 +109,7 @@ To define the stack size of an item prototype, use the `stack_size` property. If
 Similar to `stack_size`, the `max_stack_size` defines the maximum stack size and its default value is 1.
 
 Example:
-```json
+```javascript
 {
     "prototypes": {
         // The default stack size and the default maximum stack size is 1:
@@ -140,7 +140,7 @@ A `GridConstraint` can interpret the following item properties:
 * `positive_rotation` (`bool`) - Indicates whether the item icon will be rotated by positive or negative 90 degrees. If not defined, the item is rotated by positive 90 degrees.
 
 Example:
-```json
+```javascript
 {
     "prototypes": {
         // The default item size is Vector2i(1, 1):
@@ -166,27 +166,27 @@ Example:
 If an item is inside an inventory with a `WeightConstraint`, its `weight` property is interpreted as the (unit) weight of the item.
 
 Example:
-```json
+```javascript
 {
-	"prototypes": {
+    "prototypes": {
         // The default item weight is 1 and the default stack size is 1.
         // The total stack weight is 1 * 1 = 1:
-		"small_item": {},
+        "small_item": {},
         // The total stack weight is 1 * 20 = 20:
-		"big_item": {
-			"properties": {
-				"weight": 20
-			}
-		},
+        "big_item": {
+            "properties": {
+                "weight": 20
+            }
+        },
         // The total stack weight is 10 * 2 = 20:
         "small_stackable_item": {
             "properties": {
-				"stack_size": 10,
-				"max_stack_size": 10,
+                "stack_size": 10,
+                "max_stack_size": 10,
                 "weight": 2
-			}
+            }
         }
-	}
+    }
 }
 ```
 
@@ -195,7 +195,7 @@ Example:
 Prototypes can inherit properties from other prototypes, which can also override some of those properties.
 
 Example:
-```json
+```javascript
 {
     "prototypes": {
         // Base prototype for melee weapons.
