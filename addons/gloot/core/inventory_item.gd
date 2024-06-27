@@ -10,17 +10,18 @@ class_name InventoryItem
 
 signal property_changed(property_name)  ## Emitted when an item property has changed.
 
-var _prototree_json: JSON :
+## A JSON resource containing prototree information.
+var prototree_json: JSON :
     set(new_prototree_json):
-        if new_prototree_json == _prototree_json:
+        if new_prototree_json == prototree_json:
             return
 
         if (_inventory != null) && (new_prototree_json != _inventory.prototree_json):
             return
 
         _disconnect_prototree_json_signals()
-        _prototree_json = new_prototree_json
-        _prototree.deserialize(_prototree_json)
+        prototree_json = new_prototree_json
+        _prototree.deserialize(prototree_json)
         _on_prototree_changed()
         _connect_prototree_json_signals()
         
@@ -34,7 +35,7 @@ var _inventory: Inventory :
             return
         _inventory = new_inventory
         if _inventory:
-            _prototree_json = _inventory.prototree_json
+            prototree_json = _inventory.prototree_json
 
 const KEY_PROTOTREE: String = "prototree"
 const KEY_PROTOTYPE_PATH: String = "prototype_path"
@@ -52,31 +53,31 @@ const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 
 func _connect_prototree_json_signals() -> void:
-    if !is_instance_valid(_prototree_json):
+    if !is_instance_valid(prototree_json):
         return
 
-    _prototree_json.changed.connect(_on_prototree_json_changed)
+    prototree_json.changed.connect(_on_prototree_json_changed)
 
 
 func _disconnect_prototree_json_signals() -> void:
-    if !is_instance_valid(_prototree_json):
+    if !is_instance_valid(prototree_json):
         return
 
-    _prototree_json.changed.disconnect(_on_prototree_json_changed)
+    prototree_json.changed.disconnect(_on_prototree_json_changed)
 
 
-func _init(prototree_json: JSON = null, prototype_path: Variant = "") -> void:
-    _prototree_json = prototree_json
+func _init(prototree_json_: JSON = null, prototype_path: Variant = "") -> void:
+    prototree_json = prototree_json_
     _prototype = _prototree.get_prototype(prototype_path)
 
 
 func _on_prototree_json_changed() -> void:
-    _prototree.deserialize(_prototree_json)
+    _prototree.deserialize(prototree_json)
     _on_prototree_changed()
 
 
 func _on_prototree_changed() -> void:
-    if _prototree_json == null:
+    if prototree_json == null:
         _prototype = null
         return
 
@@ -104,7 +105,7 @@ func get_prototype() -> Prototype:
 
 ## Returns a duplicate of the item.
 func duplicate() -> InventoryItem:
-    var result := InventoryItem.new(_prototree_json, _prototype.get_path())
+    var result := InventoryItem.new(prototree_json, _prototype.get_path())
     result._properties = _properties.duplicate()
     return result
 
@@ -242,7 +243,7 @@ func is_property_overridden(property_name) -> bool:
 
 ## Resets item data. Clears its properties and sets its prototree to `null`.
 func reset() -> void:
-    _prototree_json = null
+    prototree_json = null
     _properties = {}
 
 
@@ -250,7 +251,7 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_PROTOTREE] = Inventory._serialize_prototree_json(_prototree_json)
+    result[KEY_PROTOTREE] = Inventory._serialize_prototree_json(prototree_json)
     if _prototype != null:
         result[KEY_PROTOTYPE_PATH] = str(_prototype.get_path())
     else:
@@ -285,7 +286,7 @@ func deserialize(source: Dictionary) -> bool:
     reset()
     
     # TODO: Check return values
-    _prototree_json = Inventory._deserialize_prototree_json(source[KEY_PROTOTREE])
+    prototree_json = Inventory._deserialize_prototree_json(source[KEY_PROTOTREE])
     _prototype = _prototree.get_prototype(source[KEY_PROTOTYPE_PATH])
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():

@@ -108,7 +108,7 @@ func test_reset() -> void:
     item.set_property("foo", "bar")
 
     item.reset()
-    assert(item._prototree_json == inventory.prototree_json)
+    assert(item.prototree_json == inventory.prototree_json)
     assert(item.get_prototype() != null)
     assert(PrototypePath.str_paths_equal(str(item.get_prototype().get_path()), "/minimal_item"))
     assert(item.get_overridden_properties().is_empty())
@@ -116,7 +116,7 @@ func test_reset() -> void:
 
     inventory.remove_item(item)
     item.reset()
-    assert(item._prototree_json == null)
+    assert(item.prototree_json == null)
     assert(item.get_prototype() == null)
     assert(item.get_overridden_properties().is_empty())
 

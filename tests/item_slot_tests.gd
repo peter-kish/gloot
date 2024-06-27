@@ -74,7 +74,7 @@ func test_can_hold_item() -> void:
 
 func test_serialize() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item._prototree_json
+    var expected_prototree_json := item.prototree_json
     var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
@@ -82,14 +82,14 @@ func test_serialize() -> void:
     slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item()._prototree_json == expected_prototree_json)
+    assert(slot.get_item().prototree_json == expected_prototree_json)
     assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)
 
 
 func test_serialize_json() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item._prototree_json
+    var expected_prototree_json := item.prototree_json
     var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
@@ -104,6 +104,6 @@ func test_serialize_json() -> void:
     slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item()._prototree_json == expected_prototree_json)
+    assert(slot.get_item().prototree_json == expected_prototree_json)
     assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)

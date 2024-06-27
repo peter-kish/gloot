@@ -10,6 +10,7 @@ It is based on an item prototype from an prototree. Can hold additional properti
 
 ## Properties
 
+* `prototree_json: JSON` - A JSON resource containing prototree information.
 
 ## Methods
 

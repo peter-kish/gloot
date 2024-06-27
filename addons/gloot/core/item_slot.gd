@@ -13,6 +13,7 @@ signal cleared                  ## Emitted when the slot is cleared.Emitted when
 const Verify = preload("res://addons/gloot/core/verify.gd")
 const KEY_ITEM: String = "item"
 
+## A JSON resource containing prototree information.
 @export var prototree_json: JSON:
     set(new_prototree_json):
         if new_prototree_json == prototree_json:
@@ -107,7 +108,7 @@ func can_hold_item(item: InventoryItem) -> bool:
     assert(prototree_json != null, "Item prototree not set!")
     if item == null:
         return false
-    if prototree_json != item._prototree_json:
+    if prototree_json != item.prototree_json:
         return false
 
     return true

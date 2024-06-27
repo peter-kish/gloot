@@ -10,7 +10,7 @@ An item slot that can hold an inventory item.
 
 ## Properties
 
-* `prototree_json: JSON` - 
+* `prototree_json: JSON` - A JSON resource containing prototree information.
 
 ## Methods
 
