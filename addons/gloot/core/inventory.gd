@@ -15,10 +15,18 @@ signal constraint_added(constraint)             ## Emitted when a new constraint
 signal constraint_removed(constraint)           ## Emitted when a constraint has been removed from the inventory.
 signal constraint_changed(constraint)           ## Emitted when an inventory constraint has changed.
 
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
-const ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
-const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const _ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+
+const _KEY_NODE_NAME: String = "node_name"
+const _KEY_PROTOTREE: String = "prototree"
+const _KEY_CONSTRAINTS: String = "constraints"
+const _KEY_ITEMS: String = "items"
+const _KEY_STACK_SIZE = _StackManager._KEY_STACK_SIZE
+const _KEY_MAX_STACK_SIZE = _StackManager._KEY_MAX_STACK_SIZE
 
 ## A JSON resource containing prototree information.
 @export var prototree_json: JSON :
@@ -36,18 +44,10 @@ const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 var _prototree := ProtoTree.new()
 
 var _items: Array[InventoryItem] = []
-var _constraint_manager: ConstraintManager = null
+var _constraint_manager: _ConstraintManager = null
 var _serialized_format: Dictionary:
     set(new_serialized_format):
         _serialized_format = new_serialized_format
-
-const KEY_NODE_NAME: String = "node_name"
-const KEY_PROTOTREE: String = "prototree"
-const KEY_CONSTRAINTS: String = "constraints"
-const KEY_ITEMS: String = "items"
-const KEY_STACK_SIZE = StackManager.KEY_STACK_SIZE
-const KEY_MAX_STACK_SIZE = StackManager.KEY_MAX_STACK_SIZE
-const Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 ## Returns the inventory prototree parsed from the prototree_json JSON resource.
@@ -100,7 +100,7 @@ static func _get_item_script() -> Script:
 
 
 func _init() -> void:
-    _constraint_manager = ConstraintManager.new(self)
+    _constraint_manager = _ConstraintManager.new(self)
     _constraint_manager.constraint_changed.connect(_on_constraint_changed)
 
 
@@ -147,11 +147,11 @@ func get_item_count() -> int:
 
 
 func _connect_item_signals(item: InventoryItem) -> void:
-    Utils.safe_connect(item.property_changed, _on_item_property_changed.bind(item))
+    _Utils.safe_connect(item.property_changed, _on_item_property_changed.bind(item))
 
 
 func _disconnect_item_signals(item:InventoryItem) -> void:
-    Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
+    _Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
 
 
 func _on_item_property_changed(property: String, item: InventoryItem) -> void:
@@ -300,14 +300,14 @@ func serialize() -> Dictionary:
     if prototree_json == null || _constraint_manager == null:
         return result
 
-    result[KEY_NODE_NAME] = name as String
-    result[KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
+    result[_KEY_NODE_NAME] = name as String
+    result[_KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
     if !_constraint_manager.is_empty():
-        result[KEY_CONSTRAINTS] = _constraint_manager.serialize()
+        result[_KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
-        result[KEY_ITEMS] = []
+        result[_KEY_ITEMS] = []
         for item in get_items():
-            result[KEY_ITEMS].append(item.serialize())
+            result[_KEY_ITEMS].append(item.serialize())
 
     return result
 
@@ -323,28 +323,28 @@ static func _serialize_prototree_json(prototree_json: JSON) -> String:
 
 ## Loads the inventory data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
-        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
-        !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
+    if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) ||\
+        !_Verify.dict(source, true, _KEY_PROTOTREE, TYPE_STRING) ||\
+        !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
+        !_Verify.dict(source, false, _KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
     prototree_json = null
 
-    if !source[KEY_NODE_NAME].is_empty() && source[KEY_NODE_NAME] != name:
-        name = source[KEY_NODE_NAME]
-    prototree_json = _deserialize_prototree_json(source[KEY_PROTOTREE])
+    if !source[_KEY_NODE_NAME].is_empty() && source[_KEY_NODE_NAME] != name:
+        name = source[_KEY_NODE_NAME]
+    prototree_json = _deserialize_prototree_json(source[_KEY_PROTOTREE])
     # TODO: Check return value:
-    if source.has(KEY_ITEMS):
-        var items = source[KEY_ITEMS]
+    if source.has(_KEY_ITEMS):
+        var items = source[_KEY_ITEMS]
         for item_dict in items:
             var item = _get_item_script().new()
             # TODO: Check return value:
             item.deserialize(item_dict)
             assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.get_title())
-    if source.has(KEY_CONSTRAINTS):
-        if !_constraint_manager.deserialize(source[KEY_CONSTRAINTS]):
+    if source.has(_KEY_CONSTRAINTS):
+        if !_constraint_manager.deserialize(source[_KEY_CONSTRAINTS]):
             return false
 
     return true
@@ -365,33 +365,33 @@ static func _deserialize_prototree_json(data: String) -> JSON:
 ## which is added to the inventory. Returns `null` if the split cannot be performed or if the new stack cannot be added
 ## to the inventory.
 func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
-    return StackManager.inv_split_stack(self, item, ItemCount.new(new_stack_size))
+    return _StackManager.inv_split_stack(self, item, _ItemCount.new(new_stack_size))
 
 
 ## Merges the `item_src` item stack into the `item_dst` stack which is inside the inventory. If `item_dst` doesn't have
 ## enough stack space and `split_source` is set to `true`, `item_src` will be split and only partially merged. Returns
 ## `false` if the merge cannot be performed.
 func merge_stacks(item_dst: InventoryItem, item_src: InventoryItem, split_source: bool = false) -> bool:
-    return StackManager.inv_merge_stack(self, item_dst, item_src, split_source)
+    return _StackManager.inv_merge_stack(self, item_dst, item_src, split_source)
 
 
 ## Adds the given item to the inventory and merges it with all compatible items. Returns `false` if the item cannot be
 ## added.
 func add_item_automerge(item: InventoryItem) -> bool:
-    return StackManager.inv_add_automerge(self, item)
+    return _StackManager.inv_add_automerge(self, item)
 
 
 ## Adds the given item to the inventory, splitting it if there is not enough space for the whole stack.
 func add_item_autosplit(item: InventoryItem) -> bool:
-    return StackManager.inv_add_autosplit(self, item)
+    return _StackManager.inv_add_autosplit(self, item)
 
 
 ## A combination of `add_item_autosplit` and `add_item_automerge`. Adds the given item stack into the inventory, splitting it up
 ## and joining it with available item stacks, as needed.
 func add_item_autosplitmerge(item: InventoryItem) -> bool:
-    return StackManager.inv_add_autosplitmerge(self, item)
+    return _StackManager.inv_add_autosplitmerge(self, item)
 
 
 ## Merges the given item with all compatible items in the same inventory.
 func pack_item(item: InventoryItem) -> void:
-    return StackManager.inv_pack_stack(self, item)
+    return _StackManager.inv_pack_stack(self, item)

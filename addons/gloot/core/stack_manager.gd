@@ -1,53 +1,53 @@
-const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
-const KEY_STACK_SIZE: String = "stack_size"
-const KEY_MAX_STACK_SIZE: String = "max_stack_size"
+const _KEY_STACK_SIZE: String = "stack_size"
+const _KEY_MAX_STACK_SIZE: String = "max_stack_size"
 
 const DEFAULT_STACK_SIZE: int = 1
 const DEFAULT_MAX_STACK_SIZE: int = 1
 
 
-static func get_item_stack_size(item: InventoryItem) -> ItemCount:
+static func get_item_stack_size(item: InventoryItem) -> _ItemCount:
     assert(item != null, "item is null!")
-    var stack_size: int = item.get_property(KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
-    return ItemCount.new(stack_size)
+    var stack_size: int = item.get_property(_KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
+    return _ItemCount.new(stack_size)
 
 
-static func get_item_max_stack_size(item: InventoryItem) -> ItemCount:
+static func get_item_max_stack_size(item: InventoryItem) -> _ItemCount:
     assert(item != null, "item is null!")
-    var max_stack_size: int = item.get_property(KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
-    return ItemCount.new(max_stack_size)
+    var max_stack_size: int = item.get_property(_KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
+    return _ItemCount.new(max_stack_size)
 
 
-static func set_item_stack_size(item: InventoryItem, stack_size: ItemCount) -> bool:
+static func set_item_stack_size(item: InventoryItem, stack_size: _ItemCount) -> bool:
     assert(item != null, "item is null!")
     assert(stack_size != null, "stack_size is null!")
     if stack_size.gt(get_item_max_stack_size(item)):
         return false
-    if stack_size.eq(ItemCount.new(0)):
+    if stack_size.eq(_ItemCount.new(0)):
         var inventory: Inventory = item.get_inventory()
         if inventory != null:
             inventory.remove_item(item)
-    item.set_property(KEY_STACK_SIZE, stack_size.count)
+    item.set_property(_KEY_STACK_SIZE, stack_size.count)
     return true
 
 
-static func set_item_max_stack_size(item: InventoryItem, max_stack_size: ItemCount) -> void:
+static func set_item_max_stack_size(item: InventoryItem, max_stack_size: _ItemCount) -> void:
     assert(item != null, "item is null!")
     assert(max_stack_size != null, "max_stack_size is null!")
-    item.set_property(KEY_MAX_STACK_SIZE, max_stack_size.count)
+    item.set_property(_KEY_MAX_STACK_SIZE, max_stack_size.count)
 
 
-static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
+static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> _ItemCount:
     assert(prototree != null, "prototree is null!")
-    var stack_size: int = prototree.get_prototype_property(prototype_path, KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
-    return ItemCount.new(stack_size)
+    var stack_size: int = prototree.get_prototype_property(prototype_path, _KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
+    return _ItemCount.new(stack_size)
 
 
-static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> ItemCount:
+static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> _ItemCount:
     assert(prototree != null, "prototree is null!")
-    var max_stack_size: int = prototree.get_prototype_property(prototype_path, KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
-    return ItemCount.new(max_stack_size)
+    var max_stack_size: int = prototree.get_prototype_property(prototype_path, _KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
+    return _ItemCount.new(max_stack_size)
 
 
 static func stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> bool:
@@ -57,8 +57,8 @@ static func stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> b
     assert(item_2 != null, "item_2 is null!")
 
     var ignore_properies: Array[String] = [
-        KEY_STACK_SIZE,
-        KEY_MAX_STACK_SIZE
+        _KEY_STACK_SIZE,
+        _KEY_MAX_STACK_SIZE
     ]
 
     if !item_1.get_prototype().get_path().equal(item_2.get_prototype().get_path()):
@@ -102,7 +102,7 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> b
         return false
 
     var src_size := get_item_stack_size(item_src)
-    set_item_stack_size(item_src, ItemCount.zero())
+    set_item_stack_size(item_src, _ItemCount.zero())
     set_item_stack_size(item_dst, get_item_stack_size(item_dst).add(src_size))
     return true
 
@@ -111,11 +111,11 @@ static func _can_merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) 
     if !stacks_compatible(item_dst, item_src):
         return false
 
-    var src_size: ItemCount = get_item_stack_size(item_src)
+    var src_size: _ItemCount = get_item_stack_size(item_src)
     var dst_size := get_item_stack_size(item_dst)
     var free_dst_stack_space := get_free_stack_space(item_dst)
 
-    if free_dst_stack_space.eq(ItemCount.zero()):
+    if free_dst_stack_space.eq(_ItemCount.zero()):
         return false
     if src_size.gt(free_dst_stack_space):
         return false
@@ -144,15 +144,15 @@ static func _can_merge_stacks_split_source(item_dst: InventoryItem, item_src: In
         return false
     if !stacks_compatible(item_dst, item_src):
         return false
-    return !get_free_stack_space(item_dst).eq(ItemCount.zero())
+    return !get_free_stack_space(item_dst).eq(_ItemCount.zero())
 
 
-static func get_free_stack_space(item: InventoryItem) -> ItemCount:
+static func get_free_stack_space(item: InventoryItem) -> _ItemCount:
     assert(item != null, "item is null!")
     return get_item_max_stack_size(item).sub(get_item_stack_size(item))
 
 
-static func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+static func split_stack(item: InventoryItem, new_stack_size: _ItemCount) -> InventoryItem:
     if !can_split_stack(item, new_stack_size):
         return null
 
@@ -162,13 +162,13 @@ static func split_stack(item: InventoryItem, new_stack_size: ItemCount) -> Inven
     return new_item
 
 
-static func can_split_stack(item: InventoryItem, new_stack_size: ItemCount) -> bool:
+static func can_split_stack(item: InventoryItem, new_stack_size: _ItemCount) -> bool:
     if get_item_stack_size(item).gt(new_stack_size):
         return true
     return false
 
 
-static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size: ItemCount) -> InventoryItem:
+static func inv_split_stack(inv: Inventory, item: InventoryItem, new_stack_size: _ItemCount) -> InventoryItem:
     assert(inv.has_item(item), "Inventory must contain item!")
 
     var old_item_stack_size := get_item_stack_size(item)
@@ -219,8 +219,8 @@ static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryIte
         _merge_stacks_split_source(item_dst, item_src)
         return true
 
-    var receivable_stack_size := ItemCount.min(get_free_stack_space(item_dst), inv._constraint_manager.get_space_for(item_src))
-    if receivable_stack_size.eq(ItemCount.zero()):
+    var receivable_stack_size := _ItemCount.min(get_free_stack_space(item_dst), inv._constraint_manager.get_space_for(item_src))
+    if receivable_stack_size.eq(_ItemCount.zero()):
         return false
     var src_stack_size := get_item_stack_size(item_src)
     if receivable_stack_size.ge(src_stack_size):
@@ -250,7 +250,7 @@ static func inv_add_autosplit(inv: Inventory, item: InventoryItem) -> bool:
         return true
 
     var space_for_item := inv._constraint_manager.get_space_for(item)
-    if space_for_item.eq(ItemCount.zero()):
+    if space_for_item.eq(_ItemCount.zero()):
         return false
 
     var new_stack := split_stack(item, space_for_item)
@@ -272,7 +272,7 @@ static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
 
     for i in inv.get_items():
         _merge_stacks_split_source(i, item)
-        if get_item_stack_size(item).eq(ItemCount.zero()):
+        if get_item_stack_size(item).eq(_ItemCount.zero()):
             return true
     inv.add_item(item)
     return true
@@ -280,7 +280,7 @@ static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
 
 static func _inv_has_space_for_single_item(inv: Inventory, item: InventoryItem) -> bool:
     var test_item := item.duplicate()
-    set_item_stack_size(test_item, ItemCount.one())
+    set_item_stack_size(test_item, _ItemCount.one())
     return inv._constraint_manager.has_space_for(test_item)
 
 

@@ -5,15 +5,15 @@ extends RefCounted
 ## An item prototype contains a set of properties and is identified with an ID string. It can also contain other "child"
 ## prototypes as part of a prototype tree (prototree).
 
-const KEY_PROPERTIES = "properties"
-const KEY_PROTOTYPES = "prototypes"
+const _KEY_PROPERTIES = "properties"
+const _KEY_PROTOTYPES = "prototypes"
 
 var _id: String
 var _properties: Dictionary
 var _parent: Prototype
 var _prototypes: Dictionary
 
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 
 func _init(id: String) -> void:
@@ -126,7 +126,7 @@ func get_path() -> PrototypePath:
 
 func _get_str_path() -> String:
     if _is_root():
-        return PrototypePath.DELIMITER
+        return PrototypePath._DELIMITER
     return "%s/%s" % [_parent._get_str_path(), get_id()]
 
 
@@ -185,19 +185,19 @@ func _deserialize_from_dict(data: Dictionary) -> bool:
     # TODO: data verification
     if data.is_empty():
         return true
-    if data.has(KEY_PROPERTIES):
-        for property in data[KEY_PROPERTIES].keys():
-            if typeof(data[KEY_PROPERTIES][property]) == TYPE_STRING:
-                var value = Utils.str_to_var(data[KEY_PROPERTIES][property])
+    if data.has(_KEY_PROPERTIES):
+        for property in data[_KEY_PROPERTIES].keys():
+            if typeof(data[_KEY_PROPERTIES][property]) == TYPE_STRING:
+                var value = _Utils.str_to_var(data[_KEY_PROPERTIES][property])
                 if value == null:
-                    set_property(property, data[KEY_PROPERTIES][property])
+                    set_property(property, data[_KEY_PROPERTIES][property])
                 else:
                     set_property(property, value)
             else:
-                set_property(property, data[KEY_PROPERTIES][property])
-    if data.has(KEY_PROTOTYPES):
-        for prototype_id in data[KEY_PROTOTYPES].keys():
+                set_property(property, data[_KEY_PROPERTIES][property])
+    if data.has(_KEY_PROTOTYPES):
+        for prototype_id in data[_KEY_PROTOTYPES].keys():
             var new_protototype := create_prototype(prototype_id)
-            if !new_protototype._deserialize_from_dict(data[KEY_PROTOTYPES][prototype_id]):
+            if !new_protototype._deserialize_from_dict(data[_KEY_PROTOTYPES][prototype_id]):
                 return false
     return true

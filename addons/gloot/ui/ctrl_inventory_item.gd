@@ -7,7 +7,7 @@ extends CtrlInventoryItemBase
 ## Displays an `InventoryItem` icon and its stack size. Consists of a `TextureRect` (the icon) a `Label` (the stack
 ## size).
 
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 var _texture_rect: TextureRect
 var _stack_size_label: Label
@@ -16,13 +16,13 @@ var _stack_size_label: Label
 func _connect_item_signals(new_item: InventoryItem) -> void:
     if new_item == null:
         return
-    Utils.safe_connect(new_item.property_changed, _on_item_property_changed)
+    _Utils.safe_connect(new_item.property_changed, _on_item_property_changed)
 
 
 func _disconnect_item_signals() -> void:
     if !is_instance_valid(item):
         return
-    Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
+    _Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
 
 
 func _on_item_property_changed(_property: String) -> void:

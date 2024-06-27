@@ -9,7 +9,7 @@ extends ItemList
 signal inventory_item_activated(item)           ## Emitted when an inventory item double-clicked.
 signal inventory_item_context_activated(item)   ## Emitted when an inventory item right-clicked.
 
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Reference to the inventory that is being displayed.
 @export var inventory: Inventory = null :
@@ -41,7 +41,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
-        Utils.safe_connect(inventory.ready, _refresh)
+        _Utils.safe_connect(inventory.ready, _refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
     inventory.item_added.connect(_on_item_manipulated)
@@ -50,7 +50,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    Utils.safe_disconnect(inventory.ready, _refresh)
+    _Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)
     inventory.item_added.disconnect(_on_item_manipulated)
@@ -59,9 +59,9 @@ func _disconnect_inventory_signals() -> void:
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == InventoryItem.KEY_NAME || property == Inventory.KEY_STACK_SIZE:
+    if property == InventoryItem._KEY_NAME || property == Inventory._KEY_STACK_SIZE:
         set_item_text(inventory.get_item_index(item), _get_item_title(item))
-    if property == InventoryItem.KEY_IMAGE:
+    if property == InventoryItem._KEY_IMAGE:
         set_item_icon(inventory.get_item_index(item), item.get_texture())
 
 

@@ -2,12 +2,12 @@ extends RefCounted
 
 signal constraint_changed(constraint)
 
-const Verify = preload("res://addons/gloot/core/verify.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
-const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
-const KEY_CONSTRAINT_NAME: String = "name"
-const KEY_CONSTRAINT_DATA: String = "data"
+const _KEY_CONSTRAINT_NAME: String = "name"
+const _KEY_CONSTRAINT_DATA: String = "data"
 
 var inventory: Inventory = null
 var _constraints: Array[InventoryConstraint] = []
@@ -25,12 +25,12 @@ func is_empty() -> bool:
 
 func register_constraint(constraint: InventoryConstraint) -> void:
     _constraints.append(constraint)
-    Utils.safe_connect(constraint.changed, _on_constraint_changed.bind(constraint))
+    _Utils.safe_connect(constraint.changed, _on_constraint_changed.bind(constraint))
 
 
 func unregister_constraint(constraint: InventoryConstraint) -> void:
     _constraints.erase(constraint)
-    Utils.safe_disconnect(constraint.changed, _on_constraint_changed.bind(constraint))
+    _Utils.safe_disconnect(constraint.changed, _on_constraint_changed.bind(constraint))
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
@@ -82,10 +82,10 @@ func _enforce_constraints(item: InventoryItem) -> bool:
     return true
 
 
-func get_space_for(item: InventoryItem) -> ItemCount:
-    var min := ItemCount.inf()
+func get_space_for(item: InventoryItem) -> _ItemCount:
+    var min := _ItemCount.inf()
     for constraint in _constraints:
-        var space_for_item: ItemCount = ItemCount.new(constraint.get_space_for(item))
+        var space_for_item: _ItemCount = _ItemCount.new(constraint.get_space_for(item))
         if space_for_item.lt(min):
             min = space_for_item
     return min
@@ -117,8 +117,8 @@ func serialize() -> Dictionary:
 
     for constraint in _constraints:
         result[constraint.get_script().resource_path] = {
-            KEY_CONSTRAINT_NAME: constraint.name,
-            KEY_CONSTRAINT_DATA: constraint.serialize()
+            _KEY_CONSTRAINT_NAME: constraint.name,
+            _KEY_CONSTRAINT_DATA: constraint.serialize()
         }
 
     return result
@@ -126,9 +126,9 @@ func serialize() -> Dictionary:
 
 func deserialize(source: Dictionary) -> bool:
     for constraint_script_path in source:
-        if !Verify.dict(source[constraint_script_path], true, KEY_CONSTRAINT_NAME, [TYPE_STRING, TYPE_STRING_NAME]):
+        if !_Verify.dict(source[constraint_script_path], true, _KEY_CONSTRAINT_NAME, [TYPE_STRING, TYPE_STRING_NAME]):
             return false
-        if !Verify.dict(source[constraint_script_path], true, KEY_CONSTRAINT_DATA, TYPE_DICTIONARY):
+        if !_Verify.dict(source[constraint_script_path], true, _KEY_CONSTRAINT_DATA, TYPE_DICTIONARY):
             return false
 
     reset()

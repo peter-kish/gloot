@@ -1,4 +1,4 @@
-const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 const Inf: int = -1
 
@@ -21,8 +21,8 @@ func is_inf() -> bool:
     return count < 0
 
 
-## Adds the given ItemCount to the current one and returns the result.
-func add(item_count_: ItemCount) -> ItemCount:
+## Adds the given _ItemCount to the current one and returns the result.
+func add(item_count_: _ItemCount) -> _ItemCount:
     if item_count_.is_inf():
         count = Inf
     elif !self.is_inf():
@@ -31,8 +31,8 @@ func add(item_count_: ItemCount) -> ItemCount:
     return self
 
 
-## Subtracts the given ItemCount from the current one and returns the result.
-func sub(item_count_: ItemCount) -> ItemCount:
+## Subtracts the given _ItemCount from the current one and returns the result.
+func sub(item_count_: _ItemCount) -> _ItemCount:
     assert(!item_count_.gt(self), "Can't subtract a count greater than self!")
     if item_count_.is_inf():
         count = 0
@@ -42,8 +42,8 @@ func sub(item_count_: ItemCount) -> ItemCount:
     return self
 
 
-## Multiplies the given ItemCount with the current one and returns the result.
-func mul(item_count_: ItemCount) -> ItemCount:
+## Multiplies the given _ItemCount with the current one and returns the result.
+func mul(item_count_: _ItemCount) -> _ItemCount:
     if (count == 0):
         return self
     if item_count_.is_inf():
@@ -59,8 +59,8 @@ func mul(item_count_: ItemCount) -> ItemCount:
     return self
 
 
-## Divides the current ItemCount with the given one and returns the result.
-func div(item_count_: ItemCount) -> ItemCount:
+## Divides the current _ItemCount with the given one and returns the result.
+func div(item_count_: _ItemCount) -> _ItemCount:
     assert(item_count_.count > 0 || item_count_.is_inf(), "Can't devide by zero!")
     if (count == 0):
         return self
@@ -78,12 +78,12 @@ func div(item_count_: ItemCount) -> ItemCount:
 
 
 ## Check if the item count is equal with the given item count.
-func eq(item_count_: ItemCount) -> bool:
+func eq(item_count_: _ItemCount) -> bool:
     return item_count_.count == count
 
 
 ## Check if the item count is less than the given item count.
-func lt(item_count_: ItemCount) -> bool:
+func lt(item_count_: _ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
@@ -96,12 +96,12 @@ func lt(item_count_: ItemCount) -> bool:
 
 
 ## Check if the item count is less or equal than the given item count.
-func le(item_count_: ItemCount) -> bool:
+func le(item_count_: _ItemCount) -> bool:
     return self.lt(item_count_) || self.eq(item_count_)
 
 
 ## Check if the item count is greater than the given item count.
-func gt(item_count_: ItemCount) -> bool:
+func gt(item_count_: _ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
@@ -114,30 +114,30 @@ func gt(item_count_: ItemCount) -> bool:
 
 
 ## Check if the item count is greater or equal than the given item count.
-func ge(item_count_: ItemCount) -> bool:
+func ge(item_count_: _ItemCount) -> bool:
     return self.gt(item_count_) || self.eq(item_count_)
 
 
 ## Returns the smaller item count out of the two.
-static func min(item_count_l: ItemCount, item_count_r: ItemCount) -> ItemCount:
+static func min(item_count_l: _ItemCount, item_count_r: _ItemCount) -> _ItemCount:
     if item_count_l.lt(item_count_r):
         return item_count_l
     return item_count_r
 
 
 ## Returns an infinite item count.
-static func inf() -> ItemCount:
-    return ItemCount.new(Inf)
+static func inf() -> _ItemCount:
+    return _ItemCount.new(Inf)
 
 
 ## Returns an item count if 0.
-static func zero() -> ItemCount:
-    return ItemCount.new(0)
+static func zero() -> _ItemCount:
+    return _ItemCount.new(0)
 
 
 ## Returns an item count if 1.
-static func one() -> ItemCount:
-    return ItemCount.new(1)
+static func one() -> _ItemCount:
+    return _ItemCount.new(1)
 
 
 func _to_string() -> String:

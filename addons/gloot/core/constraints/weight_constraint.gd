@@ -7,12 +7,14 @@ class_name WeightConstraint
 ## The constraint implements a weight-based inventory where the total sum of the item weights cannot exceed the
 ## configured capacity of the inventory.
 
+## Default capacity.
 const DEFAULT_CAPACITY: float = 1.0
-const KEY_WEIGHT: String = "weight"
-const KEY_CAPACITY: String = "capacity"
-const KEY_OCCUPIED_SPACE: String = "occupied_space"
 
-const Verify = preload("res://addons/gloot/core/verify.gd")
+const _KEY_WEIGHT: String = "weight"
+const _KEY_CAPACITY: String = "capacity"
+const _KEY_OCCUPIED_SPACE: String = "occupied_space"
+
+const _Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 ## Maximum weight the inventory can hold.
@@ -48,7 +50,7 @@ func _on_item_removed(item: InventoryItem) -> void:
 
     
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == KEY_WEIGHT || property == Inventory.KEY_STACK_SIZE:
+    if property == _KEY_WEIGHT || property == Inventory._KEY_STACK_SIZE:
         _calculate_occupied_space()
 
 
@@ -92,7 +94,7 @@ func _calculate_occupied_space() -> void:
 
 
 static func _get_item_unit_weight(item: InventoryItem) -> float:
-    var weight = item.get_property(KEY_WEIGHT, 1.0)
+    var weight = item.get_property(_KEY_WEIGHT, 1.0)
     return weight
 
 
@@ -107,7 +109,7 @@ static func get_item_weight(item: InventoryItem) -> float:
 ## Sets the weight of the given item.
 static func set_item_weight(item: InventoryItem, weight: float) -> void:
     assert(weight >= 0.0, "Item weight must be greater or equal to 0!")
-    item.set_property(KEY_WEIGHT, weight)
+    item.set_property(_KEY_WEIGHT, weight)
 
 
 ## Returns the number of times this constraint can receive the given item.
@@ -130,18 +132,18 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result := {}
 
-    result[KEY_CAPACITY] = capacity
+    result[_KEY_CAPACITY] = capacity
 
     return result
 
 
 ## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT):
+    if !_Verify.dict(source, true, _KEY_CAPACITY, TYPE_FLOAT):
         return false
 
     reset()
-    capacity = source[KEY_CAPACITY]
+    capacity = source[_KEY_CAPACITY]
     _calculate_occupied_space()
 
     return true

@@ -7,10 +7,12 @@ class_name ItemCountConstraint
 ## The constraint implements a count-based inventory where the total number of items cannot exceed the configured
 ## capacity of the inventory.
 
-const Verify = preload("res://addons/gloot/core/verify.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
 
+## Default capacity.
 const DEFAULT_CAPACITY = 1
-const KEY_CAPACITY: String = "capacity"
+
+const _KEY_CAPACITY: String = "capacity"
 
 ## Maximum number of items the inventory can hold.
 @export var capacity: int = DEFAULT_CAPACITY :
@@ -61,16 +63,16 @@ func reset() -> void:
 ## Serializes the constraint into a `Dictionary`.
 func serialize() -> Dictionary:
     var result := {}
-    result[KEY_CAPACITY] = capacity
+    result[_KEY_CAPACITY] = capacity
     return result
 
 
 ## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, [TYPE_INT, TYPE_FLOAT]):
+    if !_Verify.dict(source, true, _KEY_CAPACITY, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()
-    capacity = source[KEY_CAPACITY]
+    capacity = source[_KEY_CAPACITY]
 
     return true

@@ -1,6 +1,6 @@
 extends Object
 
-const Undoables = preload("res://addons/gloot/editor/undoables.gd")
+const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
 
 
 static func _get_undo_redo_manager() -> EditorUndoRedoManager:
@@ -28,8 +28,8 @@ static func _undoable_action_impl(objects: Array, action_name: String, callable:
     var new_states := _serialize_objects(objects)
 
     undo_redo_manager.create_action(action_name)
-    undo_redo_manager.add_do_method(Undoables, "_deserialize_objects", objects, new_states)
-    undo_redo_manager.add_undo_method(Undoables, "_deserialize_objects", objects, old_states)
+    undo_redo_manager.add_do_method(_Undoables, "_deserialize_objects", objects, new_states)
+    undo_redo_manager.add_undo_method(_Undoables, "_deserialize_objects", objects, old_states)
     undo_redo_manager.commit_action()
 
     return true

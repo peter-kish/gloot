@@ -6,19 +6,21 @@ class_name GridConstraint
 ##
 ## The constraint implements a grid-based inventory of a configurable size.
 
-const Verify = preload("res://addons/gloot/core/verify.gd")
-const QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
-const KEY_SIZE: String = "size"
-const KEY_ROTATED: String = "rotated"
-const KEY_POSITIVE_ROTATION: String = "positive_rotation"
-const KEY_ITEM_POSITIONS: String = "item_positions"
+## Default size of the 2d grid.
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
+
+const _KEY_SIZE: String = "size"
+const _KEY_ROTATED: String = "rotated"
+const _KEY_POSITIVE_ROTATION: String = "positive_rotation"
+const _KEY_ITEM_POSITIONS: String = "item_positions"
 
 var _swap_positions: Array[Vector2i]
 var _item_positions := {}
-var _quad_tree := QuadTree.new(size)
+var _quad_tree := _QuadTree.new(size)
 var _inventory_set_stack: Array[Callable]
 
 ## The size of the 2d grid.
@@ -41,7 +43,7 @@ func _push_inventory_set_operation(c: Callable) -> void:
 
 
 func _refresh_quad_tree() -> void:
-    _quad_tree = QuadTree.new(size)
+    _quad_tree = _QuadTree.new(size)
     if !is_instance_valid(inventory):
         return
     for item in inventory.get_items():
@@ -67,7 +69,7 @@ func _on_item_removed(item: InventoryItem) -> void:
 
     
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property == KEY_SIZE:
+    if property == _KEY_SIZE:
         _refresh_quad_tree()
 
 
@@ -142,7 +144,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
 
 ## Returns the size of the given item.
 func get_item_size(item: InventoryItem) -> Vector2i:
-    var result: Vector2i = item.get_property(KEY_SIZE, Vector2i.ONE)
+    var result: Vector2i = item.get_property(_KEY_SIZE, Vector2i.ONE)
     if is_item_rotated(item):
         var temp := result.x
         result.x = result.y
@@ -152,12 +154,12 @@ func get_item_size(item: InventoryItem) -> Vector2i:
 
 ## Checks wether the given item is rotated.
 static func is_item_rotated(item: InventoryItem) -> bool:
-    return item.get_property(KEY_ROTATED, false)
+    return item.get_property(_KEY_ROTATED, false)
 
 
 ## Checks wether the given item has positive rotation.
 static func is_item_rotation_positive(item: InventoryItem) -> bool:
-    return item.get_property(KEY_POSITIVE_ROTATION, false)
+    return item.get_property(_KEY_POSITIVE_ROTATION, false)
 
 
 # TODO: Consider making a static "unsafe" version of this
@@ -170,7 +172,7 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if inventory.has_item(item) and !rect_free(new_rect, item):
         return false
 
-    item.set_property(KEY_SIZE, new_size)
+    item.set_property(_KEY_SIZE, new_size)
     return true
 
 
@@ -182,9 +184,9 @@ func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
         return false
 
     if rotated:
-        item.set_property(KEY_ROTATED, true)
+        item.set_property(_KEY_ROTATED, true)
     else:
-        item.clear_property(KEY_ROTATED)
+        item.clear_property(_KEY_ROTATED)
 
     return true
 
@@ -197,9 +199,9 @@ func rotate_item(item: InventoryItem) -> bool:
 ## Sets the rotation direction of the given item (positive or negative).
 static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
     if positive:
-        item.set_property(KEY_POSITIVE_ROTATION, true)
+        item.set_property(_KEY_POSITIVE_ROTATION, true)
     else:
-        item.clear_property(KEY_POSITIVE_ROTATION)
+        item.clear_property(_KEY_POSITIVE_ROTATION)
 
 
 ## Checks if the given item can be rotated.
@@ -233,7 +235,7 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
 func _get_prototype_size(prototype_path: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
     assert(inventory.prototree_json != null, "Inventory prototree is null!")
-    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_path, KEY_SIZE, Vector2i.ONE)
+    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_path, _KEY_SIZE, Vector2i.ONE)
     return size
 
 
@@ -475,7 +477,7 @@ func enforce(item: InventoryItem) -> void:
 ## Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).
 func reset() -> void:
     size = DEFAULT_SIZE
-    _quad_tree = QuadTree.new(size)
+    _quad_tree = _QuadTree.new(size)
     _item_positions.clear()
 
 
@@ -484,8 +486,8 @@ func serialize() -> Dictionary:
     var result := {}
 
     # Store Vector2i as string to make JSON conversion easier later
-    result[KEY_SIZE] = var_to_str(size)
-    result[KEY_ITEM_POSITIONS] = _serialize_item_positions()
+    result[_KEY_SIZE] = var_to_str(size)
+    result[_KEY_ITEM_POSITIONS] = _serialize_item_positions()
 
     return result
 
@@ -501,27 +503,27 @@ func _serialize_item_positions() -> Dictionary:
 
 ## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
+    if !_Verify.dict(source, true, _KEY_SIZE, TYPE_STRING):
         return false
 
     reset()
 
     # Queue this part of the deserialization for later if the inventory is still not set
     if is_instance_valid(inventory):
-        _deserialize_item_positions(source[KEY_ITEM_POSITIONS])
+        _deserialize_item_positions(source[_KEY_ITEM_POSITIONS])
     else:
-        _push_inventory_set_operation(_deserialize_item_positions.bind(source[KEY_ITEM_POSITIONS].duplicate()))
+        _push_inventory_set_operation(_deserialize_item_positions.bind(source[_KEY_ITEM_POSITIONS].duplicate()))
 
-    size = Utils.str_to_var(source[KEY_SIZE])
+    size = _Utils.str_to_var(source[_KEY_SIZE])
 
     return true
 
 
 func _deserialize_item_positions(source: Dictionary) -> bool:
     for str_item_index in source.keys():
-        var item_index: int = Utils.str_to_var(str_item_index)
+        var item_index: int = _Utils.str_to_var(str_item_index)
         var item := inventory.get_items()[item_index]
-        var item_position = Utils.str_to_var(source[str_item_index])
+        var item_position = _Utils.str_to_var(source[str_item_index])
         set_item_position_unsafe(item, item_position)
     return true
 

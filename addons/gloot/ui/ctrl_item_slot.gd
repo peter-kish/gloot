@@ -7,8 +7,8 @@ extends Control
 ## A control node representing an inventory slot (`ItemSlot`).
 
 
-const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Reference to the item slot that is being displayed.
 @export var item_slot: ItemSlot :
@@ -50,21 +50,21 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         _refresh()
 
 var _background_panel: Panel
-var _ctrl_draggable_inventory_item: CtrlDraggableInventoryItem
+var _ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem
 
 
 func _connect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
-    Utils.safe_connect(item_slot.item_equipped, _refresh)
-    Utils.safe_connect(item_slot.cleared, _refresh)
+    _Utils.safe_connect(item_slot.item_equipped, _refresh)
+    _Utils.safe_connect(item_slot.cleared, _refresh)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
-    Utils.safe_disconnect(item_slot.item_equipped, _refresh)
-    Utils.safe_disconnect(item_slot.cleared, _refresh)
+    _Utils.safe_disconnect(item_slot.item_equipped, _refresh)
+    _Utils.safe_disconnect(item_slot.cleared, _refresh)
 
 
 func _ready():
@@ -80,7 +80,7 @@ func _ready():
     _set_panel_style(_background_panel, slot_style)
     add_child(_background_panel)
 
-    _ctrl_draggable_inventory_item = CtrlDraggableInventoryItem.new()
+    _ctrl_draggable_inventory_item = _CtrlDraggableInventoryItem.new()
     _ctrl_draggable_inventory_item.icon_stretch_mode = icon_stretch_mode
     _ctrl_draggable_inventory_item.size = size
     add_child(_ctrl_draggable_inventory_item)

@@ -37,19 +37,19 @@ var _inventory: Inventory :
         if _inventory:
             prototree_json = _inventory.prototree_json
 
-const KEY_PROTOTREE: String = "prototree"
-const KEY_PROTOTYPE_PATH: String = "prototype_path"
-const KEY_PROPERTIES: String = "properties"
-const KEY_TYPE: String = "type"
-const KEY_VALUE: String = "value"
+const _KEY_PROTOTREE: String = "prototree"
+const _KEY_PROTOTYPE_PATH: String = "prototype_path"
+const _KEY_PROPERTIES: String = "properties"
+const _KEY_TYPE: String = "type"
+const _KEY_VALUE: String = "value"
 
-const KEY_IMAGE: String = "image"
-const KEY_NAME: String = "name"
+const _KEY_IMAGE: String = "image"
+const _KEY_NAME: String = "name"
 
-const StackManager = preload("res://addons/gloot/core/stack_manager.gd")
-const Verify = preload("res://addons/gloot/core/verify.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
-const ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 
 func _connect_prototree_json_signals() -> void:
@@ -251,15 +251,15 @@ func reset() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    result[KEY_PROTOTREE] = Inventory._serialize_prototree_json(prototree_json)
+    result[_KEY_PROTOTREE] = Inventory._serialize_prototree_json(prototree_json)
     if _prototype != null:
-        result[KEY_PROTOTYPE_PATH] = str(_prototype.get_path())
+        result[_KEY_PROTOTYPE_PATH] = str(_prototype.get_path())
     else:
-        result[KEY_PROTOTYPE_PATH] = ""
+        result[_KEY_PROTOTYPE_PATH] = ""
     if !_properties.is_empty():
-        result[KEY_PROPERTIES] = {}
+        result[_KEY_PROPERTIES] = {}
         for property_name in _properties.keys():
-            result[KEY_PROPERTIES][property_name] = _serialize_property(property_name)
+            result[_KEY_PROPERTIES][property_name] = _serialize_property(property_name)
 
     return result
 
@@ -270,27 +270,27 @@ func _serialize_property(property_name: String) -> Dictionary:
     var property_value = _properties[property_name]
     var property_type = typeof(property_value)
     result = {
-        KEY_TYPE: property_type,
-        KEY_VALUE: var_to_str(property_value)
+        _KEY_TYPE: property_type,
+        _KEY_VALUE: var_to_str(property_value)
     }
     return result;
 
 
 ## Loads the item data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_PROTOTREE, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOTYPE_PATH, TYPE_STRING) ||\
-        !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
+    if !_Verify.dict(source, true, _KEY_PROTOTREE, TYPE_STRING) ||\
+        !_Verify.dict(source, true, _KEY_PROTOTYPE_PATH, TYPE_STRING) ||\
+        !_Verify.dict(source, false, _KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 
     reset()
     
     # TODO: Check return values
-    prototree_json = Inventory._deserialize_prototree_json(source[KEY_PROTOTREE])
-    _prototype = _prototree.get_prototype(source[KEY_PROTOTYPE_PATH])
-    if source.has(KEY_PROPERTIES):
-        for key in source[KEY_PROPERTIES].keys():
-            var value = _deserialize_property(source[KEY_PROPERTIES][key])
+    prototree_json = Inventory._deserialize_prototree_json(source[_KEY_PROTOTREE])
+    _prototype = _prototree.get_prototype(source[_KEY_PROTOTYPE_PATH])
+    if source.has(_KEY_PROPERTIES):
+        for key in source[_KEY_PROPERTIES].keys():
+            var value = _deserialize_property(source[_KEY_PROPERTIES][key])
             set_property(key, value)
             if value == null:
                 _properties = {}
@@ -301,12 +301,12 @@ func deserialize(source: Dictionary) -> bool:
 
 func _deserialize_property(data: Dictionary):
     # Properties are stored as strings for JSON support.
-    var result = Utils.str_to_var(data[KEY_VALUE])
-    var expected_type: int = data[KEY_TYPE]
+    var result = _Utils.str_to_var(data[_KEY_VALUE])
+    var expected_type: int = data[_KEY_TYPE]
     var property_type: int = typeof(result)
     if property_type != expected_type:
         print("Property has unexpected type: %s. Expected: %s" %
-                    [Verify.type_names[property_type], Verify.type_names[expected_type]])
+                    [_Verify.type_names[property_type], _Verify.type_names[expected_type]])
         return null
     return result
 
@@ -314,7 +314,7 @@ func _deserialize_property(data: Dictionary):
 ## Helper function for retrieving the item texture. It checks the image item property and loads it as a texture, if
 ## available.
 func get_texture() -> Texture2D:
-    var texture_path = get_property(KEY_IMAGE)
+    var texture_path = get_property(_KEY_IMAGE)
     if texture_path && texture_path != "" && ResourceLoader.exists(texture_path):
         var texture = load(texture_path)
         if texture is Texture2D:
@@ -325,7 +325,7 @@ func get_texture() -> Texture2D:
 ## Helper function for retrieving the item title. It checks the name item property and uses it as the title, if
 ## available. Otherwise, prototype_id is returned as title.
 func get_title() -> String:
-    var title = get_property(KEY_NAME, null)
+    var title = get_property(_KEY_NAME, null)
     if !(title is String):
         title = _prototype.get_id()
 
@@ -334,51 +334,51 @@ func get_title() -> String:
 
 ## Returns the stack size.
 func get_stack_size() -> int:
-    return StackManager.get_item_stack_size(self).count
+    return _StackManager.get_item_stack_size(self).count
 
 
 ## Returns the maximum stack size.
 func get_max_stack_size() -> int:
-    return StackManager.get_item_max_stack_size(self).count
+    return _StackManager.get_item_max_stack_size(self).count
 
 
 ## Sets the stack size.
 func set_stack_size(stack_size: int) -> bool:
-    return StackManager.set_item_stack_size(self, ItemCount.new(stack_size))
+    return _StackManager.set_item_stack_size(self, _ItemCount.new(stack_size))
 
 
 ## Sets the maximum stack size.
 func set_max_stack_size(max_stack_size: int) -> void:
-    StackManager.set_item_max_stack_size(self, ItemCount.new(max_stack_size))
+    _StackManager.set_item_max_stack_size(self, _ItemCount.new(max_stack_size))
 
 
 ## Merges the item stack into the `item_dst` stack. If `item_dst` doesn't have enough stack space and `split` is set to
 ## `true`, the stack will be split and only partially merged. Returns `false` if the merge cannot be performed.
 func merge_into(item_dst: InventoryItem, split: bool = false) -> bool:
-    return StackManager.merge_stacks(item_dst, self, split)
+    return _StackManager.merge_stacks(item_dst, self, split)
 
 
 ## Checks if the item stack can be merged into `item_dst` with, or without splitting (`split` parameter).
 func can_merge_into(item_dst: InventoryItem, split: bool = false) -> bool:
-    return StackManager.can_merge_stacks(item_dst, self, split)
+    return _StackManager.can_merge_stacks(item_dst, self, split)
 
 
 ## Checks if the item stack is compatible for merging with `item_dst`.
 func compatible_with(item_dst: InventoryItem) -> bool:
-    return StackManager.stacks_compatible(self, item_dst)
+    return _StackManager.stacks_compatible(self, item_dst)
 
 
 ## Returns the free stack space in the item stack (maximum_stack_size - stack_size).
 func get_free_stack_space() -> int:
-    return StackManager.get_free_stack_space(self).count
+    return _StackManager.get_free_stack_space(self).count
 
 
 ## Splits the item stack into two and returns a reference to the new stack. `new_stack_size` defines the size of the new
 ## stack. Returns `null` if the split cannot be performed.
 func split(new_stack_size: int) -> InventoryItem:
-    return StackManager.split_stack(self, ItemCount.new(new_stack_size))
+    return _StackManager.split_stack(self, _ItemCount.new(new_stack_size))
 
 
 ## Checks if the item stack can be split using the given new stack size.
 func can_split(new_stack_size: int) -> bool:
-    return StackManager.can_split_stack(self, ItemCount.new(new_stack_size))
+    return _StackManager.can_split_stack(self, _ItemCount.new(new_stack_size))

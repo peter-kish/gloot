@@ -10,8 +10,8 @@ signal prototree_json_changed   ## Emitted when the prototree_json property has 
 signal item_equipped            ## Emitted when an item is placed in the slot.
 signal cleared                  ## Emitted when the slot is cleared.Emitted when the slot is cleared.
 
-const Verify = preload("res://addons/gloot/core/verify.gd")
-const KEY_ITEM: String = "item"
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _KEY_ITEM: String = "item"
 
 ## A JSON resource containing prototree information.
 @export var prototree_json: JSON:
@@ -119,21 +119,21 @@ func serialize() -> Dictionary:
     var result: Dictionary = {}
 
     if get_item() != null:
-        result[KEY_ITEM] = get_item().serialize()
+        result[_KEY_ITEM] = get_item().serialize()
 
     return result
 
 
 ## Loads the item slot data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, false, KEY_ITEM, [TYPE_DICTIONARY]):
+    if !_Verify.dict(source, false, _KEY_ITEM, [TYPE_DICTIONARY]):
         return false
 
     clear()
 
-    if source.has(KEY_ITEM):
+    if source.has(_KEY_ITEM):
         var item := InventoryItem.new()
-        if !item.deserialize(source[KEY_ITEM]):
+        if !item.deserialize(source[_KEY_ITEM]):
             return false
         equip(item)
 

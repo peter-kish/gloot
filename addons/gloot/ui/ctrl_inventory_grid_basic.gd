@@ -8,9 +8,9 @@ signal inventory_item_context_activated(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
-const Undoables = preload("res://addons/gloot/editor/undoables.gd")
-const CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
+const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export var inventory: Inventory = null :
     set(new_inventory):
@@ -78,20 +78,20 @@ func _connect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
-    Utils.safe_connect(inventory.constraint_changed, _on_constraint_changed)
-    Utils.safe_connect(inventory.item_added, _on_item_added)
-    Utils.safe_connect(inventory.item_removed, _on_item_removed)
+    _Utils.safe_connect(inventory.item_property_changed, _on_item_property_changed)
+    _Utils.safe_connect(inventory.constraint_changed, _on_constraint_changed)
+    _Utils.safe_connect(inventory.item_added, _on_item_added)
+    _Utils.safe_connect(inventory.item_removed, _on_item_removed)
 
 
 func _disconnect_inventory_signals() -> void:
     if !is_instance_valid(inventory):
         return
 
-    Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
-    Utils.safe_disconnect(inventory.constraint_changed, _on_constraint_changed)
-    Utils.safe_disconnect(inventory.item_added, _on_item_added)
-    Utils.safe_disconnect(inventory.item_removed, _on_item_removed)
+    _Utils.safe_disconnect(inventory.item_property_changed, _on_item_property_changed)
+    _Utils.safe_disconnect(inventory.constraint_changed, _on_constraint_changed)
+    _Utils.safe_disconnect(inventory.item_added, _on_item_added)
+    _Utils.safe_disconnect(inventory.item_removed, _on_item_removed)
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
@@ -100,11 +100,11 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 func _on_item_property_changed(_item: InventoryItem, property: String) -> void:
     var relevant_properties := [
-        GridConstraint.KEY_SIZE,
-        GridConstraint.KEY_ROTATED,
-        GridConstraint.KEY_POSITIVE_ROTATION,
-        Inventory.KEY_STACK_SIZE,
-        InventoryItem.KEY_IMAGE,
+        GridConstraint._KEY_SIZE,
+        GridConstraint._KEY_ROTATED,
+        GridConstraint._KEY_POSITIVE_ROTATION,
+        Inventory._KEY_STACK_SIZE,
+        InventoryItem._KEY_IMAGE,
     ]
     if property in relevant_properties:
         _queue_refresh()
@@ -172,7 +172,7 @@ func _populate_list() -> void:
         return
         
     for item in inventory.get_items():
-        var ctrl_draggable_inventory_item = CtrlDraggableInventoryItem.new()
+        var ctrl_draggable_inventory_item = _CtrlDraggableInventoryItem.new()
         ctrl_draggable_inventory_item.item = item
         ctrl_draggable_inventory_item.ctrl_inventory_item_scene = custom_item_control_scene
         ctrl_draggable_inventory_item.activated.connect(_on_inventory_item_activated.bind(ctrl_draggable_inventory_item))
@@ -205,7 +205,7 @@ func _can_drop_data(at_position: Vector2, data) -> bool:
 
 
 func _drop_data(at_position: Vector2, data) -> void:
-    var local_offset := CtrlDraggableInventoryItem.get_grab_offset_local_to(self)
+    var local_offset := _CtrlDraggableInventoryItem.get_grab_offset_local_to(self)
     at_position -= local_offset
     var item := (data as InventoryItem)
     if is_instance_valid(item):
@@ -223,7 +223,7 @@ func _get_item_sprite_size(item: InventoryItem) -> Vector2:
     return sprite_size
 
 
-func _on_inventory_item_activated(ctrl_draggable_inventory_item: CtrlDraggableInventoryItem) -> void:
+func _on_inventory_item_activated(ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
     var item = ctrl_draggable_inventory_item.item
     if !item:
         return
@@ -231,7 +231,7 @@ func _on_inventory_item_activated(ctrl_draggable_inventory_item: CtrlDraggableIn
     inventory_item_activated.emit(item)
 
 
-func _on_inventory_item_context_activated(ctrl_draggable_inventory_item: CtrlDraggableInventoryItem) -> void:
+func _on_inventory_item_context_activated(ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
     var item = ctrl_draggable_inventory_item.item
     if !item:
         return
@@ -362,7 +362,7 @@ func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
     if !grid_constraint.rect_free(Rect2i(move_position, grid_constraint.get_item_size(item)), item):
         return false
     if Engine.is_editor_hint():
-        Undoables.undoable_action(inventory, "Move Inventory Item", func(): 
+        _Undoables.undoable_action(inventory, "Move Inventory Item", func(): 
             return grid_constraint.move_item_to(item, move_position)
         )
         return true
@@ -376,7 +376,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
         return false
 
     if Engine.is_editor_hint():
-        Undoables.undoable_action(inventory, "Merge Inventory Items", func(): 
+        _Undoables.undoable_action(inventory, "Merge Inventory Items", func(): 
             return inventory.merge_stacks(item_dst, item_src)
         )
     else:
@@ -404,7 +404,7 @@ func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
             inventories.append(item.get_inventory())
         if is_instance_valid(item2.get_inventory()):
             inventories.append(item2.get_inventory())
-        Undoables.undoable_action(inventories, "Swap Inventory Items", func():
+        _Undoables.undoable_action(inventories, "Swap Inventory Items", func():
             InventoryItem.swap(item, item2)
             return true
         )

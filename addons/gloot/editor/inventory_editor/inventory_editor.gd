@@ -1,10 +1,10 @@
 @tool
 extends Control
 
-const Undoables = preload("res://addons/gloot/editor/undoables.gd")
-const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
-const PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
-const POPUP_SIZE = Vector2i(800, 300)
+const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
+const _EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
+const _PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
+const _POPUP_SIZE = Vector2i(800, 300)
 
 var inventory: Inventory :
     set(new_inventory):
@@ -98,13 +98,13 @@ func _create_inventory_container() -> Control:
 
 
 func _on_inventory_item_activated(item: InventoryItem) -> void:
-    Undoables.undoable_action(inventory, "Remove Inventory Item", func():
+    _Undoables.undoable_action(inventory, "Remove Inventory Item", func():
         return inventory.remove_item(item)
     )
 
 
 func _on_inventory_item_context_activated(item: InventoryItem) -> void:
-    Undoables.undoable_action(inventory, "Rotate Inventory Item", func():
+    _Undoables.undoable_action(inventory, "Rotate Inventory Item", func():
         var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
         if grid_constraint == null:
             return false
@@ -114,9 +114,9 @@ func _on_inventory_item_context_activated(item: InventoryItem) -> void:
 
 
 func _ready() -> void:
-    %BtnAdd.icon = EditorIcons.get_icon("Add")
-    %BtnEdit.icon = EditorIcons.get_icon("Edit")
-    %BtnRemove.icon = EditorIcons.get_icon("Remove")
+    %BtnAdd.icon = _EditorIcons.get_icon("Add")
+    %BtnEdit.icon = _EditorIcons.get_icon("Edit")
+    %BtnRemove.icon = _EditorIcons.get_icon("Remove")
 
     %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
     %BtnAdd.pressed.connect(_on_btn_add)
@@ -126,7 +126,7 @@ func _ready() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
-    Undoables.undoable_action(inventory, "Add Inventory Item", func():
+    _Undoables.undoable_action(inventory, "Add Inventory Item", func():
         return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
 
@@ -135,7 +135,7 @@ func _on_btn_add() -> void:
     var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
     if prototype == null:
         return
-    Undoables.undoable_action(inventory, "Add Inventory Item", func():
+    _Undoables.undoable_action(inventory, "Add Inventory Item", func():
         return (inventory.create_and_add_item(str(prototype.get_path())) != null)
     )
     
@@ -145,17 +145,17 @@ func _on_btn_edit() -> void:
     if selected_item == null:
         return
     if _properties_editor == null:
-        _properties_editor = PropertiesEditor.instantiate()
+        _properties_editor = _PropertiesEditor.instantiate()
         add_child(_properties_editor)
     _properties_editor.item = selected_item
-    _properties_editor.popup_centered(POPUP_SIZE)
+    _properties_editor.popup_centered(_POPUP_SIZE)
 
 
 func _on_btn_remove() -> void:
     var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
     for selected_item in selected_items:
         if selected_item != null:
-            Undoables.undoable_action(inventory, "Remove Inventory Item", func():
+            _Undoables.undoable_action(inventory, "Remove Inventory Item", func():
                 return inventory.remove_item(selected_item)
             )
 

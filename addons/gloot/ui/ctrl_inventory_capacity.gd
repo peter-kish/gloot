@@ -6,7 +6,7 @@ extends Control
 ##
 ## Displays the inventory capacity as a progress bar.
 
-const Utils = preload("res://addons/gloot/core/utils.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Includes a label displaying inventory capacity if enabled.
 @export var show_label = true :
@@ -49,7 +49,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
-        Utils.safe_connect(inventory.ready, _refresh)
+        _Utils.safe_connect(inventory.ready, _refresh)
     inventory.prototree_json_changed.connect(_refresh)
     inventory.constraint_changed.connect(_on_constraint_changed)
     inventory.constraint_added.connect(_on_constraint_changed)
@@ -60,7 +60,7 @@ func _connect_inventory_signals() -> void:
 
 
 func _disconnect_inventory_signals() -> void:
-    Utils.safe_disconnect(inventory.ready, _refresh)
+    _Utils.safe_disconnect(inventory.ready, _refresh)
     inventory.prototree_json_changed.disconnect(_refresh)
     inventory.constraint_changed.disconnect(_on_constraint_changed)
     inventory.constraint_added.disconnect(_on_constraint_changed)
@@ -80,7 +80,7 @@ func _on_item_manipulated(item: InventoryItem) -> void:
 
 
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
-    if property in [Inventory.KEY_STACK_SIZE, WeightConstraint.KEY_WEIGHT]:
+    if property in [Inventory._KEY_STACK_SIZE, WeightConstraint._KEY_WEIGHT]:
         _refresh()
 
 

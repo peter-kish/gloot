@@ -4,7 +4,7 @@ extends RefCounted
 ##
 ## A pre-parsed relative or absolute path of a prototype within a prototype tree (prototree).
 
-const DELIMITER = "/"
+const _DELIMITER = "/"
 var _path: PackedStringArray
 var _absolute: bool = false
 
@@ -13,8 +13,8 @@ func _init(path: String) -> void:
     path = path.strip_edges()
     if path.is_empty():
         return
-    _absolute = (path[0] == DELIMITER)
-    _path = path.split(DELIMITER, false)
+    _absolute = (path[0] == _DELIMITER)
+    _path = path.split(_DELIMITER, false)
     for i in _path.size():
         _path[i] = _path[i].strip_edges()
 
@@ -62,10 +62,10 @@ static func str_paths_equal(path1: String, path2: String) -> bool:
 func _to_string() -> String:
     var result: String = ""
     if _absolute:
-        result = DELIMITER
+        result = _DELIMITER
 
     for i in range(0, _path.size()):
         if i != 0:
-            result = "%s%s" % [result, DELIMITER]
+            result = "%s%s" % [result, _DELIMITER]
         result = "%s%s" % [result, _path[i]]
     return result
