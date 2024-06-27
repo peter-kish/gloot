@@ -5,244 +5,258 @@
 </p>
 
 A universal inventory system for the Godot game engine (version 4.2 and newer).
-> **NOTE**: The latest version of the plugin runs on Godot 4. The last Godot 3 compatible version is v2.1.4 and can be found on the `godot_3` branch. (see [Releases](https://github.com/peter-kish/gloot/releases)).
 
 ## Table of Contents
 
 1. [Features](#features)
-    1. [Item Prototypes](#item-prototypes)
-    2. [Inventory Items](#inventory-items)
-    3. [Inventory Types](#inventory-types)
-    4. [Item Slots](#item-slots)
-    5. [UI Controls](#ui-controls)
+    1. [Inventory Item Class](#inventory-item-class)
+    2. [Item Prototypes and Prototrees](#item-prototypes-and-prototrees)
+    3. [Inventory Class](#inventory-class)
+    4. [Inventory Constraints](#inventory-constraints)
+    5. [Item Slots](#item-slots)
+    6. [UI Controls](#ui-controls)
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [Creating Item Prototypes](#creating-item-prototypes)
-    1. [Minimal Item Protoset JSON](#minimal-item-protoset-json)
-    2. [Item prototypes for a Stack Based Inventory](#item-prototypes-for-a-stack-based-inventory)
-    3. [Item prototypes for a Grid Based Inventory](#item-prototypes-for-a-grid-based-inventory)
-    4. [Additional Prototype Fields](#additional-prototype-fields)
-    5. [Using the Protoset Editor (WIP)](#using-the-protoset-editor-wip)
-    6. [Editing item properties](#editing-item-properties)
+    1. [Minimal Prototree](#minimal-prototree)
+    2. [`stack_size` and `max_stack_size`](#stack_size-and-max_stack_size)
+    3. [Prototrees with Grid Constraint Properties](#prototrees-with-grid-constraint-properties)
+    4. [Prototrees with Weight Constraint Properties](#prototrees-with-weight-constraint-properties)
+    5. [Prototype Inheritance](#prototype-inheritance)
+    6. [Editing Item Properties](#editing-item-properties)
 5. [Serialization](#serialization)
-6. [The Documentation](#the-documentation)
-7. [Examples](#examples)
+6. [Documentation](#documentation)
 
 ## Features
 
-### Item Prototypes
+### Inventory Item Class
+The `InventoryItem` class represents an item stack. All item stacks have a default stack size (and maximum stack size) of 1. Items can have properties that are based on item prototypes from a prototype tree.
 
-* ![](addons/gloot/images/icon_item_protoset.svg "ItemProtoset icon") [`ItemProtoset`](docs/item_protoset.md) - A resource type holding a set of [inventory item prototypes](#creating-item-prototypes) in JSON format.
+### Item Prototypes and Prototrees
 
-### Inventory Items
+Prototypes define common properties for inventory items. Items based on a prototype have the same properties as the prototype. They can also override some of those properties or define completely new ones that are not present in the prototype.
 
-* ![](addons/gloot/images/icon_item.svg "InventoryItem icon") [`InventoryItem`](docs/inventory_item.md) - Inventory item class. It is based on an item prototype from an [`ItemProtoset`](docs/item_protoset.md) resource. Can hold additional [properties](#editing-item-properties).
+Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a `Prototree`. Prototrees are defined in JSON format and are stored as a JSON resource.
 
-### Inventory Types
+### Inventory Class
+The `Inventory` class represents a basic inventory. Supports basic inventory operations (adding, removing, transferring items etc.) and can be configured by adding various inventory constraints.
 
-* ![](addons/gloot/images/icon_inventory.svg "Inventory icon") [`Inventory`](docs/inventory.md) - Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
-* ![](addons/gloot/images/icon_inventory_stacked.svg "InventoryStacked icon") [`InventoryStacked`](docs/inventory_stacked.md) - Has a limited item capacity in terms of weight. Items of the same type are organized in stacks. Inherits `Inventory`.
-* ![](addons/gloot/images/icon_inventory_grid.svg "InventoryGrid icon") [`InventoryGrid`](docs/inventory_grid.md) - Has a limited capacity in terms of space. The inventory capacity is defined by its width and height. Inherits `Inventory`.
-* ![](addons/gloot/images/icon_inventory_grid_stacked.svg "InventoryGridStacked icon") [`InventoryGridStacked`](docs/inventory_grid_stacked.md) - Inherits `InventoryGrid` and extends it with support for item stacking (similar to `InventoryStacked` but without the weight constraint).
+### Inventory Constraints
+* `GridConstraint` - Limits the inventory to a 2d grid of a given width and height.
+* `WeightConstraint` - Limits the inventory to a given weight capacity (the default unit weight of an item is 1).
+* `ItemCountConstraint` - Limits the inventory to a given item count.
 
 ### Item Slots
-
-* ![](addons/gloot/images/icon_item_slot.svg "ItemSlot icon") [`ItemSlot`](docs/item_slot.md) - Can hold one inventory item.
-* ![](addons/gloot/images/icon_item_ref_slot.svg "ItemSlot icon") [`ItemRefSlot`](docs/item_ref_slot.md) - Can hold a reference to an item.
+* `ItemSlot` - Can hold one inventory item.
 
 ### UI Controls
-
-User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing. The following controls offer some basic interaction with the various [inventory types](#inventory-types).
-
-* ![](addons/gloot/images/icon_ctrl_inventory.svg "CtrlInventory icon") [`CtrlInventory`](docs/ctrl_inventory.md) - UI control representing a basic [`Inventory`](docs/inventory.md). Displays a list of items in the inventory. Uses the `name` item property to display the item name in the list.
-
-![](images/screenshots/ss_inventory.png "CtrlInventory")
-* ![](addons/gloot/images/icon_ctrl_inventory_stacked.svg "CtrlInventoryStacked icon") [`CtrlInventoryStacked`](docs/ctrl_inventory_stacked.md) - UI control representing a stack based inventory ([`InventoryStacked`](docs/inventory_stacked.md)). It lists the contained items and shows an optional progress bar displaying the capacity and fullness of the inventory. Inherits `CtrlInventory`.
-
-![](images/screenshots/ss_inventory_stacked.png "CtrlInventoryStacked")
-* ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGrid icon") [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - UI control representing a grid based inventory ([`InventoryGrid`](docs/inventory_grid.md) or [`InventoryGridStacked`](docs/inventory_grid_stacked.md)). Displays a grid based on the inventory capacity (width and height) and the contained items on the grid. The items can be moved around in the inventory by dragging. Uses the `image` item property (path to a texture) to display the item on the grid.
-
-![](images/screenshots/ss_inventory_grid.png "CtrlInventoryGrid")
-* ![](addons/gloot/images/icon_ctrl_inventory_grid.svg "CtrlInventoryGridEx icon") [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) - Similar to [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) but with extended options for customization.
-
-![](images/screenshots/ss_inventory_grid_ex.png "CtrlInventoryGridEx")
-* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlot icon") [`CtrlItemSlot`](docs/ctrl_item_slot.md) - UI control representing an [`ItemSlot`](docs/item_slot.md) or an [`ItemRefSlot`](docs/item_ref_slot.md).
-* ![](addons/gloot/images/icon_ctrl_item_slot.svg "CtrlItemSlotEx icon") [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md) - Similar to [`CtrlItemSlot`](docs/ctrl_item_slot.md) but with extended options for customization.
+User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing.
+The following controls offer some basic interaction with various inventories:
+* `CtrlInventory` - Control node for displaying inventories as an `ItemList`.
+* `CtrlInventoryCapacity` - Control node for displaying inventory capacity (in case a `WeightConstraint` or a `ItemCountConstraint` is attached to the inventory) as a progress bar.
+* `CtrlInventoryGrid` - Control node for displaying inventories with a `GridConstraint` on a 2d grid.
+* `CtrlItemSlot` - A control node representing an inventory slot (`ItemSlot`).
 
 ## Installation
 
 1. Create an `addons` directory inside your project directory.
 2. Get the plugin from the AssetLib or from GitHub
-    * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download and deselect everything except the `addons` directory when importing. 
-
-    ![](images/screenshots/ss_install_gloot.png)
-
+    * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download and deselect everything except the `addons` directory when importing.
     * From GitHub: Run `git clone https://github.com/peter-kish/gloot.git` and copy the contents of the `addons` directory to your projects `addons` directory.
 4. Enable the plugin in `Project Settings > Plugins`.
 
 ## Usage
 
-1. Create an [`ItemProtoset`](docs/item_protoset.md) resource that will hold all the item prototypes used by the inventory. The resource has a single property `json_data` that holds all item prototype information in JSON format (see [Creating Item Prototypes](#creating-item-prototypes) below).
-2. Create an inventory node in your scene. Set its capacity if needed (required for [`InventoryStacked`](docs/inventory_stacked.md) and [`InventoryGrid`](docs/inventory_grid.md)) and set its `item_protoset` property (previously created).
-3. Add items to the inventory in one of the following ways:
-    1. Add items using the custom control in the inspector:
-
-    ![](images/screenshots/ss_inspector.png "Custom Inspector Control")
-
-    2. Add items by creating `InventoryItem` nodes as child nodes of the inventory node.
-        > **NOTE**: When an `InventoryItem` node is added to an inventory node, its `protoset` property is automatically set to be the same as the `item_protoset` property of the inventory node.
-
-    3. Add items from code. Use [`create_and_add_item()`](docs/inventory.md) to create and add items based on the given prototype ID:
-    ```gd
-    inventory.create_and_add_item("Item1")
-    ```
-
-4. (*Optional*) Create [item slots](#item-slots) that will hold various items (for example the currently equipped weapon or armor).
-5. Create some [UI controls](#ui-controls) to display the created inventory and its contents.
-6. Call `add_item()`, `remove_item()`, `transfer_item()` etc. from your scripts to move items around multiple inventory nodes. Refer to the [documentation](#the-documentation) for more details about the available properties, methods and signals for each class.
+1. Create an `Prototree` resource that will hold all the item prototypes used by the inventory (see [Creating Item Prototypes]() below).
+2. Create an `Inventory` node in your scene and set its `prototree_json` property (previously created).
+3. (*Optional*) Add constraints as child nodes to the previously created inventory node.
+3. Add items to the inventory from the inspector:
+    Items can also be added from code, e.g. by calling `create_and_add_item()` to create and add items based on the given prototype ID:
+4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
+5. Create some UI controls to display the created inventory and its contents.
+6. Call `add_item()`, `remove_item()` etc. from your scripts to manipulate inventory nodes. Refer to the documentation for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
 
 An item prototype is a set of item properties that all items based on that prototype will contain. Items based on a specific prototype can override these properties or add new properties that are not defined in the prototype.
 
-Item protosets represent a number of item prototypes based on which future inventory items will be created.
-An item prototype is defined by its ID and its properties.
+Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a `Prototree`. An item prototype is defined by its path in the prototree and its properties.
 
-### Minimal Item Protoset JSON
+### Minimal Prototree
 
-There are a few requirements each protoset JSON must fulfill:
+Prototrees are defined as JSON resources. The prototree is defined as a JSON object representing the root prototype. Prototypes consist of two JSON objects (both are optional):
+1. `prototypes` - Contains the child prototypes
+2. `properties` - Contains the prototype properties
 
-* The JSON must be a JSON array containing JSON objects.
-* Each element of the array must contain the `id` property uniquely identifying the prototype.
-
-Below is an example of a minimal item protoset JSON:
-
+Below is an example of a minimal prototree in JSON format:
 ```json
-[
-    {
-        "id": "minimal_item"
+{
+    // The root prototype has only one prototype and no properties:
+    "prototypes": {
+        // "minimal_item" has no child prototypes and no properties:
+        "minimal_item": {
+        }
     }
-]
+}
 ```
 
-### Item prototypes for a Stack Based Inventory
+This prototree only contains one prototype named `minimal_item`, which has no properties.
 
-Prototypes of items contained in stack based inventories support the following additional properties:
+### `stack_size` and `max_stack_size`
 
-* `stack_size` - Defines the default stack size of the item. Newly created items that use this prototype will have this stack size. Has the value of 1 if not defined.
-* `weight` - Defines the unit weight of the item. Has the value of 1.0 if not defined.
-    **NOTE**: The total weight of an item is defined as its unit weight multiplied by its stack size.
+To define the stack size of an item prototype, use the `stack_size` property. If not defined, the stack size will be 1. Some GLoot functions that work with item stacks (e.g. `Inventory.split_stack` or `InventoryItem.split`) will manipulate this property.
+
+Similar to `stack_size`, the `max_stack_size` defines the maximum stack size and its default value is 1.
 
 Example:
 ```json
-[
-    {
-        "id": "stackable_item",
-        "stack_size": 10
-    },
-    {
-        "id": "heavy_item",
-        "weight": 20.0
-    },
-    {
-        "id": "very_heavy_item",
-        "stack_size": 10,
-        "weight": 20.0
+{
+    "prototypes": {
+        // The default stack size and the default maximum stack size is 1:
+        "watch": {},
+        // A full deck of 52 cards:
+        "deck_of_cards": {
+            "properties": {
+                "stack_size": 52,
+                "max_stack_size": 52
+            }
+        },
+        // Half a magazine of bullets:
+        "pistol_bullets": {
+            "properties": {
+                "stack_size": 12,
+                "max_stack_size": 24
+            }
+        }
     }
-]
+}
 ```
 
-* The total weight of a `stackable_item` is 10 - The unit weight is not defined and the default value of 1.0 is used. Multiplied with `stack_size` of 10 gives a total weight of 10.0.
-* The total weight of a `heavy_item` is 20.0 - The stack size is not defined and the default value of 1 is used. Multiplied with `weight` of 20.0 gives a total weight of 20.0.
-* The total weight of a `very_heavy_item` is 200.0 - The stack size of 10 is multiplied with the unit weight of 20.0.
+### Prototrees with Grid Constraint Properties
 
-### Item prototypes for a Grid Based Inventory
-
-Prototypes of items contained in stack based inventories support the following additional properties:
-
-* `width` - Defines the width of the item. Has the value of 1 if not defined.
-* `height` - Defines the height of the item. Has the value of 1 if not defined.
+A `GridConstraint` can interpret the following item properties:
+* `size` (`Vector2i`) - Defines the width and height of the item. If not defined, the item size is `Vector2i(1, 1)`.
+* `rotated` (`bool`) - If `true`, the item is rotated by 90 degrees. If not defined, the item is not rotated.
+* `positive_rotation` (`bool`) - Indicates whether the item icon will be rotated by positive or negative 90 degrees. If not defined, the item is rotated by positive 90 degrees.
 
 Example:
 ```json
-[
-    {
-        "id": "1x1_knife",
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "1x3_spear",
-        "width": 1,
-        "height": 3
-    },
-    {
-        "id": "2x2_bomb",
-        "width": 2,
-        "height": 2
+{
+    "prototypes": {
+        // The default item size is Vector2i(1, 1):
+        "1x1_knife": {},
+        // Rotate the spear to position it horizontally (size.y becomes its width):
+        "1x3_spear": {
+            "properties": {
+                "size": "Vector2i(1, 3)",
+                "rotated": "true"
+            }
+        },
+        "2x2_bomb": {
+            "properties": {
+                "size": "Vector2i(2, 2)"
+            }
+        }
     }
-]
+}
 ```
 
-### Additional Prototype Fields
+### Prototrees with Weight Constraint Properties
 
-Apart from the previously mentioned properties, item prototypes can hold all kinds of additional user-defined data. Properties like "name" or "description" are often used and can be easily added alongside the predefined properties.
+If an item is inside an inventory with a `WeightConstraint`, its `weight` property is interpreted as the (unit) weight of the item.
 
 Example:
 ```json
-[
-    {
-        "id": "knife_01",
-        "weight": "2.0",
-        "name": "Kitchen Knife",
-        "description": "A knife intended to be used in food preparation."
+{
+	"prototypes": {
+        // The default item weight is 1 and the default stack size is 1.
+        // The total stack weight is 1 * 1 = 1:
+		"small_item": {},
+        // The total stack weight is 1 * 20 = 20:
+		"big_item": {
+			"properties": {
+				"weight": 20
+			}
+		},
+        // The total stack weight is 10 * 2 = 20:
+        "small_stackable_item": {
+            "properties": {
+				"stack_size": 10,
+				"max_stack_size": 10,
+                "weight": 2
+			}
+        }
+	}
+}
+```
+
+### Prototype Inheritance
+
+Prototypes can inherit properties from other prototypes, which can also override some of those properties.
+
+Example:
+```json
+{
+    "prototypes": {
+        // Base prototype for melee weapons.
+        // Defines the "weapon_type" and "damage" properties:
+        "melee_weapons": {
+            "properties": {
+                "weapon_type": "melee",
+                "damage": 1
+            },
+            "prototypes": {
+                // Inherits the "weapon_type" property ("melee").
+                // Overrides the "damage" property (from 1 to 10):
+                "knife": {
+                    "properties": {
+                        "damage": 10
+                    }
+                },
+                // Inherits the "weapon_type" property ("melee").
+                // Overrides the "damage" property (from 1 to 30):
+                "axe": {
+                    "properties": {
+                        "damage": 30
+                    }
+                }
+            }
+        }
     }
-]
+}
 ```
 
-Any of the item properties can be accessed from code through the `get_property()` methods of the [`InventoryItem`](docs/inventory_item.md) classes:
-```gd
-var item_name = item.get_property("name", "")
-var item_description = item.get_property("description", "")
-```
+### Editing Item Properties
 
-### Using the Protoset Editor (WIP)
+Item properties defined in the prototree JSON resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
 
-Protosets can also be edited with the GUI based protoset editor. It can be opened using "Edit Protoset" button in the inspector when a protoset resource is selected.
-
-![](images/screenshots/ss_protoset_editor.png "Protoset Editor")
-
-### Editing item properties
-
-Item properties defined in the [`ItemProtoset`](docs/item_protoset.md) resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
-```gd
+```gdscript
 # Decrease the size of an item stack by 1
 var stack_size: int = item.get_property("stack_size")
 if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
 ```
 
-Item properties can also be modified and overridden using the inspector when an `InventoryItem` is selected. Properties marked with green color represent overridden properties. Some properties are disabled for editing, as they are managed by the plugin itself (for example `id` and `grid_position`).
-
-![](images/screenshots/ss_inspector_inventory_item.png "Editing InventoryItem Properties")
+Item properties can also be modified and overridden using the editor: To open the item properties editor, first select an inventory node.
+Then select an item in the inspector and press the "Edit" button.
+Properties marked with green color in the item editor represent overridden properties.
 
 ## Serialization
 
-All GLoot classes have a `serialize()` and a `deserialize()` method that can be used for serialization.
-The `serialize()` methods serializes the class into a dictionary, that can be further serialized into JSON, binary or some other format.
+All GLoot classes have a `serialize()` and a `deserialize()` method that can be used for serialization. The `serialize()` methods serializes the class into a dictionary, that can be further serialized into JSON, binary or some other format.
 
 Example:
-```gd
+```gdscript
 # Serialize the inventory into a JSON string
 var inventory: Inventory = get_node("inventory")
 var dict: Dictionary = inventory.serialize()
 var json: String = JSON.stringify(dict)
 ```
 
-The `deserialize` methods receive a dictionary as argument that has been previously generated with `serialize()` and apply the data to the current class instance.
+The `deserialize()` methods receive a dictionary as argument that has been previously generated with `serialize()` and apply the data to the current class instance.
 
 Example:
-```gd
+```gdscript
 # Deserialize the inventory from a JSON string
 var inventory: Inventory = get_node("inventory")
 var res: JSONParseResult = JSON.parse(json)
@@ -251,25 +265,6 @@ if res.error == OK:
     inventory.deserialize(dict)
 ```
 
-## The Documentation
+## Documentation
 
-The docs can be found [here](./docs/docs.md).
-
-## Examples
-
-Take a look at the `examples` directory for some example scenes:
-* `inventory_transfer.tscn` - Displaying two basic inventories (`Inventory`) and transferring items between them.
-
-![](images/screenshots/ss_example_inventory_transfer.png "inventory_transfer.tscn")
-* `inventory_stacked_transfer.tscn` - Displaying two stack based inventories (`InventoryStacked`) and transferring items between them.
-
-![](images/screenshots/ss_example_inventory_stacked_transfer.png "inventory_stacked_transfer.tscn")
-* `inventory_grid_transfer.tscn` - Displaying two grid based inventories (`InventoryGrid`) and transferring items between them using drag and drop.
-
-![](images/screenshots/ss_example_inventory_grid_transfer.png "inventory_grid_transfer.tscn")
-* `inventory_grid_ex_transfer.tscn` - Similar to `inventory_grid_transfer.tscn`, but using [`CtrlInventoryGridEx`](docs/ctrl_inventory_grid_ex.md) and [`CtrlItemSlotEx`](docs/ctrl_item_slot_ex.md).
-
-![](images/screenshots/ss_example_inventory_grid_transfer_ex.png "inventory_grid_ex_transfer.tscn")
-* `inventory_grid_stacked_ex_transfer.tscn` - Similar to `inventory_grid_ex_transfer.tscn`, but using [`InventoryGirdStacked`](docs/inventory_grid_stacked.md).
-
-![](images/screenshots/ss_example_inventory_grid_stacked_transfer.png "inventory_grid_stacked_ex_transfer.tscn")
+The documentation can be found [here](https://github.com/peter-kish/gloot/tree/dev_v3.0.0/docs).
