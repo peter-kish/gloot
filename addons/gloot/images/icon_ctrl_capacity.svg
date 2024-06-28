@@ -40,9 +40,9 @@
      inkscape:window-height="1368"
      id="namedview6"
      showgrid="true"
-     inkscape:zoom="32"
-     inkscape:cx="3.953125"
-     inkscape:cy="13.9375"
+     inkscape:zoom="29.5"
+     inkscape:cx="4.0169492"
+     inkscape:cy="5.8644068"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -57,26 +57,15 @@
     <inkscape:grid
        type="xygrid"
        id="grid4520"
-       spacingx="1"
-       spacingy="1"
        originx="0"
        originy="0"
+       spacingy="1"
+       spacingx="1"
        units="px"
        visible="true" />
   </sodipodi:namedview>
   <path
-     style="fill:#00e436;fill-opacity:1;stroke:none;stroke-width:0.133333;stroke-linecap:round;stroke-linejoin:round"
-     d="M 8,1.2557787 13.333333,3.9224453 8,6.589112 2.6666667,3.9224453 Z"
-     id="path15"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     style="fill:#008751;fill-opacity:1;stroke:none;stroke-width:0.133333;stroke-linecap:round;stroke-linejoin:round"
-     d="M 1e-8,11.922445 8,16 V 6.589112 L 2.6666667,3.9224453 Z"
-     id="path16"
-     sodipodi:nodetypes="ccccc" />
-  <path
-     style="fill:#1d2b53;fill-opacity:1;stroke:none;stroke-width:0.133333;stroke-linecap:round;stroke-linejoin:round"
-     d="M 16,11.922445 8,16 V 6.589112 l 5.333333,-2.6666667 z"
-     id="path17"
-     sodipodi:nodetypes="ccccc" />
+     id="rect2"
+     style="fill:#00e436;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round"
+     d="M 1 4 L 1 12 L 15 12 L 15 4 L 1 4 z M 2 5 L 14 5 L 14 11 L 2 11 L 2 5 z M 3 6 L 3 10 L 10 10 L 10 6 L 3 6 z " />
 </svg>

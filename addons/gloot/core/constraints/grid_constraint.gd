@@ -142,7 +142,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
     changed.emit()
 
 
-## Returns the size of the given item.
+## Returns the size of the given item (i.e. the `size` property).
 func get_item_size(item: InventoryItem) -> Vector2i:
     var result: Vector2i = item.get_property(_KEY_SIZE, Vector2i.ONE)
     if is_item_rotated(item):
@@ -152,7 +152,7 @@ func get_item_size(item: InventoryItem) -> Vector2i:
     return result
 
 
-## Checks wether the given item is rotated.
+## Checks wether the given item is rotated (i.e. whether the `rotated` property is set).
 static func is_item_rotated(item: InventoryItem) -> bool:
     return item.get_property(_KEY_ROTATED, false)
 
@@ -163,7 +163,7 @@ static func is_item_rotation_positive(item: InventoryItem) -> bool:
 
 
 # TODO: Consider making a static "unsafe" version of this
-## Sets the size of the given item.
+## Sets the size of the given item (i.e. the `size` property).
 func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     if new_size.x < 1 || new_size.y < 1:
         return false
@@ -176,7 +176,7 @@ func set_item_size(item: InventoryItem, new_size: Vector2i) -> bool:
     return true
 
 
-## Returns the rotation of the given item.
+## Sets the rotation of the given item (i.e. the `rotated` property).
 func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
     if is_item_rotated(item) == rotated:
         return false
@@ -191,12 +191,12 @@ func set_item_rotation(item: InventoryItem, rotated: bool) -> bool:
     return true
 
 
-## Rotates the given item.
+## Rotates the given item (i.e. toggles the `rotated` property).
 func rotate_item(item: InventoryItem) -> bool:
     return set_item_rotation(item, !is_item_rotated(item))
 
 
-## Sets the rotation direction of the given item (positive or negative).
+## Sets the rotation direction of the given item (positive or negative, i.e. sets the `positive_rotation` property).
 static func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
     if positive:
         item.set_property(_KEY_POSITIVE_ROTATION, true)

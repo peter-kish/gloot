@@ -26,55 +26,66 @@ A universal inventory system for the Godot game engine (version 4.2 and newer).
     6. [Editing Item Properties](#editing-item-properties)
 5. [Serialization](#serialization)
 6. [Documentation](#documentation)
+7. [Examples](#examples)
 
 ## Features
 
 ### Inventory Item Class
-The `InventoryItem` class represents an item stack. All item stacks have a default stack size (and maximum stack size) of 1. Items can have properties that are based on item prototypes from a prototype tree.
+The [`InventoryItem`](docs/inventory_item.md) class represents an item stack. All item stacks have a default stack size (and maximum stack size) of 1. Items can also have other properties that are based on item prototypes from a [prototype tree](#item-prototypes-and-prototrees).
 
 ### Item Prototypes and Prototrees
 
-Prototypes define common properties for inventory items. Items based on a prototype have the same properties as the prototype. They can also override some of those properties or define completely new ones that are not present in the prototype.
+Prototypes define common properties for inventory items and items based on a prototype have the same properties as the prototype. They can also override some of those properties or define completely new ones that are not present in the prototype.
 
-Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a `Prototree`. Prototrees are defined in JSON format and are stored as a JSON resource.
+Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a [`Prototree`](docs/prototree.md). Prototrees are defined in JSON format and are stored as a [JSON resource](https://docs.godotengine.org/en/stable/classes/class_json.html).
 
 ### Inventory Class
-The `Inventory` class represents a basic inventory. Supports basic inventory operations (adding, removing, transferring items etc.) and can be configured by adding various inventory constraints.
+The ![](addons/gloot/images/icon_inventory.svg) [`Inventory`](docs/inventory.md) class represents a basic inventory with basic inventory operations (adding, removing, transferring items etc.) and can be configured by adding various [inventory constraints](#inventory-constraints).
 
 ### Inventory Constraints
-* `GridConstraint` - Limits the inventory to a 2d grid of a given width and height.
-* `WeightConstraint` - Limits the inventory to a given weight capacity (the default unit weight of an item is 1).
-* `ItemCountConstraint` - Limits the inventory to a given item count.
+* ![](addons/gloot/images/icon_grid_constraint.svg) [`GridConstraint`](docs/grid_constraint.md) - Limits the inventory to a 2d grid of a given width and height.
+* ![](addons/gloot/images/icon_weight_constraint.svg) [`WeightConstraint`](docs/weight_constraint.md) - Limits the inventory to a given weight capacity (the default unit weight of an item is 1).
+* ![](addons/gloot/images/icon_item_count_constraint.svg) [`ItemCountConstraint`](docs/item_count_constraint.md) - Limits the inventory to a given item count.
 
 ### Item Slots
-* `ItemSlot` - Can hold one inventory item.
+The ![](addons/gloot/images/icon_item_slot.svg) [`ItemSlot`](docs/item_slot.md) class represents an item slot that can hold one inventory item.
 
 ### UI Controls
 User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing.
 The following controls offer some basic interaction with various inventories:
-* `CtrlInventory` - Control node for displaying inventories as an `ItemList`.
-* `CtrlInventoryCapacity` - Control node for displaying inventory capacity (in case a `WeightConstraint` or a `ItemCountConstraint` is attached to the inventory) as a progress bar.
-* `CtrlInventoryGrid` - Control node for displaying inventories with a `GridConstraint` on a 2d grid.
-* `CtrlItemSlot` - A control node representing an inventory slot (`ItemSlot`).
+* ![](addons/gloot/images/icon_ctrl_inventory.svg) [`CtrlInventory`](docs/ctrl_inventory.md) - Control node for displaying inventories as an [`ItemList`](https://docs.godotengine.org/en/stable/classes/class_itemlist.html).
+    > TODO: Screenshot
+* ![](addons/gloot/images/icon_ctrl_capacity.svg) [`CtrlInventoryCapacity`](docs/ctrl_inventory_capacity.md) - Control node for displaying inventory capacity as a progress bar (in case a `WeightConstraint` or an `ItemCountConstraint` is attached to the inventory).
+    > TODO: Screenshot
+* ![](addons/gloot/images/icon_ctrl_inventory_grid.svg) [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - Control node for displaying inventories with a `GridConstraint` on a 2d grid.
+    > TODO: Screenshot
+* ![](addons/gloot/images/icon_ctrl_item_slot.svg) [`CtrlItemSlot`](docs/ctrl_item_slot.md) - A control node representing an inventory slot (`ItemSlot`).
+    > TODO: Screenshot
 
 ## Installation
 
 1. Create an `addons` directory inside your project directory.
 2. Get the plugin from the AssetLib or from GitHub
     * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download and deselect everything except the `addons` directory when importing.
+        > TODO: Screenshot
     * From GitHub: Run `git clone https://github.com/peter-kish/gloot.git` and copy the contents of the `addons` directory to your projects `addons` directory.
 4. Enable the plugin in `Project Settings > Plugins`.
 
 ## Usage
 
-1. Create an `Prototree` resource that will hold all the item prototypes used by the inventory (see [Creating Item Prototypes]() below).
+1. Create a JSON resource that will hold all the item prototypes used by the inventory (see [Creating Item Prototypes](#creating-item-prototypes) below).
 2. Create an `Inventory` node in your scene and set its `prototree_json` property (previously created).
 3. (*Optional*) Add constraints as child nodes to the previously created inventory node.
 3. Add items to the inventory from the inspector:
-    Items can also be added from code, e.g. by calling `create_and_add_item()` to create and add items based on the given prototype ID:
+    > TODO: Screenshot
+
+    Items can also be added from code, e.g. by calling `create_and_add_item()` to create and add items based on the given prototype path:
+    ```gdscript
+    inventory.create_and_add_item("melee_weapons/knife")
+    ```
 4. (*Optional*) Create item slots that will hold various items (for example the currently equipped weapon or armor).
 5. Create some UI controls to display the created inventory and its contents.
-6. Call `add_item()`, `remove_item()` etc. from your scripts to manipulate inventory nodes. Refer to the documentation for more details about the available properties, methods and signals for each class.
+6. Call `add_item()`, `remove_item()` etc. from your scripts to manipulate inventory nodes. Refer to [the documentation](https://github.com/peter-kish/gloot/tree/dev_v3.0.0/docs) for more details about the available properties, methods and signals for each class.
 
 ## Creating Item Prototypes
 
@@ -84,9 +95,9 @@ Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a `
 
 ### Minimal Prototree
 
-Prototrees are defined as JSON resources. The prototree is defined as a JSON object representing the root prototype. Prototypes consist of two JSON objects (both are optional):
-1. `prototypes` - Contains the child prototypes
-2. `properties` - Contains the prototype properties
+Prototrees are defined as JSON resources in which the tree is defined as a JSON object representing the root prototype. Prototypes consist of two JSON objects (both are optional):
+1. `prototypes` - Contains the child (derived) prototypes.
+2. `properties` - Contains the prototype properties.
 
 Below is an example of a minimal prototree in JSON format:
 ```javascript
@@ -143,18 +154,20 @@ Example:
 ```javascript
 {
     "prototypes": {
-        // The default item size is Vector2i(1, 1):
+        // The default item size is (1, 1):
         "1x1_knife": {},
-        // Rotate the spear to position it horizontally (size.y becomes its width):
+        // The bombs will have a size of (2, 2):
+        "2x2_bomb": {
+            "properties": {
+                "size": "Vector2i(2, 2)"
+            }
+        },
+        // Spears will have a size of (1, 3), but will be be rotated to be
+        // positioned horizontally (size.y becomes its width):
         "1x3_spear": {
             "properties": {
                 "size": "Vector2i(1, 3)",
                 "rotated": "true"
-            }
-        },
-        "2x2_bomb": {
-            "properties": {
-                "size": "Vector2i(2, 2)"
             }
         }
     }
@@ -192,7 +205,7 @@ Example:
 
 ### Prototype Inheritance
 
-Prototypes can inherit properties from other prototypes, which can also override some of those properties.
+As already mentioned, prototypes can inherit properties from other prototypes. The derived prototypes can override properties from the base or define new properties.
 
 Example:
 ```javascript
@@ -207,17 +220,19 @@ Example:
             },
             "prototypes": {
                 // Inherits the "weapon_type" property ("melee").
-                // Overrides the "damage" property (from 1 to 10):
-                "knife": {
-                    "properties": {
-                        "damage": 10
-                    }
-                },
-                // Inherits the "weapon_type" property ("melee").
                 // Overrides the "damage" property (from 1 to 30):
                 "axe": {
                     "properties": {
                         "damage": 30
+                    }
+                },
+                // Inherits the "weapon_type" property ("melee").
+                // Overrides the "damage" property (from 1 to 10) and adds an
+                // item description:
+                "knife": {
+                    "properties": {
+                        "damage": 10,
+                        "description": "A standard kitchen knife."
                     }
                 }
             }
@@ -228,8 +243,9 @@ Example:
 
 ### Editing Item Properties
 
-Item properties defined in the prototree JSON resource can be overridden for each individual item using the `set_property()` method and overridden property values can be cleared using the `clear_property()` method:
+Item properties defined in the prototree can additionally be overridden by each individual item that uses that prototree. Use the `set_property()` method to set/override property values, or the `clear_property()` to clear them:
 
+Example:
 ```gdscript
 # Decrease the size of an item stack by 1
 var stack_size: int = item.get_property("stack_size")
@@ -237,13 +253,15 @@ if stack_size > 0:
     item.set_property("stack_size", stack_size - 1)
 ```
 
-Item properties can also be modified and overridden using the editor: To open the item properties editor, first select an inventory node.
-Then select an item in the inspector and press the "Edit" button.
-Properties marked with green color in the item editor represent overridden properties.
+Item properties can also be modified and overridden from the editor:
+> TODO: Screenshot
+
+To open the item editor select an inventory node, select an item in the inspector and press the "Edit" button.
+Properties marked with green in the item editor represent overridden properties.
 
 ## Serialization
 
-All GLoot classes have a `serialize()` and a `deserialize()` method that can be used for serialization. The `serialize()` methods serializes the class into a dictionary, that can be further serialized into JSON, binary or some other format.
+All GLoot classes have a `serialize()` and a `deserialize()` method that can be used for serialization. The `serialize()` methods serializes the class into a dictionary, which can be further serialized into JSON, binary or some other format.
 
 Example:
 ```gdscript
@@ -268,3 +286,7 @@ if res.error == OK:
 ## Documentation
 
 The documentation can be found [here](https://github.com/peter-kish/gloot/tree/dev_v3.0.0/docs).
+
+## Examples
+
+> TODO

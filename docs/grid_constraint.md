@@ -24,23 +24,23 @@ The constraint implements a grid-based inventory of a configurable size.
 * `get_item_at(position: Vector2i) -> InventoryItem` - Returns the item at the given grid position. Returns `null` if no item can be found at that position.
 * `get_item_position(item: InventoryItem) -> Vector2i` - Returns the position of the given item on the 2d grid.
 * `get_item_rect(item: InventoryItem) -> Rect2i` - Returns a rectangle constructed from the position and size of the given item.
-* `get_item_size(item: InventoryItem) -> Vector2i` - Returns the size of the given item.
+* `get_item_size(item: InventoryItem) -> Vector2i` - Returns the size of the given item (i.e. the `size` property).
 * `get_items_under(rect: Rect2i) -> InventoryItem[]` - Returns an array of items under the given rectangle.
 * `get_space_for(item: InventoryItem) -> int` - Returns the number of times this constraint can receive the given item.
 * `has_space_for(item: InventoryItem) -> bool` - Checks if the constraint can receive the given item.
-* `is_item_rotated(item: InventoryItem) -> bool` - Checks wether the given item is rotated.
+* `is_item_rotated(item: InventoryItem) -> bool` - Checks wether the given item is rotated (i.e. whether the `rotated` property is set).
 * `is_item_rotation_positive(item: InventoryItem) -> bool` - Checks wether the given item has positive rotation.
 * `move_item_to(item: InventoryItem, position: Vector2i) -> bool` - Moves the given item to a new position. Returns `false` if the item cannot be moved.
 * `move_item_to_free_spot(item: InventoryItem) -> bool` - Moves the given item to a free spot. Returns `false` if no free spot can be found.
 * `rect_free(rect: Rect2i, exception: InventoryItem) -> bool` - Checks if the given rectangle is free (i.e. no items can be found under it). The `exception` item will be disregarded during the check, if set.
 * `reset() -> void` - Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).
-* `rotate_item(item: InventoryItem) -> bool` - Rotates the given item.
+* `rotate_item(item: InventoryItem) -> bool` - Rotates the given item (i.e. toggles the `rotated` property).
 * `serialize() -> Dictionary` - Serializes the constraint into a `Dictionary`.
 * `set_item_position(item: InventoryItem, new_position: Vector2i) -> bool` - Sets the position of the given item on the 2d grid.
 * `set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> void` - Sets the position of the given item on the 2d grid without any validity checks (somewhat faster than set_item_position).
 * `set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool` - Sets the position and size of the given item based on the given rectangle. Returns `false` if the new position and size cannot be applied to the item.
-* `set_item_rotation(item: InventoryItem, rotated: bool) -> bool` - Returns the rotation of the given item.
-* `set_item_rotation_direction(item: InventoryItem, positive: bool) -> void` - Sets the rotation direction of the given item (positive or negative).
-* `set_item_size(item: InventoryItem, new_size: Vector2i) -> bool` - Sets the size of the given item.
+* `set_item_rotation(item: InventoryItem, rotated: bool) -> bool` - Sets the rotation of the given item (i.e. the `rotated` property).
+* `set_item_rotation_direction(item: InventoryItem, positive: bool) -> void` - Sets the rotation direction of the given item (positive or negative, i.e. sets the `positive_rotation` property).
+* `set_item_size(item: InventoryItem, new_size: Vector2i) -> bool` - Sets the size of the given item (i.e. the `size` property).
 * `sort() -> bool` - Sorts the inventory based on item size.
 

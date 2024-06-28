@@ -98,7 +98,7 @@ static func _get_item_unit_weight(item: InventoryItem) -> float:
     return weight
 
 
-## Returns the weight of the given item.
+## Returns the weight of the given item (i.e. the `weight` property).
 static func get_item_weight(item: InventoryItem) -> float:
     if item == null:
         return -1.0
@@ -106,7 +106,7 @@ static func get_item_weight(item: InventoryItem) -> float:
     return item.get_stack_size() * _get_item_unit_weight(item)
 
 
-## Sets the weight of the given item.
+## Sets the weight of the given item (i.e. the `weight` property).
 static func set_item_weight(item: InventoryItem, weight: float) -> void:
     assert(weight >= 0.0, "Item weight must be greater or equal to 0!")
     item.set_property(_KEY_WEIGHT, weight)
