@@ -8,7 +8,7 @@ const _COLOR_OVERRIDDEN = Color.GREEN
 const _COLOR_INVALID = Color.RED
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
-@onready var _dict_editor: Control = $"MarginContainer/_DictEditor"
+@onready var _dict_editor: Control = $"MarginContainer/DictEditor"
 var item: InventoryItem = null :
     set(new_item):
         if new_item == null:
