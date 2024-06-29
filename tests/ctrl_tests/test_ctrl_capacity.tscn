@@ -73,6 +73,7 @@ script = ExtResource("6_40sow")
 inventory = NodePath("../InventoryWeightConstraint")
 
 [node name="CtrlInventoryCapacity2" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+visible = false
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 3
 anchors_preset = 0

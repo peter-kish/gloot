@@ -54,20 +54,29 @@ The ![](addons/gloot/images/icon_item_slot.svg) [`ItemSlot`](docs/item_slot.md) 
 User interfaces are usually unique for each project, but it often helps to have some basic UI elements ready for earlier development phases and testing.
 The following controls offer some basic interaction with various inventories:
 * ![](addons/gloot/images/icon_ctrl_inventory.svg) [`CtrlInventory`](docs/ctrl_inventory.md) - Control node for displaying inventories as an [`ItemList`](https://docs.godotengine.org/en/stable/classes/class_itemlist.html).
-    > TODO: Screenshot
+
+    ![](images/screenshots/ss_inventory.png)
+
 * ![](addons/gloot/images/icon_ctrl_capacity.svg) [`CtrlInventoryCapacity`](docs/ctrl_inventory_capacity.md) - Control node for displaying inventory capacity as a progress bar (in case a `WeightConstraint` or an `ItemCountConstraint` is attached to the inventory).
-    > TODO: Screenshot
+
+    ![](images/screenshots/ss_capacity.png)
+    
 * ![](addons/gloot/images/icon_ctrl_inventory_grid.svg) [`CtrlInventoryGrid`](docs/ctrl_inventory_grid.md) - Control node for displaying inventories with a `GridConstraint` on a 2d grid.
-    > TODO: Screenshot
+
+    ![](images/screenshots/ss_inventory_grid.png)
+    
 * ![](addons/gloot/images/icon_ctrl_item_slot.svg) [`CtrlItemSlot`](docs/ctrl_item_slot.md) - A control node representing an inventory slot (`ItemSlot`).
-    > TODO: Screenshot
+    
+    ![](images/screenshots/ss_item_slot.png)
 
 ## Installation
 
 1. Create an `addons` directory inside your project directory.
 2. Get the plugin from the AssetLib or from GitHub
     * From the AssetLib: Open the AssetLib from the Godot editor and search for "GLoot". Click download and deselect everything except the `addons` directory when importing.
-        > TODO: Screenshot
+
+        ![](images/screenshots/ss_install_gloot.png)
+
     * From GitHub: Run `git clone https://github.com/peter-kish/gloot.git` and copy the contents of the `addons` directory to your projects `addons` directory.
 4. Enable the plugin in `Project Settings > Plugins`.
 
@@ -77,7 +86,8 @@ The following controls offer some basic interaction with various inventories:
 2. Create an `Inventory` node in your scene and set its `prototree_json` property (previously created).
 3. (*Optional*) Add constraints as child nodes to the previously created inventory node.
 3. Add items to the inventory from the inspector:
-    > TODO: Screenshot
+
+    ![](images/screenshots/ss_inspector.png)
 
     Items can also be added from code, e.g. by calling `create_and_add_item()` to create and add items based on the given prototype path:
     ```gdscript
@@ -254,7 +264,7 @@ if stack_size > 0:
 ```
 
 Item properties can also be modified and overridden from the editor:
-> TODO: Screenshot
+![](images/screenshots/ss_inspector_inventory_item.png)
 
 To open the item editor select an inventory node, select an item in the inspector and press the "Edit" button.
 Properties marked with green in the item editor represent overridden properties.

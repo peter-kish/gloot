@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnmcyf6p4gtgp"]
+[gd_scene load_steps=6 format=3 uid="uid://dnmcyf6p4gtgp"]
 
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="1_1ie5k"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="2_b7vgs"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
 [ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_yg38y"]
 
@@ -18,9 +19,10 @@ layout_mode = 0
 offset_right = 350.0
 offset_bottom = 235.0
 item_count = 2
-item_0/text = "minimal_item"
-item_1/text = "item 1"
-item_1/icon = ExtResource("1_1ie5k")
+item_0/text = "item 1"
+item_0/icon = ExtResource("1_1ie5k")
+item_1/text = "item 2"
+item_1/icon = ExtResource("2_b7vgs")
 script = ExtResource("2_vyj5s")
 inventory = NodePath("../Inventory")
 
@@ -30,10 +32,10 @@ prototree_json = ExtResource("4_yg38y")
 _serialized_format = {
 "items": [{
 "prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/minimal_item"
+"prototype_path": "/item1"
 }, {
 "prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1"
+"prototype_path": "/item1/item_2"
 }],
 "node_name": "Inventory",
 "prototree": "res://tests/data/prototree_basic.json"
