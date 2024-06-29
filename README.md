@@ -299,4 +299,4 @@ The documentation can be found [here](https://github.com/peter-kish/gloot/tree/d
 
 ## Examples
 
-> TODO
+Some example scenes can be found in the [examples](examples/README.md) directory.
