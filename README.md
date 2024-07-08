@@ -105,18 +105,13 @@ Prototypes can inherit other prototypes, forming a tree-like structure, i.e. a `
 
 ### Minimal Prototree
 
-Prototrees are defined as JSON resources in which the tree is defined as a JSON object representing the root prototype. Prototypes consist of two JSON objects (both are optional):
-1. `prototypes` - Contains the child (derived) prototypes.
-2. `properties` - Contains the prototype properties.
+Prototrees are defined as JSON resources in which the tree is defined as a JSON object whose key-value pairs define the prototypes. The key represents the prototype ID, while the value is another object that represents the prototype properties.
 
 Below is an example of a minimal prototree in JSON format:
 ```javascript
 {
-    // The root prototype has only one prototype and no properties:
-    "prototypes": {
-        // "minimal_item" has no child prototypes and no properties:
-        "minimal_item": {
-        }
+    // "minimal_item" with no properties:
+    "minimal_item": {
     }
 }
 ```
@@ -132,23 +127,17 @@ Similar to `stack_size`, the `max_stack_size` defines the maximum stack size and
 Example:
 ```javascript
 {
-    "prototypes": {
-        // The default stack size and the default maximum stack size is 1:
-        "watch": {},
-        // A full deck of 52 cards:
-        "deck_of_cards": {
-            "properties": {
-                "stack_size": 52,
-                "max_stack_size": 52
-            }
-        },
-        // Half a magazine of bullets:
-        "pistol_bullets": {
-            "properties": {
-                "stack_size": 12,
-                "max_stack_size": 24
-            }
-        }
+    // The default stack size and the default maximum stack size is 1:
+    "watch": {},
+    // A full deck of 52 cards:
+    "deck_of_cards": {
+        "stack_size": 52,
+        "max_stack_size": 52
+    },
+    // Half a magazine of bullets:
+    "pistol_bullets": {
+        "stack_size": 12,
+        "max_stack_size": 24
     }
 }
 ```
@@ -163,23 +152,17 @@ A `GridConstraint` can interpret the following item properties:
 Example:
 ```javascript
 {
-    "prototypes": {
-        // The default item size is (1, 1):
-        "1x1_knife": {},
-        // The bombs will have a size of (2, 2):
-        "2x2_bomb": {
-            "properties": {
-                "size": "Vector2i(2, 2)"
-            }
-        },
-        // Spears will have a size of (1, 3), but will be be rotated to be
-        // positioned horizontally (size.y becomes its width):
-        "1x3_spear": {
-            "properties": {
-                "size": "Vector2i(1, 3)",
-                "rotated": "true"
-            }
-        }
+    // The default item size is (1, 1):
+    "1x1_knife": {},
+    // The bombs will have a size of (2, 2):
+    "2x2_bomb": {
+        "size": "Vector2i(2, 2)"
+    },
+    // Spears will have a size of (1, 3), but will be be rotated to be
+    // positioned horizontally (size.y becomes its width):
+    "1x3_spear": {
+        "size": "Vector2i(1, 3)",
+        "rotated": "true"
     }
 }
 ```
@@ -191,62 +174,48 @@ If an item is inside an inventory with a `WeightConstraint`, its `weight` proper
 Example:
 ```javascript
 {
-    "prototypes": {
-        // The default item weight is 1 and the default stack size is 1.
-        // The total stack weight is 1 * 1 = 1:
-        "small_item": {},
-        // The total stack weight is 1 * 20 = 20:
-        "big_item": {
-            "properties": {
-                "weight": 20
-            }
-        },
-        // The total stack weight is 10 * 2 = 20:
-        "small_stackable_item": {
-            "properties": {
-                "stack_size": 10,
-                "max_stack_size": 10,
-                "weight": 2
-            }
-        }
+    // The default item weight is 1 and the default stack size is 1.
+    // The total stack weight is 1 * 1 = 1:
+    "small_item": {},
+    // The total stack weight is 1 * 20 = 20:
+    "big_item": {
+        "weight": 20
+    },
+    // The total stack weight is 10 * 2 = 20:
+    "small_stackable_item": {
+        "stack_size": 10,
+        "max_stack_size": 10,
+        "weight": 2
     }
 }
 ```
 
 ### Prototype Inheritance
 
-As already mentioned, prototypes can inherit properties from other prototypes. The derived prototypes can override properties from the base or define new properties.
+As already mentioned, a prototype can inherit properties from another prototype. The base of a derived prototype is defined using the `extends` property. The derived prototypes can override properties from the base or define new properties.
 
 Example:
 ```javascript
 {
-    "prototypes": {
-        // Base prototype for melee weapons.
-        // Defines the "weapon_type" and "damage" properties:
-        "melee_weapons": {
-            "properties": {
-                "weapon_type": "melee",
-                "damage": 1
-            },
-            "prototypes": {
-                // Inherits the "weapon_type" property ("melee").
-                // Overrides the "damage" property (from 1 to 30):
-                "axe": {
-                    "properties": {
-                        "damage": 30
-                    }
-                },
-                // Inherits the "weapon_type" property ("melee").
-                // Overrides the "damage" property (from 1 to 10) and adds an
-                // item description:
-                "knife": {
-                    "properties": {
-                        "damage": 10,
-                        "description": "A standard kitchen knife."
-                    }
-                }
-            }
-        }
+    // Base prototype for melee weapons.
+    // Defines the "weapon_type" and "damage" properties:
+    "melee_weapon": {
+        "weapon_type": "melee",
+        "damage": 1
+    },
+    // Inherits the "weapon_type" property ("melee").
+    // Overrides the "damage" property (from 1 to 30):
+    "axe": {
+        "extends": "melee_weapon",
+        "damage": 30
+    },
+    // Inherits the "weapon_type" property ("melee").
+    // Overrides the "damage" property (from 1 to 10) and adds an
+    // item description:
+    "knife": {
+        "extends": "melee_weapon",
+        "damage": 10,
+        "description": "A standard kitchen knife."
     }
 }
 ```
