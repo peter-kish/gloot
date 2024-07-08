@@ -16,7 +16,7 @@ The constraint implements a grid-based inventory of a configurable size.
 
 * `add_item_at(item: InventoryItem, position: Vector2i) -> bool` - Adds the given item to the inventory and sets its position.
 * `can_rotate_item(item: InventoryItem) -> bool` - Checks if the given item can be rotated.
-* `create_and_add_item_at(prototype_path: String, position: Vector2i) -> InventoryItem` - Creates and adds the given item to the inventory and sets its position.
+* `create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem` - Creates and adds the given item to the inventory and sets its position.
 * `deserialize(source: Dictionary) -> bool` - Loads the constraint data from the given `Dictionary`.
 * `enforce(item: InventoryItem) -> void` - Enforces the grid constraint. Attempts to move all items to free spots, or pack the items together so that no two items occupy the same field on the grid.
 * `find_free_place(item: InventoryItem, exception: InventoryItem) -> Dictionary` - Finds a place for the given item. The `exception` item will be disregarded during the search, if set. Returns a dictionary containing two fields: `success` and `position`. `success` will be set to `false` if not free place can be found and to `true` otherwise. If `success` is true the `position` field contains the resulting coordinates.

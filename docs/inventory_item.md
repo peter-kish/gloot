@@ -10,7 +10,7 @@ It is based on an item prototype from an prototree. Can hold additional properti
 
 ## Properties
 
-* `prototree_json: JSON` - A JSON resource containing prototree information.
+* `protoset: JSON` - A JSON resource containing prototype information.
 
 ## Methods
 
@@ -26,7 +26,7 @@ It is based on an item prototype from an prototree. Can hold additional properti
 * `get_overridden_properties() -> Array` - Returns an array of overridden item properties.
 * `get_properties() -> Array` - Returns an array of item properties.
 * `get_property(property_name: String, default_value: Variant) -> Variant` - Returns the given item property. If the item does not define the item property, `default_value` is returned.
-* `get_prototree() -> ProtoTree` - Returns the inventory prototree parsed from the prototree_json JSON resource.
+* `get_prototree() -> ProtoTree` - Returns the inventory prototree parsed from the protoset JSON resource.
 * `get_prototype() -> Prototype` - Returns the item prototype.
 * `get_stack_size() -> int` - Returns the stack size.
 * `get_texture() -> Texture2D` - Helper function for retrieving the item texture. It checks the image item property and loads it as a texture, if available.
@@ -34,7 +34,7 @@ It is based on an item prototype from an prototree. Can hold additional properti
 * `has_property(property_name: String) -> bool` - Checks if the item has the given property defined.
 * `is_property_overridden(property_name: Variant) -> bool` - Checks if the item overrides the given property.
 * `merge_into(item_dst: InventoryItem, split: bool) -> bool` - Merges the item stack into the `item_dst` stack. If `item_dst` doesn't have enough stack space and `split` is set to `true`, the stack will be split and only partially merged. Returns `false` if the merge cannot be performed.
-* `reset() -> void` - Resets item data. Clears its properties and sets its prototree to `null`.
+* `reset() -> void` - Resets item data. Clears its properties and sets its protoset to `null`.
 * `serialize() -> Dictionary` - Serializes the item into a `Dictionary`.
 * `set_max_stack_size(max_stack_size: int) -> void` - Sets the maximum stack size.
 * `set_property(property_name: String, value: Variant) -> void` - Sets the given item property to the given value.
