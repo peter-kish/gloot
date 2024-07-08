@@ -25,10 +25,10 @@ func connect_item_slot_signals():
     item_slot.item_equipped.connect(_refresh)
     item_slot.cleared.connect(_refresh)
 
-    if !item_slot.prototree_json:
+    if !item_slot.protoset:
         return
-    item_slot.prototree_json.changed.connect(_refresh)
-    item_slot.prototree_json_changed.connect(_refresh)
+    item_slot.protoset.changed.connect(_refresh)
+    item_slot.protoset_changed.connect(_refresh)
 
 
 func disconnect_item_slot_signals():
@@ -38,10 +38,10 @@ func disconnect_item_slot_signals():
     item_slot.item_equipped.disconnect(_refresh)
     item_slot.cleared.disconnect(_refresh)
 
-    if !item_slot.prototree_json:
+    if !item_slot.protoset:
         return
-    item_slot.prototree_json.changed.disconnect(_refresh)
-    item_slot.prototree_json_changed.disconnect(_refresh)
+    item_slot.protoset.changed.disconnect(_refresh)
+    item_slot.protoset_changed.disconnect(_refresh)
 
 
 func init(item_slot_: ItemSlot) -> void:
@@ -49,9 +49,9 @@ func init(item_slot_: ItemSlot) -> void:
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || item_slot == null || item_slot.prototree_json == null:
+    if !is_inside_tree() || item_slot == null || item_slot.protoset == null:
         return
-    %PrototreeViewer.prototree_json = item_slot.prototree_json
+    %PrototreeViewer.protoset = item_slot.protoset
 
 
 func _ready() -> void:
@@ -75,7 +75,7 @@ func _apply_editor_settings() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
-    var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
+    var item := InventoryItem.new(item_slot.protoset, prototype.get_path())
     _Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )
@@ -85,7 +85,7 @@ func _on_btn_add() -> void:
     var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
     if prototype == null:
         return
-    var item := InventoryItem.new(item_slot.prototree_json, prototype.get_path())
+    var item := InventoryItem.new(item_slot.protoset, prototype.get_path())
     _Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )

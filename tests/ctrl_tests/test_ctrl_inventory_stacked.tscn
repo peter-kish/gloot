@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="2_6ia13"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_25j36"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="4_ijkns"]
-[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="4_uov1j"]
+[ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="4_uov1j"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="5_b1fi0"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="6_tm82y"]
 
@@ -37,17 +37,17 @@ inventory = NodePath("../Inventory")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_25j36")
-prototree_json = ExtResource("4_uov1j")
+protoset = ExtResource("4_uov1j")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/minimal_item"
 }, {
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/stackable_item"
 }],
 "node_name": "Inventory",
-"prototree": "res://tests/data/prototree_stacks.json"
+"protoset": "res://tests/data/protoset_stacks.json"
 }
 
 [node name="WeightConstraint" type="Node" parent="Inventory"]

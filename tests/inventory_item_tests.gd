@@ -4,7 +4,7 @@ var inventory: Inventory
 var slot: ItemSlot
 var item: InventoryItem
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
 
 func init_suite() -> void:
     tests = [
@@ -23,9 +23,9 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory = create_inventory(TEST_PROTOTREE)
+    inventory = create_inventory(TEST_PROTOSET)
     slot = ItemSlot.new()
-    slot.prototree_json = TEST_PROTOTREE
+    slot.protoset = TEST_PROTOSET
     item = inventory.create_and_add_item("minimal_item")
 
 
@@ -41,10 +41,10 @@ func test_get_inventory() -> void:
 
 
 func test_swap() -> void:
-    var inventory2 = create_inventory(TEST_PROTOTREE)
+    var inventory2 = create_inventory(TEST_PROTOSET)
     var item2 = inventory2.create_and_add_item("minimal_item")
     var slot2 = ItemSlot.new()
-    slot2.prototree_json = TEST_PROTOTREE
+    slot2.protoset = TEST_PROTOSET
 
     # Swap items between two inventories
     assert(InventoryItem.swap(item, item2))
@@ -78,7 +78,7 @@ func test_set_property() -> void:
 
 
 func test_references() -> void:
-    var item2 := create_item(preload("res://tests/data/prototree_dict.json"), "containing_dict")
+    var item2 := create_item(preload("res://tests/data/protoset_dict.json"), "containing_dict")
     var dict: Dictionary = item2.get_property("dictionary")
     assert(dict != null)
     assert(dict.has("foo"))
@@ -108,7 +108,7 @@ func test_reset() -> void:
     item.set_property("foo", "bar")
 
     item.reset()
-    assert(item.prototree_json == inventory.prototree_json)
+    assert(item.protoset == inventory.protoset)
     assert(item.get_prototype() != null)
     assert(PrototypePath.str_paths_equal(str(item.get_prototype().get_path()), "/minimal_item"))
     assert(item.get_overridden_properties().is_empty())
@@ -116,7 +116,7 @@ func test_reset() -> void:
 
     inventory.remove_item(item)
     item.reset()
-    assert(item.prototree_json == null)
+    assert(item.protoset == null)
     assert(item.get_prototype() == null)
     assert(item.get_overridden_properties().is_empty())
 

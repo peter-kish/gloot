@@ -4,7 +4,7 @@ var inventory: Inventory
 var item: InventoryItem
 var grid_constraint: GridConstraint
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_grid.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_grid.json")
 const TEST_PROTOTYPE_PATH = "/item_2x2"
 
 
@@ -29,8 +29,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = create_item(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
-    inventory = create_inventory(TEST_PROTOTREE)
+    item = create_item(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
+    inventory = create_inventory(TEST_PROTOSET)
     grid_constraint = enable_grid_constraint(inventory)
 
 

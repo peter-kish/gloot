@@ -1,6 +1,6 @@
 extends TestSuite
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
 const TEST_PROTOTYPE_PATH = "/minimal_item"
 
 var slot: ItemSlot
@@ -22,16 +22,16 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = InventoryItem.new(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
-    item2 = InventoryItem.new(TEST_PROTOTREE, TEST_PROTOTYPE_PATH)
+    item = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
+    item2 = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
     inventory = Inventory.new()
-    inventory.prototree_json = TEST_PROTOTREE
+    inventory.protoset = TEST_PROTOSET
     inventory.add_item(item)
     inventory.add_item(item2)
     slot = ItemSlot.new()
-    slot.prototree_json = TEST_PROTOTREE
+    slot.protoset = TEST_PROTOSET
     slot2 = ItemSlot.new()
-    slot2.prototree_json = TEST_PROTOTREE
+    slot2.protoset = TEST_PROTOSET
 
 
 func cleanup_test() -> void:
@@ -74,7 +74,7 @@ func test_can_hold_item() -> void:
 
 func test_serialize() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item.prototree_json
+    var expected_protoset := item.protoset
     var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
@@ -82,14 +82,14 @@ func test_serialize() -> void:
     slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().prototree_json == expected_prototree_json)
+    assert(slot.get_item().protoset == expected_protoset)
     assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)
 
 
 func test_serialize_json() -> void:
     assert(slot.equip(item))
-    var expected_prototree_json := item.prototree_json
+    var expected_protoset := item.protoset
     var expected_prototype_path := item._prototype.get_path()
     var expected_properties := item.get_properties()
 
@@ -104,6 +104,6 @@ func test_serialize_json() -> void:
     slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
-    assert(slot.get_item().prototree_json == expected_prototree_json)
+    assert(slot.get_item().protoset == expected_protoset)
     assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
     assert(slot.get_item().get_properties() == expected_properties)

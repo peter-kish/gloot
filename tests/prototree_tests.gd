@@ -107,7 +107,7 @@ func prototype_path_test() -> void:
 
 func deserialize_test() -> void:
     var prototree := ProtoTree.new()
-    assert(prototree.deserialize(preload("res://tests/data/prototree_basic.json")))
+    assert(prototree.deserialize(preload("res://tests/data/protoset_basic.json")))
     assert(!prototree.is_empty())
     assert(prototree.get_root().has_prototype("item1"))
     var item1 := prototree.get_root().get_prototype("item1")

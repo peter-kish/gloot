@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://dphh30kym6h7f"]
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_ykodk"]
-[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="2_8vr37"]
+[ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="2_8vr37"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="3_16p24"]
-[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_uiaq5"]
+[ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="4_uiaq5"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/item_count_constraint.gd" id="5_7dr5d"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="6_40sow"]
 
@@ -11,7 +11,7 @@
 
 [node name="InventoryWeightConstraint" type="Node" parent="."]
 script = ExtResource("1_ykodk")
-prototree_json = ExtResource("2_8vr37")
+protoset = ExtResource("2_8vr37")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/weight_constraint.gd": {
@@ -22,14 +22,14 @@ _serialized_format = {
 }
 },
 "items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/minimal_item"
 }, {
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/big_item"
 }],
 "node_name": "InventoryWeightConstraint",
-"prototree": "res://tests/data/prototree_stacks.json"
+"protoset": "res://tests/data/protoset_stacks.json"
 }
 
 [node name="WeightConstraint" type="Node" parent="InventoryWeightConstraint"]
@@ -38,7 +38,7 @@ capacity = 50.0
 
 [node name="InventoryItemCountConstraint" type="Node" parent="."]
 script = ExtResource("1_ykodk")
-prototree_json = ExtResource("4_uiaq5")
+protoset = ExtResource("4_uiaq5")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/item_count_constraint.gd": {
@@ -49,14 +49,14 @@ _serialized_format = {
 }
 },
 "items": [{
-"prototree": "res://tests/data/prototree_basic.json",
+"protoset": "res://tests/data/protoset_basic.json",
 "prototype_path": "/minimal_item"
 }, {
-"prototree": "res://tests/data/prototree_basic.json",
+"protoset": "res://tests/data/protoset_basic.json",
 "prototype_path": "/minimal_item_2"
 }],
 "node_name": "InventoryItemCountConstraint",
-"prototree": "res://tests/data/prototree_basic.json"
+"protoset": "res://tests/data/protoset_basic.json"
 }
 
 [node name="ItemCountConstraint" type="Node" parent="InventoryItemCountConstraint"]

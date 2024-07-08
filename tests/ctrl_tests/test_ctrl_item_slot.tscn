@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="2_h16kg"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="3_th5bj"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="4_j3nko"]
-[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="5_46c6m"]
+[ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="5_46c6m"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="6_qj5xf"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
@@ -35,25 +35,25 @@ slot_highlighted_style = SubResource("2")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("4_j3nko")
-prototree_json = ExtResource("5_46c6m")
+protoset = ExtResource("5_46c6m")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_basic.json",
+"protoset": "res://tests/data/protoset_basic.json",
 "prototype_path": "/item1"
 }, {
-"prototree": "res://tests/data/prototree_basic.json",
+"protoset": "res://tests/data/protoset_basic.json",
 "prototype_path": "/item1/item_2"
 }],
 "node_name": "Inventory",
-"prototree": "res://tests/data/prototree_basic.json"
+"protoset": "res://tests/data/protoset_basic.json"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("6_qj5xf")
-prototree_json = ExtResource("5_46c6m")
+protoset = ExtResource("5_46c6m")
 _serialized_format = {
 "item": {
-"prototree": "res://tests/data/prototree_basic.json",
+"protoset": "res://tests/data/protoset_basic.json",
 "prototype_path": "/item1"
 }
 }

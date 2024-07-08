@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="3_lwfya"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
-[ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="8_mr2pf"]
+[ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="8_mr2pf"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_6njuc"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
@@ -169,12 +169,12 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("10_lyc83")
-prototree_json = ExtResource("8_mr2pf")
+protoset = ExtResource("8_mr2pf")
 
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
-prototree_json = ExtResource("8_mr2pf")
+protoset = ExtResource("8_mr2pf")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/grid_constraint.gd": {
@@ -198,7 +198,7 @@ _serialized_format = {
 "value": "2"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
+"protoset": "res://tests/data/protoset_grid.json",
 "prototype_path": "/item_1x1"
 }, {
 "properties": {
@@ -211,11 +211,11 @@ _serialized_format = {
 "value": "2"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
+"protoset": "res://tests/data/protoset_grid.json",
 "prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryLeft",
-"prototree": "res://tests/data/prototree_grid.json"
+"protoset": "res://tests/data/protoset_grid.json"
 }
 
 [node name="GridConstraint" type="Node" parent="InventoryLeft"]
@@ -225,7 +225,7 @@ size = Vector2i(5, 5)
 [node name="InventoryRight" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
-prototree_json = ExtResource("8_mr2pf")
+protoset = ExtResource("8_mr2pf")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/grid_constraint.gd": {
@@ -249,7 +249,7 @@ _serialized_format = {
 "value": "2"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
+"protoset": "res://tests/data/protoset_grid.json",
 "prototype_path": "/item_1x1"
 }, {
 "properties": {
@@ -262,11 +262,11 @@ _serialized_format = {
 "value": "2"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
+"protoset": "res://tests/data/protoset_grid.json",
 "prototype_path": "/item_2x2"
 }],
 "node_name": "InventoryRight",
-"prototree": "res://tests/data/prototree_grid.json"
+"protoset": "res://tests/data/protoset_grid.json"
 }
 
 [node name="GridConstraint" type="Node" parent="InventoryRight"]

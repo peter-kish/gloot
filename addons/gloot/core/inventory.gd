@@ -10,7 +10,7 @@ signal item_added(item)                         ## Emitted when an item has been
 signal item_removed(item)                       ## Emitted when an item has been removed from the inventory.
 signal item_property_changed(item, property)    ## Emitted when a property of an item inside the inventory has been changed.
 signal item_moved(item)                         ## Emitted when an item has moved to a new index.
-signal prototree_json_changed                   ## Emitted when the prototree_json property has changed.
+signal protoset_changed                         ## Emitted when the protoset property has changed.
 signal constraint_added(constraint)             ## Emitted when a new constraint has been added to the inventory.
 signal constraint_removed(constraint)           ## Emitted when a constraint has been removed from the inventory.
 signal constraint_changed(constraint)           ## Emitted when an inventory constraint has changed.
@@ -22,23 +22,23 @@ const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 
 const _KEY_NODE_NAME: String = "node_name"
-const _KEY_PROTOTREE: String = "prototree"
+const _KEY_PROTOSET: String = "protoset"
 const _KEY_CONSTRAINTS: String = "constraints"
 const _KEY_ITEMS: String = "items"
 const _KEY_STACK_SIZE = _StackManager._KEY_STACK_SIZE
 const _KEY_MAX_STACK_SIZE = _StackManager._KEY_MAX_STACK_SIZE
 
-## A JSON resource containing prototree information.
-@export var prototree_json: JSON :
-    set(new_prototree_json):
-        if new_prototree_json == prototree_json:
+## A JSON resource containing prototype information.
+@export var protoset: JSON :
+    set(new_protoset):
+        if new_protoset == protoset:
             return
         clear()
-        _disconnect_prototree_json_signals()
-        prototree_json = new_prototree_json
-        _prototree.deserialize(prototree_json)
-        _connect_prototree_json_signals()
-        prototree_json_changed.emit()
+        _disconnect_protoset_signals()
+        protoset = new_protoset
+        _prototree.deserialize(protoset)
+        _connect_protoset_signals()
+        protoset_changed.emit()
         update_configuration_warnings()
 
 var _prototree := ProtoTree.new()
@@ -50,26 +50,26 @@ var _serialized_format: Dictionary:
         _serialized_format = new_serialized_format
 
 
-## Returns the inventory prototree parsed from the prototree_json JSON resource.
+## Returns the inventory prototree parsed from the protoset JSON resource.
 func get_prototree() -> ProtoTree:
-    # TODO: Consider returning null when prototree_json is null
+    # TODO: Consider returning null when protoset is null
     return _prototree
 
 
-func _disconnect_prototree_json_signals() -> void:
-    if !is_instance_valid(prototree_json):
+func _disconnect_protoset_signals() -> void:
+    if !is_instance_valid(protoset):
         return
-    prototree_json.changed.disconnect(_on_prototree_json_changed)
+    protoset.changed.disconnect(_on_protoset_changed)
 
 
-func _connect_prototree_json_signals() -> void:
-    if !is_instance_valid(prototree_json):
+func _connect_protoset_signals() -> void:
+    if !is_instance_valid(protoset):
         return
-    prototree_json.changed.connect(_on_prototree_json_changed)
+    protoset.changed.connect(_on_protoset_changed)
 
 
-func _on_prototree_json_changed() -> void:
-    prototree_json_changed.emit()
+func _on_protoset_changed() -> void:
+    protoset_changed.emit()
 
     
 func _get_property_list():
@@ -88,9 +88,9 @@ func _update_serialized_format() -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if prototree_json == null:
+    if protoset == null:
         return PackedStringArray([
-                "This inventory node has no prototree. Set the 'prototree_json' field to be able to " \
+                "This inventory node has no prototree. Set the 'protoset' field to be able to " \
                 + "populate the inventory with items."])
     return PackedStringArray()
 
@@ -204,7 +204,7 @@ func can_add_item(item: InventoryItem) -> bool:
 ## Creates an `InventoryItem` based on the given prototype path adds it to the inventory. Returns `null` if the item
 ## cannot be added.
 func create_and_add_item(prototype_path: String) -> InventoryItem:
-    var item: InventoryItem = InventoryItem.new(prototree_json, prototype_path)
+    var item: InventoryItem = InventoryItem.new(protoset, prototype_path)
     if add_item(item):
         return item
     else:
@@ -280,10 +280,10 @@ func get_constraint(script: Script) -> InventoryConstraint:
     return _constraint_manager.get_constraint(script)
 
 
-## Removes all items from the inventory and sets its prototree to `null`.
+## Removes all items from the inventory and sets its protoset to `null`.
 func reset() -> void:
     clear()
-    prototree_json = null
+    protoset = null
 
 
 ## Removes all the items from the inventory.
@@ -297,11 +297,11 @@ func clear() -> void:
 func serialize() -> Dictionary:
     var result: Dictionary = {}
 
-    if prototree_json == null || _constraint_manager == null:
+    if protoset == null || _constraint_manager == null:
         return result
 
     result[_KEY_NODE_NAME] = name as String
-    result[_KEY_PROTOTREE] = _serialize_prototree_json(prototree_json)
+    result[_KEY_PROTOSET] = _serialize_protoset(protoset)
     if !_constraint_manager.is_empty():
         result[_KEY_CONSTRAINTS] = _constraint_manager.serialize()
     if !get_items().is_empty():
@@ -312,29 +312,29 @@ func serialize() -> Dictionary:
     return result
 
 
-static func _serialize_prototree_json(prototree_json: JSON) -> String:
-    if !is_instance_valid(prototree_json):
+static func _serialize_protoset(protoset: JSON) -> String:
+    if !is_instance_valid(protoset):
         return ""
-    elif prototree_json.resource_path.is_empty():
-        return prototree_json.stringify(prototree_json.data)
+    elif protoset.resource_path.is_empty():
+        return protoset.stringify(protoset.data)
     else:
-        return prototree_json.resource_path
+        return protoset.resource_path
 
 
 ## Loads the inventory data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
     if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) ||\
-        !_Verify.dict(source, true, _KEY_PROTOTREE, TYPE_STRING) ||\
+        !_Verify.dict(source, true, _KEY_PROTOSET, TYPE_STRING) ||\
         !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
         !_Verify.dict(source, false, _KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
     clear()
-    prototree_json = null
+    protoset = null
 
     if !source[_KEY_NODE_NAME].is_empty() && source[_KEY_NODE_NAME] != name:
         name = source[_KEY_NODE_NAME]
-    prototree_json = _deserialize_prototree_json(source[_KEY_PROTOTREE])
+    protoset = _deserialize_protoset(source[_KEY_PROTOSET])
     # TODO: Check return value:
     if source.has(_KEY_ITEMS):
         var items = source[_KEY_ITEMS]
@@ -351,7 +351,7 @@ func deserialize(source: Dictionary) -> bool:
     return true
 
 
-static func _deserialize_prototree_json(data: String) -> JSON:
+static func _deserialize_protoset(data: String) -> JSON:
     if data.is_empty():
         return null
     elif data.begins_with("res://"):

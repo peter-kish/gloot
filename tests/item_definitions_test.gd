@@ -9,7 +9,7 @@ func init_suite() -> void:
 
 func init_test() -> void:
     inventory = Inventory.new()
-    inventory.prototree_json = preload("res://tests/data/prototree_basic.json")
+    inventory.protoset = preload("res://tests/data/protoset_basic.json")
     inventory.create_and_add_item("minimal_item")
     inventory.create_and_add_item("minimal_item")
 

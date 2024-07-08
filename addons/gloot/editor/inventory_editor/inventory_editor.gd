@@ -25,13 +25,13 @@ func connect_inventory_signals():
         return
 
     inventory.constraint_changed.connect(_on_constraint_changed)
-    inventory.prototree_json_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
     inventory.constraint_added.connect(_on_constraint_changed)
     inventory.constraint_removed.connect(_on_constraint_changed)
 
-    if !inventory.prototree_json:
+    if !inventory.protoset:
         return
-    inventory.prototree_json.changed.connect(_refresh)
+    inventory.protoset.changed.connect(_refresh)
 
 
 func disconnect_inventory_signals():
@@ -39,13 +39,13 @@ func disconnect_inventory_signals():
         return
         
     inventory.constraint_changed.disconnect(_on_constraint_changed)
-    inventory.prototree_json_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
     inventory.constraint_added.disconnect(_on_constraint_changed)
     inventory.constraint_removed.disconnect(_on_constraint_changed)
 
-    if !inventory.prototree_json:
+    if !inventory.protoset:
         return
-    inventory.prototree_json.changed.disconnect(_refresh)
+    inventory.protoset.changed.disconnect(_refresh)
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
@@ -53,7 +53,7 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 
 func _refresh() -> void:
-    if !is_inside_tree() || inventory == null || inventory.prototree_json == null:
+    if !is_inside_tree() || inventory == null || inventory.protoset == null:
         return
         
     # Remove the inventory control, if present
@@ -66,7 +66,7 @@ func _refresh() -> void:
     _inventory_container = _create_inventory_container()
     %ScrollContainer.add_child(_inventory_container)
 
-    %PrototreeViewer.prototree_json = inventory.prototree_json
+    %PrototreeViewer.protoset = inventory.protoset
 
 
 func _create_inventory_container() -> Control:

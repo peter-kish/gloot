@@ -42,7 +42,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _connect_inventory_signals() -> void:
     if !inventory.is_node_ready():
         _Utils.safe_connect(inventory.ready, _refresh)
-    inventory.prototree_json_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
     inventory.item_property_changed.connect(_on_item_property_changed)
     inventory.item_added.connect(_on_item_manipulated)
     inventory.item_removed.connect(_on_item_manipulated)
@@ -51,7 +51,7 @@ func _connect_inventory_signals() -> void:
 
 func _disconnect_inventory_signals() -> void:
     _Utils.safe_disconnect(inventory.ready, _refresh)
-    inventory.prototree_json_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
     inventory.item_property_changed.disconnect(_on_item_property_changed)
     inventory.item_added.disconnect(_on_item_manipulated)
     inventory.item_removed.disconnect(_on_item_manipulated)

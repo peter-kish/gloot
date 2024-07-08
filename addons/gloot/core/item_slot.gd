@@ -6,22 +6,22 @@ extends Node
 ##
 ## An item slot that can hold an inventory item.
 
-signal prototree_json_changed   ## Emitted when the prototree_json property has been changed.
+signal protoset_changed   ## Emitted when the protoset property has been changed.
 signal item_equipped            ## Emitted when an item is placed in the slot.
 signal cleared                  ## Emitted when the slot is cleared.Emitted when the slot is cleared.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _KEY_ITEM: String = "item"
 
-## A JSON resource containing prototree information.
-@export var prototree_json: JSON:
-    set(new_prototree_json):
-        if new_prototree_json == prototree_json:
+## A JSON resource containing prototype information.
+@export var protoset: JSON:
+    set(new_protoset):
+        if new_protoset == protoset:
             return
-        prototree_json = new_prototree_json
+        protoset = new_protoset
         if is_instance_valid(_inventory):
-            _inventory.prototree_json = prototree_json
-        prototree_json_changed.emit()
+            _inventory.protoset = protoset
+        protoset_changed.emit()
         update_configuration_warnings()
 var _inventory: Inventory = null :
     set(new_inventory):
@@ -48,7 +48,7 @@ func _disconnect_inventory_signals() -> void:
 
 func _init() -> void:
     _inventory = Inventory.new()
-    _inventory.prototree_json = prototree_json
+    _inventory.protoset = protoset
     var item_count_constraint := ItemCountConstraint.new()
     _inventory.add_child(item_count_constraint)
     add_child(_inventory)
@@ -63,9 +63,9 @@ func _on_item_removed(item: InventoryItem) -> void:
 
 
 func _get_configuration_warnings() -> PackedStringArray:
-    if prototree_json == null:
+    if protoset == null:
         return PackedStringArray([
-                "This item slot has no prototree. Set the 'prototree_json' field to be able to equip items."])
+                "This item slot has no protoset. Set the 'protoset' field to be able to equip items."])
     return PackedStringArray()
 
 
@@ -102,13 +102,13 @@ func get_item() -> InventoryItem:
     return _inventory.get_items()[0]
 
 
-## Checks if the slot can hold the given item, i.e. the slot uses the same prototree as the item and the item is not
+## Checks if the slot can hold the given item, i.e. the slot uses the same protoset as the item and the item is not
 ## `null`.
 func can_hold_item(item: InventoryItem) -> bool:
-    assert(prototree_json != null, "Item prototree not set!")
+    assert(protoset != null, "Item protoset not set!")
     if item == null:
         return false
-    if prototree_json != item.prototree_json:
+    if protoset != item.protoset:
         return false
 
     return true

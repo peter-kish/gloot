@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="4_nim7g"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="5_v7bum"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_otfc2"]
-[ext_resource type="JSON" path="res://tests/data/prototree_stacks.json" id="6_v6n8v"]
+[ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="6_v6n8v"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_worre"]
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_1flkn"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="10_i7fg4"]
@@ -123,12 +123,12 @@ text = ">>>"
 [node name="ItemSlot" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("8_worre")
-prototree_json = ExtResource("6_v6n8v")
+protoset = ExtResource("6_v6n8v")
 
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_1flkn")
-prototree_json = ExtResource("6_v6n8v")
+protoset = ExtResource("6_v6n8v")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/weight_constraint.gd": {
@@ -139,10 +139,10 @@ _serialized_format = {
 }
 },
 "items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/minimal_item"
 }, {
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/big_item"
 }, {
 "properties": {
@@ -151,11 +151,11 @@ _serialized_format = {
 "value": "100.0"
 }
 },
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/stackable_item"
 }],
 "node_name": "InventoryLeft",
-"prototree": "res://tests/data/prototree_stacks.json"
+"protoset": "res://tests/data/protoset_stacks.json"
 }
 
 [node name="WeightConstraint" type="Node" parent="InventoryLeft"]
@@ -165,7 +165,7 @@ capacity = 50.0
 [node name="InventoryRight" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("9_1flkn")
-prototree_json = ExtResource("6_v6n8v")
+protoset = ExtResource("6_v6n8v")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/weight_constraint.gd": {
@@ -176,10 +176,10 @@ _serialized_format = {
 }
 },
 "items": [{
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/minimal_item"
 }, {
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/big_item"
 }, {
 "properties": {
@@ -188,11 +188,11 @@ _serialized_format = {
 "value": "100.0"
 }
 },
-"prototree": "res://tests/data/prototree_stacks.json",
+"protoset": "res://tests/data/protoset_stacks.json",
 "prototype_path": "/stackable_item"
 }],
 "node_name": "InventoryRight",
-"prototree": "res://tests/data/prototree_stacks.json"
+"protoset": "res://tests/data/protoset_stacks.json"
 }
 
 [node name="WeightConstraint" type="Node" parent="InventoryRight"]

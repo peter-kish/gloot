@@ -32,28 +32,28 @@ func connect_inventory_signals():
     if !inventory:
         return
 
-    inventory.prototree_json_changed.connect(_refresh)
+    inventory.protoset_changed.connect(_refresh)
     inventory.constraint_changed.connect(_on_constraint_changed)
     inventory.constraint_added.connect(_on_constraint_changed)
     inventory.constraint_removed.connect(_on_constraint_changed)
 
-    if !inventory.prototree_json:
+    if !inventory.protoset:
         return
-    inventory.prototree_json.changed.connect(_refresh)
+    inventory.protoset.changed.connect(_refresh)
 
 
 func disconnect_inventory_signals():
     if !inventory:
         return
         
-    inventory.prototree_json_changed.disconnect(_refresh)
+    inventory.protoset_changed.disconnect(_refresh)
     inventory.constraint_changed.disconnect(_on_constraint_changed)
     inventory.constraint_added.disconnect(_on_constraint_changed)
     inventory.constraint_removed.disconnect(_on_constraint_changed)
 
-    if !inventory.prototree_json:
+    if !inventory.protoset:
         return
-    inventory.prototree_json.changed.disconnect(_refresh)
+    inventory.protoset.changed.disconnect(_refresh)
 
 
 func _on_constraint_changed(constraint: InventoryConstraint) -> void:
