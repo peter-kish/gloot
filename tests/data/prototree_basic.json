@@ -1,24 +1,16 @@
 {
-    "prototypes": {
-        "minimal_item": {
+	"minimal_item": {
 
-        },
-        "minimal_item_2": {
+	},
+	"minimal_item_2": {
 
-        },
-        "item1": {
-            "properties": {
-                "name": "item 1",
-                "image": "res://images/item_book_blue.png"
-            },
-            "prototypes": {
-                "item_2": {
-                    "properties": {
-                        "name": "item 2",
-                        "image": "res://images/item_scroll_blue.png"
-                    }
-                }
-            }
-        }
-    }
+	},
+	"item1": {
+		"name": "item 1",
+		"image": "res://images/item_book_blue.png"
+	},
+	"item_2": {
+		"name": "item 2",
+		"image": "res://images/item_scroll_blue.png"
+	}
 }

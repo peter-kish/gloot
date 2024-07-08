@@ -13,8 +13,6 @@ var _properties: Dictionary
 var _parent: Prototype
 var _prototypes: Dictionary
 
-const _Utils = preload("res://addons/gloot/core/utils.gd")
-
 
 func _init(id: String) -> void:
     _id = id
@@ -172,32 +170,3 @@ func clear() -> void:
     _properties.clear()
     _prototypes.clear()
 
-
-## Parses the given JSON resource into a prototype. Returns `false` if parsing fails.
-func deserialize(json: JSON) -> bool:
-    clear()
-    if !is_instance_valid(json):
-        return false
-    return _deserialize_from_dict(json.data)
-
-
-func _deserialize_from_dict(data: Dictionary) -> bool:
-    # TODO: data verification
-    if data.is_empty():
-        return true
-    if data.has(_KEY_PROPERTIES):
-        for property in data[_KEY_PROPERTIES].keys():
-            if typeof(data[_KEY_PROPERTIES][property]) == TYPE_STRING:
-                var value = _Utils.str_to_var(data[_KEY_PROPERTIES][property])
-                if value == null:
-                    set_property(property, data[_KEY_PROPERTIES][property])
-                else:
-                    set_property(property, value)
-            else:
-                set_property(property, data[_KEY_PROPERTIES][property])
-    if data.has(_KEY_PROTOTYPES):
-        for prototype_id in data[_KEY_PROTOTYPES].keys():
-            var new_protototype := create_prototype(prototype_id)
-            if !new_protototype._deserialize_from_dict(data[_KEY_PROTOTYPES][prototype_id]):
-                return false
-    return true
