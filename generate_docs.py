@@ -22,7 +22,6 @@ def main() -> None:
         "docs/ItemSlot.xml": "docs/item_slot.md",
         "docs/ProtoTree.xml": "docs/prototree.md",
         "docs/Prototype.xml": "docs/prototype.md",
-        "docs/PrototypePath.xml": "docs/prototype_path.md",
         "docs/GridConstraint.xml": "docs/grid_constraint.md",
         "docs/WeightConstraint.xml": "docs/weight_constraint.md",
     }

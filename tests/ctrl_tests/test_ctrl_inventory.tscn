@@ -32,10 +32,10 @@ protoset = ExtResource("4_yg38y")
 _serialized_format = {
 "items": [{
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1"
+"prototype_id": "item1"
 }, {
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1/item_2"
+"prototype_id": "item_2"
 }],
 "node_name": "Inventory",
 "protoset": "res://tests/data/protoset_basic.json"

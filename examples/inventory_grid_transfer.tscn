@@ -176,10 +176,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_1x1"
+"prototype_id": "item_1x1"
 }, {
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_2x2"
+"prototype_id": "item_2x2"
 }],
 "node_name": "InventoryLeft",
 "protoset": "res://tests/data/protoset_grid.json"
@@ -207,10 +207,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_1x1"
+"prototype_id": "item_1x1"
 }, {
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_2x2"
+"prototype_id": "item_2x2"
 }],
 "node_name": "InventoryRight",
 "protoset": "res://tests/data/protoset_grid.json"

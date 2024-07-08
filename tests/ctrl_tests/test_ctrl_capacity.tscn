@@ -23,10 +23,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/minimal_item"
+"prototype_id": "minimal_item"
 }, {
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/big_item"
+"prototype_id": "big_item"
 }],
 "node_name": "InventoryWeightConstraint",
 "protoset": "res://tests/data/protoset_stacks.json"
@@ -50,10 +50,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/minimal_item"
+"prototype_id": "minimal_item"
 }, {
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/minimal_item_2"
+"prototype_id": "minimal_item_2"
 }],
 "node_name": "InventoryItemCountConstraint",
 "protoset": "res://tests/data/protoset_basic.json"

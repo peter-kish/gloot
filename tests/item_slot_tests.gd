@@ -1,7 +1,7 @@
 extends TestSuite
 
 const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
-const TEST_PROTOTYPE_PATH = "/minimal_item"
+const TEST_PROTOTYPE_ID = "minimal_item"
 
 var slot: ItemSlot
 var slot2: ItemSlot
@@ -22,8 +22,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
-    item2 = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
+    item = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_ID)
+    item2 = InventoryItem.new(TEST_PROTOSET, TEST_PROTOTYPE_ID)
     inventory = Inventory.new()
     inventory.protoset = TEST_PROTOSET
     inventory.add_item(item)
@@ -75,7 +75,7 @@ func test_can_hold_item() -> void:
 func test_serialize() -> void:
     assert(slot.equip(item))
     var expected_protoset := item.protoset
-    var expected_prototype_path := item._prototype.get_path()
+    var expected_prototype_id := item._prototype.get_prototype_id()
     var expected_properties := item.get_properties()
 
     var item_slot_data = slot.serialize()
@@ -83,14 +83,14 @@ func test_serialize() -> void:
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item().protoset == expected_protoset)
-    assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
+    assert(slot.get_item().get_prototype().get_prototype_id() == expected_prototype_id)
     assert(slot.get_item().get_properties() == expected_properties)
 
 
 func test_serialize_json() -> void:
     assert(slot.equip(item))
     var expected_protoset := item.protoset
-    var expected_prototype_path := item._prototype.get_path()
+    var expected_prototype_id := item._prototype.get_prototype_id()
     var expected_properties := item.get_properties()
 
     var item_slot_data = slot.serialize()
@@ -105,5 +105,5 @@ func test_serialize_json() -> void:
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
     assert(slot.get_item().protoset == expected_protoset)
-    assert(slot.get_item().get_prototype().get_path().equal(expected_prototype_path))
+    assert(slot.get_item().get_prototype().get_prototype_id() == expected_prototype_id)
     assert(slot.get_item().get_properties() == expected_properties)

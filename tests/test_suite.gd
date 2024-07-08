@@ -88,8 +88,8 @@ func enable_item_count_constraint(inventory: Inventory, capacity: int = ItemCoun
 
 
 # Create an item with the given prototype ID from the given protoset
-func create_item(protoset: JSON, prototype_path: String) -> InventoryItem:
-    var item = InventoryItem.new(protoset, prototype_path)
+func create_item(protoset: JSON, prototype_id: String) -> InventoryItem:
+    var item = InventoryItem.new(protoset, prototype_id)
     return item
 
 

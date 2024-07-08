@@ -127,7 +127,7 @@ func _ready() -> void:
 
 func _on_prototype_activated(prototype: Prototype) -> void:
     _Undoables.undoable_action(inventory, "Add Inventory Item", func():
-        return (inventory.create_and_add_item(str(prototype.get_path())) != null)
+        return (inventory.create_and_add_item(str(prototype.get_prototype_id())) != null)
     )
 
 
@@ -136,7 +136,7 @@ func _on_btn_add() -> void:
     if prototype == null:
         return
     _Undoables.undoable_action(inventory, "Add Inventory Item", func():
-        return (inventory.create_and_add_item(str(prototype.get_path())) != null)
+        return (inventory.create_and_add_item(str(prototype.get_prototype_id())) != null)
     )
     
 

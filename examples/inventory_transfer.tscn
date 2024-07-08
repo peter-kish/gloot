@@ -108,10 +108,10 @@ protoset = ExtResource("6_yy1r8")
 _serialized_format = {
 "items": [{
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1"
+"prototype_id": "item1"
 }, {
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1/item_2"
+"prototype_id": "item_2"
 }],
 "node_name": "InventoryLeft",
 "protoset": "res://tests/data/protoset_basic.json"
@@ -124,10 +124,10 @@ protoset = ExtResource("6_yy1r8")
 _serialized_format = {
 "items": [{
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1"
+"prototype_id": "item1"
 }, {
 "protoset": "res://tests/data/protoset_basic.json",
-"prototype_path": "/item1/item_2"
+"prototype_id": "item_2"
 }],
 "node_name": "InventoryRight",
 "protoset": "res://tests/data/protoset_basic.json"

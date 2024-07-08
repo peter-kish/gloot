@@ -75,7 +75,7 @@ func _apply_editor_settings() -> void:
 
 
 func _on_prototype_activated(prototype: Prototype) -> void:
-    var item := InventoryItem.new(item_slot.protoset, prototype.get_path())
+    var item := InventoryItem.new(item_slot.protoset, prototype.get_prototype_id())
     _Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )
@@ -85,7 +85,7 @@ func _on_btn_add() -> void:
     var prototype: Prototype = %PrototreeViewer.get_selected_prototype()
     if prototype == null:
         return
-    var item := InventoryItem.new(item_slot.protoset, prototype.get_path())
+    var item := InventoryItem.new(item_slot.protoset, prototype.get_prototype_id())
     _Undoables.undoable_action(item_slot, "Equip item", func():
         return item_slot.equip(item)
     )

@@ -8,11 +8,11 @@ var inventory2: Inventory
 var constraint_manager: ConstraintManager
 
 const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
-const TEST_PROTOTYPE_PATH = "/minimal_item"
+const TEST_PROTOTYPE_ID = "minimal_item"
 const TEST_PROTOSET_W = preload("res://tests/data/protoset_stacks.json")
-const TEST_PROTOTYPE_PATH_W = "/minimal_item"
+const TEST_PROTOTYPE_ID_W = "minimal_item"
 const TEST_PROTOSET_G = preload("res://tests/data/protoset_grid.json")
-const TEST_PROTOTYPE_PATH_G = "/item_2x2"
+const TEST_PROTOTYPE_ID_G = "item_2x2"
 
 
 func init_suite():
@@ -47,13 +47,13 @@ func test_init() -> void:
 
 
 func test_has_space_for() -> void:
-    var item = create_item(TEST_PROTOSET, TEST_PROTOTYPE_PATH)
+    var item = create_item(TEST_PROTOSET, TEST_PROTOTYPE_ID)
     assert(constraint_manager.has_space_for(item))
 
 
 func test_w_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_W
-    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_PATH_W)
+    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
 
     enable_weight_constraint(inventory, 10.0)
     assert(constraint_manager.get_constraint(WeightConstraint) != null)
@@ -72,7 +72,7 @@ func test_w_has_space_for() -> void:
 
 func test_g_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_PATH_G)
+    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
     var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
@@ -92,7 +92,7 @@ func test_g_has_space_for() -> void:
 
 func test_wg_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_W
-    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_PATH_W)
+    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
 
     enable_grid_constraint(inventory, Vector2i(3, 3))
     enable_weight_constraint(inventory, 10.0)
@@ -117,7 +117,7 @@ func test_wg_has_space_for() -> void:
 
 func test_g_enforce_constraints() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_PATH_G)
+    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
     var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
@@ -146,7 +146,7 @@ func test_sg_enforce_constraints() -> void:
     var grid_constraint := enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
-    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_ID_G)
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
     # Test cases:
@@ -162,7 +162,7 @@ func test_sg_enforce_constraints() -> void:
     ]
 
     for data in test_data:
-        var test_item := InventoryItem.new(TEST_PROTOSET_G, TEST_PROTOTYPE_PATH_G)
+        var test_item := InventoryItem.new(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
         grid_constraint.size = data.input.inv_size
         new_item.set_max_stack_size(data.input.new_item_max_stack_size)
@@ -183,10 +183,10 @@ func test_sg_wrong_stack_type() -> void:
     var grid_constraint := enable_grid_constraint(inventory, Vector2i(2, 2))
     assert(grid_constraint != null)
 
-    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_PATH_G)
+    var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_ID_G)
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
-    var test_item := InventoryItem.new(TEST_PROTOSET_G, "/item_1x1")
+    var test_item := InventoryItem.new(TEST_PROTOSET_G, "item_1x1")
     new_item.set_max_stack_size(2)
     assert(new_item.set_stack_size(1))
     assert(!inventory.can_add_item(test_item))
@@ -198,7 +198,7 @@ func test_sg_wrong_stack_type() -> void:
 
 func test_wg_enforce_constraints() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_PATH_G)
+    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
     var weight_constraint = enable_weight_constraint(inventory, 10.0)
     var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))

@@ -41,10 +41,10 @@ protoset = ExtResource("4_uov1j")
 _serialized_format = {
 "items": [{
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/minimal_item"
+"prototype_id": "minimal_item"
 }, {
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/stackable_item"
+"prototype_id": "stackable_item"
 }],
 "node_name": "Inventory",
 "protoset": "res://tests/data/protoset_stacks.json"

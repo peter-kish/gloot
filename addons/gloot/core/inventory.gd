@@ -201,10 +201,10 @@ func can_add_item(item: InventoryItem) -> bool:
     return true
 
 
-## Creates an `InventoryItem` based on the given prototype path adds it to the inventory. Returns `null` if the item
+## Creates an `InventoryItem` based on the given prototype ID adds it to the inventory. Returns `null` if the item
 ## cannot be added.
-func create_and_add_item(prototype_path: String) -> InventoryItem:
-    var item: InventoryItem = InventoryItem.new(protoset, prototype_path)
+func create_and_add_item(prototype_id: String) -> InventoryItem:
+    var item: InventoryItem = InventoryItem.new(protoset, prototype_id)
     if add_item(item):
         return item
     else:
@@ -229,39 +229,33 @@ func _can_remove_item(item: InventoryItem) -> bool:
     return item != null && has_item(item)
 
 
-## Returns the first found item with the given prototype path. 
-func get_item_with_prototype_path(prototype_path: String) -> InventoryItem:
+## Returns the first found item with the given prototype ID. 
+func get_item_with_prototype_id(prototype_id: String) -> InventoryItem:
     for item in get_items():
-        if _is_item_at_path(item, prototype_path):
+        if !is_instance_valid(item.get_prototype()):
+            continue
+        if item.get_prototype().get_prototype_id() == prototype_id:
             return item
             
     return null
 
 
-## Returns an array of all the items with the given prototype path.
-func get_items_with_prototype_path(prototype_path: String) -> Array[InventoryItem]:
+## Returns an array of all the items with the given prototype ID.
+func get_items_with_prototype_id(prototype_id: String) -> Array[InventoryItem]:
     var result: Array[InventoryItem] = []
 
     for item in get_items():
-        if _is_item_at_path(item, prototype_path):
+        if !is_instance_valid(item.get_prototype()):
+            continue
+        if item.get_prototype().get_prototype_id() == prototype_id:
             result.append(item)
             
     return result
 
 
-func _is_item_at_path(item: InventoryItem, path: String) -> bool:
-    var prototype := item.get_prototree().get_prototype(path)
-    if !is_instance_valid(prototype):
-        return false
-
-    var prototype_path := item.get_prototree().get_prototype(path).get_path()
-    var abs_item_path := item.get_prototype().get_path()
-    return abs_item_path.equal(prototype_path)
-
-
-## Checks if the inventory has an item with the given prototype path.
-func has_item_with_prototype_path(prototype_path: String) -> bool:
-    return get_item_with_prototype_path(prototype_path) != null
+## Checks if the inventory has an item with the given prototype ID.
+func has_item_with_prototype_id(prototype_id: String) -> bool:
+    return get_item_with_prototype_id(prototype_id) != null
 
 
 func _on_constraint_added(constraint: InventoryConstraint) -> void:

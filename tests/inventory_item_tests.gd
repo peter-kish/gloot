@@ -68,7 +68,7 @@ func test_swap() -> void:
 
 func test_get_property() -> void:
     assert(item.get_property("name", "none") == "none")
-    var item2 := inventory.create_and_add_item("/item1")
+    var item2 := inventory.create_and_add_item("item1")
     assert(item2.get_property("name", "none") == "item 1")
 
 
@@ -97,7 +97,7 @@ func test_clear_property() -> void:
     item.clear_property("name")
     assert(item.get_property("name", "none") == "none")
 
-    var item2 := inventory.create_and_add_item("/item1")
+    var item2 := inventory.create_and_add_item("item1")
     item2.set_property("name", "Bob")
     assert(item2.get_property("name", "none") == "Bob")
     item2.clear_property("name")
@@ -110,7 +110,7 @@ func test_reset() -> void:
     item.reset()
     assert(item.protoset == inventory.protoset)
     assert(item.get_prototype() != null)
-    assert(PrototypePath.str_paths_equal(str(item.get_prototype().get_path()), "/minimal_item"))
+    assert(item.get_prototype().get_prototype_id() == "minimal_item")
     assert(item.get_overridden_properties().is_empty())
     assert(!item.has_property("foo"))
 
@@ -123,14 +123,14 @@ func test_reset() -> void:
 
 func test_get_texture() -> void:
     assert(item.get_texture() == null)
-    var item2 := inventory.create_and_add_item("/item1")
+    var item2 := inventory.create_and_add_item("item1")
     assert(item2.get_texture() != null)
     assert(item2.get_texture().resource_path == "res://images/item_book_blue.png")
 
 
 func test_get_title() -> void:
     assert(item.get_title() == "minimal_item")
-    var item2 := inventory.create_and_add_item("/item1")
+    var item2 := inventory.create_and_add_item("item1")
     assert(item2.get_title() == "item 1")
 
 

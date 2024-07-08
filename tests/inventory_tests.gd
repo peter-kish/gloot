@@ -47,10 +47,10 @@ func test_add_remove() -> void:
 
 
 func test_has_item() -> void:
-    assert(inventory1.has_item_with_prototype_path("/minimal_item"))
+    assert(inventory1.has_item_with_prototype_id("minimal_item"))
     assert(inventory1.has_item(item))
     assert(inventory1.remove_item(item))
-    assert(!inventory1.has_item_with_prototype_path("/minimal_item"))
+    assert(!inventory1.has_item_with_prototype_id("minimal_item"))
     assert(!inventory1.has_item(item))
 
 
@@ -59,7 +59,7 @@ func test_create_and_add() -> void:
     assert(new_item)
     assert(inventory2.get_item_count() == 1)
     assert(inventory2.has_item(new_item))
-    assert(inventory2.has_item_with_prototype_path("/minimal_item_2"))
+    assert(inventory2.has_item_with_prototype_id("minimal_item_2"))
 
 
 func test_remove_item() -> void:
@@ -97,7 +97,7 @@ func test_local_protoset() -> void:
     var file := FileAccess.open("res://tests/data/protoset_basic.json", FileAccess.READ)
     json.parse(file.get_as_text())
     inv.protoset = json
-    assert(inv.create_and_add_item("/minimal_item") != null)
+    assert(inv.create_and_add_item("minimal_item") != null)
 
     var inv_data = inv.serialize()
     inv.reset()

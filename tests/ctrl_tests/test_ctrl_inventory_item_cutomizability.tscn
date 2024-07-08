@@ -32,7 +32,7 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_1x1"
+"prototype_id": "item_1x1"
 }, {
 "properties": {
 "background_color": {
@@ -41,7 +41,7 @@ _serialized_format = {
 }
 },
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_2x2"
+"prototype_id": "item_2x2"
 }, {
 "properties": {
 "background_color": {
@@ -50,7 +50,7 @@ _serialized_format = {
 }
 },
 "protoset": "res://tests/data/protoset_grid.json",
-"prototype_path": "/item_1x1"
+"prototype_id": "item_1x1"
 }],
 "node_name": "Inventory",
 "protoset": "res://tests/data/protoset_grid.json"

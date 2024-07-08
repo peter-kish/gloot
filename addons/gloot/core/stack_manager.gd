@@ -38,20 +38,20 @@ static func set_item_max_stack_size(item: InventoryItem, max_stack_size: _ItemCo
     item.set_property(_KEY_MAX_STACK_SIZE, max_stack_size.count)
 
 
-static func get_prototype_stack_size(prototree: ProtoTree, prototype_path: String) -> _ItemCount:
+static func get_prototype_stack_size(prototree: ProtoTree, prototype_id: String) -> _ItemCount:
     assert(prototree != null, "prototree is null!")
-    var stack_size: int = prototree.get_prototype_property(prototype_path, _KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
+    var stack_size: int = prototree.get_prototype_property(prototype_id, _KEY_STACK_SIZE, DEFAULT_STACK_SIZE)
     return _ItemCount.new(stack_size)
 
 
-static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_path: String) -> _ItemCount:
+static func get_prototype_max_stack_size(prototree: ProtoTree, prototype_id: String) -> _ItemCount:
     assert(prototree != null, "prototree is null!")
-    var max_stack_size: int = prototree.get_prototype_property(prototype_path, _KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
+    var max_stack_size: int = prototree.get_prototype_property(prototype_id, _KEY_MAX_STACK_SIZE, DEFAULT_MAX_STACK_SIZE)
     return _ItemCount.new(max_stack_size)
 
 
 static func stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> bool:
-    # Two item stacks are compatible for mergine if they have the same prototype and neither of the two contain
+    # Two item stacks are compatible for merging if they have the same prototype and neither of the two contain
     # overridden properties that the other one doesn't have (except for "stack_size", "max_stack_size").
     assert(item_1 != null, "item_1 is null!")
     assert(item_2 != null, "item_2 is null!")
@@ -61,7 +61,7 @@ static func stacks_compatible(item_1: InventoryItem, item_2: InventoryItem) -> b
         _KEY_MAX_STACK_SIZE
     ]
 
-    if !item_1.get_prototype().get_path().equal(item_2.get_prototype().get_path()):
+    if !item_1.get_prototype().get_prototype_id() == item_2.get_prototype().get_prototype_id():
         return false
 
     for property in item_1.get_overridden_properties():

@@ -140,10 +140,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/minimal_item"
+"prototype_id": "minimal_item"
 }, {
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/big_item"
+"prototype_id": "big_item"
 }, {
 "properties": {
 "max_stack_size": {
@@ -152,7 +152,7 @@ _serialized_format = {
 }
 },
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/stackable_item"
+"prototype_id": "stackable_item"
 }],
 "node_name": "InventoryLeft",
 "protoset": "res://tests/data/protoset_stacks.json"
@@ -177,10 +177,10 @@ _serialized_format = {
 },
 "items": [{
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/minimal_item"
+"prototype_id": "minimal_item"
 }, {
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/big_item"
+"prototype_id": "big_item"
 }, {
 "properties": {
 "max_stack_size": {
@@ -189,7 +189,7 @@ _serialized_format = {
 }
 },
 "protoset": "res://tests/data/protoset_stacks.json",
-"prototype_path": "/stackable_item"
+"prototype_id": "stackable_item"
 }],
 "node_name": "InventoryRight",
 "protoset": "res://tests/data/protoset_stacks.json"

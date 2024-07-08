@@ -35,12 +35,12 @@ func init_test() -> void:
     inventory = create_inventory_stacked(TEST_PROTOSET, 10)
     inventory_2 = create_inventory_stacked(TEST_PROTOSET, 10)
 
-    item = create_item(TEST_PROTOSET, "/minimal_item")
-    big_item = create_item(TEST_PROTOSET, "/big_item")
-    stackable_item = create_item(TEST_PROTOSET, "/stackable_item")
-    stackable_item_2 = create_item(TEST_PROTOSET, "/stackable_item")
-    limited_stackable_item = create_item(TEST_PROTOSET, "/stackable_item/limited_stackable_item")
-    limited_stackable_item_2 = create_item(TEST_PROTOSET, "/stackable_item/limited_stackable_item")
+    item = create_item(TEST_PROTOSET, "minimal_item")
+    big_item = create_item(TEST_PROTOSET, "big_item")
+    stackable_item = create_item(TEST_PROTOSET, "stackable_item")
+    stackable_item_2 = create_item(TEST_PROTOSET, "stackable_item")
+    limited_stackable_item = create_item(TEST_PROTOSET, "limited_stackable_item")
+    limited_stackable_item_2 = create_item(TEST_PROTOSET, "limited_stackable_item")
 
 
 func cleanup_test() -> void:
