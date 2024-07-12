@@ -188,7 +188,8 @@ func add_item(item: InventoryItem) -> bool:
     var gc := _constraint_manager.get_grid_constraint()
     var sc := _constraint_manager.get_stacks_constraint()
     if gc != null && sc != null && !gc.has_space_for(item):
-        assert(sc.transfer_automerge(item, self))
+        var transfer_success = sc.transfer_automerge(item, self)
+        assert(transfer_success)
     else:
         add_child(item)
 
@@ -334,7 +335,8 @@ func deserialize(source: Dictionary) -> bool:
             var item = _get_item_script().new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.prototype_id)
+            var add_item_success = add_item(item)
+            assert(add_item_success, "Failed to add item '%s'. Inventory full?" % item.prototype_id)
 
     return true
 
