@@ -4,7 +4,7 @@ var free_fields :
     get:
         return _free_fields
     set(new_free_fields):
-        assert(false, "free_fields is read-only!")
+        push_error("free_fields is read-only!")
 
 
 func _init(size: Vector2i) -> void:

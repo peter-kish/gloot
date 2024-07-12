@@ -33,7 +33,7 @@ var occupied_space: float :
             return 0.0
         return _constraint_manager.get_weight_constraint().occupied_space
     set(new_occupied_space):
-        assert(false, "occupied_space is read-only!")
+        push_error("occupied_space is read-only!")
 
 
 func _init() -> void:
