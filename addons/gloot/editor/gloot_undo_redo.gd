@@ -45,7 +45,8 @@ static func remove_inventory_items(inventory: Inventory, items: Array[InventoryI
 
     var old_inv_state := inventory.serialize()
     for item in items:
-        assert(inventory.remove_item(item))
+        var remove_item_success = inventory.remove_item(item)
+        assert(remove_item_success)
     var new_inv_state := inventory.serialize()
 
     undo_redo_manager.create_action("Remove Inventory Items")
