@@ -1,19 +1,19 @@
 {
-	"minimal_item": {
+    "minimal_item": {
 
-	},
-	"big_item": {
-		"weight": 20,
-		"image": "res://images/item_book_blue.png"
-	},
-	"stackable_item": {
-		"max_stack_size": 10,
-		"stack_size": 10,
-		"image": "res://images/item_scroll_blue.png"
-	},
-	"limited_stackable_item": {
-		"extends": "stackable_item",
-		"max_stack_size": 5,
-		"stack_size": 5
-	}
+    },
+    "big_item": {
+        "weight": 20,
+        "image": "res://images/item_book_blue.png"
+    },
+    "stackable_item": {
+        "max_stack_size": 10,
+        "stack_size": 10,
+        "image": "res://images/item_scroll_blue.png"
+    },
+    "limited_stackable_item": {
+        "extends": "stackable_item",
+        "max_stack_size": 5,
+        "stack_size": 5
+    }
 }
