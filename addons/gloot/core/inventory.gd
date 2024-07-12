@@ -342,7 +342,8 @@ func deserialize(source: Dictionary) -> bool:
             var item = _get_item_script().new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            assert(add_item(item), "Failed to add item '%s'. Inventory full?" % item.get_title())
+            var success = add_item(item)
+            assert(success, "Failed to add item '%s'. Inventory full?" % item.get_title())
     if source.has(_KEY_CONSTRAINTS):
         if !_constraint_manager.deserialize(source[_KEY_CONSTRAINTS]):
             return false

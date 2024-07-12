@@ -133,7 +133,8 @@ static func _merge_stacks_split_source(item_dst: InventoryItem, item_src: Invent
 
     var free_dst_stack_space := get_free_stack_space(item_dst)
     var new_stack := split_stack(item_src, free_dst_stack_space)
-    assert(_merge_stacks(item_dst, new_stack))
+    var success = _merge_stacks(item_dst, new_stack)
+    assert(success, "Failed to merge stacks!")
     return true
 
 
@@ -225,13 +226,15 @@ static func _inv_merge_stack_split_source(inv: Inventory, item_dst: InventoryIte
     var src_stack_size := get_item_stack_size(item_src)
     if receivable_stack_size.ge(src_stack_size):
         # No splitting of item_src is needed
-        assert(_inv_merge_stack(inv, item_dst, item_src))
+        var success = _inv_merge_stack(inv, item_dst, item_src)
+        assert(success, "Failed to merge stacks!")
         return true
 
     # Need to split item_src
     var partial_stack := split_stack(item_src, receivable_stack_size)
     assert(partial_stack != null)
-    assert(merge_stacks(item_dst, partial_stack))
+    var success = merge_stacks(item_dst, partial_stack)
+    assert(success, "Failed to merge stacks!")
     return true
 
 
@@ -240,7 +243,8 @@ static func inv_add_automerge(inv: Inventory, item: InventoryItem) -> bool:
 
     if !inv._constraint_manager.has_space_for(item):
         return false
-    assert(inv.add_item(item))
+    var success = inv.add_item(item)
+    assert(success, "Failed to add item!")
     inv_pack_stack(inv, item)
     return true
 
@@ -255,7 +259,8 @@ static func inv_add_autosplit(inv: Inventory, item: InventoryItem) -> bool:
 
     var new_stack := split_stack(item, space_for_item)
     assert(new_stack)
-    assert(inv.add_item(new_stack))
+    var success = inv.add_item(new_stack)
+    assert(success, "Failed to add item!")
     return true
 
 

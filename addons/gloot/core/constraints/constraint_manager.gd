@@ -38,7 +38,8 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 
 func _on_item_added(item: InventoryItem) -> void:
-    assert(_enforce_constraints(item), "Failed to enforce constraints!")
+    var success = _enforce_constraints(item)
+    assert(success, "Failed to enforce constraints!")
 
     # Enforcing constraints can result in the item being removed from the inventory
     # (e.g. when it's merged with another item stack)
