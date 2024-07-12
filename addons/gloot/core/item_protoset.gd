@@ -29,7 +29,8 @@ func parse(json: String) -> void:
     _prototypes.clear()
 
     var test_json_conv: JSON = JSON.new()
-    assert(test_json_conv.parse(json) == OK, "Failed to parse JSON!")
+    var parse_status = test_json_conv.parse(json)
+    assert(parse_status == OK, "Failed to parse JSON!")
     var parse_result = test_json_conv.data
     assert(parse_result is Array, "JSON file must contain an array!")
 
