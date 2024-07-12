@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="2_b7vgs"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
-[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="4_yg38y"]
+[ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="4_yg38y"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -28,15 +28,15 @@ inventory = NodePath("../Inventory")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2")
-prototree_json = ExtResource("4_yg38y")
+protoset = ExtResource("4_yg38y")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item1"
 }, {
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1/item_2"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item_2"
 }],
 "node_name": "Inventory",
-"prototree": "res://tests/data/prototree_basic.json"
+"protoset": "res://tests/data/protoset_basic.json"
 }

@@ -9,7 +9,7 @@ var stackable_item_2: InventoryItem
 var limited_stackable_item: InventoryItem
 var limited_stackable_item_2: InventoryItem
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_stacks.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_stacks.json")
 
 
 func init_suite() -> void:
@@ -32,15 +32,15 @@ func init_suite() -> void:
 
 
 func init_test() -> void:
-    inventory = create_inventory_stacked(TEST_PROTOTREE, 10)
-    inventory_2 = create_inventory_stacked(TEST_PROTOTREE, 10)
+    inventory = create_inventory_stacked(TEST_PROTOSET, 10)
+    inventory_2 = create_inventory_stacked(TEST_PROTOSET, 10)
 
-    item = create_item(TEST_PROTOTREE, "/minimal_item")
-    big_item = create_item(TEST_PROTOTREE, "/big_item")
-    stackable_item = create_item(TEST_PROTOTREE, "/stackable_item")
-    stackable_item_2 = create_item(TEST_PROTOTREE, "/stackable_item")
-    limited_stackable_item = create_item(TEST_PROTOTREE, "/stackable_item/limited_stackable_item")
-    limited_stackable_item_2 = create_item(TEST_PROTOTREE, "/stackable_item/limited_stackable_item")
+    item = create_item(TEST_PROTOSET, "minimal_item")
+    big_item = create_item(TEST_PROTOSET, "big_item")
+    stackable_item = create_item(TEST_PROTOSET, "stackable_item")
+    stackable_item_2 = create_item(TEST_PROTOSET, "stackable_item")
+    limited_stackable_item = create_item(TEST_PROTOSET, "limited_stackable_item")
+    limited_stackable_item_2 = create_item(TEST_PROTOSET, "limited_stackable_item")
 
 
 func cleanup_test() -> void:

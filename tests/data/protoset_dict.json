@@ -1,0 +1,8 @@
+{
+	"containing_dict": {
+		"dictionary": {
+			"foo": "bar",
+			"baz": 42
+		}
+	}
+}

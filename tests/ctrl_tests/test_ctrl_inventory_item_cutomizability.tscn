@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b78tddlgluvms"]
 
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_mqe2v"]
-[ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="2_bkjtp"]
+[ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="2_bkjtp"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="3_yhhkd"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="4_a2n5o"]
 [ext_resource type="PackedScene" uid="uid://cdfttlpuiy8me" path="res://tests/ctrl_tests/custom_ctrl_inventory_item.tscn" id="5_ssp1b"]
@@ -16,7 +16,7 @@ grow_vertical = 2
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("1_mqe2v")
-prototree_json = ExtResource("2_bkjtp")
+protoset = ExtResource("2_bkjtp")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/grid_constraint.gd": {
@@ -31,8 +31,8 @@ _serialized_format = {
 }
 },
 "items": [{
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_1x1"
+"protoset": "res://tests/data/protoset_grid.json",
+"prototype_id": "item_1x1"
 }, {
 "properties": {
 "background_color": {
@@ -40,8 +40,8 @@ _serialized_format = {
 "value": "Color(1, 0, 0, 1)"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_2x2"
+"protoset": "res://tests/data/protoset_grid.json",
+"prototype_id": "item_2x2"
 }, {
 "properties": {
 "background_color": {
@@ -49,11 +49,11 @@ _serialized_format = {
 "value": "Color(0.308594, 0.53006, 1, 1)"
 }
 },
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_1x1"
+"protoset": "res://tests/data/protoset_grid.json",
+"prototype_id": "item_1x1"
 }],
 "node_name": "Inventory",
-"prototree": "res://tests/data/prototree_grid.json"
+"protoset": "res://tests/data/protoset_grid.json"
 }
 
 [node name="GridConstraint" type="Node" parent="Inventory"]

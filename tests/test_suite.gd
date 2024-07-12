@@ -44,23 +44,23 @@ func _run_tests():
         cleanup_test()
 
 
-func create_inventory(prototree_json: JSON) -> Inventory:
+func create_inventory(protoset: JSON) -> Inventory:
     var inventory = Inventory.new()
-    inventory.prototree_json = prototree_json
+    inventory.protoset = protoset
     return inventory
 
 
-func create_inventory_stacked(prototree_json: JSON, capacity: float) -> Inventory:
+func create_inventory_stacked(protoset: JSON, capacity: float) -> Inventory:
     var inventory = Inventory.new()
-    inventory.prototree_json = prototree_json
+    inventory.protoset = protoset
     enable_weight_constraint(inventory, capacity)
 
     return inventory
 
 
-func create_inventory_grid(prototree_json: JSON, size: Vector2i) -> Inventory:
+func create_inventory_grid(protoset: JSON, size: Vector2i) -> Inventory:
     var inventory = Inventory.new()
-    inventory.prototree_json = prototree_json
+    inventory.protoset = protoset
     enable_grid_constraint(inventory, size)
 
     return inventory
@@ -87,9 +87,9 @@ func enable_item_count_constraint(inventory: Inventory, capacity: int = ItemCoun
     return item_count_constraint
 
 
-# Create an item with the given prototype ID from the given prototree
-func create_item(prototree_json: JSON, prototype_path: String) -> InventoryItem:
-    var item = InventoryItem.new(prototree_json, prototype_path)
+# Create an item with the given prototype ID from the given protoset
+func create_item(protoset: JSON, prototype_id: String) -> InventoryItem:
+    var item = InventoryItem.new(protoset, prototype_id)
     return item
 
 

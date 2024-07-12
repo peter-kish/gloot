@@ -3,15 +3,15 @@ extends Tree
 
 signal prototype_activated(prototype)
 
-@export var prototree_json: JSON = null :
-    set(new_prototree_json):
-        if new_prototree_json == prototree_json:
+@export var protoset: JSON = null :
+    set(new_protoset):
+        if new_protoset == protoset:
             return
         _disconnect_json_signals()
-        prototree_json = new_prototree_json
+        protoset = new_protoset
         _proto_tree.clear()
         _connect_json_signals()
-        _proto_tree.deserialize(prototree_json)
+        _proto_tree.deserialize(protoset)
         _queue_refresh()
 
 
@@ -20,15 +20,15 @@ var _refresh_queued := false
 
 
 func _connect_json_signals() -> void:
-    if !is_instance_valid(prototree_json):
+    if !is_instance_valid(protoset):
         return
-    prototree_json.changed.connect(_queue_refresh)
+    protoset.changed.connect(_queue_refresh)
 
 
 func _disconnect_json_signals() -> void:
-    if !is_instance_valid(prototree_json):
+    if !is_instance_valid(protoset):
         return
-    prototree_json.changed.disconnect(_queue_refresh)
+    protoset.changed.disconnect(_queue_refresh)
 
 
 func _queue_refresh() -> void:

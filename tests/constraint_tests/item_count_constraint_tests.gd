@@ -4,7 +4,7 @@ var inventory: Inventory
 var item: InventoryItem
 var item_count_constraint: ItemCountConstraint
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_basic.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
 
 
 func init_suite():
@@ -21,8 +21,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = create_item(TEST_PROTOTREE, "minimal_item")
-    inventory = create_inventory(TEST_PROTOTREE)
+    item = create_item(TEST_PROTOSET, "minimal_item")
+    inventory = create_inventory(TEST_PROTOSET)
     item_count_constraint = enable_item_count_constraint(inventory)
 
 
@@ -76,7 +76,7 @@ func test_swap_items() -> void:
     var item1 = inventory.create_and_add_item("minimal_item")
     
     var inv2 = Inventory.new()
-    inv2.prototree_json = TEST_PROTOTREE
+    inv2.protoset = TEST_PROTOSET
     enable_item_count_constraint(inv2, 20)
 
     var item2 = inv2.create_and_add_item("minimal_item")

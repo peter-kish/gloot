@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_up3cv"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3_0nl5x"]
 [ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="3_vieoo"]
-[ext_resource type="JSON" path="res://tests/data/prototree_grid.json" id="4_h57xp"]
+[ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="4_h57xp"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -15,17 +15,17 @@ grow_vertical = 2
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("2_up3cv")
-prototree_json = ExtResource("4_h57xp")
+protoset = ExtResource("4_h57xp")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_1x1"
+"protoset": "res://tests/data/protoset_grid.json",
+"prototype_id": "item_1x1"
 }, {
-"prototree": "res://tests/data/prototree_grid.json",
-"prototype_path": "/item_2x2"
+"protoset": "res://tests/data/protoset_grid.json",
+"prototype_id": "item_2x2"
 }],
 "node_name": "Inventory",
-"prototree": "res://tests/data/prototree_grid.json"
+"protoset": "res://tests/data/protoset_grid.json"
 }
 
 [node name="GridConstraint" type="Node" parent="Inventory"]

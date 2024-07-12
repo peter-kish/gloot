@@ -13,8 +13,6 @@ var _properties: Dictionary
 var _parent: Prototype
 var _prototypes: Dictionary
 
-const _Utils = preload("res://addons/gloot/core/utils.gd")
-
 
 func _init(id: String) -> void:
     _id = id
@@ -66,26 +64,24 @@ func set_property(property: String, value: Variant):
     _properties[property] = value
 
 
-## Checks if the prototype contains the prototype at the given path (as a `String` or a `PrototypePath`) within the
-## prototype tree.
-func has_prototype(path) -> bool:
-    path = _to_path(path)
-    return get_prototype(path) != null
+## Checks if the prototype contains the prototype with the given ID within the prototype tree.
+func has_prototype(prototype_id: String) -> bool:
+    return get_prototype(prototype_id) != null
 
 
-## Checks if the prototype at the given path (as a `String` or a `PrototypePath`) has the given property defined.
-func has_prototype_property(path: Variant, property: String) -> bool:
-    if !has_prototype(path):
+## Checks if the prototype with the given ID has the given property defined.
+func has_prototype_property(prototype_id: String, property: String) -> bool:
+    if !has_prototype(prototype_id):
         return false
 
-    return get_prototype(path).has_property(property)
+    return get_prototype(prototype_id).has_property(property)
 
 
-## Returns the given property of the prototype at the given path (as a `String` or a `PrototypePath`). If the prototype
-## does not have the property defined, `default_value` is returned.
-func get_prototype_property(path: Variant, property: String, default_value: Variant = null) -> Variant:
-    if has_prototype(path):
-        var prototype = get_prototype(path)
+## Returns the given property of the prototype with the given ID. If the prototype does not have the property defined,
+## `default_value` is returned.
+func get_prototype_property(prototype_id: String, property: String, default_value: Variant = null) -> Variant:
+    if has_prototype(prototype_id):
+        var prototype = get_prototype(prototype_id)
         if !prototype._properties.is_empty() && prototype.has_property(property):
             return prototype.get_property(property)
     
@@ -94,9 +90,8 @@ func get_prototype_property(path: Variant, property: String, default_value: Vari
 
 ## Creates a child prototype with the given ID.
 func create_prototype(prototype_id: String) -> Prototype:
-    # TODO: Consider using a prototype path as input
     # TODO: Consider using a prototype as input
-    if has_prototype(PrototypePath.new(prototype_id)):
+    if has_prototype(prototype_id):
         return null
     var new_prototype := Prototype.new(prototype_id)
     new_prototype._parent = self
@@ -104,30 +99,22 @@ func create_prototype(prototype_id: String) -> Prototype:
     return new_prototype
 
 
-## Returns the prototype at the given path (as a `String` or a `PrototypePath`).
-func get_prototype(path) -> Prototype:
-    path = _to_path(path)
-    if path.is_empty():
+## Returns the prototype with the given ID.
+func get_prototype(prototype_id: String) -> Prototype:
+    if prototype_id.is_empty():
         return null
-    var prototype = self
-    if path.is_absolute():
-        prototype = _get_root()
-    for i in range(path.get_name_count()):
-        if !prototype._prototypes.has(str(path.get_name(i))):
-            return null
-        prototype = prototype._prototypes[str(path.get_name(i))]
-    return prototype
+    if _prototypes.has(prototype_id):
+        return _prototypes[prototype_id]
+    for p in _prototypes:
+        var prototype: Prototype = _prototypes[p].get_prototype(prototype_id)
+        if is_instance_valid(prototype):
+            return prototype
+    return null
 
 
-## Returns the path of the prototype within the prototype tree.
-func get_path() -> PrototypePath:
-    return PrototypePath.new(_get_str_path())
-
-
-func _get_str_path() -> String:
-    if _is_root():
-        return PrototypePath._DELIMITER
-    return "%s/%s" % [_parent._get_str_path(), get_id()]
+## Returns the ID of the prototype.
+func get_prototype_id() -> String:
+    return _id
 
 
 func _is_root() -> bool:
@@ -139,25 +126,15 @@ func get_prototypes() -> Array:
     return _prototypes.values().duplicate()
 
 
-## Removes the prototype at the given path (as a `String` or a `PrototypePath`).
-func remove_prototype(path) -> void:
-    path = _to_path(path)
-    var prototype = get_prototype(path)
+## Removes the prototype with the given ID.
+func remove_prototype(prototype_id: String) -> void:
+    var prototype = get_prototype(prototype_id)
     if prototype == null:
         return
     var parent = prototype._parent
     if parent == null:
         return
     parent._prototypes.erase(prototype.get_id())
-
-
-func _to_path(path)-> PrototypePath:
-    if path is String:
-        return PrototypePath.new(path)
-    if path is PrototypePath:
-        return path
-    push_error("Can't convert parameter to PrototypePath")
-    return null
 
 
 func _get_root() -> Prototype:
@@ -172,32 +149,3 @@ func clear() -> void:
     _properties.clear()
     _prototypes.clear()
 
-
-## Parses the given JSON resource into a prototype. Returns `false` if parsing fails.
-func deserialize(json: JSON) -> bool:
-    clear()
-    if !is_instance_valid(json):
-        return false
-    return _deserialize_from_dict(json.data)
-
-
-func _deserialize_from_dict(data: Dictionary) -> bool:
-    # TODO: data verification
-    if data.is_empty():
-        return true
-    if data.has(_KEY_PROPERTIES):
-        for property in data[_KEY_PROPERTIES].keys():
-            if typeof(data[_KEY_PROPERTIES][property]) == TYPE_STRING:
-                var value = _Utils.str_to_var(data[_KEY_PROPERTIES][property])
-                if value == null:
-                    set_property(property, data[_KEY_PROPERTIES][property])
-                else:
-                    set_property(property, value)
-            else:
-                set_property(property, data[_KEY_PROPERTIES][property])
-    if data.has(_KEY_PROTOTYPES):
-        for prototype_id in data[_KEY_PROTOTYPES].keys():
-            var new_protototype := create_prototype(prototype_id)
-            if !new_protototype._deserialize_from_dict(data[_KEY_PROTOTYPES][prototype_id]):
-                return false
-    return true

@@ -232,10 +232,10 @@ func set_item_rect(item: InventoryItem, new_rect: Rect2i) -> bool:
     return true
 
 
-func _get_prototype_size(prototype_path: String) -> Vector2i:
+func _get_prototype_size(prototype_id: String) -> Vector2i:
     assert(inventory != null, "Inventory not set!")
-    assert(inventory.prototree_json != null, "Inventory prototree is null!")
-    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_path, _KEY_SIZE, Vector2i.ONE)
+    assert(inventory.protoset != null, "Inventory protoset is null!")
+    var size: Vector2i = inventory.get_prototree().get_prototype_property(prototype_id, _KEY_SIZE, Vector2i.ONE)
     return size
 
 
@@ -256,13 +256,13 @@ func add_item_at(item: InventoryItem, position: Vector2i) -> bool:
 
 
 ## Creates and adds the given item to the inventory and sets its position.
-func create_and_add_item_at(prototype_path: String, position: Vector2i) -> InventoryItem:
+func create_and_add_item_at(prototype_id: String, position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
-    var item_rect := Rect2i(position, _get_prototype_size(prototype_path))
+    var item_rect := Rect2i(position, _get_prototype_size(prototype_id))
     if !rect_free(item_rect):
         return null
 
-    var item = inventory.create_and_add_item(prototype_path)
+    var item = inventory.create_and_add_item(prototype_id)
     if item == null:
         return null
 

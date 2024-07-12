@@ -1,0 +1,10 @@
+{
+	"item_1x1": {
+		"image": "res://images/item_book_blue.png",
+		"size": "Vector2i(1, 1)"
+	},
+	"item_2x2": {
+		"image": "res://images/item_armour_silver.png",
+		"size": "Vector2i(2, 2)"
+	}
+}

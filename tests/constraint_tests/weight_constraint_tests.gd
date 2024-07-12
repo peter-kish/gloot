@@ -4,7 +4,7 @@ var inventory: Inventory
 var item: InventoryItem
 var weight_constraint: WeightConstraint
 
-const TEST_PROTOTREE = preload("res://tests/data/prototree_stacks.json")
+const TEST_PROTOSET = preload("res://tests/data/protoset_stacks.json")
 
 
 func init_suite():
@@ -21,8 +21,8 @@ func init_suite():
 
 
 func init_test() -> void:
-    item = create_item(TEST_PROTOTREE, "big_item")
-    inventory = create_inventory(TEST_PROTOTREE)
+    item = create_item(TEST_PROTOSET, "big_item")
+    inventory = create_inventory(TEST_PROTOSET)
     weight_constraint = enable_weight_constraint(inventory)
     weight_constraint.capacity = 100.0
 
@@ -88,7 +88,7 @@ func test_swap_items() -> void:
     var small_item = inventory.create_and_add_item("minimal_item")
     
     var inv2 = Inventory.new()
-    inv2.prototree_json = TEST_PROTOTREE
+    inv2.protoset = TEST_PROTOSET
     enable_weight_constraint(inv2, 20.0)
 
     var big_item = inv2.create_and_add_item("big_item")

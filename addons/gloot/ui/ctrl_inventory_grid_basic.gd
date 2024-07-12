@@ -322,7 +322,7 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     if source_inventory != null:
-        if source_inventory.prototree_json != inventory.prototree_json:
+        if source_inventory.protoset != inventory.protoset:
             return
         if grid_constraint.add_item_at(item, field_coords):
             return

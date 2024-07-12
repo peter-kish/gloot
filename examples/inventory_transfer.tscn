@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://examples/inventory_transfer.gd" id="4"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="4_0by68"]
 [ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_bfwo4"]
-[ext_resource type="JSON" path="res://tests/data/prototree_basic.json" id="6_yy1r8"]
+[ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
 [node name="InventoryTransfer" type="Control"]
@@ -104,36 +104,36 @@ text = ">>>"
 [node name="InventoryLeft" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2")
-prototree_json = ExtResource("6_yy1r8")
+protoset = ExtResource("6_yy1r8")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item1"
 }, {
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1/item_2"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item_2"
 }],
 "node_name": "InventoryLeft",
-"prototree": "res://tests/data/prototree_basic.json"
+"protoset": "res://tests/data/protoset_basic.json"
 }
 
 [node name="InventoryRight" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2")
-prototree_json = ExtResource("6_yy1r8")
+protoset = ExtResource("6_yy1r8")
 _serialized_format = {
 "items": [{
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item1"
 }, {
-"prototree": "res://tests/data/prototree_basic.json",
-"prototype_path": "/item1/item_2"
+"protoset": "res://tests/data/protoset_basic.json",
+"prototype_id": "item_2"
 }],
 "node_name": "InventoryRight",
-"prototree": "res://tests/data/prototree_basic.json"
+"protoset": "res://tests/data/protoset_basic.json"
 }
 
 [node name="ItemSlot" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("8_v60ia")
-prototree_json = ExtResource("6_yy1r8")
+protoset = ExtResource("6_yy1r8")
