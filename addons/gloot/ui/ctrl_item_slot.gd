@@ -15,10 +15,10 @@ const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_con
 
 ## Emitted when the mouse enters the [Rect2] area of the control representing
 ## the given [InventoryItem].
-signal item_mouse_entered
+signal item_mouse_entered(item)
 ## Emitted when the mouse leaves the [Rect2] area of the control representing
 ## the given [InventoryItem].
-signal item_mouse_exited
+signal item_mouse_exited(item)
 
 ## Path to an [ItemSlot] node.
 @export var item_slot_path: NodePath :
