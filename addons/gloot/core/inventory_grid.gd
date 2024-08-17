@@ -73,7 +73,7 @@ func can_rotate_item(item: InventoryItem) -> bool:
 ## way it is rendered in the UI. If the item seems to be rendered upside-down
 ## after a rotation, set the rotation direction to negative.
 func set_item_rotation_direction(item: InventoryItem, positive: bool) -> void:
-    _constraint_manager.set_item_rotation_direction(item, positive)
+    _constraint_manager.get_grid_constraint().set_item_rotation_direction(item, positive)
 
 ## Checks if the item rotation is positive (indicated by the
 ## [code]positive_rotation[/code]).
