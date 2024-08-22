@@ -17,6 +17,17 @@ grow_vertical = 2
 script = ExtResource("2_up3cv")
 protoset = ExtResource("4_h57xp")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/grid_constraint.gd": {
+"data": {
+"item_positions": {
+"1": "Vector2i(0, 1)"
+},
+"size": "Vector2i(5, 5)"
+},
+"name": &"GridConstraint"
+}
+},
 "items": [{
 "protoset": "res://tests/data/protoset_grid.json",
 "prototype_id": "item_1x1"

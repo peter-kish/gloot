@@ -146,4 +146,3 @@ func test_autosplitmerge() -> void:
     assert(inventory_3x3.add_item_autosplitmerge(item_2x2_2))
     assert(item_2x2.get_stack_size() == 3)
     assert(item_2x2_2.get_stack_size() == 1)
-

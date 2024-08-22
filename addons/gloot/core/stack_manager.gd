@@ -294,4 +294,3 @@ static func inv_pack_stack(inv: Inventory, item: InventoryItem) -> void:
         if !can_merge_stacks(mergable_item, item, true):
             continue
         merge_stacks(mergable_item, item, true)
-

@@ -36,4 +36,3 @@ func _on_btn_sort(ctrl_inventory) -> void:
 
 func _on_btn_unequip() -> void:
     %InventoryRight.add_item(%ItemSlot.get_item())
-

@@ -502,4 +502,3 @@ func get_selected_inventory_items() -> Array[InventoryItem]:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return []
     return _ctrl_inventory_grid_basic.get_selected_inventory_items()
-    

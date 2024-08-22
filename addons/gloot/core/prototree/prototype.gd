@@ -148,4 +148,3 @@ func _get_root() -> Prototype:
 func clear() -> void:
     _properties.clear()
     _prototypes.clear()
-

@@ -223,4 +223,3 @@ func test_wg_enforce_constraints() -> void:
             assert(grid_constraint.rect_free(grid_constraint.get_item_rect(item), item))
         
     inventory.remove_item(new_item)
-

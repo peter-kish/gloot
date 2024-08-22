@@ -157,4 +157,3 @@ func test_serialize_json() -> void:
     assert(item.get_property("foo") == null)
     assert(item.deserialize(item_data))
     assert(item.get_property("foo") == "bar")
-

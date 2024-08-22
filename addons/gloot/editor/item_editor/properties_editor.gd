@@ -103,4 +103,3 @@ func _get_remove_button_map() -> Dictionary:
 
         result[key]["disabled"] = not item.is_property_overridden(key)
     return result
-

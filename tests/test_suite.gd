@@ -123,4 +123,3 @@ func _free_if_valid(node) -> void:
 
 func is_node_valid(node) -> bool:
     return node != null && !node.is_queued_for_deletion() && is_instance_valid(node)
-

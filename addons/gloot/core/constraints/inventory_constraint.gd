@@ -101,4 +101,3 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
 ## Enforce any constraint rules.
 func enforce(item: InventoryItem) -> void:
     pass
-    

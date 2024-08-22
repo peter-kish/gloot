@@ -40,4 +40,3 @@ func _on_equip_pressed() -> void:
 func _on_unequip_pressed() -> void:
     if %ItemSlot.get_item() != null && %InventoryLeft.can_add_item(%ItemSlot.get_item()):
         %InventoryLeft.add_item_automerge(%ItemSlot.get_item())
-        

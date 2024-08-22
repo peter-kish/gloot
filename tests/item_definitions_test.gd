@@ -21,4 +21,3 @@ func cleanup_test() -> void:
 func test_item_count() -> void:
     var items = inventory.get_items()
     assert(items.size() == 2)
-

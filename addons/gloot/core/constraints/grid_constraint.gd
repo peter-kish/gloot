@@ -527,4 +527,3 @@ func _deserialize_item_positions(source: Dictionary) -> bool:
         var item_position = _Utils.str_to_var(source[str_item_index])
         set_item_position_unsafe(item, item_position)
     return true
-

@@ -147,5 +147,3 @@ func deserialize(source: Dictionary) -> bool:
     _calculate_occupied_space()
 
     return true
-
-

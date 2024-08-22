@@ -138,4 +138,3 @@ func deserialize(source: Dictionary) -> bool:
         equip(item)
 
     return true
-

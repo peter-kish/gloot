@@ -304,4 +304,3 @@ func test_serialize_json() -> void:
     
     assert(grid_constraint.deserialize(constraint_data))
     assert(grid_constraint.size == size)
-

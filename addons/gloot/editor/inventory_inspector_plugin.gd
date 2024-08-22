@@ -19,4 +19,3 @@ func _parse_begin(object: Object) -> void:
         var item_slot_inspector := _ItemSlotInspector.instantiate()
         item_slot_inspector.init(object as ItemSlot)
         add_custom_control(item_slot_inspector)
-

@@ -39,6 +39,14 @@ inventory = NodePath("../Inventory")
 script = ExtResource("2_25j36")
 protoset = ExtResource("4_uov1j")
 _serialized_format = {
+"constraints": {
+"res://addons/gloot/core/constraints/weight_constraint.gd": {
+"data": {
+"capacity": 20.0
+},
+"name": &"WeightConstraint"
+}
+},
 "items": [{
 "protoset": "res://tests/data/protoset_stacks.json",
 "prototype_id": "minimal_item"

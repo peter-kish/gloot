@@ -435,4 +435,3 @@ func get_item_rect(item: InventoryItem) -> Rect2:
         _get_field_position(inventory.get_constraint(GridConstraint).get_item_position(item)),
         _get_item_sprite_size(item)
     )
-

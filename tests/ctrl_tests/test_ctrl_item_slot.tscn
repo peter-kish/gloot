@@ -51,9 +51,3 @@ _serialized_format = {
 [node name="ItemSlot" type="Node" parent="."]
 script = ExtResource("6_qj5xf")
 protoset = ExtResource("5_46c6m")
-_serialized_format = {
-"item": {
-"protoset": "res://tests/data/protoset_basic.json",
-"prototype_id": "item1"
-}
-}

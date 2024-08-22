@@ -198,4 +198,3 @@ func test_serialize_json() -> void:
     assert(inventory.get_item_count() == 1)
     assert(inventory.get_constraint(WeightConstraint).capacity == capacity)
     assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == occupied_space)
-
