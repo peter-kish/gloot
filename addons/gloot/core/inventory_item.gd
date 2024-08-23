@@ -231,7 +231,7 @@ func get_overridden_properties() -> Array:
 ## Returns an array of item properties.
 func get_properties() -> Array:
     if _prototype != null:
-        return _properties.keys() + _prototype.get_properties().keys()
+        return _Utils.array_union(_properties.keys(), _prototype.get_properties().keys())
     else:
         return _properties.keys()
 

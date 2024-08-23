@@ -18,3 +18,11 @@ static func str_to_var(s: String) -> Variant:
     if typeof(variant) == TYPE_FLOAT && !s.is_valid_float():
         variant = null
     return variant
+
+
+static func array_union(a: Array, b: Array) -> Array:
+    var result: Array = a.duplicate()
+    for x in b:
+        if not x in result:
+            result.push_back(x)
+    return result

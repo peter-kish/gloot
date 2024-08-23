@@ -70,6 +70,12 @@ func test_get_property() -> void:
     assert(item.get_property("name", "none") == "none")
     var item2 := inventory.create_and_add_item("item1")
     assert(item2.get_property("name", "none") == "item 1")
+    item2.set_property("name", "item 2")
+    assert(item2.get_property("name", "none") == "item 2")
+    var properties := item2.get_properties()
+    assert(properties.size() == 2)
+    assert("name" in properties)
+    assert("image" in properties)
 
 
 func test_set_property() -> void:
@@ -90,7 +96,6 @@ func test_references() -> void:
     item2.set_property("dictionary", dict)
     assert(item2.get_property("dictionary")["baz"] == 43)
     
-
 
 func test_clear_property() -> void:
     item.set_property("name", "Bob")
