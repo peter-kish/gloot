@@ -2,8 +2,7 @@
 extends Control
 
 signal activated
-signal clicked
-signal context_activated
+signal clicked(at_position, mouse_button_index)
 
 var item: InventoryItem:
     set(new_item):
@@ -82,7 +81,4 @@ func _gui_input(event: InputEvent) -> void:
     if mb_event.button_index == MOUSE_BUTTON_LEFT:
         if mb_event.double_click:
             activated.emit()
-        else:
-            clicked.emit()
-    elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT:
-        context_activated.emit()
+    clicked.emit(mb_event.position, mb_event.button_index)

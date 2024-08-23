@@ -4,7 +4,8 @@ extends Control
 signal item_dropped(item, offset)
 signal selection_changed
 signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
+signal inventory_item_clicked(item)
+signal inventory_item_selected(item)
 signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
@@ -176,10 +177,9 @@ func _populate_list() -> void:
         ctrl_draggable_inventory_item.item = item
         ctrl_draggable_inventory_item.ctrl_inventory_item_scene = custom_item_control_scene
         ctrl_draggable_inventory_item.activated.connect(_on_inventory_item_activated.bind(ctrl_draggable_inventory_item))
-        ctrl_draggable_inventory_item.context_activated.connect(_on_inventory_item_context_activated.bind(ctrl_draggable_inventory_item))
+        ctrl_draggable_inventory_item.clicked.connect(_on_inventory_item_clicked.bind(ctrl_draggable_inventory_item))
         ctrl_draggable_inventory_item.mouse_entered.connect(_on_item_mouse_entered.bind(ctrl_draggable_inventory_item))
         ctrl_draggable_inventory_item.mouse_exited.connect(_on_item_mouse_exited.bind(ctrl_draggable_inventory_item))
-        ctrl_draggable_inventory_item.clicked.connect(_on_item_clicked.bind(ctrl_draggable_inventory_item))
         ctrl_draggable_inventory_item.size = _get_item_sprite_size(item)
 
         ctrl_draggable_inventory_item.position = _get_field_position(grid_constraint.get_item_position(item))
@@ -223,31 +223,9 @@ func _get_item_sprite_size(item: InventoryItem) -> Vector2:
     return sprite_size
 
 
-func _on_inventory_item_activated(ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
-    var item = ctrl_draggable_inventory_item.item
-    if !item:
-        return
-
-    inventory_item_activated.emit(item)
-
-
-func _on_inventory_item_context_activated(ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
-    var item = ctrl_draggable_inventory_item.item
-    if !item:
-        return
-
-    inventory_item_context_activated.emit(item)
-
-
-func _on_item_mouse_entered(ctrl_draggable_inventory_item) -> void:
-    item_mouse_entered.emit(ctrl_draggable_inventory_item.item)
-
-
-func _on_item_mouse_exited(ctrl_draggable_inventory_item) -> void:
-    item_mouse_exited.emit(ctrl_draggable_inventory_item.item)
-
-
-func _on_item_clicked(ctrl_draggable_inventory_item) -> void:
+func _on_inventory_item_clicked(at_position: Vector2,
+        button_index: int,
+        ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
     var item = ctrl_draggable_inventory_item.item
     if !is_instance_valid(item):
         return
@@ -261,6 +239,24 @@ func _on_item_clicked(ctrl_draggable_inventory_item) -> void:
         _clear_selection()
         _select(item)
 
+    inventory_item_clicked.emit(item, at_position, button_index)
+
+
+func _on_inventory_item_activated(ctrl_draggable_inventory_item: _CtrlDraggableInventoryItem) -> void:
+    var item = ctrl_draggable_inventory_item.item
+    if !item:
+        return
+
+    inventory_item_activated.emit(item)
+
+
+func _on_item_mouse_entered(ctrl_draggable_inventory_item) -> void:
+    item_mouse_entered.emit(ctrl_draggable_inventory_item.item)
+
+
+func _on_item_mouse_exited(ctrl_draggable_inventory_item) -> void:
+    item_mouse_exited.emit(ctrl_draggable_inventory_item.item)
+
 
 func _select(item: InventoryItem) -> void:
     if item in _selected_items:
@@ -270,6 +266,7 @@ func _select(item: InventoryItem) -> void:
         return
 
     _selected_items.append(item)
+    inventory_item_selected.emit(item)
     selection_changed.emit()
 
 

@@ -83,7 +83,7 @@ func _create_inventory_container() -> Control:
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
     _inventory_control.inventory_item_activated.connect(_on_inventory_item_activated)
-    _inventory_control.inventory_item_context_activated.connect(_on_inventory_item_context_activated)
+    _inventory_control.inventory_item_clicked.connect(_on_inventory_item_clicked)
 
     if inventory.get_constraint(WeightConstraint) != null:
         capacity_control = CtrlInventoryCapacity.new()
@@ -103,7 +103,9 @@ func _on_inventory_item_activated(item: InventoryItem) -> void:
     )
 
 
-func _on_inventory_item_context_activated(item: InventoryItem) -> void:
+func _on_inventory_item_clicked(item: InventoryItem, at_position: Vector2, mouse_button_index: int) -> void:
+    if mouse_button_index != MOUSE_BUTTON_RIGHT:
+        return
     _Undoables.undoable_action(inventory, "Rotate Inventory Item", func():
         var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
         if grid_constraint == null:

@@ -8,8 +8,9 @@ extends Control
 
 signal item_dropped(item, offset) ## Emitted when an item has been dropped onto the 2D grid.
 signal selection_changed ## Emitted when the item selection has changed.
-signal inventory_item_activated(item) ## Emitted when an inventory item double-clicked.
-signal inventory_item_context_activated(item) ## Emitted when an inventory item right-clicked.
+signal inventory_item_activated(item) ## Emitted when an inventory item has been double-clicked.
+signal inventory_item_clicked(item) ## Emitted when an inventory item has been right-clicked.
+signal inventory_item_selected(item) ## Emitted when an inventory item has been selected.
 signal item_mouse_entered(item) ## Emitted when the mouse cursor has entered the visible area of an item.
 signal item_mouse_exited(item) ## Emitted when the mouse cursor has exited the visible area of an item.
 
@@ -333,8 +334,11 @@ func _ready() -> void:
     _ctrl_inventory_grid_basic.inventory_item_activated.connect(func(item: InventoryItem):
         inventory_item_activated.emit(item)
     )
-    _ctrl_inventory_grid_basic.inventory_item_context_activated.connect(func(item: InventoryItem):
-        inventory_item_context_activated.emit(item)
+    _ctrl_inventory_grid_basic.inventory_item_clicked.connect(func(item: InventoryItem, at_position: Vector2, mouse_button_index: int):
+        inventory_item_clicked.emit(item, at_position, mouse_button_index)
+    )
+    _ctrl_inventory_grid_basic.inventory_item_selected.connect(func(item: InventoryItem):
+        inventory_item_selected.emit(item)
     )
     _ctrl_inventory_grid_basic.item_mouse_entered.connect(_on_item_mouse_entered)
     _ctrl_inventory_grid_basic.item_mouse_exited.connect(_on_item_mouse_exited)

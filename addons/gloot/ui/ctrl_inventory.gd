@@ -6,8 +6,9 @@ extends ItemList
 ##
 ## Displays inventories as an `ItemList`.
 
-signal inventory_item_activated(item) ## Emitted when an inventory item double-clicked.
-signal inventory_item_context_activated(item) ## Emitted when an inventory item right-clicked.
+signal inventory_item_activated(item) ## Emitted when an inventory item has been double-clicked.
+signal inventory_item_clicked(item, at_position, mouse_button_index) ## Emitted when an inventory item has been clicked.
+signal inventory_item_selected(item) ## Emitted when an inventory item has been selected.
 
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
@@ -72,6 +73,7 @@ func _on_item_manipulated(item: InventoryItem) -> void:
 func _ready() -> void:
     item_activated.connect(_on_list_item_activated)
     item_clicked.connect(_on_list_item_clicked)
+    item_selected.connect(_on_list_item_selected)
     _refresh()
 
 
@@ -80,8 +82,11 @@ func _on_list_item_activated(index: int) -> void:
 
 
 func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
-    if mouse_button_index == MOUSE_BUTTON_RIGHT:
-        inventory_item_context_activated.emit(_get_inventory_item(index))
+    inventory_item_clicked.emit(_get_inventory_item(index), at_position, mouse_button_index)
+
+
+func _on_list_item_selected(index: int) -> void:
+    inventory_item_selected.emit(_get_inventory_item(index))
 
 
 ## Returns the selected inventory item. If multiple items are selected, it returns the first one.

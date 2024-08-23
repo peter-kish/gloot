@@ -2,9 +2,9 @@
 @icon("res://addons/gloot/images/icon_ctrl_inventory.svg")
 extends VBoxContainer
 
-# TODO: Consider renaming to inventory_item_activated
 signal inventory_item_activated(item)
-signal inventory_item_context_activated(item)
+signal inventory_item_clicked(item)
+signal inventory_item_selected(item)
 
 @export var inventory: Inventory = null:
     set(new_inventory):
@@ -85,8 +85,11 @@ func _refresh() -> void:
     _inventory_control.inventory_item_activated.connect(func(item: InventoryItem):
         inventory_item_activated.emit(item)
     )
-    _inventory_control.inventory_item_context_activated.connect(func(item: InventoryItem):
-        inventory_item_context_activated.emit(item)
+    _inventory_control.inventory_item_clicked.connect(func(item: InventoryItem, at_position: Vector2, mouse_button_index: int):
+        inventory_item_clicked.emit(item, at_position, mouse_button_index)
+    )
+    _inventory_control.inventory_item_selected.connect(func(item: InventoryItem):
+        inventory_item_selected.emit(item)
     )
     if inventory.get_constraint(WeightConstraint) != null:
         _capacity_control = CtrlInventoryCapacity.new()
