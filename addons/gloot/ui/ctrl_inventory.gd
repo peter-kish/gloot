@@ -6,13 +6,13 @@ extends ItemList
 ##
 ## Displays inventories as an `ItemList`.
 
-signal inventory_item_activated(item)           ## Emitted when an inventory item double-clicked.
-signal inventory_item_context_activated(item)   ## Emitted when an inventory item right-clicked.
+signal inventory_item_activated(item) ## Emitted when an inventory item double-clicked.
+signal inventory_item_context_activated(item) ## Emitted when an inventory item right-clicked.
 
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Reference to the inventory that is being displayed.
-@export var inventory: Inventory = null :
+@export var inventory: Inventory = null:
     set(new_inventory):
         if inventory == new_inventory:
             return

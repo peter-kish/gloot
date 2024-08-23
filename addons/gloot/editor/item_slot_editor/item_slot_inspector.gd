@@ -8,7 +8,7 @@ const _EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var _window_dialog: Window = $Window
 @onready var _item_slot_editor: Control = $Window/MarginContainer/ItemSlotEditor
 
-var item_slot: ItemSlot :
+var item_slot: ItemSlot:
     set(new_item_slot):
         item_slot = new_item_slot
         if item_slot_editor:

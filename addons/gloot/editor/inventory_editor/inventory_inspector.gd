@@ -8,7 +8,7 @@ const _EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var _window_dialog: Window = $Window
 @onready var _inventory_editor: Control = $Window/MarginContainer/InventoryEditor
 
-var inventory: Inventory :
+var inventory: Inventory:
     set(new_inventory):
         inventory = new_inventory
         if inventory_editor:

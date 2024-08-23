@@ -9,7 +9,7 @@ class_name InventoryConstraint
 signal changed
 
 ## Reference to an inventory that this constraint belongs to.
-var inventory: Inventory = null :
+var inventory: Inventory = null:
     set(new_inventory):
         inventory = new_inventory
         if is_instance_valid(inventory):
@@ -43,7 +43,7 @@ func _on_unparented() -> void:
 func _get_configuration_warnings() -> PackedStringArray:
     if inventory == null:
         return PackedStringArray([
-            "InventoryConstraint nodes only serve to provide constraints to Inventory nodes. Please only use them as "\
+            "InventoryConstraint nodes only serve to provide constraints to Inventory nodes. Please only use them as " \
             + "children of Inventory nodes."])
     return PackedStringArray()
 
@@ -54,7 +54,7 @@ func get_space_for(item: InventoryItem) -> int:
 
 
 ## Checks if the constraint can receive the given item.
-func has_space_for(item:InventoryItem) -> bool:
+func has_space_for(item: InventoryItem) -> bool:
     return false
 
 

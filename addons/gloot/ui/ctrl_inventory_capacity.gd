@@ -9,7 +9,7 @@ extends Control
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Includes a label displaying inventory capacity if enabled.
-@export var show_label = true :
+@export var show_label = true:
     set(new_show_label):
         if new_show_label == show_label:
             return
@@ -18,7 +18,7 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
             _label.visible = show_label
 
 ## Reference to an inventory with a WeightConstraint or an ItemCountConstraint.
-@export var inventory: Inventory = null :
+@export var inventory: Inventory = null:
     set(new_inventory):
         if inventory == new_inventory:
             return

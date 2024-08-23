@@ -6,7 +6,7 @@ extends VBoxContainer
 signal inventory_item_activated(item)
 signal inventory_item_context_activated(item)
 
-@export var inventory: Inventory = null :
+@export var inventory: Inventory = null:
     set(new_inventory):
         if inventory == new_inventory:
             return

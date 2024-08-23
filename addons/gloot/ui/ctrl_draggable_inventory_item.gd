@@ -5,7 +5,7 @@ signal activated
 signal clicked
 signal context_activated
 
-var item: InventoryItem :
+var item: InventoryItem:
     set(new_item):
         if item == new_item:
             return
@@ -13,7 +13,7 @@ var item: InventoryItem :
         item = new_item
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.item = item
-var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE :
+var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE:
     set(new_stretch_mode):
         if icon_stretch_mode == new_stretch_mode:
             return

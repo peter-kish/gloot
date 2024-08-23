@@ -6,12 +6,12 @@ extends Control
 ##
 ## Displays the inventory contents on a 2D grid. The grid style, size and item icons are customizable.
 
-signal item_dropped(item, offset)               ## Emitted when an item has been dropped onto the 2D grid.
-signal selection_changed                        ## Emitted when the item selection has changed.
-signal inventory_item_activated(item)           ## Emitted when an inventory item double-clicked.
-signal inventory_item_context_activated(item)   ## Emitted when an inventory item right-clicked.
-signal item_mouse_entered(item)                 ## Emitted when the mouse cursor has entered the visible area of an item.
-signal item_mouse_exited(item)                  ## Emitted when the mouse cursor has exited the visible area of an item.
+signal item_dropped(item, offset) ## Emitted when an item has been dropped onto the 2D grid.
+signal selection_changed ## Emitted when the item selection has changed.
+signal inventory_item_activated(item) ## Emitted when an inventory item double-clicked.
+signal inventory_item_context_activated(item) ## Emitted when an inventory item right-clicked.
+signal item_mouse_entered(item) ## Emitted when the mouse cursor has entered the visible area of an item.
+signal item_mouse_exited(item) ## Emitted when the mouse cursor has exited the visible area of an item.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
@@ -69,7 +69,7 @@ class CustomizablePanel extends Panel:
             add_theme_stylebox_override("panel", style)
 
 ## Reference to an inventory with a GridConstraint that is being displayed.
-@export var inventory: Inventory = null :
+@export var inventory: Inventory = null:
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -83,20 +83,20 @@ class CustomizablePanel extends Panel:
         _queue_refresh()
         update_configuration_warnings()
 ## If enabled, stretches the icons based on `field_dimensions`.
-@export var stretch_item_icons: bool = true :
+@export var stretch_item_icons: bool = true:
     set(new_stretch_item_icons):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.stretch_item_icons = new_stretch_item_icons
         stretch_item_icons = new_stretch_item_icons
 ## Size of individual fields in the grid.
-@export var field_dimensions: Vector2 = Vector2(32, 32) :
+@export var field_dimensions: Vector2 = Vector2(32, 32):
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
         _queue_refresh()
 ## Spacing between grid fields.
-@export var item_spacing: int = 0 :
+@export var item_spacing: int = 0:
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
@@ -104,7 +104,7 @@ class CustomizablePanel extends Panel:
         _queue_refresh()
 ## Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL. See the
 ## `ItemList.SelectMode` constants for details.
-@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE:
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
@@ -113,7 +113,7 @@ class CustomizablePanel extends Panel:
             _ctrl_inventory_grid_basic.select_mode = select_mode
 ## Custom control scene representing an `InventoryItem` (must inherit `CtrlInventoryItemBase`). If set to `null`,
 ## `CtrlInventoryItem` will be used to represent the item.
-@export var custom_item_control_scene: PackedScene = null :
+@export var custom_item_control_scene: PackedScene = null:
     set(new_custom_item_control_scene):
         if new_custom_item_control_scene == custom_item_control_scene:
             return
@@ -129,13 +129,13 @@ class CustomizablePanel extends Panel:
         field_style = new_field_style
         _queue_refresh()
 ## The grid field style used when hovering over it with the mouse.
-@export var field_highlighted_style: StyleBox :
+@export var field_highlighted_style: StyleBox:
     set(new_field_highlighted_style):
         field_highlighted_style = new_field_highlighted_style
         _queue_refresh()
 ## The grid field style used for selected items. Unlike `selection_style`, this style is used as field background behind
 ## selected items.
-@export var field_selected_style: StyleBox :
+@export var field_selected_style: StyleBox:
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()

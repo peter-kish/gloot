@@ -3,7 +3,7 @@ extends Tree
 
 signal prototype_activated(prototype)
 
-@export var protoset: JSON = null :
+@export var protoset: JSON = null:
     set(new_protoset):
         if new_protoset == protoset:
             return

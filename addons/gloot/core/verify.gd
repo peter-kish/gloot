@@ -1,4 +1,3 @@
-
 const type_names: Array = [
     "null",
     "bool",
@@ -79,7 +78,7 @@ static func create_var(type: int):
             return Basis()
         TYPE_TRANSFORM3D:
             return Transform3D()
-        TYPE_PROJECTION :
+        TYPE_PROJECTION:
             return Projection()
         TYPE_COLOR:
             return Color()

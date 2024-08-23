@@ -3,7 +3,7 @@ const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 const Inf: int = -1
 
 ## The item count as an integer (-1 equals infinity).
-@export var count: int = 0 :
+@export var count: int = 0:
     set(new_count):
         if new_count < 0:
             new_count = -1
@@ -87,7 +87,7 @@ func lt(item_count_: _ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
-        return true 
+        return true
 
     if self.is_inf():
         return false
@@ -105,7 +105,7 @@ func gt(item_count_: _ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
-        return false 
+        return false
 
     if self.is_inf():
         return true

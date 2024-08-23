@@ -8,10 +8,10 @@ class_name InventoryItem
 ## maximum stack size is 1, which can be changed by setting the `stack_size` and `maximum_stack_size` properties inside
 ## the prototype or directly inside the item.
 
-signal property_changed(property_name)  ## Emitted when an item property has changed.
+signal property_changed(property_name) ## Emitted when an item property has changed.
 
 ## A JSON resource containing prototype information.
-var protoset: JSON :
+var protoset: JSON:
     set(new_protoset):
         if new_protoset == protoset:
             return
@@ -29,7 +29,7 @@ var _prototree := ProtoTree.new()
 var _prototype: Prototype
 var _properties: Dictionary
 
-var _inventory: Inventory :
+var _inventory: Inventory:
     set(new_inventory):
         if new_inventory == _inventory:
             return
@@ -170,7 +170,7 @@ static func _add_item_to_inventory(item: InventoryItem, inventory: Inventory, in
 func has_property(property_name: String) -> bool:
     if _properties.has(property_name):
         return true
-    if _prototype != null &&  _prototype.has_property(property_name):
+    if _prototype != null && _prototype.has_property(property_name):
         return true
     return false
 
@@ -278,8 +278,8 @@ func _serialize_property(property_name: String) -> Dictionary:
 
 ## Loads the item data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !_Verify.dict(source, true, _KEY_PROTOSET, TYPE_STRING) ||\
-        !_Verify.dict(source, true, _KEY_PROTOTYPE_ID, TYPE_STRING) ||\
+    if !_Verify.dict(source, true, _KEY_PROTOSET, TYPE_STRING) || \
+        !_Verify.dict(source, true, _KEY_PROTOTYPE_ID, TYPE_STRING) || \
         !_Verify.dict(source, false, _KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 

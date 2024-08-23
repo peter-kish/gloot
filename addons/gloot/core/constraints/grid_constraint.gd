@@ -24,7 +24,7 @@ var _quad_tree := _QuadTree.new(size)
 var _inventory_set_stack: Array[Callable]
 
 ## The size of the 2d grid.
-@export var size: Vector2i = DEFAULT_SIZE :
+@export var size: Vector2i = DEFAULT_SIZE:
     set(new_size):
         assert(new_size.x > 0, "Inventory width must be positive!")
         assert(new_size.y > 0, "Inventory height must be positive!")
@@ -428,7 +428,6 @@ func _get_free_space_for(item: InventoryItem) -> int:
         free_space = find_free_space(item_size, occupied_rects)
     return occupied_rects.size()
     
-
 
 ## Checks if the constraint can receive the given item. 
 func has_space_for(item: InventoryItem) -> bool:

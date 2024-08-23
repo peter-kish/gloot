@@ -18,7 +18,7 @@ const _Verify = preload("res://addons/gloot/core/verify.gd")
 
 
 ## Maximum weight the inventory can hold.
-@export var capacity: float = DEFAULT_CAPACITY :
+@export var capacity: float = DEFAULT_CAPACITY:
     set(new_capacity):
         if new_capacity < 0.0:
             new_capacity = 0.0

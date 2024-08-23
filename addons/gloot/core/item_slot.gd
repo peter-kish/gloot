@@ -6,9 +6,9 @@ extends Node
 ##
 ## An item slot that can hold an inventory item.
 
-signal protoset_changed   ## Emitted when the protoset property has been changed.
-signal item_equipped            ## Emitted when an item is placed in the slot.
-signal cleared                  ## Emitted when the slot is cleared.Emitted when the slot is cleared.
+signal protoset_changed ## Emitted when the protoset property has been changed.
+signal item_equipped ## Emitted when an item is placed in the slot.
+signal cleared ## Emitted when the slot is cleared.Emitted when the slot is cleared.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _KEY_ITEM: String = "item"
@@ -23,7 +23,7 @@ const _KEY_ITEM: String = "item"
             _inventory.protoset = protoset
         protoset_changed.emit()
         update_configuration_warnings()
-var _inventory: Inventory = null :
+var _inventory: Inventory = null:
     set(new_inventory):
         if new_inventory == _inventory:
             return

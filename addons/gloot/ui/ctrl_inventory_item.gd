@@ -90,10 +90,10 @@ func _update_texture() -> void:
         _texture_rect.size = Vector2(size.y, size.x)
         if GridConstraint.is_item_rotation_positive(item):
             _texture_rect.position = Vector2(_texture_rect.size.y, 0)
-            _texture_rect.rotation = PI/2
+            _texture_rect.rotation = PI / 2
         else:
             _texture_rect.position = Vector2(0, _texture_rect.size.x)
-            _texture_rect.rotation = -PI/2
+            _texture_rect.rotation = -PI / 2
 
     else:
         _texture_rect.size = size

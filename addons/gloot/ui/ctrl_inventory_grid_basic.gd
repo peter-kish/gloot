@@ -12,7 +12,7 @@ const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
-@export var inventory: Inventory = null :
+@export var inventory: Inventory = null:
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -24,29 +24,29 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
         _connect_inventory_signals()
 
         _queue_refresh()
-@export var field_dimensions: Vector2 = Vector2(32, 32) :
+@export var field_dimensions: Vector2 = Vector2(32, 32):
     set(new_field_dimensions):
         if new_field_dimensions == field_dimensions:
             return
         field_dimensions = new_field_dimensions
         _queue_refresh()
-@export var item_spacing: int = 0 :
+@export var item_spacing: int = 0:
     set(new_item_spacing):
         if new_item_spacing == item_spacing:
             return
         item_spacing = new_item_spacing
         _queue_refresh()
-@export var stretch_item_icons: bool = true :
+@export var stretch_item_icons: bool = true:
     set(new_stretch_item_icons):
         stretch_item_icons = new_stretch_item_icons
         _queue_refresh()
-@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = ItemList.SelectMode.SELECT_SINGLE:
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
         select_mode = new_select_mode
         _clear_selection()
-@export var custom_item_control_scene: PackedScene = null :
+@export var custom_item_control_scene: PackedScene = null:
     set(new_custom_item_control_scene):
         if new_custom_item_control_scene == custom_item_control_scene:
             return
@@ -362,7 +362,7 @@ func _move_item(item: InventoryItem, move_position: Vector2i) -> bool:
     if !grid_constraint.rect_free(Rect2i(move_position, grid_constraint.get_item_size(item)), item):
         return false
     if Engine.is_editor_hint():
-        _Undoables.undoable_action(inventory, "Move Inventory Item", func(): 
+        _Undoables.undoable_action(inventory, "Move Inventory Item", func():
             return grid_constraint.move_item_to(item, move_position)
         )
         return true
@@ -376,7 +376,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
         return false
 
     if Engine.is_editor_hint():
-        _Undoables.undoable_action(inventory, "Merge Inventory Items", func(): 
+        _Undoables.undoable_action(inventory, "Merge Inventory Items", func():
             return inventory.merge_stacks(item_dst, item_src)
         )
     else:

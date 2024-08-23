@@ -15,7 +15,7 @@ const DEFAULT_CAPACITY = 1
 const _KEY_CAPACITY: String = "capacity"
 
 ## Maximum number of items the inventory can hold.
-@export var capacity: int = DEFAULT_CAPACITY :
+@export var capacity: int = DEFAULT_CAPACITY:
     set(new_capacity):
         if new_capacity < 1:
             new_capacity = 1
@@ -51,7 +51,7 @@ func get_space_for(item: InventoryItem) -> int:
 
 
 ## Checks if the constraint can receive the given item.
-func has_space_for(item:InventoryItem) -> bool:
+func has_space_for(item: InventoryItem) -> bool:
     return get_occupied_space() < capacity
 
 

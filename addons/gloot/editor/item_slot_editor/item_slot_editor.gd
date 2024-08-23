@@ -6,7 +6,7 @@ const _EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 const _PropertiesEditor = preload("res://addons/gloot/editor/item_editor/properties_editor.tscn")
 const _POPUP_SIZE = Vector2i(800, 300)
 
-var item_slot: ItemSlot :
+var item_slot: ItemSlot:
     set(new_item_slot):
         disconnect_item_slot_signals()
         item_slot = new_item_slot

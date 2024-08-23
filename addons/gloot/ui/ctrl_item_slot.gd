@@ -11,7 +11,7 @@ const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggabl
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Reference to the item slot that is being displayed.
-@export var item_slot: ItemSlot :
+@export var item_slot: ItemSlot:
     set(new_item_slot):
         if new_item_slot == item_slot:
             return
@@ -25,7 +25,7 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
 @export_group("Icon Behavior", "icon_")
 ## Controls the item icon behavior when resizing the node's bounding rectangle. See the `TextureRect.StretchMode`
 ## constants for details.
-@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
+@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED:
     set(new_icon_stretch_mode):
         if icon_stretch_mode == new_icon_stretch_mode:
             return
@@ -35,14 +35,14 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 @export_group("Custom Styles")
 ## The slot background style.
-@export var slot_style: StyleBox :
+@export var slot_style: StyleBox:
     set(new_slot_style):
         if slot_style == new_slot_style:
             return
         slot_style = new_slot_style
         _refresh()
 ## The slot background style when the mouse cursor hovers over the slot.
-@export var slot_highlighted_style: StyleBox :
+@export var slot_highlighted_style: StyleBox:
     set(new_slot_highlighted_style):
         if slot_highlighted_style == new_slot_highlighted_style:
             return

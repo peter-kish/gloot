@@ -6,14 +6,14 @@ class_name Inventory
 ##
 ## Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of item stacks.
 
-signal item_added(item)                         ## Emitted when an item has been added to the inventory.
-signal item_removed(item)                       ## Emitted when an item has been removed from the inventory.
-signal item_property_changed(item, property)    ## Emitted when a property of an item inside the inventory has been changed.
-signal item_moved(item)                         ## Emitted when an item has moved to a new index.
-signal protoset_changed                         ## Emitted when the protoset property has changed.
-signal constraint_added(constraint)             ## Emitted when a new constraint has been added to the inventory.
-signal constraint_removed(constraint)           ## Emitted when a constraint has been removed from the inventory.
-signal constraint_changed(constraint)           ## Emitted when an inventory constraint has changed.
+signal item_added(item) ## Emitted when an item has been added to the inventory.
+signal item_removed(item) ## Emitted when an item has been removed from the inventory.
+signal item_property_changed(item, property) ## Emitted when a property of an item inside the inventory has been changed.
+signal item_moved(item) ## Emitted when an item has moved to a new index.
+signal protoset_changed ## Emitted when the protoset property has changed.
+signal constraint_added(constraint) ## Emitted when a new constraint has been added to the inventory.
+signal constraint_removed(constraint) ## Emitted when a constraint has been removed from the inventory.
+signal constraint_changed(constraint) ## Emitted when an inventory constraint has changed.
 
 const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const _ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")
@@ -29,7 +29,7 @@ const _KEY_STACK_SIZE = _StackManager._KEY_STACK_SIZE
 const _KEY_MAX_STACK_SIZE = _StackManager._KEY_MAX_STACK_SIZE
 
 ## A JSON resource containing prototype information.
-@export var protoset: JSON :
+@export var protoset: JSON:
     set(new_protoset):
         if new_protoset == protoset:
             return
@@ -150,7 +150,7 @@ func _connect_item_signals(item: InventoryItem) -> void:
     _Utils.safe_connect(item.property_changed, _on_item_property_changed.bind(item))
 
 
-func _disconnect_item_signals(item:InventoryItem) -> void:
+func _disconnect_item_signals(item: InventoryItem) -> void:
     _Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
 
 
@@ -317,9 +317,9 @@ static func _serialize_protoset(protoset: JSON) -> String:
 
 ## Loads the inventory data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) ||\
-        !_Verify.dict(source, true, _KEY_PROTOSET, TYPE_STRING) ||\
-        !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
+    if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) || \
+        !_Verify.dict(source, true, _KEY_PROTOSET, TYPE_STRING) || \
+        !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) || \
         !_Verify.dict(source, false, _KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 

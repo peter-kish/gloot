@@ -5,7 +5,7 @@ signal value_changed
 const _MultivalueEditor = preload("res://addons/gloot/editor/common/multivalue_editor.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
-var value :
+var value:
     set(new_value):
         value = new_value
         call_deferred("_refresh")
