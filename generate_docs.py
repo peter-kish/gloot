@@ -26,7 +26,7 @@ def main() -> None:
         "docs/WeightConstraint.xml": "docs/weight_constraint.md",
     }
 
-    if os.system(f"{args.godot_bin} --editor --path . --doctool . --gdscript-docs .") != 0:
+    if os.system(f"{args.godot_bin} --editor --path . --doctool docs/ --gdscript-docs .") != 0:
         return 1
     
     for xml_file in files:
