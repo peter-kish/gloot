@@ -60,6 +60,8 @@ func deserialize(json: JSON) -> bool:
     clear()
     if !is_instance_valid(json):
         return false
+    if json.data == null:
+        return false
     if json.data.is_empty():
         return true
     for prototype_id in json.data.keys():
