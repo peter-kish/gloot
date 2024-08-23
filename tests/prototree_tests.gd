@@ -1,6 +1,7 @@
 extends TestSuite
 
 const TEST_PROTOTYPE_NAME = "test_prototype"
+const TEST_PROTOTYPE_NAME2 = "test_prototype2"
 const TEST_PROPERTY_NAME = "test_property"
 const TEST_PROPERTY_NAME2 = "test_property2"
 
@@ -25,13 +26,16 @@ func child_prototypes_test() -> void:
     assert(!prototype.has_prototype(TEST_PROTOTYPE_NAME))
     assert(prototype.get_prototypes().is_empty())
 
-    var new_prototype = prototype.create_prototype(TEST_PROTOTYPE_NAME)
-    assert(prototype.has_prototype(TEST_PROTOTYPE_NAME))
-    assert(prototype.get_prototype(TEST_PROTOTYPE_NAME) == new_prototype)
+    var new_prototype = prototype.create_prototype(TEST_PROTOTYPE_NAME2)
+    assert(prototype.has_prototype(TEST_PROTOTYPE_NAME2))
+    assert(prototype.get_prototype(TEST_PROTOTYPE_NAME2) == new_prototype)
     assert(prototype.get_prototypes().hash() == [new_prototype].hash())
 
-    prototype.remove_prototype(TEST_PROTOTYPE_NAME)
-    assert(!prototype.has_prototype(TEST_PROTOTYPE_NAME))
+    assert(new_prototype.inherits(TEST_PROTOTYPE_NAME))
+    assert(new_prototype.inherits(TEST_PROTOTYPE_NAME2))
+
+    prototype.remove_prototype(TEST_PROTOTYPE_NAME2)
+    assert(!prototype.has_prototype(TEST_PROTOTYPE_NAME2))
     assert(prototype.get_prototypes().is_empty())
 
 

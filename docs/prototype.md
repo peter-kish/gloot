@@ -11,6 +11,7 @@ An item prototype contains a set of properties and is identified with an ID stri
 ## Methods
 
 * `get_id() -> String` - Returns the prototype ID string.
+* `inherits(prototype_id: String) -> bool` - Checks if the prototype inherits (extends) the prototype with the given ID.
 * `overrides_property(property: String) -> bool` - Checks if the prototype overrides the given property.
 * `has_property(property: String) -> bool` - Checks if the prototype has the given property defined.
 * `get_property(property: String, default_value: Variant) -> Variant` - Returns the value of the given property. If the prototype does not have the property defined, `default_value` is returned.

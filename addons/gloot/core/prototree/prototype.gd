@@ -23,6 +23,16 @@ func get_id() -> String:
     return _id
 
 
+## Checks if the prototype inherits (extends) the prototype with the given ID.
+func inherits(prototype_id: String) -> bool:
+    var x = self
+    while x:
+        if x._id == prototype_id:
+            return true
+        x = x._parent
+    return false
+
+
 ## Checks if the prototype overrides the given property.
 func overrides_property(property: String) -> bool:
     return _properties.has(property)
