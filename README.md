@@ -192,7 +192,7 @@ Example:
 
 ### Prototype Inheritance
 
-As already mentioned, a prototype can inherit properties from another prototype. The base of a derived prototype is defined using the `extends` property. The derived prototypes can override properties from the base or define new properties.
+As already mentioned, a prototype can inherit properties from another prototype. The base of a derived prototype is defined using the `inherits` property. The derived prototypes can override properties from the base or define new properties.
 
 Example:
 ```javascript
@@ -206,14 +206,14 @@ Example:
     // Inherits the "weapon_type" property ("melee").
     // Overrides the "damage" property (from 1 to 30):
     "axe": {
-        "extends": "melee_weapon",
+        "inherits": "melee_weapon",
         "damage": 30
     },
     // Inherits the "weapon_type" property ("melee").
     // Overrides the "damage" property (from 1 to 10) and adds an
     // item description:
     "knife": {
-        "extends": "melee_weapon",
+        "inherits": "melee_weapon",
         "damage": 10,
         "description": "A standard kitchen knife."
     }

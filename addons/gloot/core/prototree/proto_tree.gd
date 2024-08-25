@@ -16,43 +16,50 @@ func get_root() -> Prototype:
 
 ## Creates a child prototype for the root prototype.
 func create_prototype(prototype_id: String) -> Prototype:
-    return _root.create_prototype(prototype_id)
+    return _root.inherit(prototype_id)
 
 
 ## Returns the prototype with the given ID.
 func get_prototype(prototype_id: String) -> Prototype:
-    return _root.get_prototype(prototype_id)
+    return _root.get_derived_prototype(prototype_id)
 
 
 ## Returns an array of all child prototypes of the root.
 func get_prototypes() -> Array:
-    return _root.get_prototypes()
+    return _root.get_derived_prototypes()
 
 
 ## Checks if the prototree contains the prototype with the given ID.
 func has_prototype(prototype_id: String) -> bool:
-    return _root.has_prototype(prototype_id)
+    return _root.is_inherited_by(prototype_id)
 
 
 ## Checks if the prototype with the given ID has the given property defined.
-func has_prototype_property(prototype_id: String, property: String) -> bool:
-    return _root.has_prototype_property(prototype_id, property)
+func prototype_has_property(prototype_id: String, property: String) -> bool:
+    if !has_prototype(prototype_id):
+        return false
+    return _root.get_derived_prototype(prototype_id).has_property(property)
 
 
 ## Returns the given property of the prototype with the given ID. If the prototype does not have the property defined,
 ## `default_value` is returned.
 func get_prototype_property(prototype_id: String, property: String, default_value: Variant = null) -> Variant:
-    return _root.get_prototype_property(prototype_id, property, default_value)
+    if has_prototype(prototype_id):
+        var prototype = get_prototype(prototype_id)
+        if prototype.has_property(property):
+            return prototype.get_property(property)
+    
+    return default_value
 
 
 ## Clears the prototree by clearing the roots properties and child prototypes.
 func clear() -> void:
-    _root.clear()
+    _root._clear()
 
 
 ## Checks if the prototree is empty (the root has no properties and no child prototypes).
 func is_empty() -> bool:
-    return _root.get_properties().is_empty() && _root.get_prototypes().is_empty()
+    return _root.get_properties().is_empty() && _root.get_derived_prototypes().is_empty()
 
 
 ## Parses the given JSON resource into a prototree. Returns `false` if parsing fails.
@@ -67,15 +74,15 @@ func deserialize(json: JSON) -> bool:
     for prototype_id in json.data.keys():
         var base: Prototype = null
         var prototype_dict = json.data[prototype_id]
-        if prototype_dict.has("extends"):
-            base = _root.get_prototype(prototype_dict["extends"])
+        if prototype_dict.has("inherits"):
+            base = _root.get_derived_prototype(prototype_dict["inherits"])
         else:
             base = _root
 
         if base == null:
             clear()
             return false
-        var new_protototype = base.create_prototype(prototype_id)
+        var new_protototype = base.inherit(prototype_id)
         assert(new_protototype)
         for property in prototype_dict.keys():
             if typeof(prototype_dict[property]) == TYPE_STRING:

@@ -43,14 +43,14 @@ func _process(_delta: float) -> void:
 
 func _refresh() -> void:
     clear()
-    var root = create_item(null)
-    root.set_text(0, _proto_tree.get_root().get_id())
-    root.set_metadata(0, _proto_tree.get_root())
-    _traverse(_proto_tree.get_root(), root)
+    var root_tree_item = create_item(null)
+    root_tree_item.set_text(0, _proto_tree.get_root().get_id())
+    root_tree_item.set_metadata(0, _proto_tree.get_root())
+    _traverse(_proto_tree.get_root(), root_tree_item)
 
 
 func _traverse(prototype: Prototype, tree_item: TreeItem) -> void:
-    for subprototype in prototype.get_prototypes():
+    for subprototype in prototype.get_derived_prototypes():
         var subitem = create_item(tree_item)
         subitem.set_text(0, subprototype.get_id())
         subitem.set_metadata(0, subprototype)

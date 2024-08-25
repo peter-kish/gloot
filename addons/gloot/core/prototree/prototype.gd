@@ -23,7 +23,7 @@ func get_id() -> String:
     return _id
 
 
-## Checks if the prototype inherits (extends) the prototype with the given ID.
+## Checks if the prototype inherits the prototype with the given ID.
 func inherits(prototype_id: String) -> bool:
     var x = self
     while x:
@@ -33,22 +33,37 @@ func inherits(prototype_id: String) -> bool:
     return false
 
 
-## Checks if the prototype overrides the given property.
-func overrides_property(property: String) -> bool:
+func _defines_or_overrides_property(property: String) -> bool:
     return _properties.has(property)
 
 
-## Checks if the prototype has the given property defined.
+## Checks if the prototype inherits the given property.
+func inherits_property(property: String) -> bool:
+    if is_instance_valid(_parent):
+        return _parent.has_property(property)
+    return false
+
+
+## Checks if the prototype defines the given property.
+func defines_property(property: String) -> bool:
+    return _defines_or_overrides_property(property) && !inherits_property(property)
+
+
+## Checks if the prototype overrides the given property.
+func overrides_property(property: String) -> bool:
+    return _defines_or_overrides_property(property) && inherits_property(property)
+
+
+## Checks if the prototype has the given property (either by defining, inheriting or overriding it).
 func has_property(property: String) -> bool:
-    if overrides_property(property):
+    if _defines_or_overrides_property(property):
         return true
     if is_instance_valid(_parent):
         return _parent.has_property(property)
     return false
 
 
-## Returns the value of the given property. If the prototype does not have the property defined, `default_value` is
-## returned.
+## Returns the value of the given property. If the prototype does not have the property, `default_value` is returned.
 func get_property(property: String, default_value: Variant = null) -> Variant:
     if _properties.has(property):
         return _properties[property]
@@ -57,7 +72,7 @@ func get_property(property: String, default_value: Variant = null) -> Variant:
     return default_value
 
 
-## Returns a `Dictionary` of all properties defined for the prototype.
+## Returns a `Dictionary` of all prototype properties (defined, inherited or overridden).
 func get_properties() -> Dictionary:
     var result := _properties.duplicate()
     if !is_instance_valid(_parent):
@@ -75,33 +90,14 @@ func set_property(property: String, value: Variant):
 
 
 ## Checks if the prototype contains the prototype with the given ID within the prototype tree.
-func has_prototype(prototype_id: String) -> bool:
-    return get_prototype(prototype_id) != null
+func is_inherited_by(prototype_id: String) -> bool:
+    return get_derived_prototype(prototype_id) != null
 
 
-## Checks if the prototype with the given ID has the given property defined.
-func has_prototype_property(prototype_id: String, property: String) -> bool:
-    if !has_prototype(prototype_id):
-        return false
-
-    return get_prototype(prototype_id).has_property(property)
-
-
-## Returns the given property of the prototype with the given ID. If the prototype does not have the property defined,
-## `default_value` is returned.
-func get_prototype_property(prototype_id: String, property: String, default_value: Variant = null) -> Variant:
-    if has_prototype(prototype_id):
-        var prototype = get_prototype(prototype_id)
-        if !prototype._properties.is_empty() && prototype.has_property(property):
-            return prototype.get_property(property)
-    
-    return default_value
-
-
-## Creates a child prototype with the given ID.
-func create_prototype(prototype_id: String) -> Prototype:
+## Creates a child prototype with the given ID that inherits the prototype.
+func inherit(prototype_id: String) -> Prototype:
     # TODO: Consider using a prototype as input
-    if has_prototype(prototype_id):
+    if is_inherited_by(prototype_id):
         return null
     var new_prototype := Prototype.new(prototype_id)
     new_prototype._parent = self
@@ -109,14 +105,14 @@ func create_prototype(prototype_id: String) -> Prototype:
     return new_prototype
 
 
-## Returns the prototype with the given ID.
-func get_prototype(prototype_id: String) -> Prototype:
+## Returns the derived prototype with the given ID.
+func get_derived_prototype(prototype_id: String) -> Prototype:
     if prototype_id.is_empty():
         return null
     if _prototypes.has(prototype_id):
         return _prototypes[prototype_id]
     for p in _prototypes:
-        var prototype: Prototype = _prototypes[p].get_prototype(prototype_id)
+        var prototype: Prototype = _prototypes[p].get_derived_prototype(prototype_id)
         if is_instance_valid(prototype):
             return prototype
     return null
@@ -131,14 +127,14 @@ func _is_root() -> bool:
     return !is_instance_valid(_parent)
 
 
-## Returns an array of all child prototypes.
-func get_prototypes() -> Array:
+## Returns an array of all derived prototypes.
+func get_derived_prototypes() -> Array:
     return _prototypes.values().duplicate()
 
 
-## Removes the prototype with the given ID.
-func remove_prototype(prototype_id: String) -> void:
-    var prototype = get_prototype(prototype_id)
+## Removes the derived prototype with the given ID.
+func remove_derived_prototype(prototype_id: String) -> void:
+    var prototype = get_derived_prototype(prototype_id)
     if prototype == null:
         return
     var parent = prototype._parent
@@ -154,7 +150,6 @@ func _get_root() -> Prototype:
     return root
 
 
-## Clears the prototype by clearing its properties and removing all child prototypes.
-func clear() -> void:
+func _clear() -> void:
     _properties.clear()
     _prototypes.clear()

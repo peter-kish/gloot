@@ -17,37 +17,37 @@ func init_suite() -> void:
 
 
 func constructor_test() -> void:
-    var prototype = Prototype.new(TEST_PROTOTYPE_NAME)
+    var prototype := Prototype.new(TEST_PROTOTYPE_NAME)
     assert(prototype.get_id() == TEST_PROTOTYPE_NAME)
 
 
 func child_prototypes_test() -> void:
-    var prototype = Prototype.new(TEST_PROTOTYPE_NAME)
-    assert(!prototype.has_prototype(TEST_PROTOTYPE_NAME))
-    assert(prototype.get_prototypes().is_empty())
+    var prototype := Prototype.new(TEST_PROTOTYPE_NAME)
+    assert(!prototype.is_inherited_by(TEST_PROTOTYPE_NAME))
+    assert(prototype.get_derived_prototypes().is_empty())
 
-    var new_prototype = prototype.create_prototype(TEST_PROTOTYPE_NAME2)
-    assert(prototype.has_prototype(TEST_PROTOTYPE_NAME2))
-    assert(prototype.get_prototype(TEST_PROTOTYPE_NAME2) == new_prototype)
-    assert(prototype.get_prototypes().hash() == [new_prototype].hash())
+    var new_prototype := prototype.inherit(TEST_PROTOTYPE_NAME2)
+    assert(prototype.is_inherited_by(TEST_PROTOTYPE_NAME2))
+    assert(prototype.get_derived_prototype(TEST_PROTOTYPE_NAME2) == new_prototype)
+    assert(prototype.get_derived_prototypes().hash() == [new_prototype].hash())
 
     assert(new_prototype.inherits(TEST_PROTOTYPE_NAME))
     assert(new_prototype.inherits(TEST_PROTOTYPE_NAME2))
 
-    prototype.remove_prototype(TEST_PROTOTYPE_NAME2)
-    assert(!prototype.has_prototype(TEST_PROTOTYPE_NAME2))
-    assert(prototype.get_prototypes().is_empty())
+    prototype.remove_derived_prototype(TEST_PROTOTYPE_NAME2)
+    assert(!prototype.is_inherited_by(TEST_PROTOTYPE_NAME2))
+    assert(prototype.get_derived_prototypes().is_empty())
 
 
 func properties_test() -> void:
-    var prototype = Prototype.new(TEST_PROTOTYPE_NAME)
+    var prototype := Prototype.new(TEST_PROTOTYPE_NAME)
     assert(!prototype.has_property(TEST_PROPERTY_NAME))
 
     prototype.set_property(TEST_PROPERTY_NAME, 42)
     assert(prototype.has_property(TEST_PROPERTY_NAME))
     assert(prototype.get_property(TEST_PROPERTY_NAME) == 42)
 
-    var new_prototype = prototype.create_prototype(TEST_PROTOTYPE_NAME)
+    var new_prototype := prototype.inherit(TEST_PROTOTYPE_NAME)
     assert(new_prototype.has_property(TEST_PROPERTY_NAME))
     assert(new_prototype.get_property(TEST_PROPERTY_NAME) == 42)
     new_prototype.set_property(TEST_PROPERTY_NAME, 43)
@@ -65,13 +65,13 @@ func properties_test() -> void:
 
 
 func prototree_test() -> void:
-    var prototree = ProtoTree.new()
+    var prototree := ProtoTree.new()
     assert(prototree.is_empty())
     assert(prototree.get_root().get_id() == "ROOT")
 
     var prototype := prototree.create_prototype(TEST_PROTOTYPE_NAME)
     prototype.set_property(TEST_PROPERTY_NAME, 42)
-    assert(prototree.has_prototype_property(TEST_PROTOTYPE_NAME, TEST_PROPERTY_NAME))
+    assert(prototree.prototype_has_property(TEST_PROTOTYPE_NAME, TEST_PROPERTY_NAME))
     assert(prototree.get_prototype_property(TEST_PROTOTYPE_NAME, TEST_PROPERTY_NAME) == 42)
 
 
@@ -79,7 +79,7 @@ func deserialize_test() -> void:
     var prototree := ProtoTree.new()
     assert(prototree.deserialize(preload("res://tests/data/protoset_basic.json")))
     assert(!prototree.is_empty())
-    assert(prototree.get_root().has_prototype("item1"))
-    var item1 := prototree.get_root().get_prototype("item1")
+    assert(prototree.has_prototype("item1"))
+    var item1 := prototree.get_prototype("item1")
     assert(item1.get_property("name") == "item 1")
     assert(item1.get_property("image") == "res://images/item_book_blue.png")

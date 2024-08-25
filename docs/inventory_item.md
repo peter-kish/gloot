@@ -19,12 +19,12 @@ It is based on an item prototype from an prototree. Can hold additional properti
 * `duplicate() -> InventoryItem` - Returns a duplicate of the item.
 * `get_inventory() -> Inventory` - Returns the `Inventory` this item belongs to, or `null` if it is not inside an inventory.
 * `swap(item1: InventoryItem, item2: InventoryItem) -> bool` - Swaps the two given items. Returns `false` if the items cannot be swapped.
-* `has_property(property_name: String) -> bool` - Checks if the item has the given property defined.
+* `has_property(property_name: String) -> bool` - Checks if the item has the given property.
 * `get_property(property_name: String, default_value: Variant) -> Variant` - Returns the given item property. If the item does not define the item property, `default_value` is returned.
 * `set_property(property_name: String, value: Variant) -> void` - Sets the given item property to the given value.
 * `clear_property(property_name: String) -> void` - Clears (un-defines) the given item property.
-* `get_overridden_properties() -> Array` - Returns an array of overridden item properties.
-* `get_properties() -> Array` - Returns an array of item properties.
+* `get_overridden_properties() -> Array` - Returns an array of properties that the item overrides.
+* `get_properties() -> Array` - Returns an array of item properties (includes prototype properties).
 * `is_property_overridden(property_name: Variant) -> bool` - Checks if the item overrides the given property.
 * `reset() -> void` - Resets item data. Clears its properties and sets its protoset to `null`.
 * `serialize() -> Dictionary` - Serializes the item into a `Dictionary`.

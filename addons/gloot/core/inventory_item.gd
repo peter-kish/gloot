@@ -166,7 +166,7 @@ static func _add_item_to_inventory(item: InventoryItem, inventory: Inventory, in
     return false
 
 
-## Checks if the item has the given property defined.
+## Checks if the item has the given property.
 func has_property(property_name: String) -> bool:
     if _properties.has(property_name):
         return true
@@ -223,12 +223,12 @@ func clear_property(property_name: String) -> void:
         property_changed.emit(property_name)
 
 
-## Returns an array of overridden item properties.
+## Returns an array of properties that the item overrides.
 func get_overridden_properties() -> Array:
     return _properties.keys().duplicate()
 
 
-## Returns an array of item properties.
+## Returns an array of item properties (includes prototype properties).
 func get_properties() -> Array:
     if _prototype != null:
         return _Utils.array_union(_properties.keys(), _prototype.get_properties().keys())
