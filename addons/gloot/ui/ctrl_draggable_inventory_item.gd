@@ -78,6 +78,8 @@ func _gui_input(event: InputEvent) -> void:
         return
 
     var mb_event: InputEventMouseButton = event
+    if !mb_event.pressed:
+        return
     if mb_event.button_index == MOUSE_BUTTON_LEFT:
         if mb_event.double_click:
             activated.emit()
