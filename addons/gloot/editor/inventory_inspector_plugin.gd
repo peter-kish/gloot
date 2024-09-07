@@ -5,12 +5,16 @@ const _ItemSlotInspector = preload("res://addons/gloot/editor/item_slot_editor/i
 
 
 func _can_handle(object: Object) -> bool:
-    return (object is Inventory) || \
-            (object is InventoryItem) || \
-            (object is ItemSlot)
+    return (object is Inventory) || (object is ItemSlot)
 
 
 func _parse_begin(object: Object) -> void:
+    if Engine.is_editor_hint() && object.get_class() == "EditorDebuggerRemoteObject":
+        # _parse_begin is called for a EditorDebuggerRemoteObject when inspecting
+        # a remote node and causes errors when trying to access Inventory/ItemSlot
+        # properties.
+        return
+
     if object is Inventory:
         var inventory_inspector := _InventoryInspector.instantiate()
         inventory_inspector.init(object as Inventory)

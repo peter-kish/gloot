@@ -5,7 +5,7 @@
 | Directory     | Description |
 | ------------- | ----------- |
 | `constraints` | Constraint implementations (`WeightConstraint`, `GridConstraint` and `ItemCountConstraint`) |
-| `prototree`   | Prototree related code (`Prototype`, `PrototypePath` and `ProtoTree`) |
+| `prototree`   | Prototree related code (`Prototype` and `ProtoTree`) |
 
 ## Files
 
