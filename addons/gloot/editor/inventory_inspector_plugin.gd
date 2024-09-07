@@ -17,6 +17,12 @@ func _can_handle(object: Object) -> bool:
 
 
 func _parse_begin(object: Object) -> void:
+    if Engine.is_editor_hint() && object.get_class() == "EditorDebuggerRemoteObject":
+        # _parse_begin is called for an EditorDebuggerRemoteObject when inspecting
+        # a remote node and causes errors when trying to access Inventory/ItemSlot
+        # properties.
+        return
+
     if object is Inventory:
         var inventory_inspector := InventoryInspector.instantiate()
         inventory_inspector.init(object as Inventory)
@@ -38,6 +44,12 @@ func _parse_property(object: Object,
         hint_string: String,
         usage: int,
         wide: bool) -> bool:
+    if Engine.is_editor_hint() && object.get_class() == "EditorDebuggerRemoteObject":
+        # _parse_property is called for an EditorDebuggerRemoteObject when inspecting
+        # a remote node and causes errors when trying to access Inventory/ItemSlot
+        # properties.
+        return false
+
     if (object is InventoryItem) && name == "properties":
         add_property_editor(name, EditPropertiesButton.new())
         return true
