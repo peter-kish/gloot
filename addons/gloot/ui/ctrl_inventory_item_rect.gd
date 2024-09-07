@@ -8,7 +8,7 @@ signal activated
 signal clicked
 signal context_activated
 
-var item: InventoryItem :
+var item: InventoryItem:
     set(new_item):
         if item == new_item:
             return
@@ -24,13 +24,13 @@ var item: InventoryItem :
             texture = null
             deactivate()
         _update_stack_size()
-var texture: Texture2D :
+var texture: Texture2D:
     set(new_texture):
         if new_texture == texture:
             return
         texture = new_texture
         _update_texture()
-var stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE :
+var stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE:
     set(new_stretch_mode):
         if stretch_mode == new_stretch_mode:
             return
@@ -70,7 +70,7 @@ func _disconnect_item_signals() -> void:
 
 func _on_item_property_changed(property_name: String) -> void:
     var relevant_properties = [
-        StacksConstraint.KEY_STACK_SIZE, 
+        StacksConstraint.KEY_STACK_SIZE,
         GridConstraint.KEY_WIDTH,
         GridConstraint.KEY_HEIGHT,
         GridConstraint.KEY_SIZE,
@@ -127,10 +127,10 @@ func _update_texture() -> void:
         _texture_rect.size = Vector2(size.y, size.x)
         if GridConstraint.is_item_rotation_positive(item):
             _texture_rect.position = Vector2(_texture_rect.size.y, 0)
-            _texture_rect.rotation = PI/2
+            _texture_rect.rotation = PI / 2
         else:
             _texture_rect.position = Vector2(0, _texture_rect.size.x)
-            _texture_rect.rotation = -PI/2
+            _texture_rect.rotation = -PI / 2
 
     else:
         _texture_rect.size = size
@@ -171,6 +171,8 @@ func _gui_input(event: InputEvent) -> void:
         return
 
     var mb_event: InputEventMouseButton = event
+    if !mb_event.pressed:
+        return
     if mb_event.button_index == MOUSE_BUTTON_LEFT:
         if mb_event.double_click:
             activated.emit()
@@ -178,4 +180,3 @@ func _gui_input(event: InputEvent) -> void:
             clicked.emit()
     elif mb_event.button_index == MOUSE_BUTTON_MASK_RIGHT:
         context_activated.emit()
-
