@@ -9,14 +9,14 @@ extends CtrlInventory
 ## the capacity and fullness of the inventory.
 
 ## If true, a progress bar will be shown indicating inventory fullness.
-@export var progress_bar_visible: bool = true :
+@export var progress_bar_visible: bool = true:
     set(new_progress_bar_visible):
         progress_bar_visible = new_progress_bar_visible
         if _progress_bar:
             _progress_bar.visible = progress_bar_visible
 
 ## If true, a percentage label will be shown indicating inventory fullness.
-@export var label_visible: bool = true :
+@export var label_visible: bool = true:
     set(new_label_visible):
         label_visible = new_label_visible
         if _label:
@@ -79,4 +79,3 @@ func _refresh():
         _progress_bar.min_value = 0
         _progress_bar.max_value = inventory.capacity
         _progress_bar.value = inventory.occupied_space
-

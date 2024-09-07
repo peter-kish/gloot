@@ -58,4 +58,3 @@ func _refresh_button() -> void:
     if !item || !item.protoset:
         return
     _btn_prototype_id.disabled = !item.protoset.has_prototype(item.prototype_id)
-

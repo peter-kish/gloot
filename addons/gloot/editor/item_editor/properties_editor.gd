@@ -11,7 +11,7 @@ var IMMUTABLE_KEYS: Array[String] = [ItemProtoset.KEY_ID, GridConstraint.KEY_GRI
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _dict_editor: Control = $"MarginContainer/DictEditor"
-var item: InventoryItem = null :
+var item: InventoryItem = null:
     set(new_item):
         if new_item == null:
             return
@@ -120,4 +120,3 @@ func _get_remove_button_map() -> Dictionary:
 
         result[key]["disabled"] = (not key in item.properties) or (key in IMMUTABLE_KEYS)
     return result
-

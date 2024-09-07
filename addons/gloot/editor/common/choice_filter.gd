@@ -9,27 +9,27 @@ signal choice_selected(value_index)
 @onready var line_edit: LineEdit = $HBoxContainer/LineEdit
 @onready var item_list: ItemList = $ItemList
 @onready var btn_pick: Button = $Button
-@export var pick_button_visible: bool = true :
+@export var pick_button_visible: bool = true:
     set(new_pick_button_visible):
         pick_button_visible = new_pick_button_visible
         if btn_pick:
             btn_pick.visible = pick_button_visible
-@export var pick_text: String :
+@export var pick_text: String:
     set(new_pick_text):
         pick_text = new_pick_text
         if btn_pick:
             btn_pick.text = pick_text
-@export var pick_icon: Texture2D :
+@export var pick_icon: Texture2D:
     set(new_pick_icon):
         pick_icon = new_pick_icon
         if btn_pick:
             btn_pick.icon = pick_icon
-@export var filter_text: String = "Filter:" :
+@export var filter_text: String = "Filter:":
     set(new_filter_text):
         filter_text = new_filter_text
         if lbl_filter:
             lbl_filter.text = filter_text
-@export var filter_icon: Texture2D :
+@export var filter_icon: Texture2D:
     set(new_filter_icon):
         filter_icon = new_filter_icon
         if line_edit:

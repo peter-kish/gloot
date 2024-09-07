@@ -10,7 +10,7 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var btn_clear = $HSplitContainer/VBoxContainer/HBoxContainer/BtnClear
 @onready var ctrl_item_slot = $HSplitContainer/VBoxContainer/CtrlItemSlot
 
-var item_slot: ItemSlot :
+var item_slot: ItemSlot:
     set(new_item_slot):
         disconnect_item_slot_signals()
         item_slot = new_item_slot
@@ -103,4 +103,3 @@ static func _select_node(node: Node) -> void:
     EditorInterface.get_selection().clear()
     EditorInterface.get_selection().add_node(node)
     EditorInterface.edit_node(node)
-

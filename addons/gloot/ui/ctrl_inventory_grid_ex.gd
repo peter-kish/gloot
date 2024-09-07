@@ -79,7 +79,7 @@ class SelectionPanel extends Panel:
             add_theme_stylebox_override("panel", style)
 
 ## Path to an [Inventory] node.
-@export var inventory_path: NodePath :
+@export var inventory_path: NodePath:
     set(new_inv_path):
         if new_inv_path == inventory_path:
             return
@@ -97,7 +97,7 @@ class SelectionPanel extends Panel:
 
 ## The default texture that will be used for items with no [code]image[/code]
 ## property.
-@export var default_item_texture: Texture2D :
+@export var default_item_texture: Texture2D:
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
@@ -105,28 +105,28 @@ class SelectionPanel extends Panel:
 
 ## If true, the inventory item sprites will be stretched to fit the inventory
 ## fields they are positioned on.
-@export var stretch_item_sprites: bool = true :
+@export var stretch_item_sprites: bool = true:
     set(new_stretch_item_sprites):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.stretch_item_sprites = new_stretch_item_sprites
         stretch_item_sprites = new_stretch_item_sprites
 
 ## The size of each inventory field in pixels.
-@export var field_dimensions: Vector2 = Vector2(32, 32) :
+@export var field_dimensions: Vector2 = Vector2(32, 32):
     set(new_field_dimensions):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.field_dimensions = new_field_dimensions
         field_dimensions = new_field_dimensions
 
 ## The spacing between items in pixels.
-@export var item_spacing: int = 0 :
+@export var item_spacing: int = 0:
     set(new_item_spacing):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.item_spacing = new_item_spacing
         item_spacing = new_item_spacing
 
 ## Single or multi select mode (hold CTRL to select multiple items).
-@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = CtrlInventoryGridBasic.SelectMode.SELECT_SINGLE:
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
@@ -136,31 +136,31 @@ class SelectionPanel extends Panel:
 
 @export_group("Custom Styles")
 ## Style of a single inventory field.
-@export var field_style: StyleBox :
+@export var field_style: StyleBox:
     set(new_field_style):
         field_style = new_field_style
         _queue_refresh()
 
 ## Style of a single inventory field when the mouse hovers over it.
-@export var field_highlighted_style: StyleBox :
+@export var field_highlighted_style: StyleBox:
     set(new_field_highlighted_style):
         field_highlighted_style = new_field_highlighted_style
         _queue_refresh()
 
 ## Style of a single inventory field when the item on top of it is selected.
-@export var field_selected_style: StyleBox :
+@export var field_selected_style: StyleBox:
     set(new_field_selected_style):
         field_selected_style = new_field_selected_style
         _queue_refresh()
 
 ## Style of a rectangle that will be drawn on top of the selected item.
-@export var selection_style: StyleBox :
+@export var selection_style: StyleBox:
     set(new_selection_style):
         selection_style = new_selection_style
         _queue_refresh()
 
 ## The [Inventory] node linked to this control.
-var inventory: InventoryGrid = null :
+var inventory: InventoryGrid = null:
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -439,4 +439,3 @@ func get_selected_inventory_items() -> Array[InventoryItem]:
     if !is_instance_valid(_ctrl_inventory_grid_basic):
         return []
     return _ctrl_inventory_grid_basic.get_selected_inventory_items()
-    

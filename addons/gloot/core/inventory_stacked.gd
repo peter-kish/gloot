@@ -14,7 +14,7 @@ signal occupied_space_changed
 
 ## Maximum weight the inventory can hold.
 ## Set to 0.0 for unlimited capacity.
-@export var capacity: float :
+@export var capacity: float:
     get:
         if _constraint_manager == null:
             return 0.0
@@ -25,7 +25,7 @@ signal occupied_space_changed
         _constraint_manager.get_weight_constraint().capacity = new_capacity
 
 ## Currently occupied space in the inventory
-var occupied_space: float :
+var occupied_space: float:
     get:
         if _constraint_manager == null:
             return 0.0

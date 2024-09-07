@@ -8,7 +8,7 @@ const POPUP_MARGIN = 10
 
 @onready var _margin_container: MarginContainer = $"MarginContainer"
 @onready var _choice_filter: Control = $"MarginContainer/ChoiceFilter"
-var item: InventoryItem = null :
+var item: InventoryItem = null:
     set(new_item):
         if new_item == null:
             return
@@ -46,4 +46,3 @@ func _get_prototype_ids() -> Array:
         return []
 
     return item.protoset._prototypes.keys()
-

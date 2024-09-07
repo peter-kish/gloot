@@ -12,7 +12,7 @@ const KEY_ITEM_INDEX: String = "item_index"
 const EMPTY_SLOT = -1
 
 ## Path to an [Inventory] node. Sets the [member inventory] property.
-@export var inventory_path: NodePath :
+@export var inventory_path: NodePath:
     set(new_inv_path):
         if inventory_path == new_inv_path:
             return
@@ -22,16 +22,16 @@ const EMPTY_SLOT = -1
 
 var _wr_item: WeakRef = weakref(null)
 var _wr_inventory: WeakRef = weakref(null)
-@export var _equipped_item: int = EMPTY_SLOT : set = _set_equipped_item_index
+@export var _equipped_item: int = EMPTY_SLOT: set = _set_equipped_item_index
 ## Reference to an [Inventory] node.
-var inventory: Inventory = null :
+var inventory: Inventory = null:
     get = _get_inventory, set = _set_inventory
 
 
 func _get_configuration_warnings() -> PackedStringArray:
     if inventory_path.is_empty():
         return PackedStringArray([
-                "Inventory path not set! Inventory path needs to point to an inventory node, so " +\
+                "Inventory path not set! Inventory path needs to point to an inventory node, so " + \
                 "items from that inventory can be equipped in the slot."])
     return PackedStringArray()
 
@@ -163,7 +163,7 @@ func reset() -> void:
 ## Serializes the item slot into a dictionary.
 func serialize() -> Dictionary:
     var result: Dictionary = {}
-    var item : InventoryItem = _wr_item.get_ref()
+    var item: InventoryItem = _wr_item.get_ref()
 
     if item != null && item.get_inventory() != null:
         result[KEY_ITEM_INDEX] = item.get_inventory().get_item_index(item)
@@ -195,4 +195,3 @@ func _equip_item_with_index(item_index: int) -> bool:
         return false
     equip(_get_inventory().get_items()[item_index])
     return true
-

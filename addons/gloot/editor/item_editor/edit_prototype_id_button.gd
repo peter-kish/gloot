@@ -76,4 +76,3 @@ func _refresh_button() -> void:
         _btn_prototype_id.remove_theme_color_override("font_color")
         _btn_prototype_id.remove_theme_color_override("font_color_hover")
         _btn_prototype_id.tooltip_text = ""
-

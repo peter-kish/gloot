@@ -24,7 +24,7 @@ signal removed_from_slot(item_slot)
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## An [ItemProtoset] resource containing item prototypes.
-@export var protoset: ItemProtoset :
+@export var protoset: ItemProtoset:
     set(new_protoset):
         if new_protoset == protoset:
             return
@@ -46,7 +46,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         update_configuration_warnings()
 
 ## ID of the prototype from [member protoset] this item is based on.
-@export var prototype_id: String :
+@export var prototype_id: String:
     set(new_prototype_id):
         if new_prototype_id == prototype_id:
             return
@@ -60,13 +60,13 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         prototype_id_changed.emit()
 
 ## Additional item properties.
-@export var properties: Dictionary :
+@export var properties: Dictionary:
     set(new_properties):
         properties = new_properties
         properties_changed.emit()
         update_configuration_warnings()
 
-var _inventory: Inventory :
+var _inventory: Inventory:
     set(new_inventory):
         if new_inventory == _inventory:
             return
@@ -325,9 +325,9 @@ func _serialize_property(property_name: String) -> Dictionary:
 
 ## Deserializes the item from a given dictionary.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) ||\
+    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) || \
+        !Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) || \
+        !Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) || \
         !Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
         return false
 

@@ -30,4 +30,3 @@ func _on_dragable_dropped(drop_zone: CtrlDropZone, pos: Vector2, grabbed_dragabl
         print("%s dropped at %s on %s" % [grabbed_dragable.name, str(pos), drop_zone.name])
     else:
         print("%s dropped at %s" % [grabbed_dragable.name, str(pos)])
-

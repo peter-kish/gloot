@@ -12,12 +12,12 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var btn_remove_prototype = $"%BtnRemovePrototype"
 @onready var btn_rename_prototype = $"%BtnRenamePrototype"
 
-var protoset: ItemProtoset :
+var protoset: ItemProtoset:
     set(new_protoset):
         protoset = new_protoset
         if protoset:
             protoset.changed.connect(_on_protoset_changed)
-        _refresh()   
+        _refresh()
 var selected_prototype_id: String = ""
         
 
@@ -66,12 +66,12 @@ func _populate() -> void:
 
 
 func _refresh_btn_add_prototype() -> void:
-    btn_add_prototype.disabled = txt_prototype_id.text.is_empty() ||\
+    btn_add_prototype.disabled = txt_prototype_id.text.is_empty() || \
         protoset.has_prototype(txt_prototype_id.text)
 
 
 func _refresh_btn_rename_prototype() -> void:
-    btn_rename_prototype.disabled = txt_prototype_id.text.is_empty() ||\
+    btn_rename_prototype.disabled = txt_prototype_id.text.is_empty() || \
         protoset.has_prototype(txt_prototype_id.text)
 
 

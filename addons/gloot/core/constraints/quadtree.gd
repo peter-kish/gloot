@@ -1,4 +1,3 @@
-
 class QtRect:
     var rect: Rect2i
     var metadata: Variant

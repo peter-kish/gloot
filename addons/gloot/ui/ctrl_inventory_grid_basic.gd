@@ -16,19 +16,19 @@ const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constra
 
 enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
 
-@export var field_dimensions: Vector2 = Vector2(32, 32) :
+@export var field_dimensions: Vector2 = Vector2(32, 32):
     set(new_field_dimensions):
         if new_field_dimensions == field_dimensions:
             return
         field_dimensions = new_field_dimensions
         _queue_refresh()
-@export var item_spacing: int = 0 :
+@export var item_spacing: int = 0:
     set(new_item_spacing):
         if new_item_spacing == item_spacing:
             return
         item_spacing = new_item_spacing
         _queue_refresh()
-@export var inventory_path: NodePath :
+@export var inventory_path: NodePath:
     set(new_inv_path):
         if new_inv_path == inventory_path:
             return
@@ -43,23 +43,23 @@ enum SelectMode {SELECT_SINGLE = 0, SELECT_MULTI = 1}
             
         inventory = node
         update_configuration_warnings()
-@export var default_item_texture: Texture2D :
+@export var default_item_texture: Texture2D:
     set(new_default_item_texture):
         if new_default_item_texture == default_item_texture:
             return
         default_item_texture = new_default_item_texture
         _queue_refresh()
-@export var stretch_item_sprites: bool = true :
+@export var stretch_item_sprites: bool = true:
     set(new_stretch_item_sprites):
         stretch_item_sprites = new_stretch_item_sprites
         _queue_refresh()
-@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE:
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
         select_mode = new_select_mode
         _clear_selection()
-var inventory: InventoryGrid = null :
+var inventory: InventoryGrid = null:
     set(new_inventory):
         if inventory == new_inventory:
             return
@@ -449,4 +449,3 @@ func get_item_rect(item: InventoryItem) -> Rect2:
         _get_field_position(inventory.get_item_position(item)),
         _get_item_sprite_size(item)
     )
-

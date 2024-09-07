@@ -152,7 +152,7 @@ func test_ws_has_space_for() -> void:
         WeightConstraint.set_item_weight(item, data.input.weight)
         StacksConstraint.set_item_max_stack_size(item, data.input.stack_size)
         assert(StacksConstraint.set_item_stack_size(item, data.input.stack_size))
-        var space : = constraint_manager.get_space_for(item)
+        var space := constraint_manager.get_space_for(item)
         assert(space.eq(data.expected.space))
         assert(constraint_manager.has_space_for(item) == data.expected.has_space)
 
@@ -647,4 +647,3 @@ func test_wsg_transfer_autosplit() -> void:
         clear_inventory(inventory2)
         free_item(dst_item)
         free_item(src_item)
-

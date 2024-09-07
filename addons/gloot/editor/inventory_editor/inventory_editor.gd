@@ -10,7 +10,7 @@ const EditorIcons = preload("res://addons/gloot/editor/common/editor_icons.gd")
 @onready var btn_edit = $HSplitContainer/VBoxContainer/HBoxContainer/BtnEdit
 @onready var btn_remove = $HSplitContainer/VBoxContainer/HBoxContainer/BtnRemove
 @onready var scroll_container = $HSplitContainer/VBoxContainer/ScrollContainer
-var inventory: Inventory :
+var inventory: Inventory:
     set(new_inventory):
         disconnect_inventory_signals()
         inventory = new_inventory
@@ -124,4 +124,3 @@ static func _select_node(node: Node) -> void:
     EditorInterface.get_selection().clear()
     EditorInterface.get_selection().add_node(node)
     EditorInterface.edit_node(node)
-

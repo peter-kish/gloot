@@ -1,7 +1,7 @@
 @tool
 extends "res://addons/gloot/ui/ctrl_dragable.gd"
 
-@export var texture: Texture2D :
+@export var texture: Texture2D:
     set(new_texture):
         if texture == new_texture:
             return
@@ -38,4 +38,3 @@ func create_preview() -> Control:
     preview.texture = texture
     preview.scale = get_global_transform().get_scale()
     return preview
-

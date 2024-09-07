@@ -1,6 +1,6 @@
 var map: Array
 var _free_fields: int
-var free_fields :
+var free_fields:
     get:
         return _free_fields
     set(new_free_fields):
@@ -82,4 +82,3 @@ func get_size() -> Vector2i:
     if map.is_empty():
         return Vector2i.ZERO
     return Vector2i(map.size(), map[0].size())
-

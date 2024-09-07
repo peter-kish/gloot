@@ -13,7 +13,7 @@ signal size_changed
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 ## The size of the inventory (width and height).
-@export var size: Vector2i = DEFAULT_SIZE :
+@export var size: Vector2i = DEFAULT_SIZE:
     get:
         if _constraint_manager == null:
             return DEFAULT_SIZE
@@ -122,4 +122,3 @@ func find_free_place(item: InventoryItem) -> Dictionary:
 ## Sorts the inventory items by size.
 func sort() -> bool:
     return _constraint_manager.get_grid_constraint().sort()
-

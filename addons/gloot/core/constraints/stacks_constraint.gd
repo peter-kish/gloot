@@ -319,4 +319,3 @@ func transfer_automerge(item: InventoryItem, destination: Inventory) -> bool:
     var add_item_success = destination.add_item(item)
     assert(add_item_success)
     return true
-

@@ -21,7 +21,7 @@ signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
 ## Path to an [ItemSlot] node.
-@export var item_slot_path: NodePath :
+@export var item_slot_path: NodePath:
     set(new_item_slot_path):
         if item_slot_path == new_item_slot_path:
             return
@@ -41,7 +41,7 @@ signal item_mouse_exited(item)
 
 ## The default icon that will be used for items with no [code]image[/code]
 ## property.
-@export var default_item_icon: Texture2D :
+@export var default_item_icon: Texture2D:
     set(new_default_item_icon):
         if default_item_icon == new_default_item_icon:
             return
@@ -49,7 +49,7 @@ signal item_mouse_exited(item)
         _refresh()
 
 ## The item texture is displayed if set to true.
-@export var item_texture_visible: bool = true :
+@export var item_texture_visible: bool = true:
     set(new_item_texture_visible):
         if item_texture_visible == new_item_texture_visible:
             return
@@ -58,7 +58,7 @@ signal item_mouse_exited(item)
             _ctrl_inventory_item_rect.visible = item_texture_visible
 
 ## The item name label is displayed if set to true.
-@export var label_visible: bool = true :
+@export var label_visible: bool = true:
     set(new_label_visible):
         if label_visible == new_label_visible:
             return
@@ -67,7 +67,7 @@ signal item_mouse_exited(item)
             _label.visible = label_visible
 
 @export_group("Icon Behavior", "icon_")
-@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED :
+@export var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_KEEP_CENTERED:
     set(new_icon_stretch_mode):
         if icon_stretch_mode == new_icon_stretch_mode:
             return
@@ -75,28 +75,28 @@ signal item_mouse_exited(item)
         if is_instance_valid(_ctrl_inventory_item_rect):
             _ctrl_inventory_item_rect.stretch_mode = icon_stretch_mode
 @export_group("Text Behavior", "label_")
-@export var label_horizontal_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER :
+@export var label_horizontal_alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER:
     set(new_label_horizontal_alignment):
         if label_horizontal_alignment == new_label_horizontal_alignment:
             return
         label_horizontal_alignment = new_label_horizontal_alignment
         if is_instance_valid(_label):
             _label.horizontal_alignment = label_horizontal_alignment
-@export var label_vertical_alignment: VerticalAlignment = VERTICAL_ALIGNMENT_CENTER :
+@export var label_vertical_alignment: VerticalAlignment = VERTICAL_ALIGNMENT_CENTER:
     set(new_label_vertical_alignment):
         if label_vertical_alignment == new_label_vertical_alignment:
             return
         label_vertical_alignment = new_label_vertical_alignment
         if is_instance_valid(_label):
             _label.vertical_alignment = label_vertical_alignment
-@export var label_text_overrun_behavior: TextServer.OverrunBehavior :
+@export var label_text_overrun_behavior: TextServer.OverrunBehavior:
     set(new_label_text_overrun_behavior):
         if label_text_overrun_behavior == new_label_text_overrun_behavior:
             return
         label_text_overrun_behavior = new_label_text_overrun_behavior
         if is_instance_valid(_label):
             _label.text_overrun_behavior = label_text_overrun_behavior
-@export var label_clip_text: bool :
+@export var label_clip_text: bool:
     set(new_label_clip_text):
         if label_clip_text == new_label_clip_text:
             return
@@ -105,7 +105,7 @@ signal item_mouse_exited(item)
             _label.clip_text = label_clip_text
 
 ## The [ItemSlot] node linked to this control.
-var item_slot: ItemSlotBase :
+var item_slot: ItemSlotBase:
     set(new_item_slot):
         if new_item_slot == item_slot:
             return
@@ -293,4 +293,3 @@ func _clear() -> void:
     if is_instance_valid(_ctrl_inventory_item_rect):
         _ctrl_inventory_item_rect.item = null
         _ctrl_inventory_item_rect.texture = default_item_icon
-

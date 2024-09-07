@@ -15,7 +15,7 @@ signal inventory_item_context_activated(item)
 enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList.SELECT_MULTI}
 
 ## Path to an [Inventory] node.
-@export var inventory_path: NodePath :
+@export var inventory_path: NodePath:
     set(new_inv_path):
         inventory_path = new_inv_path
         var node: Node = get_node_or_null(inventory_path)
@@ -33,7 +33,7 @@ enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList
 @export var default_item_icon: Texture2D
 
 ## Single or multi select mode (hold CTRL to select multiple items).
-@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE :
+@export_enum("Single", "Multi") var select_mode: int = SelectMode.SELECT_SINGLE:
     set(new_select_mode):
         if select_mode == new_select_mode:
             return
@@ -43,7 +43,7 @@ enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList
             _item_list.select_mode = select_mode
 
 ## The [Inventory] node linked to this control.
-var inventory: Inventory = null :
+var inventory: Inventory = null:
     set(new_inventory):
         if new_inventory == inventory:
             return
@@ -206,4 +206,3 @@ func select_inventory_item(item: InventoryItem) -> void:
             continue
         _item_list.select(index)
         return
-

@@ -152,8 +152,8 @@ static func swap_inventory_items(item1: InventoryItem, item2: InventoryItem) -> 
     var undo_redo_manager = _get_undo_redo_manager()
 
     var inventories: Array[Inventory] = [item1.get_inventory(), item2.get_inventory()]
-    var old_inv_states: Array[Dictionary] = [{}, {}]
-    var new_inv_states: Array[Dictionary] = [{}, {}]
+    var old_inv_states: Array[Dictionary] = [ {}, {}]
+    var new_inv_states: Array[Dictionary] = [ {}, {}]
     old_inv_states[0] = inventories[0].serialize()
     old_inv_states[1] = inventories[1].serialize()
     if !InventoryItem.swap(item1, item2):
@@ -294,4 +294,3 @@ static func set_prototype_properties(protoset: ItemProtoset,
         new_properties
     )
     undo_redo_manager.commit_action()
-

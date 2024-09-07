@@ -10,14 +10,14 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 const KEY_ID: String = "id"
 
 ## JSON string containing item prototypes.
-@export_multiline var json_data: String :
+@export_multiline var json_data: String:
     set(new_json_data):
         json_data = new_json_data
         if !json_data.is_empty():
             parse(json_data)
         _save()
 
-var _prototypes: Dictionary = {} :
+var _prototypes: Dictionary = {}:
     set(new_prototypes):
         _prototypes = new_prototypes
         _update_json_data()

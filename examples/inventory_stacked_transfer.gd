@@ -51,4 +51,3 @@ func _on_unequip_pressed() -> void:
     if slot.get_item() != null && inventory_left.has_place_for(slot.get_item()):
         inventory_left.add_item_automerge(slot.get_item())
         slot.clear()
-        

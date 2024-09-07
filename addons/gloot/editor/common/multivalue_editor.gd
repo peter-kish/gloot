@@ -4,11 +4,11 @@ signal value_changed(value_index)
 
 const Utils = preload("res://addons/gloot/core/utils.gd")
 
-var values: Array = [] :
+var values: Array = []:
     set(new_values):
         assert(!is_inside_tree(), "Can't set values once the node is inside a tree")
         values = new_values
-var titles: Array = [] :
+var titles: Array = []:
     set(new_titles):
         assert(!is_inside_tree(), "Can't set titles once the node is inside a tree")
         titles = new_titles

@@ -1,6 +1,6 @@
 extends Object
 
-var inventory: Inventory = null :
+var inventory: Inventory = null:
     set(new_inventory):
         assert(new_inventory != null, "Can't set inventory to null!")
         assert(inventory == null, "Inventory already set!")
@@ -18,7 +18,7 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 # Override this
-func has_space_for(item:InventoryItem) -> bool:
+func has_space_for(item: InventoryItem) -> bool:
     return false
 
 

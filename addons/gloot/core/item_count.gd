@@ -2,7 +2,7 @@ class_name ItemCount
 
 const Inf: int = -1
 
-@export var count: int = 0 :
+@export var count: int = 0:
     set(new_count):
         if new_count < 0:
             new_count = -1
@@ -69,7 +69,7 @@ func less(item_count_: ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
-        return true 
+        return true
 
     if self.is_inf():
         return false
@@ -85,7 +85,7 @@ func gt(item_count_: ItemCount) -> bool:
     if item_count_.is_inf():
         if self.is_inf():
             return false
-        return false 
+        return false
 
     if self.is_inf():
         return true

@@ -144,7 +144,7 @@ func _connect_item_signals(item: InventoryItem) -> void:
         item.property_changed.connect(_on_item_property_changed.bind(item))
 
 
-func _disconnect_item_signals(item:InventoryItem) -> void:
+func _disconnect_item_signals(item: InventoryItem) -> void:
     if item.protoset_changed.is_connected(_emit_item_modified):
         item.protoset_changed.disconnect(_emit_item_modified)
     if item.prototype_id_changed.is_connected(_emit_item_modified):
@@ -221,7 +221,7 @@ func can_hold_item(item: InventoryItem) -> bool:
     return true
 
 ## Creates an [InventoryItem] based on the prototype ID.
-func create_item(prototype_id: String) ->InventoryItem:
+func create_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new()
     item.protoset = item_protoset
     item.prototype_id = prototype_id
@@ -230,7 +230,7 @@ func create_item(prototype_id: String) ->InventoryItem:
 ## Creates an [InventoryItem] based on the given prototype ID and adds it to
 ## the inventory. Returns [code]null[/code] if the item cannot be added.
 func create_and_add_item(prototype_id: String) -> InventoryItem:
-    var item:InventoryItem = create_item(prototype_id)
+    var item: InventoryItem = create_item(prototype_id)
     if add_item(item):
         return item
     else:
@@ -319,9 +319,9 @@ static func _serialize_item_protoset(item_protoset: ItemProtoset) -> String:
 
 ## Loads the inventory data from the given dictionary.
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) ||\
-        !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) ||\
-        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) ||\
+    if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) || \
+        !Verify.dict(source, true, KEY_ITEM_PROTOSET, TYPE_STRING) || \
+        !Verify.dict(source, false, KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) || \
         !Verify.dict(source, false, KEY_CONSTRAINTS, TYPE_DICTIONARY):
         return false
 
@@ -355,4 +355,3 @@ static func _deserialize_item_protoset(data: String) -> ItemProtoset:
         var protoset := ItemProtoset.new()
         protoset.json_data = data
         return protoset
-

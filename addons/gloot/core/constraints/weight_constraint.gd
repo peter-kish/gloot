@@ -11,7 +11,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const StacksConstraint = preload("res://addons/gloot/core/constraints/stacks_constraint.gd")
 
 
-var capacity: float :
+var capacity: float:
     set(new_capacity):
         if new_capacity < 0.0:
             new_capacity = 0.0
@@ -23,7 +23,7 @@ var capacity: float :
         capacity_changed.emit()
 
 var _occupied_space: float
-var occupied_space: float :
+var occupied_space: float:
     get:
         return _occupied_space
     set(new_occupied_space):
@@ -147,7 +147,7 @@ func serialize() -> Dictionary:
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) ||\
+    if !Verify.dict(source, true, KEY_CAPACITY, TYPE_FLOAT) || \
         !Verify.dict(source, true, KEY_OCCUPIED_SPACE, TYPE_FLOAT):
         return false
 
@@ -157,5 +157,3 @@ func deserialize(source: Dictionary) -> bool:
     _occupied_space = source[KEY_OCCUPIED_SPACE]
 
     return true
-
-

@@ -20,7 +20,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 var _swap_position := Vector2i.ZERO
 var _quad_tree := QuadTree.new(size)
 
-@export var size: Vector2i = DEFAULT_SIZE :
+@export var size: Vector2i = DEFAULT_SIZE:
     set(new_size):
         assert(inventory, "Inventory not set!")
         assert(new_size.x > 0, "Inventory width must be positive!")
@@ -431,7 +431,7 @@ func get_space_for(item: InventoryItem) -> ItemCount:
 
 
 func has_space_for(item: InventoryItem) -> bool:
-    var item_size = get_item_size(item)        
+    var item_size = get_item_size(item)
     return find_free_space(item_size).success
 
 
@@ -479,4 +479,3 @@ func deserialize(source: Dictionary) -> bool:
     self.size = s
 
     return true
-

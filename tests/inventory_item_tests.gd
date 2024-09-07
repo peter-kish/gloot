@@ -133,7 +133,6 @@ func test_references() -> void:
     assert(item.get_property("dictionary")["baz"] == 43)
     
 
-
 func test_clear_property() -> void:
     item.set_property("name", "Bob")
     item.clear_property("name")
@@ -198,4 +197,3 @@ func test_serialize_json() -> void:
     assert(item.get_property("foo") == null)
     assert(item.deserialize(item_data))
     assert(item.get_property("foo") == "bar")
-

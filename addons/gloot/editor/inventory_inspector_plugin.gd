@@ -48,4 +48,3 @@ func _parse_property(object: Object,
         add_property_editor(name, ItemRefSlotButton.new())
         return true
     return false
-

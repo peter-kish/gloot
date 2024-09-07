@@ -1,4 +1,3 @@
-
 static func str_to_var(s: String) -> Variant:
     var variant = str_to_var(s)
     # str_to_var considers all strings that start with a digit convertable to
