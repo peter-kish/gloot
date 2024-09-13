@@ -380,7 +380,7 @@ func _highlight_grabbed_item(style: StyleBox):
 
 
 func _is_hovering(local_pos: Vector2) -> bool:
-    return get_rect().has_point(local_pos)
+    return Rect2(Vector2.ZERO, size).has_point(local_pos)
 
 
 func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
