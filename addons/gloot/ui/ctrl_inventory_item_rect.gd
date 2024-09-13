@@ -37,7 +37,7 @@ var stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCAL
         stretch_mode = new_stretch_mode
         if is_instance_valid(_texture_rect):
             _texture_rect.stretch_mode = stretch_mode
-var item_slot: ItemSlot
+var item_slot: ItemSlotBase
 var _texture_rect: TextureRect
 var _stack_size_label: Label
 static var _stored_preview_size: Vector2
