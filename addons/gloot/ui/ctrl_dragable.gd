@@ -61,6 +61,11 @@ func _get_drag_data(at_position: Vector2):
     return self
 
 
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_END:
+        _grabbed_dragable = null
+
+
 func create_preview() -> Control:
     return null
 
