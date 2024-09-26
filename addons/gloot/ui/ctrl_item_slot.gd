@@ -68,12 +68,6 @@ func _disconnect_item_slot_signals() -> void:
 
 
 func _ready():
-    if Engine.is_editor_hint():
-        # Clean up, in case it is duplicated in the editor
-        for c in get_children():
-            remove_child(c)
-            c.queue_free()
-
     _background_panel = Panel.new()
     _background_panel.size = size
     _background_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE

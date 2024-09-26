@@ -305,12 +305,6 @@ func _refresh_field_background_grid() -> void:
 
 
 func _ready() -> void:
-    if Engine.is_editor_hint():
-        # Clean up, in case it is duplicated in the editor
-        for c in get_children():
-            remove_child(c)
-            c.queue_free()
-
     _background = CustomizablePanel.new()
     _background.name = "Background"
     _background.set_style(_get_background_style())
