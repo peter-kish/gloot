@@ -6,6 +6,8 @@ Inherits: [Node](https://docs.godotengine.org/en/stable/classes/class_node.html)
 
 Inventory item class. It is based on an item prototype from an [`ItemProtoset`](./item_protoset.md) resource. Can hold additional properties.
 
+> NOTE: This class and its derivatives are defined with the `@tool` attribute so that inventories can be edited from within the Godot editor. Make sure to add the `@tool` attribute when inheriting from this class to make it usable in the editor, since GDScript will not consider it a `@tool` even though it is defined as such in its base.
+
 ## Properties
 
 * `protoset: Resource` - An `ItemProtoset` resource containing item prototypes.

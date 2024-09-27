@@ -6,6 +6,8 @@ Inherits: [Node](https://docs.godotengine.org/en/stable/classes/class_node.html)
 
 Base class for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md)
 
+> NOTE: This class and its derivatives are defined with the `@tool` attribute so that inventories can be edited from within the Godot editor. Make sure to add the `@tool` attribute when inheriting from this class to make it usable in the editor, since GDScript will not consider it a `@tool` even though it is defined as such in its base.
+
 ## Methods
 
 * `equip(item: InventoryItem) -> bool` - Equips the given inventory item in the slot. See the documentation for [`ItemSlot`](./item_slot.md) and [`ItemRefSlot`](./item_ref_slot.md) for more details.

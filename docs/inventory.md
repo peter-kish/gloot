@@ -8,6 +8,8 @@ Inherited by: [`InventoryStacked`](./inventory_stacked.md), [`InventoryGrid`](./
 
 Basic inventory class. Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of items.
 
+> NOTE: This class and its derivatives are defined with the `@tool` attribute so that inventories can be edited from within the Godot editor. Make sure to add the `@tool` attribute when inheriting from this class to make it usable in the editor, since GDScript will not consider it a `@tool` even though it is defined as such in its base.
+
 ## Properties
 
 * `item_protoset: Resource` - An `ItemProtoset` resource containing item prototypes.
