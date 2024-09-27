@@ -40,6 +40,14 @@ func _input(event: InputEvent) -> void:
 
     lbl_info.set_global_position(get_global_mouse_position() + info_offset)
 
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+    return true
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+    ctrl_inventory_left.inventory.remove_item(data.item)
+    ctrl_inventory_right.inventory.remove_item(data.item)
+    # Replace the following line with custom logic for handling the item drop:
+    data.item.queue_free()
 
 func _on_btn_sort(ctrl_inventory) -> void:
     if !ctrl_inventory.inventory.sort():
