@@ -208,6 +208,32 @@ static func join_stacks(
     return true
 
 
+static func autosplit_join_stacks(
+    item_dst: InventoryItem,
+    item_src: InventoryItem
+) -> bool:
+    if item_dst == null || item_src == null:
+        return false
+
+    if join_stacks(item_dst, item_src):
+        return true
+
+    var free_stack_space := get_item_max_stack_size(item_dst) - get_item_stack_size(item_dst)
+    var item_count := free_stack_space
+    if item_dst.get_inventory() != null:
+        var space_for_single_item := _get_space_for_single_item(item_dst.get_inventory(), item_src)
+        item_count = ItemCount.min(space_for_single_item, ItemCount.new(free_stack_space)).count
+    if item_count == 0:
+        return false
+    var new_item: InventoryItem = split_stack(item_src, item_count)
+
+    assert(stacks_joinable(item_dst, new_item))
+
+    # TODO: Check if this can be an assertion
+    _merge_stacks(item_dst, new_item)
+    return true
+
+
 static func stacks_joinable(
     item_dst: InventoryItem,
     item_src: InventoryItem
@@ -282,7 +308,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
     return new_item
 
 
-func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
+static func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
     var single_item := item.duplicate()
     var set_item_stack_size_success = set_item_stack_size(single_item, 1)
     assert(set_item_stack_size_success)

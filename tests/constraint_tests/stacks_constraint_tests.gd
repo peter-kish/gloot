@@ -27,6 +27,7 @@ func init_suite():
         "test_split_stack",
         "test_stacks_joinable",
         "test_join_stacks",
+        "test_autosplit_join_stacks",
         "test_get_space_for",
         "test_pack_item",
     ]
@@ -166,6 +167,24 @@ func test_join_stacks() -> void:
     assert(StacksConstraint.set_item_stack_size(item, 1))
     assert(StacksConstraint.set_item_stack_size(item_2, 1))
     assert(StacksConstraint.join_stacks(item, item_2))
+    assert(inventory.get_item_count() == 1)
+    assert(!is_node_valid(item_2))
+
+
+func test_autosplit_join_stacks() -> void:
+    inventory.add_item(item)
+    inventory.add_item(item_2)
+    assert(!StacksConstraint.autosplit_join_stacks(item, item_2))
+    assert(inventory.get_item_count() == 2)
+
+    assert(StacksConstraint.set_item_stack_size(item, 1))
+    assert(StacksConstraint.autosplit_join_stacks(item, item_2))
+    assert(inventory.get_item_count() == 2)
+    assert(StacksConstraint.get_item_stack_size(item_2) == 1)
+    assert(StacksConstraint.get_item_stack_size(item) == 5)
+
+    assert(StacksConstraint.set_item_stack_size(item, 1))
+    assert(StacksConstraint.autosplit_join_stacks(item, item_2))
     assert(inventory.get_item_count() == 1)
     assert(!is_node_valid(item_2))
 
