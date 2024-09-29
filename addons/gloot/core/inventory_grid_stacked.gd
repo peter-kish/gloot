@@ -30,6 +30,10 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     return _constraint_manager.get_stacks_constraint().join_stacks(item_dst, item_src)
 
+## Joins the [param item_src] item stack with the [param item_dst] stack, splitting it up [param item_src] as needed.
+func join_autosplit(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    return _constraint_manager.get_stacks_constraint().join_autosplit_stacks(item_dst, item_src)
+
 ## Returns the stack size of the given item.
 static func get_item_stack_size(item: InventoryItem) -> int:
     return StacksConstraint.get_item_stack_size(item)
@@ -79,3 +83,7 @@ func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     return _constraint_manager.get_grid_constraint()._get_mergable_item_at(item, position)
+
+
+func _get_mergable_item_under(item: InventoryItem, rect: Rect2i) -> InventoryItem:
+    return _constraint_manager.get_grid_constraint()._get_mergable_item_under(item, rect)

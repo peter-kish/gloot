@@ -360,6 +360,16 @@ func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[Inven
     return result
 
 
+func _get_mergable_item_under(item: InventoryItem, rect: Rect2i) -> InventoryItem:
+    for item_dst in get_items_under(rect):
+        if item_dst == item:
+            continue
+        if StacksConstraint.items_mergable(item_dst, item):
+            return item_dst
+
+    return null
+
+
 func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     assert(inventory != null, "Inventory not set!")
 

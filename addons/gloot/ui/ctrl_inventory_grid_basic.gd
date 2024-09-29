@@ -404,14 +404,15 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
     if !(inventory is InventoryGridStacked):
         return false
 
-    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
+    var rect = Rect2(position, inventory.get_item_size(item_src))
+    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_under(item_src, rect)
     if item_dst == null:
         return false
 
     if Engine.is_editor_hint():
-        GlootUndoRedo.join_inventory_items(inventory, item_dst, item_src)
+        GlootUndoRedo.join_autosplit_inventory_items(inventory, item_dst, item_src)
     else:
-        (inventory as InventoryGridStacked).join(item_dst, item_src)
+        (inventory as InventoryGridStacked).join_autosplit(item_dst, item_src)
     return true
 
 

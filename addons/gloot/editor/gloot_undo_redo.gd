@@ -200,7 +200,7 @@ static func _set_item_rotation(inventory: InventoryGrid, item_index: int, rotati
     inventory.set_item_rotation(item, rotation)
 
 
-static func join_inventory_items(
+static func join_autosplit_inventory_items(
     inventory: InventoryGridStacked,
     item_dst: InventoryItem,
     item_src: InventoryItem
@@ -208,7 +208,7 @@ static func join_inventory_items(
     var undo_redo_manager = _get_undo_redo_manager()
 
     var old_inv_state := inventory.serialize()
-    if !inventory.join(item_dst, item_src):
+    if !inventory.join_autosplit(item_dst, item_src):
         return
     var new_inv_state := inventory.serialize()
 
