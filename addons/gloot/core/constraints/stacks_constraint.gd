@@ -208,7 +208,7 @@ static func join_stacks(
     return true
 
 
-static func autosplit_join_stacks(
+static func join_autosplit_stacks(
     item_dst: InventoryItem,
     item_src: InventoryItem
 ) -> bool:
