@@ -18,6 +18,7 @@ Grid based inventory that supports item stacks.
 * `add_item_automerge(item: InventoryItem) -> bool` - Adds the given item stack to the inventory, automatically merging with existing item stacks with the same prototype ID.
 * `split(item: InventoryItem, new_stack_size: int) -> InventoryItem` - Splits the given item stack into two. The newly created stack will have the size `new_stack_size`, while the old stack will contain the remainder.
 * `join(item_dst: InventoryItem, item_src: InventoryItem) -> bool` - Joins the `item_src` item stack with the `item_dst` stack.
+* `join_autosplit(item_dst: InventoryItem, item_src: InventoryItem) -> bool` - Joins the `item_src` item stack with the `item_dst` stack, splitting it up `item_src` as needed.
 * `transfer_automerge(item: InventoryItem, destination: InventoryGridStacked) -> bool` - Transfers the given item stack into the given inventory, joining it with any available item stacks with the same prototype ID.
 * `transfer_autosplitmerge(item: InventoryItem, destination: InventoryGridStacked) -> bool` - Transfers the given item stack into the given inventory, splitting it up and joining it with available item stacks, as needed.
 * `static pack(item: InventoryItem) -> void:` - Merges the given item with all compatible items in the same inventory.

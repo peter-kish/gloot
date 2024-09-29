@@ -25,6 +25,7 @@ Inventory that has a limited item capacity in terms of weight.
 * `has_place_for(item: InventoryItem) -> bool` - Checks if the inventory has enough free space for the given item.
 * `split(item: InventoryItem, new_stack_size: int) -> InventoryItem` - Splits the given item stack into two. The newly created stack will have the size `new_stack_size`, while the old stack will contain the remainder.
 * `join(item_dst: InventoryItem, item_src: InventoryItem) -> bool` - Joins the `item_src` item stack with the `item_dst` stack.
+* `join_autosplit(item_dst: InventoryItem, item_src: InventoryItem) -> bool` - Joins the `item_src` item stack with the `item_dst` stack, splitting it up `item_src` as needed.
 * `transfer_autosplit(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, splitting it if there is not enough space for the whole stack.
 * `transfer_automerge(item: InventoryItem, destination: InventoryStacked) -> bool` - Transfers the given item stack into the given inventory, joining it with any available item stacks with the same prototype ID.
 * `transfer_autosplitmerge(item: InventoryItem, destination: InventoryStacked) -> bool` - A combination of `transfer_autosplit()` and `transfer_automerge`. Transfers the given item stack into the given inventory, splitting it up and joining it with available item stacks, as needed.
