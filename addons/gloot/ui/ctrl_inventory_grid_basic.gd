@@ -404,8 +404,7 @@ func _merge_item(item_src: InventoryItem, position: Vector2i) -> bool:
     if !(inventory is InventoryGridStacked):
         return false
 
-    var rect = Rect2(position, inventory.get_item_size(item_src))
-    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_under(item_src, rect)
+    var item_dst = (inventory as InventoryGridStacked)._get_mergable_item_at(item_src, position)
     if item_dst == null:
         return false
 

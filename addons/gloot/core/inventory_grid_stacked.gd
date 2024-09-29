@@ -83,7 +83,3 @@ func transfer_to(item: InventoryItem, destination: Inventory, position: Vector2i
 
 func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> InventoryItem:
     return _constraint_manager.get_grid_constraint()._get_mergable_item_at(item, position)
-
-
-func _get_mergable_item_under(item: InventoryItem, rect: Rect2i) -> InventoryItem:
-    return _constraint_manager.get_grid_constraint()._get_mergable_item_under(item, rect)

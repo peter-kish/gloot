@@ -341,23 +341,7 @@ func _get_mergable_item_at(item: InventoryItem, position: Vector2i) -> Inventory
         return null
 
     var rect := Rect2i(position, get_item_size(item))
-    var mergable_items := _get_mergable_items_under(item, rect)
-    for mergable_item in mergable_items:
-        if inventory._constraint_manager.get_stacks_constraint().stacks_joinable(item, mergable_item):
-            return mergable_item
-    return null
-
-
-func _get_mergable_items_under(item: InventoryItem, rect: Rect2i) -> Array[InventoryItem]:
-    var result: Array[InventoryItem]
-
-    for item_dst in get_items_under(rect):
-        if item_dst == item:
-            continue
-        if StacksConstraint.items_mergable(item_dst, item):
-            result.append(item_dst)
-
-    return result
+    return _get_mergable_item_under(item, rect)
 
 
 func _get_mergable_item_under(item: InventoryItem, rect: Rect2i) -> InventoryItem:
