@@ -70,6 +70,10 @@ func split(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 static func join(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
     return StacksConstraint.join_stacks(item_dst, item_src)
 
+## Joins the [param item_src] item stack with the [param item_dst] stack, splitting it up [param item_src] as needed.
+static func join_autosplit(item_dst: InventoryItem, item_src: InventoryItem) -> bool:
+    return StacksConstraint.join_autosplit_stacks(item_dst, item_src)
+
 ## Returns the stack size of the given item.
 static func get_item_stack_size(item: InventoryItem) -> int:
     return StacksConstraint.get_item_stack_size(item)

@@ -106,7 +106,7 @@ func test_stack_join() -> void:
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))
-    assert(inventory_3x3.join(item_1x1, item_1x1_2))
+    assert(InventoryGridStacked.join(item_1x1, item_1x1_2))
 
 
 func test_stack_cant_join() -> void:
@@ -114,7 +114,7 @@ func test_stack_cant_join() -> void:
     var item_1x1_2 = item_1x1.duplicate()
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_1x1_2))
-    assert(!inventory_3x3.join(item_1x1, item_1x1_2))
+    assert(!InventoryGridStacked.join(item_1x1, item_1x1_2))
 
 
 func test_automerge() -> void:
