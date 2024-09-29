@@ -325,7 +325,10 @@ func transfer_to(item: InventoryItem, destination: GridConstraint, position: Vec
     if _merge_to(item, destination, position):
         return true
 
-    return InventoryItem.swap(item, destination.get_item_at(position))
+    var item_dst := destination.get_item_at(position)
+    if is_instance_valid(item_dst) && !StacksConstraint.items_mergable(item_dst, item):
+        return InventoryItem.swap(item, item_dst)
+    return false
 
 
 func _merge_to(item: InventoryItem, destination: GridConstraint, position: Vector2i) -> bool:
