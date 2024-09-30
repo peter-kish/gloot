@@ -36,3 +36,13 @@ func _on_btn_sort(ctrl_inventory) -> void:
 
 func _on_btn_unequip() -> void:
     %InventoryRight.add_item(%ItemSlot.get_item())
+
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+    return data is InventoryItem
+
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+    %CtrlInventoryGridLeft.inventory.remove_item(data)
+    %CtrlInventoryGridRight.inventory.remove_item(data)
+    # Add custom logic for handling the item drop here
