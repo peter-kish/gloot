@@ -12,6 +12,7 @@ signal item_mouse_exited(item)
 const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")
+const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 
 @export var inventory: Inventory = null:
     set(new_inventory):
@@ -396,11 +397,13 @@ func _swap_items(item: InventoryItem, position: Vector2i) -> bool:
         if is_instance_valid(item2.get_inventory()):
             inventories.append(item2.get_inventory())
         _Undoables.undoable_action(inventories, "Swap Inventory Items", func():
-            InventoryItem.swap(item, item2)
+            if !_StackManager.stacks_compatible(item, item2):
+                InventoryItem.swap(item, item2)
             return true
         )
     else:
-        InventoryItem.swap(item, item2)
+        if !_StackManager.stacks_compatible(item, item2):
+            InventoryItem.swap(item, item2)
     return true
 
 
