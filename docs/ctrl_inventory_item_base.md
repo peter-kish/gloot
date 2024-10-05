@@ -16,6 +16,5 @@ Base class for `CtrlInventoryItem`.
 ## Signals
 
 * `item_changed()` - Emitted when the `item` property has been changed.
-* `pre_item_changed()` - Emitted when the `item` property is about to be changed. Useful for disconnecting item signals before referencing a new item.
 * `icon_stretch_mode_changed()` - Emitted when the `icon_stretch_mode` property has been changed.
 
