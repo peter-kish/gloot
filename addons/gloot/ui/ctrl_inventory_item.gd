@@ -11,18 +11,19 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 var _texture_rect: TextureRect
 var _stack_size_label: Label
+var _old_item: InventoryItem = null
 
 
 func _connect_item_signals(new_item: InventoryItem) -> void:
-    if new_item == null:
+    if !is_instance_valid(new_item):
         return
     _Utils.safe_connect(new_item.property_changed, _on_item_property_changed)
 
 
-func _disconnect_item_signals() -> void:
-    if !is_instance_valid(item):
+func _disconnect_item_signals(old_item: InventoryItem) -> void:
+    if !is_instance_valid(old_item):
         return
-    _Utils.safe_disconnect(item.property_changed, _on_item_property_changed)
+    _Utils.safe_disconnect(old_item.property_changed, _on_item_property_changed)
 
 
 func _on_item_property_changed(_property: String) -> void:
@@ -36,7 +37,6 @@ func _get_item_position() -> Vector2:
 
 
 func _ready() -> void:
-    pre_item_changed.connect(_on_pre_item_changed)
     item_changed.connect(_on_item_changed)
     icon_stretch_mode_changed.connect(_on_icon_stretch_mode_changed)
 
@@ -61,14 +61,11 @@ func _ready() -> void:
     _refresh()
 
 
-func _on_pre_item_changed() -> void:
-    _disconnect_item_signals()
-
-
 func _on_item_changed() -> void:
+    _disconnect_item_signals(_old_item)
+    _old_item = item
     _connect_item_signals(item)
-    _update_texture()
-    _update_stack_size()
+    _refresh()
 
 
 func _on_icon_stretch_mode_changed() -> void:

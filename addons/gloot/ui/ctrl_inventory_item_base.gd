@@ -10,10 +10,6 @@ extends Control
 ## Emitted when the `item` property has been changed.
 signal item_changed
 
-## Emitted when the `item` property is about to be changed. Useful for disconnecting item signals before referencing a
-## new item.
-signal pre_item_changed
-
 ## Emitted when the `icon_stretch_mode` property has been changed.
 signal icon_stretch_mode_changed
 
@@ -22,7 +18,6 @@ var item: InventoryItem = null:
     set(new_item):
         if item == new_item:
             return
-        pre_item_changed.emit()
         item = new_item
         item_changed.emit()
 
