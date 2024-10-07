@@ -6,14 +6,14 @@ class_name Inventory
 ##
 ## Supports basic inventory operations (adding, removing, transferring items etc.). Can contain an unlimited amount of item stacks.
 
-signal item_added(item) ## Emitted when an item has been added to the inventory.
-signal item_removed(item) ## Emitted when an item has been removed from the inventory.
-signal item_property_changed(item, property) ## Emitted when a property of an item inside the inventory has been changed.
-signal item_moved(item) ## Emitted when an item has moved to a new index.
+signal item_added(item: InventoryItem) ## Emitted when an item has been added to the inventory.
+signal item_removed(item: InventoryItem) ## Emitted when an item has been removed from the inventory.
+signal item_property_changed(item: InventoryItem, property: String) ## Emitted when a property of an item inside the inventory has been changed.
+signal item_moved(item: InventoryItem) ## Emitted when an item has moved to a new index.
 signal protoset_changed ## Emitted when the protoset property has changed.
-signal constraint_added(constraint) ## Emitted when a new constraint has been added to the inventory.
-signal constraint_removed(constraint) ## Emitted when a constraint has been removed from the inventory.
-signal constraint_changed(constraint) ## Emitted when an inventory constraint has changed.
+signal constraint_added(constraint: InventoryConstraint) ## Emitted when a new constraint has been added to the inventory.
+signal constraint_removed(constraint: InventoryConstraint) ## Emitted when a constraint has been removed from the inventory.
+signal constraint_changed(constraint: InventoryConstraint) ## Emitted when an inventory constraint has changed.
 
 const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
 const _ConstraintManager = preload("res://addons/gloot/core/constraints/constraint_manager.gd")

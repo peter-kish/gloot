@@ -1,13 +1,13 @@
 @tool
 extends Control
 
-signal item_dropped(item, offset)
+signal item_dropped(item: InventoryItem, offset: Vector2)
 signal selection_changed
-signal inventory_item_activated(item)
-signal inventory_item_clicked(item)
-signal inventory_item_selected(item)
-signal item_mouse_entered(item)
-signal item_mouse_exited(item)
+signal inventory_item_activated(item: InventoryItem)
+signal inventory_item_clicked(item: InventoryItem)
+signal inventory_item_selected(item: InventoryItem)
+signal item_mouse_entered(item: InventoryItem)
+signal item_mouse_exited(item: InventoryItem)
 
 const _Undoables = preload("res://addons/gloot/editor/undoables.gd")
 const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")

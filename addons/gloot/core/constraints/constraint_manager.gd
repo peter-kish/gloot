@@ -1,6 +1,6 @@
 extends RefCounted
 
-signal constraint_changed(constraint)
+signal constraint_changed(constraint: InventoryConstraint)
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")

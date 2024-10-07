@@ -1,8 +1,8 @@
 @tool
 extends Control
 
-signal value_changed(key, value)
-signal value_removed(key)
+signal value_changed(key: String, value: Variant)
+signal value_removed(key: String)
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _ValueEditor = preload("res://addons/gloot/editor/common/value_editor.gd")

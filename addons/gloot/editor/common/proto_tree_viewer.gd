@@ -1,7 +1,7 @@
 @tool
 extends Tree
 
-signal prototype_activated(prototype)
+signal prototype_activated(prototype: Prototype)
 
 @export var protoset: JSON = null:
     set(new_protoset):

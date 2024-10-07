@@ -2,9 +2,9 @@
 @icon("res://addons/gloot/images/icon_ctrl_inventory.svg")
 extends VBoxContainer
 
-signal inventory_item_activated(item)
-signal inventory_item_clicked(item)
-signal inventory_item_selected(item)
+signal inventory_item_activated(item: InventoryItem)
+signal inventory_item_clicked(item: InventoryItem)
+signal inventory_item_selected(item: InventoryItem)
 
 @export var inventory: Inventory = null:
     set(new_inventory):

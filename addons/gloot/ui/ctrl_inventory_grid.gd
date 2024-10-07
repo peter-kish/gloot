@@ -6,13 +6,13 @@ extends Control
 ##
 ## Displays the inventory contents on a 2D grid. The grid style, size and item icons are customizable.
 
-signal item_dropped(item, offset) ## Emitted when an item has been dropped onto the 2D grid.
+signal item_dropped(item: InventoryItem, offset: Vector2) ## Emitted when an item has been dropped onto the 2D grid.
 signal selection_changed ## Emitted when the item selection has changed.
-signal inventory_item_activated(item) ## Emitted when an inventory item has been double-clicked.
-signal inventory_item_clicked(item) ## Emitted when an inventory item has been right-clicked.
-signal inventory_item_selected(item) ## Emitted when an inventory item has been selected.
-signal item_mouse_entered(item) ## Emitted when the mouse cursor has entered the visible area of an item.
-signal item_mouse_exited(item) ## Emitted when the mouse cursor has exited the visible area of an item.
+signal inventory_item_activated(item: InventoryItem) ## Emitted when an inventory item has been double-clicked.
+signal inventory_item_clicked(item: InventoryItem) ## Emitted when an inventory item has been right-clicked.
+signal inventory_item_selected(item: InventoryItem) ## Emitted when an inventory item has been selected.
+signal item_mouse_entered(item: InventoryItem) ## Emitted when the mouse cursor has entered the visible area of an item.
+signal item_mouse_exited(item: InventoryItem) ## Emitted when the mouse cursor has exited the visible area of an item.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")

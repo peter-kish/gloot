@@ -2,7 +2,7 @@
 extends Control
 
 signal activated
-signal clicked(at_position, mouse_button_index)
+signal clicked(at_position: Vector2, mouse_button_index: int)
 
 var item: InventoryItem:
     set(new_item):

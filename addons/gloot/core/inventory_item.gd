@@ -8,7 +8,7 @@ class_name InventoryItem
 ## maximum stack size is 1, which can be changed by setting the `stack_size` and `maximum_stack_size` properties inside
 ## the prototype or directly inside the item.
 
-signal property_changed(property_name) ## Emitted when an item property has changed.
+signal property_changed(property_name: String) ## Emitted when an item property has changed.
 
 ## A JSON resource containing prototype information.
 var protoset: JSON:

@@ -1,6 +1,6 @@
 extends GridContainer
 
-signal value_changed(value_index)
+signal value_changed(value_index: int)
 
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 

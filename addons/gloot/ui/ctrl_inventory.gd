@@ -6,9 +6,9 @@ extends ItemList
 ##
 ## Displays inventories as an `ItemList`.
 
-signal inventory_item_activated(item) ## Emitted when an inventory item has been double-clicked.
-signal inventory_item_clicked(item, at_position, mouse_button_index) ## Emitted when an inventory item has been clicked.
-signal inventory_item_selected(item) ## Emitted when an inventory item has been selected.
+signal inventory_item_activated(item: InventoryItem) ## Emitted when an inventory item has been double-clicked.
+signal inventory_item_clicked(item: InventoryItem, at_position: Vector2, mouse_button_index: int) ## Emitted when an inventory item has been clicked.
+signal inventory_item_selected(item: InventoryItem) ## Emitted when an inventory item has been selected.
 
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
