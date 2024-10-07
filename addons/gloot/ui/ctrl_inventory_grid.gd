@@ -118,6 +118,9 @@ class CustomizablePanel extends Panel:
     set(new_custom_item_control_scene):
         if new_custom_item_control_scene == custom_item_control_scene:
             return
+        if !_valid_custom_item_control_scene(new_custom_item_control_scene):
+            push_error("Invalid scene! Make sure the custom item control scene inherits from CtrlInventoryItemBase!")
+            return
         custom_item_control_scene = new_custom_item_control_scene
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
@@ -159,6 +162,19 @@ var _field_backgrounds: Array = []
 var _selection_panels: Control = null
 var _refresh_queued: bool = false
 var _background: CustomizablePanel = null
+
+
+func _valid_custom_item_control_scene(scene: PackedScene) -> bool:
+    if scene == null:
+        return true
+    if !scene.can_instantiate():
+        return false
+    var temp_instance := scene.instantiate()
+    if !temp_instance is CtrlInventoryItemBase:
+        temp_instance.free()
+        return false
+    temp_instance.free()
+    return true
 
 
 func _get_field_style() -> StyleBox:
