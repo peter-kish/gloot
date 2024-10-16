@@ -27,6 +27,7 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
 const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item_rect.gd")
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
+const IconDefaultItem = preload("res://addons/gloot/images/default_item.svg")
 
 
 class PriorityPanel extends Panel:
@@ -97,7 +98,7 @@ class SelectionPanel extends Panel:
 
 ## The default texture that will be used for items with no [code]image[/code]
 ## property.
-@export var default_item_texture: Texture2D:
+@export var default_item_texture: Texture2D = IconDefaultItem:
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture

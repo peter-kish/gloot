@@ -27,6 +27,7 @@ signal item_mouse_entered(item)
 signal item_mouse_exited(item)
 
 const CtrlInventoryGridBasic = preload("res://addons/gloot/ui/ctrl_inventory_grid_basic.gd")
+const IconDefaultItem = preload("res://addons/gloot/images/default_item.svg")
 
 class GridControl extends Control:
     var color: Color = Color.BLACK:
@@ -82,7 +83,7 @@ class GridControl extends Control:
 
 ## The default texture that will be used for items with no [code]image[/code]
 ## property.
-@export var default_item_texture: Texture2D:
+@export var default_item_texture: Texture2D = IconDefaultItem:
     set(new_default_item_texture):
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.default_item_texture = new_default_item_texture
