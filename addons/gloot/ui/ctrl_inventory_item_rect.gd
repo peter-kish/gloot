@@ -18,7 +18,8 @@ var item: InventoryItem:
 
         item = new_item
         if item:
-            texture = item.get_texture()
+            var item_texture: Texture2D = item.get_texture()
+            texture = item_texture if item_texture else texture
             activate()
         else:
             texture = null
