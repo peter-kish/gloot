@@ -60,10 +60,12 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
         prototype_id_changed.emit()
 
 ## Additional item properties.
+var _properties: Dictionary
 @export var properties: Dictionary:
+    get(): return _properties
     set(new_properties):
-        var changed_properties := _find_changed_properties(properties, new_properties)
-        properties = new_properties
+        var changed_properties := _find_changed_properties(_properties, new_properties)
+        _properties = new_properties
         for p in changed_properties:
             property_changed.emit(p)
         properties_changed.emit()
@@ -89,6 +91,10 @@ const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
+
+func _ready() -> void:
+    _properties = _properties.duplicate()
+
 
 func _find_changed_properties(old_properties, new_properties) -> Array[String]:
     var result: Array[String] = []
