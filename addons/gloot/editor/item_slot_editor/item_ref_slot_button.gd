@@ -1,6 +1,7 @@
 extends EditorProperty
 
 const GlootUndoRedo = preload("res://addons/gloot/editor/gloot_undo_redo.gd")
+const MAX_ICON_WIDTH = 32
 
 var updating: bool = false
 var _option_button: OptionButton
@@ -8,6 +9,7 @@ var _option_button: OptionButton
 
 func _init():
     _option_button = OptionButton.new()
+    _option_button.expand_icon = true
     add_child(_option_button)
     add_focusable(_option_button)
     _option_button.item_selected.connect(_on_item_selected)
@@ -46,6 +48,7 @@ func _populate_option_button() -> void:
         _option_button.add_icon_item(item.get_texture(), item.get_title())
         var option_item_index = _option_button.get_item_count() - 1
         _option_button.set_item_metadata(option_item_index, item)
+        _option_button.get_popup().set_item_icon_max_width(option_item_index, MAX_ICON_WIDTH)
         if item == item_ref_slot.get_item():
             equipped_item_index = option_item_index
 
