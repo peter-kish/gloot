@@ -19,7 +19,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 enum {HORIZONTAL = 0, VERTICAL = 1}
 
-var _swap_position := Vector2i.ZERO
+var _swap_data := {}
 var _quad_tree := QuadTree.new(size)
 
 @export var size: Vector2i = DEFAULT_SIZE:
@@ -55,6 +55,7 @@ func _on_item_added(item: InventoryItem) -> void:
 
 
 func _on_item_removed(item: InventoryItem) -> void:
+    item.clear_property(KEY_GRID_POSITION)
     _quad_tree.remove(item)
 
     
@@ -75,10 +76,8 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
     if !_size_check(item1, item2):
         return false
 
-    if inventory.has_item(item1):
-        _swap_position = get_item_position(item1)
-    elif inventory.has_item(item2):
-        _swap_position = get_item_position(item2)
+    _swap_data[item1] = get_item_position(item1)
+    _swap_data[item2] = get_item_position(item2)
     return true
 
 
@@ -101,13 +100,12 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     var has1 := inventory.has_item(item1)
     var has2 := inventory.has_item(item2)
     if has1 && has2:
-        var temp_pos = get_item_position(item1)
-        _move_item_to_unsafe(item1, get_item_position(item2))
-        _move_item_to_unsafe(item2, temp_pos)
+        _move_item_to_unsafe(item1, _swap_data[item2])
+        _move_item_to_unsafe(item2, _swap_data[item1])
     elif has1:
-        move_item_to(item1, _swap_position)
+        move_item_to(item1, _swap_data[item2])
     elif has2:
-        move_item_to(item2, _swap_position)
+        move_item_to(item2, _swap_data[item1])
 
 
 func _bounds_broken() -> bool:

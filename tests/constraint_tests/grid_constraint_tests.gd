@@ -146,7 +146,6 @@ func test_add_item() -> void:
     assert(grid_constraint.get_item_position(item_1x1) == Vector2i(0, 2))
 
     inventory.remove_item(item_1x1)
-    item_1x1.clear_property(GridConstraint.KEY_GRID_POSITION)
     grid_constraint.insertion_priority = GridConstraint.HORIZONTAL
     assert(inventory.add_item(item_1x1))
     assert(grid_constraint.get_item_position(item_1x1) == Vector2i(2, 0))
@@ -156,7 +155,7 @@ func test_add_item_at() -> void:
     var test_data := [
         {input = Vector2i.ZERO, expected = {return_value = true, has_item = true, position = Vector2i.ZERO}},
         {input = Vector2i(4, 4), expected = {return_value = true, has_item = true, position = Vector2i(4, 4)}},
-        {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i(4, 4)}},
+        {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i.ZERO}},
     ]
 
     for data in test_data:
