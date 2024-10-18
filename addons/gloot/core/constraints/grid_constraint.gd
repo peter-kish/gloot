@@ -17,6 +17,8 @@ const KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const KEY_GRID_POSITION: String = "grid_position"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
+enum {HORIZONTAL = 0, VERTICAL = 1}
+
 var _swap_position := Vector2i.ZERO
 var _quad_tree := QuadTree.new(size)
 
@@ -33,6 +35,7 @@ var _quad_tree := QuadTree.new(size)
         if size != old_size:
             _refresh_quad_tree()
             size_changed.emit()
+@export_enum("Horizontal", "Vertical") var insertion_priority: int = VERTICAL
 
 
 func _refresh_quad_tree() -> void:
@@ -374,13 +377,25 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
 func find_free_place(item: InventoryItem, exception: InventoryItem = null) -> Dictionary:
     var result := {success = false, position = Vector2i(-1, -1)}
     var item_size = get_item_size(item)
-    for x in range(size.x - (item_size.x - 1)):
+    
+    var check_position := func(pos: Vector2i) -> bool:
+        var rect := Rect2i(pos, item_size)
+        if rect_free(rect, exception):
+            result.success = true
+            result.position = pos
+            return true
+        return false
+
+    if insertion_priority == VERTICAL:
+        for x in range(size.x - (item_size.x - 1)):
+            for y in range(size.y - (item_size.y - 1)):
+                if check_position.call(Vector2i(x, y)):
+                    return result
+    else:
         for y in range(size.y - (item_size.y - 1)):
-            var rect := Rect2i(Vector2i(x, y), item_size)
-            if rect_free(rect, exception):
-                result.success = true
-                result.position = Vector2i(x, y)
-                return result
+            for x in range(size.x - (item_size.x - 1)):
+                if check_position.call(Vector2i(x, y)):
+                    return result
 
     return result
 

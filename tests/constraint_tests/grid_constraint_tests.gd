@@ -17,6 +17,7 @@ func init_suite():
         "test_item_size",
         "test_item_rect",
         "test_item_rotation",
+        "test_add_item",
         "test_add_item_at",
         "test_create_and_add_item_at",
         "test_get_items_under",
@@ -132,6 +133,23 @@ func test_item_rotation() -> void:
 
     inventory.remove_item(new_item)
     new_item.free()
+
+
+func test_add_item() -> void:
+    grid_constraint.size = Vector2i(3, 3)
+    assert(inventory.add_item(item))
+    assert(grid_constraint.get_item_position(item) == Vector2i.ZERO)
+    
+    var item_1x1 = create_item(inventory.item_protoset, "item_1x1")
+    grid_constraint.insertion_priority = GridConstraint.VERTICAL
+    assert(inventory.add_item(item_1x1))
+    assert(grid_constraint.get_item_position(item_1x1) == Vector2i(0, 2))
+
+    inventory.remove_item(item_1x1)
+    item_1x1.clear_property(GridConstraint.KEY_GRID_POSITION)
+    grid_constraint.insertion_priority = GridConstraint.HORIZONTAL
+    assert(inventory.add_item(item_1x1))
+    assert(grid_constraint.get_item_position(item_1x1) == Vector2i(2, 0))
 
 
 func test_add_item_at() -> void:

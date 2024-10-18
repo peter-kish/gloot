@@ -10,6 +10,7 @@ class_name InventoryGrid
 ## Emitted when the size of the inventory has changed.
 signal size_changed
 
+const GridConstraint = preload("res://addons/gloot/core/constraints/grid_constraint.gd")
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
 ## The size of the inventory (width and height).
@@ -22,6 +23,12 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
         return _constraint_manager.get_grid_constraint().size
     set(new_size):
         _constraint_manager.get_grid_constraint().size = new_size
+@export_enum("Horizontal", "Vertical") var insertion_priority: int = GridConstraint.VERTICAL:
+    set(new_insertion_priority):
+        if new_insertion_priority == insertion_priority:
+            return
+        insertion_priority = new_insertion_priority
+        _constraint_manager.get_grid_constraint().insertion_priority = insertion_priority
 
 
 func _init() -> void:
