@@ -64,10 +64,7 @@ var _properties: Dictionary
 @export var properties: Dictionary:
     get(): return _properties
     set(new_properties):
-        var changed_properties := _find_changed_properties(_properties, new_properties)
         _properties = new_properties
-        for p in changed_properties:
-            property_changed.emit(p)
         properties_changed.emit()
         update_configuration_warnings()
 
@@ -95,17 +92,6 @@ const Verify = preload("res://addons/gloot/core/verify.gd")
 func _ready() -> void:
     _properties = _properties.duplicate()
 
-
-func _find_changed_properties(old_properties, new_properties) -> Array[String]:
-    var result: Array[String] = []
-    var common_properties: Array[String] = []
-    for p in old_properties.keys():
-        if p in new_properties.keys():
-            common_properties.append(p)
-    for p in common_properties:
-        if old_properties[p] != new_properties[p]:
-            result.append(p)
-    return result
 
 func _connect_protoset_signals() -> void:
     if protoset == null:
