@@ -18,12 +18,14 @@ var item: InventoryItem = null:
         assert(item == null, "Item already set!")
         item = new_item
         if item.protoset:
-            item.protoset.changed.connect(_refresh)
-        _refresh()
+            item.protoset.changed.connect(_queue_refresh)
+        _queue_refresh()
+
+var _refresh_queued: bool = false
 
 
 func _ready() -> void:
-    about_to_popup.connect(func(): _refresh())
+    about_to_popup.connect(func(): _queue_refresh())
     close_requested.connect(func(): hide())
     _dict_editor.value_changed.connect(func(key: String, new_value): _on_value_changed(key, new_value))
     _dict_editor.value_removed.connect(func(key: String): _on_value_removed(key))
@@ -42,7 +44,7 @@ func _on_value_changed(key: String, new_value) -> void:
         return
 
     GlootUndoRedo.set_item_properties(item, new_properties)
-    _refresh()
+    _queue_refresh()
 
 
 func _on_value_removed(key: String) -> void:
@@ -53,7 +55,17 @@ func _on_value_removed(key: String) -> void:
         return
 
     GlootUndoRedo.set_item_properties(item, new_properties)
-    _refresh()
+    _queue_refresh()
+
+
+func _queue_refresh() -> void:
+    _refresh_queued = true
+
+
+func _process(_delta) -> void:
+    if _refresh_queued:
+        _refresh()
+        _refresh_queued = false
 
 
 func _refresh() -> void:
