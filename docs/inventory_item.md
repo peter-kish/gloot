@@ -12,7 +12,6 @@ Inventory item class. It is based on an item prototype from an [`ItemProtoset`](
 
 * `protoset: Resource` - An `ItemProtoset` resource containing item prototypes.
 * `prototype_id: String` - ID of the prototype from `protoset` this item is based on.
-* `properties: Dictionary` - Additional item properties (read-only).
 
 ## Methods
 

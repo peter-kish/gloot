@@ -27,6 +27,10 @@ func _parse_begin(object: Object) -> void:
         var inventory_inspector := InventoryInspector.instantiate()
         inventory_inspector.init(object as Inventory)
         add_custom_control(inventory_inspector)
+    if object is InventoryItem:
+        var edit_properties_button := EditPropertiesButton.new()
+        edit_properties_button.item = object as InventoryItem
+        add_custom_control(edit_properties_button)
     if object is ItemSlot:
         var item_slot_inspector := ItemSlotInspector.instantiate()
         item_slot_inspector.init(object as ItemSlot)
@@ -50,9 +54,6 @@ func _parse_property(object: Object,
         # properties.
         return false
 
-    if (object is InventoryItem) && name == "properties":
-        add_property_editor(name, EditPropertiesButton.new())
-        return true
     if (object is InventoryItem) && name == "prototype_id":
         add_property_editor(name, EditPrototypeIdButton.new())
         return true

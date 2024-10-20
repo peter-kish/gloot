@@ -61,7 +61,7 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Additional item properties.
 var _properties: Dictionary
-@export var properties: Dictionary:
+@export_storage var properties: Dictionary:
     get(): return _properties
     set(new_properties):
         _properties = new_properties
