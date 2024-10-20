@@ -33,28 +33,16 @@ func _ready() -> void:
 
 
 func _on_value_changed(key: String, new_value) -> void:
-    var new_properties = item.properties.duplicate()
-    new_properties[key] = new_value
-
-    var item_prototype: Dictionary = item.protoset.get_prototype(item.prototype_id)
-    if item_prototype.has(key) && (item_prototype[key] == new_value):
-        new_properties.erase(key)
-
-    if new_properties.hash() == item.properties.hash():
+    if item.get_property(key) == new_value:
         return
-
-    GlootUndoRedo.set_item_properties(item, new_properties)
+    GlootUndoRedo.set_item_property(item, key, new_value)
     _queue_refresh()
 
 
 func _on_value_removed(key: String) -> void:
-    var new_properties = item.properties.duplicate()
-    new_properties.erase(key)
-
-    if new_properties.hash() == item.properties.hash():
+    if !item.defines_property(key):
         return
-
-    GlootUndoRedo.set_item_properties(item, new_properties)
+    GlootUndoRedo.clear_item_property(item, key)
     _queue_refresh()
 
 
@@ -71,27 +59,14 @@ func _process(_delta) -> void:
 func _refresh() -> void:
     if _dict_editor.btn_add:
         _dict_editor.btn_add.icon = EditorIcons.get_icon("Add")
-    _dict_editor.dictionary = _get_dictionary()
+    if item != null:
+        _dict_editor.dictionary = item.get_properties()
+    else:
+        _dict_editor.dictionary = {}
     _dict_editor.color_map = _get_color_map()
     _dict_editor.remove_button_map = _get_remove_button_map()
     _dict_editor.immutable_keys = IMMUTABLE_KEYS
     _dict_editor.refresh()
-
-
-func _get_dictionary() -> Dictionary:
-    if item == null:
-        return {}
-
-    if !item.protoset:
-        return {}
-
-    if !item.protoset.has_prototype(item.prototype_id):
-        return {}
-
-    var result: Dictionary = item.protoset.get_prototype(item.prototype_id).duplicate()
-    for key in item.properties.keys():
-        result[key] = item.properties[key]
-    return result
 
 
 func _get_color_map() -> Dictionary:
@@ -102,9 +77,9 @@ func _get_color_map() -> Dictionary:
         return {}
 
     var result: Dictionary = {}
-    var dictionary: Dictionary = _get_dictionary()
+    var dictionary: Dictionary = item.get_properties()
     for key in dictionary.keys():
-        if item.properties.has(key):
+        if item.defines_property(key):
             result[key] = COLOR_OVERRIDDEN
         if key == ItemProtoset.KEY_ID && !item.protoset.has_prototype(dictionary[key]):
             result[key] = COLOR_INVALID
@@ -120,7 +95,7 @@ func _get_remove_button_map() -> Dictionary:
         return {}
 
     var result: Dictionary = {}
-    var dictionary: Dictionary = _get_dictionary()
+    var dictionary: Dictionary = item.get_properties()
     for key in dictionary.keys():
         result[key] = {}
         if item.protoset.get_prototype(item.prototype_id).has(key):

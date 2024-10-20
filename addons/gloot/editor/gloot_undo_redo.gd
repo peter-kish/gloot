@@ -55,20 +55,32 @@ static func remove_inventory_items(inventory: Inventory, items: Array[InventoryI
     undo_redo_manager.commit_action()
 
 
-static func set_item_properties(item: InventoryItem, new_properties: Dictionary) -> void:
+static func set_item_property(item: InventoryItem, property_name: String, value) -> void:
     var undo_redo_manager = _get_undo_redo_manager()
 
     var inventory: Inventory = item.get_inventory()
     if inventory:
-        undo_redo_manager.create_action("Set item properties")
-        undo_redo_manager.add_do_method(GlootUndoRedo, "_set_item_properties", inventory, inventory.get_item_index(item), new_properties)
-        undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_properties", inventory, inventory.get_item_index(item), item.properties)
+        undo_redo_manager.create_action("Set item property")
+        undo_redo_manager.add_do_method(GlootUndoRedo, "_set_item_property", inventory, inventory.get_item_index(item), property_name, value)
+        var old_value = item.get_property(property_name)
+        undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_property", inventory, inventory.get_item_index(item), property_name, old_value)
         undo_redo_manager.commit_action()
     else:
-        undo_redo_manager.create_action("Set item properties")
-        undo_redo_manager.add_undo_property(item, "properties", item.properties)
-        undo_redo_manager.add_do_property(item, "properties", new_properties)
+        item.set_property(property_name, value)
+
+
+static func clear_item_property(item: InventoryItem, property_name: String) -> void:
+    var undo_redo_manager = _get_undo_redo_manager()
+
+    var inventory: Inventory = item.get_inventory()
+    if inventory:
+        undo_redo_manager.create_action("Clear item property")
+        undo_redo_manager.add_do_method(GlootUndoRedo, "_clear_item_property", inventory, inventory.get_item_index(item), property_name)
+        var old_value = item.get_property(property_name)
+        undo_redo_manager.add_undo_method(GlootUndoRedo, "_set_item_property", inventory, inventory.get_item_index(item), property_name, old_value)
         undo_redo_manager.commit_action()
+    else:
+        item.clear_property(property_name)
 
 
 static func set_item_prototype_id(item: InventoryItem, new_prototype_id: String) -> void:
@@ -96,9 +108,14 @@ static func _set_item_prototype_id(inventory: Inventory, item_index: int, new_pr
     inventory.get_items()[item_index].prototype_id = new_prototype_id
 
 
-static func _set_item_properties(inventory: Inventory, item_index: int, new_properties: Dictionary):
+static func _set_item_property(inventory: Inventory, item_index: int, property_name: String, value):
     assert(item_index < inventory.get_item_count())
-    inventory.get_items()[item_index].properties = new_properties.duplicate()
+    inventory.get_items()[item_index].set_property(property_name, value)
+
+
+static func _clear_item_property(inventory: Inventory, item_index: int, property_name: String):
+    assert(item_index < inventory.get_item_count())
+    inventory.get_items()[item_index].clear_property(property_name)
 
 
 static func equip_item_in_item_slot(item_slot: ItemSlotBase, item: InventoryItem) -> void:

@@ -121,15 +121,15 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 func _reset_properties() -> void:
     if !protoset || prototype_id.is_empty():
-        properties = {}
+        _properties = {}
         return
 
     # Reset (erase) all properties from the current prototype but preserve the rest
     var prototype: Dictionary = protoset.get_prototype(prototype_id)
-    var keys: Array = properties.keys().duplicate()
+    var keys: Array = _properties.keys().duplicate()
     for property in keys:
         if prototype.has(property):
-            properties.erase(property)
+            _properties.erase(property)
 
 
 func _notification(what):
@@ -263,13 +263,40 @@ static func _add_item_to_owner(item: InventoryItem, item_owner, index: int) -> b
         return false
     return (item_owner as ItemSlot).equip(item)
 
+## Returns a dictionary with all the properties the item defines or overrides.
+func get_defined_properties() -> Dictionary:
+    return _properties.duplicate()
+
+## Returns a dictionary containing all item properties.
+func get_properties() -> Dictionary:
+    var all_properties := get_defined_properties()
+    if !protoset || prototype_id.is_empty():
+        return all_properties
+    for property in protoset.get_prototype(prototype_id):
+        if !all_properties.has(property):
+            all_properties[property] = protoset.get_prototype_property(prototype_id, property)
+    return all_properties
+
+## Returns `true` if the item defines or overrides the property with the given
+## name.
+func defines_property(property_name: String) -> bool:
+    return _properties.has(property_name)
+
+## Checks if the item has the given property.
+func has_property(property_name: String) -> bool:
+    if _properties.has(property_name):
+        return true
+    if protoset && !prototype_id.is_empty():
+        return protoset.prototype_has_property(prototype_id, property_name)
+    return false
+
 ## Returns the value of the property with the given name. In case the property
 ## can not be found, the default value is returned.
 func get_property(property_name: String, default_value = null) -> Variant:
     # Note: The protoset editor still doesn't support arrays and dictionaries,
     # but those can still be added via JSON definitions or via code.
-    if properties.has(property_name):
-        var value = properties[property_name]
+    if _properties.has(property_name):
+        var value = _properties[property_name]
         if typeof(value) == TYPE_DICTIONARY || typeof(value) == TYPE_ARRAY:
             return value.duplicate()
         return value
@@ -284,24 +311,42 @@ func get_property(property_name: String, default_value = null) -> Variant:
 
 ## Sets the property with the given name for this item.
 func set_property(property_name: String, value) -> void:
-    if properties.has(property_name) && properties[property_name] == value:
+    if _properties.has(property_name) && _properties[property_name] == value:
         return
-    properties[property_name] = value
+    _properties[property_name] = value
+    _erase_property_with_default_value(property_name)
     property_changed.emit(property_name)
     properties_changed.emit()
 
+
+func _erase_property_with_default_value(property_name: String) -> void:
+    if !protoset or prototype_id.is_empty():
+        return
+    if !protoset.prototype_has_property(prototype_id, property_name):
+        return
+    if protoset.get_prototype_property(prototype_id, property_name) != _properties[property_name]:
+        return
+    _properties.erase(property_name)
+
 ## Clears the property with the given name for this item.
 func clear_property(property_name: String) -> void:
-    if properties.has(property_name):
-        properties.erase(property_name)
+    if _properties.has(property_name):
+        _properties.erase(property_name)
         property_changed.emit(property_name)
         properties_changed.emit()
+
+func clone() -> InventoryItem:
+    var result := InventoryItem.new()
+    result.protoset = protoset
+    result.prototype_id = prototype_id
+    result._properties = _properties.duplicate()
+    return result
 
 ## Resets all properties to default values.
 func reset() -> void:
     protoset = null
     prototype_id = ""
-    properties = {}
+    _properties = {}
 
 ## Serializes the item into a dictionary.
 func serialize() -> Dictionary:
@@ -310,9 +355,9 @@ func serialize() -> Dictionary:
     result[KEY_NODE_NAME] = name as String
     result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
     result[KEY_PROTOTYE_ID] = prototype_id
-    if !properties.is_empty():
+    if !_properties.is_empty():
         result[KEY_PROPERTIES] = {}
-        for property_name in properties.keys():
+        for property_name in _properties.keys():
             result[KEY_PROPERTIES][property_name] = _serialize_property(property_name)
 
     return result
@@ -321,7 +366,7 @@ func serialize() -> Dictionary:
 func _serialize_property(property_name: String) -> Dictionary:
     # Store all properties as strings for JSON support.
     var result: Dictionary = {}
-    var property_value = properties[property_name]
+    var property_value = _properties[property_name]
     var property_type = typeof(property_value)
     result = {
         KEY_TYPE: property_type,
@@ -345,9 +390,9 @@ func deserialize(source: Dictionary) -> bool:
     prototype_id = source[KEY_PROTOTYE_ID]
     if source.has(KEY_PROPERTIES):
         for key in source[KEY_PROPERTIES].keys():
-            properties[key] = _deserialize_property(source[KEY_PROPERTIES][key])
-            if properties[key] == null:
-                properties = {}
+            _properties[key] = _deserialize_property(source[KEY_PROPERTIES][key])
+            if _properties[key] == null:
+                _properties = {}
                 return false
 
     return true

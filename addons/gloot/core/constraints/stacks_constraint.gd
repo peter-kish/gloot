@@ -22,7 +22,7 @@ static func _get_free_stack_space(item: InventoryItem) -> int:
 
 static func _has_custom_property(item: InventoryItem, property: String, value) -> bool:
     assert(item != null, "item is null!")
-    return item.properties.has(property) && item.properties[property] == value;
+    return item.defines_property(property) && item.get_property(property) == value;
 
 
 static func get_item_stack_size(item: InventoryItem) -> int:
@@ -94,22 +94,23 @@ static func items_mergable(item_1: InventoryItem, item_2: InventoryItem) -> bool
         KEY_STACK_SIZE,
         KEY_MAX_STACK_SIZE,
         GridConstraint.KEY_GRID_POSITION,
+        # TODO: Doesn't this cause bugs?
         WeightConstraint.KEY_WEIGHT
     ]
 
     if item_1.prototype_id != item_2.prototype_id:
         return false
 
-    for property in item_1.properties.keys():
+    for property in item_1.get_defined_properties():
         if property in ignore_properies:
             continue
-        if !_has_custom_property(item_2, property, item_1.properties[property]):
+        if !_has_custom_property(item_2, property, item_1.get_property(property)):
             return false
 
-    for property in item_2.properties.keys():
+    for property in item_2.get_defined_properties():
         if property in ignore_properies:
             continue
-        if !_has_custom_property(item_1, property, item_2.properties[property]):
+        if !_has_custom_property(item_1, property, item_1.get_property(property)):
             return false
 
     return true
@@ -170,7 +171,7 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
         "New stack size must be smaller than the original stack size!"
     )
 
-    var new_item = item.duplicate()
+    var new_item = item.clone()
     if new_item.get_parent():
         new_item.get_parent().remove_child(new_item)
 
@@ -309,7 +310,7 @@ func transfer_autosplit(item: InventoryItem, destination: Inventory) -> Inventor
 
 
 static func _get_space_for_single_item(inventory: Inventory, item: InventoryItem) -> ItemCount:
-    var single_item := item.duplicate()
+    var single_item := item.clone()
     var set_item_stack_size_success = set_item_stack_size(single_item, 1)
     assert(set_item_stack_size_success)
     var count := inventory._constraint_manager.get_space_for(single_item)

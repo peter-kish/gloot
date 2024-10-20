@@ -151,14 +151,14 @@ func test_reset() -> void:
     item.reset()
     assert(item.protoset == inventory.item_protoset)
     assert(item.prototype_id == "minimal_item")
-    assert(item.properties.is_empty())
-    assert(!item.properties.has("foo"))
+    assert(item.get_defined_properties().is_empty())
+    assert(!item.has_property("foo"))
 
     inventory.remove_item(item)
     item.reset()
     assert(item.protoset == null)
     assert(item.prototype_id == "")
-    assert(item.properties.is_empty())
+    assert(item.get_defined_properties().is_empty())
 
 
 func test_get_texture() -> void:
