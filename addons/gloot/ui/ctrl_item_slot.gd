@@ -31,7 +31,7 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
             return
         icon_stretch_mode = new_icon_stretch_mode
         if is_instance_valid(_ctrl_draggable_inventory_item):
-            _ctrl_draggable_inventory_item.stretch_mode = icon_stretch_mode
+            _ctrl_draggable_inventory_item.icon_stretch_mode = icon_stretch_mode
 
 @export_group("Custom Styles")
 ## The slot background style.

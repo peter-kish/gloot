@@ -18,7 +18,7 @@ var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH
             return
         icon_stretch_mode = new_stretch_mode
         if is_instance_valid(_ctrl_inventory_item):
-            _ctrl_inventory_item.stretch_mode = icon_stretch_mode
+            _ctrl_inventory_item.icon_stretch_mode = icon_stretch_mode
 var ctrl_inventory_item_scene: PackedScene = null
 var _ctrl_inventory_item: CtrlInventoryItemBase
 static var _grab_offset: Vector2
