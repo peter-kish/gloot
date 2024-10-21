@@ -23,7 +23,7 @@ const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
         return _constraint_manager.get_grid_constraint().size
     set(new_size):
         _constraint_manager.get_grid_constraint().size = new_size
-@export_enum("Horizontal", "Vertical") var insertion_priority: int = GridConstraint.VERTICAL:
+@export_enum("Horizontal", "Vertical") var insertion_priority: int = GridConstraint.INSERTION_PRIORITY_VERTICAL:
     set(new_insertion_priority):
         if new_insertion_priority == insertion_priority:
             return

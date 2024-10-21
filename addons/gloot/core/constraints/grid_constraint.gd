@@ -15,9 +15,10 @@ const KEY_SIZE: String = "size"
 const KEY_ROTATED: String = "rotated"
 const KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const KEY_GRID_POSITION: String = "grid_position"
+const KEY_INSERTION_PRIORITY: String = "insertion_priority"
 const DEFAULT_SIZE: Vector2i = Vector2i(10, 10)
 
-enum {HORIZONTAL = 0, VERTICAL = 1}
+enum {INSERTION_PRIORITY_HORIZONTAL = 0, INSERTION_PRIORITY_VERTICAL = 1}
 
 var _swap_data := {}
 var _quad_tree := QuadTree.new(size)
@@ -35,7 +36,7 @@ var _quad_tree := QuadTree.new(size)
         if size != old_size:
             _refresh_quad_tree()
             size_changed.emit()
-@export_enum("Horizontal", "Vertical") var insertion_priority: int = VERTICAL
+@export_enum("Horizontal", "Vertical") var insertion_priority: int = INSERTION_PRIORITY_VERTICAL
 
 
 func _refresh_quad_tree() -> void:
@@ -384,7 +385,7 @@ func find_free_place(item: InventoryItem, exception: InventoryItem = null) -> Di
             return true
         return false
 
-    if insertion_priority == VERTICAL:
+    if insertion_priority == INSERTION_PRIORITY_VERTICAL:
         for x in range(size.x - (item_size.x - 1)):
             for y in range(size.y - (item_size.y - 1)):
                 if check_position.call(Vector2i(x, y)):
@@ -468,6 +469,7 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
 
 func reset() -> void:
     size = DEFAULT_SIZE
+    insertion_priority = INSERTION_PRIORITY_VERTICAL
 
 
 func serialize() -> Dictionary:
@@ -475,17 +477,22 @@ func serialize() -> Dictionary:
 
     # Store Vector2i as string to make JSON conversion easier later
     result[KEY_SIZE] = var_to_str(size)
+    if insertion_priority == INSERTION_PRIORITY_HORIZONTAL:
+        result[KEY_INSERTION_PRIORITY] = insertion_priority
 
     return result
 
 
 func deserialize(source: Dictionary) -> bool:
-    if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING):
+    if !Verify.dict(source, true, KEY_SIZE, TYPE_STRING) || \
+        !Verify.dict(source, false, KEY_INSERTION_PRIORITY, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()
 
     var s: Vector2i = Utils.str_to_var(source[KEY_SIZE])
     self.size = s
+    if source.has(KEY_INSERTION_PRIORITY):
+        insertion_priority = int(source[KEY_INSERTION_PRIORITY])
 
     return true

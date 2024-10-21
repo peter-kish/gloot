@@ -141,12 +141,12 @@ func test_add_item() -> void:
     assert(grid_constraint.get_item_position(item) == Vector2i.ZERO)
     
     var item_1x1 = create_item(inventory.item_protoset, "item_1x1")
-    grid_constraint.insertion_priority = GridConstraint.VERTICAL
+    grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_VERTICAL
     assert(inventory.add_item(item_1x1))
     assert(grid_constraint.get_item_position(item_1x1) == Vector2i(0, 2))
 
     inventory.remove_item(item_1x1)
-    grid_constraint.insertion_priority = GridConstraint.HORIZONTAL
+    grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_HORIZONTAL
     assert(inventory.add_item(item_1x1))
     assert(grid_constraint.get_item_position(item_1x1) == Vector2i(2, 0))
 
@@ -335,20 +335,26 @@ func test_get_space_for() -> void:
 
 func test_serialize() -> void:
     grid_constraint.size = Vector2i(4, 2)
+    grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_HORIZONTAL
     var constraint_data = grid_constraint.serialize()
     var size = grid_constraint.size
+    var insertion_priority = grid_constraint.insertion_priority
 
     grid_constraint.reset()
     assert(grid_constraint.size == GridConstraint.DEFAULT_SIZE)
+    assert(grid_constraint.insertion_priority == GridConstraint.INSERTION_PRIORITY_VERTICAL)
 
     assert(grid_constraint.deserialize(constraint_data))
     assert(grid_constraint.size == size)
+    assert(grid_constraint.insertion_priority == insertion_priority)
     
 
 func test_serialize_json() -> void:
     grid_constraint.size = Vector2i(4, 2)
+    grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_HORIZONTAL
     var constraint_data = grid_constraint.serialize()
     var size = grid_constraint.size
+    var insertion_priority = grid_constraint.insertion_priority
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(constraint_data)
@@ -358,6 +364,8 @@ func test_serialize_json() -> void:
 
     grid_constraint.reset()
     assert(grid_constraint.size == GridConstraint.DEFAULT_SIZE)
+    assert(grid_constraint.insertion_priority == GridConstraint.INSERTION_PRIORITY_VERTICAL)
     
     assert(grid_constraint.deserialize(constraint_data))
     assert(grid_constraint.size == size)
+    assert(grid_constraint.insertion_priority == insertion_priority)
