@@ -17,6 +17,9 @@ const _KEY_SIZE: String = "size"
 const _KEY_ROTATED: String = "rotated"
 const _KEY_POSITIVE_ROTATION: String = "positive_rotation"
 const _KEY_ITEM_POSITIONS: String = "item_positions"
+const _KEY_INSERTION_PRIORITY: String = "insertion_priority"
+
+enum {INSERTION_PRIORITY_HORIZONTAL = 0, INSERTION_PRIORITY_VERTICAL = 1}
 
 var _swap_positions: Array[Vector2i]
 var _item_positions := {}
@@ -36,6 +39,12 @@ var _inventory_set_stack: Array[Callable]
         if size != old_size:
             _refresh_quad_tree()
             changed.emit()
+@export_enum("Horizontal", "Vertical") var insertion_priority: int = INSERTION_PRIORITY_VERTICAL:
+    set(new_insertion_priority):
+        if new_insertion_priority == insertion_priority:
+            return
+        insertion_priority = new_insertion_priority
+        changed.emit()
 
 
 func _push_inventory_set_operation(c: Callable) -> void:
@@ -369,13 +378,25 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
 func find_free_place(item: InventoryItem, exception: InventoryItem = null) -> Dictionary:
     var result := {success = false, position = Vector2i(-1, -1)}
     var item_size = get_item_size(item)
-    for x in range(size.x - (item_size.x - 1)):
+
+    var check_position := func(pos: Vector2i) -> bool:
+        var rect := Rect2i(pos, item_size)
+        if rect_free(rect, exception):
+            result.success = true
+            result.position = pos
+            return true
+        return false
+
+    if insertion_priority == INSERTION_PRIORITY_VERTICAL:
+        for x in range(size.x - (item_size.x - 1)):
+            for y in range(size.y - (item_size.y - 1)):
+                if check_position.call(Vector2i(x, y)):
+                    return result
+    else:
         for y in range(size.y - (item_size.y - 1)):
-            var rect := Rect2i(Vector2i(x, y), item_size)
-            if rect_free(rect, exception):
-                result.success = true
-                result.position = Vector2i(x, y)
-                return result
+            for x in range(size.x - (item_size.x - 1)):
+                if check_position.call(Vector2i(x, y)):
+                    return result
 
     return result
 
@@ -479,6 +500,7 @@ func reset() -> void:
     size = DEFAULT_SIZE
     _quad_tree = _QuadTree.new(size)
     _item_positions.clear()
+    insertion_priority = INSERTION_PRIORITY_VERTICAL
 
 
 ## Serializes the constraint into a `Dictionary`.
@@ -488,6 +510,8 @@ func serialize() -> Dictionary:
     # Store Vector2i as string to make JSON conversion easier later
     result[_KEY_SIZE] = var_to_str(size)
     result[_KEY_ITEM_POSITIONS] = _serialize_item_positions()
+    if insertion_priority == INSERTION_PRIORITY_HORIZONTAL:
+        result[_KEY_INSERTION_PRIORITY] = int(insertion_priority)
 
     return result
 
@@ -503,7 +527,8 @@ func _serialize_item_positions() -> Dictionary:
 
 ## Loads the constraint data from the given `Dictionary`.
 func deserialize(source: Dictionary) -> bool:
-    if !_Verify.dict(source, true, _KEY_SIZE, TYPE_STRING):
+    if !_Verify.dict(source, true, _KEY_SIZE, TYPE_STRING) || \
+        !_Verify.dict(source, false, _KEY_INSERTION_PRIORITY, [TYPE_INT, TYPE_FLOAT]):
         return false
 
     reset()
@@ -515,6 +540,8 @@ func deserialize(source: Dictionary) -> bool:
         _push_inventory_set_operation(_deserialize_item_positions.bind(source[_KEY_ITEM_POSITIONS].duplicate()))
 
     size = _Utils.str_to_var(source[_KEY_SIZE])
+    if source.has(_KEY_INSERTION_PRIORITY):
+        insertion_priority = int(source[_KEY_INSERTION_PRIORITY])
 
     return true
 
