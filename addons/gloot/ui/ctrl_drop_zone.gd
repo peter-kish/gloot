@@ -25,4 +25,5 @@ func _can_drop_data(at_position: Vector2, data) -> bool:
 func _drop_data(at_position: Vector2, data) -> void:
     var local_offset := CtrlDragable.get_grab_offset_local_to(self)
     dragable_dropped.emit(data, at_position - local_offset)
+    (data as CtrlDragable).dropped.emit(self, at_position - local_offset)
     CtrlDragable.dragable_dropped.emit(data, self, at_position - local_offset)
