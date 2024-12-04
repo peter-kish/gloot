@@ -69,7 +69,10 @@ func _on_inventory_set() -> void:
 func _on_item_added(item: InventoryItem) -> void:
     if item == null:
         return
-    _quad_tree.add(get_item_rect(item), item)
+    if move_item_to_free_spot(item):
+        _quad_tree.add(get_item_rect(item), item)
+    else:
+        inventory.pack_item(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
@@ -486,13 +489,6 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
         if rect.intersects(occupied_rect):
             return true
     return false
-
-
-## Enforces the grid constraint. Attempts to move all items to free spots, or pack the items together so that no two
-## items occupy the same field on the grid.
-func enforce(item: InventoryItem) -> void:
-    if !move_item_to_free_spot(item):
-        inventory.pack_item(item)
 
 
 ## Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).

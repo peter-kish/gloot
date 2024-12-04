@@ -96,8 +96,3 @@ func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
 ## Called after the two given items have been swapped.
 func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
     pass
-
-
-## Enforce any constraint rules.
-func enforce(item: InventoryItem) -> void:
-    pass

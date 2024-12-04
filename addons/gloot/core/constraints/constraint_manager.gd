@@ -38,14 +38,6 @@ func _on_constraint_changed(constraint: InventoryConstraint) -> void:
 
 
 func _on_item_added(item: InventoryItem) -> void:
-    var success = _enforce_constraints(item)
-    assert(success, "Failed to enforce constraints!")
-
-    # Enforcing constraints can result in the item being removed from the inventory
-    # (e.g. when it's merged with another item stack)
-    if !is_instance_valid(item.get_inventory()):
-        item = null
-    
     for constraint in _constraints:
         constraint._on_item_added(item)
 
@@ -74,13 +66,6 @@ func _on_post_item_swap(item1: InventoryItem, item2: InventoryItem) -> void:
 
 func _get_constraints() -> Array[InventoryConstraint]:
     return _constraints
-
-
-func _enforce_constraints(item: InventoryItem) -> bool:
-    for constraint in _constraints:
-        constraint.enforce(item)
-    # TODO: Do we need a return value?
-    return true
 
 
 func get_space_for(item: InventoryItem) -> _ItemCount:
