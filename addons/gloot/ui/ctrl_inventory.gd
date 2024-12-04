@@ -11,6 +11,8 @@ extends Control
 signal inventory_item_activated(item)
 ## Emitted when the context menu of an [InventoryItem] is activated (i.e. right clicked).
 signal inventory_item_context_activated(item)
+## Emitted when left clicked [InventoryItem] (single clicked)
+signal inventory_item_selected(item)
 
 enum SelectMode {SELECT_SINGLE = ItemList.SELECT_SINGLE, SELECT_MULTI = ItemList.SELECT_MULTI}
 
@@ -83,6 +85,7 @@ func _ready():
     _item_list.size_flags_horizontal = SIZE_EXPAND_FILL
     _item_list.size_flags_vertical = SIZE_EXPAND_FILL
     _item_list.item_activated.connect(_on_list_item_activated)
+    _item_list.item_selected.connect(_on_list_item_selected)
     _item_list.item_clicked.connect(_on_list_item_clicked)
     _item_list.select_mode = select_mode
     _vbox_container.add_child(_item_list)
@@ -120,6 +123,10 @@ func _on_list_item_activated(index: int) -> void:
 func _on_list_item_clicked(index: int, at_position: Vector2, mouse_button_index: int) -> void:
     if mouse_button_index == MOUSE_BUTTON_RIGHT:
         inventory_item_context_activated.emit(_get_inventory_item(index))
+
+
+func _on_list_item_selected(index: int) -> void:
+    inventory_item_selected.emit(_get_inventory_item(index))
 
 
 func _on_item_property_changed(_item: InventoryItem, property_name: String) -> void:
