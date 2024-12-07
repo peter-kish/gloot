@@ -287,7 +287,7 @@ func deserialize(source: Dictionary) -> bool:
     reset()
     
     # TODO: Check return values
-    protoset = Inventory._deserialize_protoset(source[_KEY_PROTOSET])
+    protoset = _Utils._deserialize_protoset(source[_KEY_PROTOSET])
     _prototype = _prototree.get_prototype(source[_KEY_PROTOTYPE_ID])
     if source.has(_KEY_PROPERTIES):
         for key in source[_KEY_PROPERTIES].keys():

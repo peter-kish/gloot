@@ -26,3 +26,13 @@ static func array_union(a: Array, b: Array) -> Array:
         if not x in result:
             result.push_back(x)
     return result
+
+
+static func _deserialize_protoset(data: String) -> JSON:
+    assert(!data.is_empty(), "Invalid protoset data (empty string)!")
+    if data.begins_with("res://"):
+        return load(data)
+    else:
+        var prototree := JSON.new()
+        prototree.parse(data)
+        return prototree

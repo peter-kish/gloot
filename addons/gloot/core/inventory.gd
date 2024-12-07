@@ -324,7 +324,7 @@ func deserialize(source: Dictionary) -> bool:
 
     if !source[_KEY_NODE_NAME].is_empty() && source[_KEY_NODE_NAME] != name:
         name = source[_KEY_NODE_NAME]
-    protoset = _deserialize_protoset(source[_KEY_PROTOSET])
+    protoset = _Utils._deserialize_protoset(source[_KEY_PROTOSET])
     # TODO: Check return value:
     if source.has(_KEY_ITEMS):
         var items = source[_KEY_ITEMS]
@@ -339,17 +339,6 @@ func deserialize(source: Dictionary) -> bool:
             return false
 
     return true
-
-
-static func _deserialize_protoset(data: String) -> JSON:
-    if data.is_empty():
-        return null
-    elif data.begins_with("res://"):
-        return load(data)
-    else:
-        var prototree := JSON.new()
-        prototree.parse(data)
-        return prototree
 
 
 ## Splits the given item stack into two within the inventory. `new_stack_size` defines the size of the new stack,
