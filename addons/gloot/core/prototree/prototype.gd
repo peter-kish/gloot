@@ -91,14 +91,13 @@ func set_property(property: String, value: Variant):
 
 ## Checks if the prototype contains the prototype with the given ID within the prototype tree.
 func is_inherited_by(prototype_id: String) -> bool:
-    return get_derived_prototype(prototype_id) != null
+    return _find_derived_prototype(prototype_id) != null
 
 
 ## Creates a child prototype with the given ID that inherits the prototype.
 func inherit(prototype_id: String) -> Prototype:
     # TODO: Consider using a prototype as input
-    if is_inherited_by(prototype_id):
-        return null
+    assert(!is_inherited_by(prototype_id), "'%s' already inherits '%s'" % [prototype_id, _id])
     var new_prototype := Prototype.new(prototype_id)
     new_prototype._parent = self
     _prototypes[prototype_id] = new_prototype
@@ -107,12 +106,17 @@ func inherit(prototype_id: String) -> Prototype:
 
 ## Returns the derived prototype with the given ID.
 func get_derived_prototype(prototype_id: String) -> Prototype:
-    if prototype_id.is_empty():
-        return null
+    assert(!prototype_id.is_empty(), "Invalid prototype ID (empty string)!")
+    var result := _find_derived_prototype(prototype_id)
+    assert(result != null, "Derived prototype not found: '%s'" % prototype_id)
+    return result
+
+
+func _find_derived_prototype(prototype_id: String) -> Prototype:
     if _prototypes.has(prototype_id):
         return _prototypes[prototype_id]
     for p in _prototypes:
-        var prototype: Prototype = _prototypes[p].get_derived_prototype(prototype_id)
+        var prototype: Prototype = _prototypes[p]._find_derived_prototype(prototype_id)
         if is_instance_valid(prototype):
             return prototype
     return null
@@ -135,11 +139,8 @@ func get_derived_prototypes() -> Array:
 ## Removes the derived prototype with the given ID.
 func remove_derived_prototype(prototype_id: String) -> void:
     var prototype = get_derived_prototype(prototype_id)
-    if prototype == null:
-        return
     var parent = prototype._parent
-    if parent == null:
-        return
+    assert(parent != null, "Derived prototype has no parent!")
     parent._prototypes.erase(prototype.get_id())
 
 

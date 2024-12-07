@@ -95,10 +95,6 @@ func _get_configuration_warnings() -> PackedStringArray:
     return PackedStringArray()
 
 
-static func _get_item_script() -> Script:
-    return preload("inventory_item.gd")
-
-
 func _init() -> void:
     _constraint_manager = _ConstraintManager.new(self)
     _constraint_manager.constraint_changed.connect(_on_constraint_changed)
@@ -333,7 +329,7 @@ func deserialize(source: Dictionary) -> bool:
     if source.has(_KEY_ITEMS):
         var items = source[_KEY_ITEMS]
         for item_dict in items:
-            var item = _get_item_script().new()
+            var item = InventoryItem.new()
             # TODO: Check return value:
             item.deserialize(item_dict)
             var success = add_item(item)

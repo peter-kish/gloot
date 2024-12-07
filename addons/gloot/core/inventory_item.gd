@@ -25,8 +25,8 @@ var protoset: JSON:
         _on_prototree_changed()
         _connect_protoset_signals()
         
-var _prototree := ProtoTree.new()
-var _prototype: Prototype
+var _prototree: ProtoTree = ProtoTree.new()
+var _prototype: Prototype = null
 var _properties: Dictionary
 
 var _inventory: Inventory:
@@ -68,7 +68,8 @@ func _disconnect_protoset_signals() -> void:
 
 func _init(protoset_: JSON = null, prototype_id: String = "") -> void:
     protoset = protoset_
-    _prototype = _prototree.get_prototype(prototype_id)
+    if _prototree.has_prototype(prototype_id):
+        _prototype = _prototree.get_prototype(prototype_id)
 
 
 func _on_protoset_changed() -> void:
