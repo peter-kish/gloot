@@ -20,6 +20,7 @@ const _ConstraintManager = preload("res://addons/gloot/core/constraints/constrai
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _ProtoTreeCache = preload("res://addons/gloot/core/prototree/proto_tree_cache.gd")
 
 const _KEY_NODE_NAME: String = "node_name"
 const _KEY_PROTOSET: String = "protoset"
@@ -36,12 +37,12 @@ const _KEY_MAX_STACK_SIZE = _StackManager._KEY_MAX_STACK_SIZE
         clear()
         _disconnect_protoset_signals()
         protoset = new_protoset
-        _prototree.deserialize(protoset)
+        _prototree = _ProtoTreeCache.get_cached(protoset)
         _connect_protoset_signals()
         protoset_changed.emit()
         update_configuration_warnings()
 
-var _prototree := ProtoTree.new()
+var _prototree := _ProtoTreeCache.get_empty()
 
 var _items: Array[InventoryItem] = []
 var _constraint_manager: _ConstraintManager = null

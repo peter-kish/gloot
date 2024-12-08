@@ -8,6 +8,12 @@ class_name InventoryItem
 ## maximum stack size is 1, which can be changed by setting the `stack_size` and `maximum_stack_size` properties inside
 ## the prototype or directly inside the item.
 
+const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
+const _Verify = preload("res://addons/gloot/core/verify.gd")
+const _Utils = preload("res://addons/gloot/core/utils.gd")
+const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
+const _ProtoTreeCache = preload("res://addons/gloot/core/prototree/proto_tree_cache.gd")
+
 signal property_changed(property_name: String) ## Emitted when an item property has changed.
 
 ## A JSON resource containing prototype information.
@@ -21,11 +27,11 @@ var protoset: JSON:
 
         _disconnect_protoset_signals()
         protoset = new_protoset
-        _prototree.deserialize(protoset)
+        _prototree = _ProtoTreeCache.get_cached(protoset)
         _on_prototree_changed()
         _connect_protoset_signals()
         
-var _prototree: ProtoTree = ProtoTree.new()
+var _prototree: ProtoTree = _ProtoTreeCache.get_empty()
 var _prototype: Prototype = null
 var _properties: Dictionary
 
@@ -45,11 +51,6 @@ const _KEY_VALUE: String = "value"
 
 const _KEY_IMAGE: String = "image"
 const _KEY_NAME: String = "name"
-
-const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
-const _Verify = preload("res://addons/gloot/core/verify.gd")
-const _Utils = preload("res://addons/gloot/core/utils.gd")
-const _ItemCount = preload("res://addons/gloot/core/item_count.gd")
 
 
 func _connect_protoset_signals() -> void:
