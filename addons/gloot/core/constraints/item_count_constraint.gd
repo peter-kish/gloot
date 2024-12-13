@@ -52,7 +52,7 @@ func get_space_for(item: InventoryItem) -> int:
 
 ## Checks if the constraint can receive the given item.
 func has_space_for(item: InventoryItem) -> bool:
-    return get_occupied_space() <= capacity && get_space_for(item) > 0
+    return get_occupied_space() < capacity || get_space_for(item) > 0
 
 
 ## Resets the constraint, i.e. sets its capacity to default (`1`).
