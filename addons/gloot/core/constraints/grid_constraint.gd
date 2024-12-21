@@ -39,6 +39,8 @@ var _inventory_set_stack: Array[Callable]
         if size != old_size:
             _refresh_quad_tree()
             changed.emit()
+## Insertion priority. Defines whether items will be stacked horizontally-first or vertically-first when inserted into
+## the 2d grid.
 @export_enum("Horizontal", "Vertical") var insertion_priority: int = INSERTION_PRIORITY_VERTICAL:
     set(new_insertion_priority):
         if new_insertion_priority == insertion_priority:

@@ -11,6 +11,7 @@ The constraint implements a grid-based inventory of a configurable size.
 ## Properties
 
 * `size: Vector2i` - The size of the 2d grid.
+* `insertion_priority: int` - Insertion priority. Defines whether items will be stacked horizontally-first or vertically-first when inserted into the 2d grid.
 
 ## Methods
 
@@ -39,7 +40,6 @@ The constraint implements a grid-based inventory of a configurable size.
 * `get_space_for(item: InventoryItem) -> int` - Returns the number of times this constraint can receive the given item.
 * `has_space_for(item: InventoryItem) -> bool` - Checks if the constraint can receive the given item.
 * `find_free_space(item_size: Vector2i, occupied_rects: Rect2i[]) -> Dictionary` - Finds a place for the given item with regard to the given occupied rectangles. Returns a dictionary containing two fields: `success` and `position`. `success` will be set to `false` if not free place can be found and to `true` otherwise. If `success` is true the `position` field contains the resulting coordinates.
-* `enforce(item: InventoryItem) -> void` - Enforces the grid constraint. Attempts to move all items to free spots, or pack the items together so that no two items occupy the same field on the grid.
 * `reset() -> void` - Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).
 * `serialize() -> Dictionary` - Serializes the constraint into a `Dictionary`.
 * `deserialize(source: Dictionary) -> bool` - Loads the constraint data from the given `Dictionary`.

@@ -6,6 +6,7 @@ class_name InventoryConstraint
 ## Base inventory constraint class which implements some basic constraint functionality and defines methods that can be
 ## overridden.
 
+## Emitted when the state of the constraint has changed.
 signal changed
 
 ## Reference to an inventory that this constraint belongs to.

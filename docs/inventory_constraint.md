@@ -18,9 +18,8 @@ Base inventory constraint class which implements some basic constraint functiona
 * `has_space_for(item: InventoryItem) -> bool` - Checks if the constraint can receive the given item.
 * `serialize() -> Dictionary` - Serializes the constraint into a `Dictionary`.
 * `deserialize(source: Dictionary) -> bool` - Loads the constraint data from the given `Dictionary`.
-* `enforce(item: InventoryItem) -> void` - Enforce any constraint rules.
 
 ## Signals
 
-* `changed()` - 
+* `changed()` - Emitted when the state of the constraint has changed.
 
