@@ -6,6 +6,8 @@
 
 A universal inventory system for the Godot game engine (version 4.2 and newer).
 
+> NOTE: **Version 3.0 has been merged to `master`** and includes a number of changes that are not backwards-compatible with version 2.x. If you intend to upgrade from version 2 to version 3, there is a short [transition guide](docs/gloot_2_to_3_transition_guide.md) that will hopefully make the process smoother. If you, however, plan to stick to the old version, it can be found on the `v2.x` branch.
+
 ## Table of Contents
 
 1. [Features](#features)
