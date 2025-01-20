@@ -49,6 +49,9 @@ static func _serialize_objects(objects: Array) -> Array[Dictionary]:
 
 
 static func undoable_action(object: Variant, action_name: String, callable: Callable) -> bool:
-    if typeof(object) == TYPE_ARRAY:
-        return _undoable_action_impl(object, action_name, callable)
-    return _undoable_action_impl([object], action_name, callable)
+    # Undoable actions cause a number of issues at the moment
+    #
+    # if typeof(object) == TYPE_ARRAY:
+    #     return _undoable_action_impl(object, action_name, callable)
+    # return _undoable_action_impl([object], action_name, callable)
+    return callable.call()
