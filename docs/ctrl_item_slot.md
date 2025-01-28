@@ -6,7 +6,7 @@ Inherits: `Control`
 
 A control node representing an inventory slot (`ItemSlot`).
 
-A control node representing an inventory slot (`ItemSlot`).
+Displays the currently equipped item with a configurable background.
 
 ## Properties
 

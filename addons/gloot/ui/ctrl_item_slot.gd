@@ -4,7 +4,7 @@ class_name CtrlItemSlot
 extends Control
 ## A control node representing an inventory slot (`ItemSlot`).
 ##
-## A control node representing an inventory slot (`ItemSlot`).
+## Displays the currently equipped item with a configurable background.
 
 
 const _CtrlDraggableInventoryItem = preload("res://addons/gloot/ui/ctrl_draggable_inventory_item.gd")
