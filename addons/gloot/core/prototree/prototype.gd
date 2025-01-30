@@ -68,7 +68,7 @@ func get_property(property: String, default_value: Variant = null) -> Variant:
     if _properties.has(property):
         return _properties[property]
     if is_instance_valid(_parent):
-        return _parent.get_property(property)
+        return _parent.get_property(property, default_value)
     return default_value
 
 
