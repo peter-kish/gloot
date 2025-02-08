@@ -276,10 +276,10 @@ static func inv_add_autosplitmerge(inv: Inventory, item: InventoryItem) -> bool:
         return false
 
     for i in inv.get_items():
-        _merge_stacks_split_source(i, item)
+        _inv_merge_stack_split_source(inv, i, item)
         if get_item_stack_size(item).eq(_ItemCount.zero()):
             return true
-    inv.add_item(item)
+    inv_add_autosplit(inv, item)
     return true
 
 

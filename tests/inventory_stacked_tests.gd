@@ -26,6 +26,8 @@ func init_suite() -> void:
         "test_automerge_max_stack_size",
         "test_add_item",
         "test_add_item_autosplitmerge",
+        "test_add_item_autosplitmerge_limited_capacity",
+        "test_add_item_autosplitmerge_limited_capacity_with_item",
         "test_serialize",
         "test_serialize_json"
     ]
@@ -165,6 +167,22 @@ func test_add_item_autosplitmerge() -> void:
     assert(inventory.get_item_count() == 1)
     assert(inventory.get_constraint(WeightConstraint).get_occupied_space() == 10)
     assert(inventory_2.get_item_count() == 1)
+
+
+func test_add_item_autosplitmerge_limited_capacity() -> void:
+    inventory.get_constraint(WeightConstraint).capacity = 9
+    assert(inventory.add_item_autosplitmerge(stackable_item))
+    assert(stackable_item.get_stack_size() == 1)
+
+
+func test_add_item_autosplitmerge_limited_capacity_with_item() -> void:
+    inventory.get_constraint(WeightConstraint).capacity = 5
+    assert(stackable_item.set_stack_size(2))
+
+    assert(inventory.add_item(stackable_item))
+
+    assert(inventory.add_item_autosplitmerge(stackable_item_2))
+    assert(stackable_item_2.get_stack_size() == 7)
 
 
 func test_serialize() -> void:
