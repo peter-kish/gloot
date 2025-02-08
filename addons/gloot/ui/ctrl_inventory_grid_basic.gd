@@ -54,6 +54,7 @@ const _StackManager = preload("res://addons/gloot/core/stack_manager.gd")
             return
         custom_item_control_scene = new_custom_item_control_scene
         _queue_refresh()
+@export var drag_tint := Color.WHITE
 
 var _ctrl_item_container: Control = null
 var _selected_items: Array[InventoryItem] = []
@@ -181,6 +182,7 @@ func _populate_list() -> void:
         ctrl_draggable_inventory_item.icon_stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
         if stretch_item_icons:
             ctrl_draggable_inventory_item.icon_stretch_mode = TextureRect.STRETCH_SCALE
+        ctrl_draggable_inventory_item.drag_tint = drag_tint
 
         _ctrl_item_container.add_child(ctrl_draggable_inventory_item)
 

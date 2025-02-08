@@ -19,12 +19,15 @@ var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH
         icon_stretch_mode = new_stretch_mode
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.icon_stretch_mode = icon_stretch_mode
+var drag_tint := Color.WHITE
 var ctrl_inventory_item_scene: PackedScene = null
 var _ctrl_inventory_item: CtrlInventoryItemBase
+var _initial_modulate := Color.WHITE
 static var _grab_offset: Vector2
 
 
 func _ready() -> void:
+    _initial_modulate = modulate
     if ctrl_inventory_item_scene == null:
         _ctrl_inventory_item = CtrlInventoryItem.new()
     else:
@@ -40,6 +43,14 @@ func _ready() -> void:
     resized.connect(func():
         _ctrl_inventory_item.size = size
     )
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_DRAG_BEGIN:
+        if get_viewport().gui_get_drag_data() == item:
+            modulate = drag_tint
+    elif what == NOTIFICATION_DRAG_END:
+        modulate = _initial_modulate
 
 
 func _get_drag_data(at_position: Vector2) -> Variant:

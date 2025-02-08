@@ -16,6 +16,7 @@ Displays the inventory contents on a 2D grid. The grid style, size and item icon
 * `item_spacing: int` - Spacing between grid fields.
 * `select_mode: int` - Item selection mode. Set to SelectMode.SELECT_MULTI to enable selecting multiple items by holding down CTRL. See the `ItemList.SelectMode` constants for details.
 * `custom_item_control_scene: PackedScene` - Custom control scene representing an `InventoryItem` (must inherit `CtrlInventoryItemBase`). If set to `null`, `CtrlInventoryItem` will be used to represent the item.
+* `drag_tint: Color` - Multiplies the color of the item's texture when dragging.
 * `field_style: StyleBox` - The default grid field background style. Unlike `background_style`, this style is used when displaying each individual field in the 2D grid.
 * `field_highlighted_style: StyleBox` - The grid field style used when hovering over it with the mouse.
 * `field_selected_style: StyleBox` - The grid field style used for selected items. Unlike `selection_style`, this style is used as field background behind selected items.

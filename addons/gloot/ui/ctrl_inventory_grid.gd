@@ -124,6 +124,15 @@ class CustomizablePanel extends Panel:
         custom_item_control_scene = new_custom_item_control_scene
         if is_instance_valid(_ctrl_inventory_grid_basic):
             _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
+## Multiplies the color of the item's texture when dragging.
+@export var drag_tint := Color.WHITE:
+    set(new_drag_tint):
+        if new_drag_tint == drag_tint:
+            return
+        drag_tint = new_drag_tint
+        if is_instance_valid(_ctrl_inventory_grid_basic):
+            _ctrl_inventory_grid_basic.drag_tint = drag_tint
+
 
 @export_group("Custom Styles")
 ## The default grid field background style. Unlike `background_style`, this style is used when displaying each
@@ -332,6 +341,7 @@ func _ready() -> void:
 
     _ctrl_inventory_grid_basic = _CtrlInventoryGridBasic.new()
     _ctrl_inventory_grid_basic.custom_item_control_scene = custom_item_control_scene
+    _ctrl_inventory_grid_basic.drag_tint = drag_tint
     _ctrl_inventory_grid_basic.inventory = inventory
     _ctrl_inventory_grid_basic.field_dimensions = field_dimensions
     _ctrl_inventory_grid_basic.item_spacing = item_spacing
