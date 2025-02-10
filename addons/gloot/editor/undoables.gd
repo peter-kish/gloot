@@ -38,20 +38,23 @@ static func _undoable_action_impl(objects: Array, action_name: String, callable:
 static func _deserialize_objects(objects: Array, object_data: Array[Dictionary]) -> void:
     assert(objects.size() == object_data.size())
     for i in range(objects.size()):
-        objects[i].deserialize(object_data[i])
+        if objects[i].has_method("_deserialize_undoable"):
+            objects[i]._deserialize_undoable(object_data[i])
+        elif objects[i].has_method("deserialize"):
+            objects[i].deserialize(object_data[i])
 
 
 static func _serialize_objects(objects: Array) -> Array[Dictionary]:
     var result: Array[Dictionary]
     for object in objects:
-        result.push_back(object.serialize())
+        if object.has_method("_serialize_undoable"):
+            result.push_back(object._serialize_undoable())
+        elif object.has_method("serialize"):
+            result.push_back(object.serialize())
     return result
 
 
 static func undoable_action(object: Variant, action_name: String, callable: Callable) -> bool:
-    # Undoable actions cause a number of issues at the moment
-    #
-    # if typeof(object) == TYPE_ARRAY:
-    #     return _undoable_action_impl(object, action_name, callable)
-    # return _undoable_action_impl([object], action_name, callable)
-    return callable.call()
+    if typeof(object) == TYPE_ARRAY:
+        return _undoable_action_impl(object, action_name, callable)
+    return _undoable_action_impl([object], action_name, callable)

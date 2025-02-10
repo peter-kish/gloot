@@ -342,6 +342,35 @@ func deserialize(source: Dictionary) -> bool:
     return true
 
 
+func _deserialize_undoable(source: Dictionary) -> bool:
+    # ConstraintManager.deserialize() results in weird behavior when used for undo/redo
+    # operations due to the creation of new nodes. ConstraintManager._deserialize_undoable()
+    # should reuse existing nodes instead, but has some other limitations.
+
+    if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) || \
+        !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) || \
+        !_Verify.dict(source, false, _KEY_CONSTRAINTS, TYPE_DICTIONARY):
+        return false
+
+    clear()
+
+    if !source[_KEY_NODE_NAME].is_empty() && source[_KEY_NODE_NAME] != name:
+        name = source[_KEY_NODE_NAME]
+    # TODO: Check return value:
+    if source.has(_KEY_ITEMS):
+        var items = source[_KEY_ITEMS]
+        for item_dict in items:
+            var item = InventoryItem.new()
+            # TODO: Check return value:
+            item.deserialize(item_dict)
+            var success = add_item(item)
+            assert(success, "Failed to add item '%s'. Inventory full?" % item.get_title())
+    if source.has(_KEY_CONSTRAINTS):
+        if !_constraint_manager._deserialize_undoable(source[_KEY_CONSTRAINTS]):
+            return false
+    return true
+
+
 ## Splits the given item stack into two within the inventory. `new_stack_size` defines the size of the new stack,
 ## which is added to the inventory. Returns `null` if the split cannot be performed or if the new stack cannot be added
 ## to the inventory.

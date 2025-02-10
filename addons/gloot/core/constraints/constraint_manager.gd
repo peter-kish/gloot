@@ -129,3 +129,22 @@ func deserialize(source: Dictionary) -> bool:
             new_constraint.owner = inventory.get_tree().edited_scene_root
 
     return true
+
+
+func _deserialize_undoable(source: Dictionary) -> bool:
+    # deserialize() results in weird behavior when used for undo/redo operations
+    # due to the creation of new nodes. This implementation should reuse existing
+    # nodes instead, but has some other limitations.
+
+    for constraint_script_path in source:
+        if !_Verify.dict(source[constraint_script_path], true, _KEY_CONSTRAINT_NAME, [TYPE_STRING, TYPE_STRING_NAME]):
+            return false
+        if !_Verify.dict(source[constraint_script_path], true, _KEY_CONSTRAINT_DATA, TYPE_DICTIONARY):
+            return false
+
+    for constraint_script_path in source:
+        for child in inventory.get_children():
+            if child.name == source[constraint_script_path].name:
+                child.deserialize(source[constraint_script_path].data)
+
+    return true
