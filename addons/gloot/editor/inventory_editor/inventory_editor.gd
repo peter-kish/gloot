@@ -79,6 +79,7 @@ func _create_inventory_container() -> Control:
         _inventory_control = CtrlInventoryGrid.new()
     else:
         _inventory_control = CtrlInventory.new()
+    _inventory_control.select_mode = ItemList.SelectMode.SELECT_MULTI
     _inventory_control.size_flags_horizontal = SIZE_EXPAND_FILL
     _inventory_control.size_flags_vertical = SIZE_EXPAND_FILL
     _inventory_control.inventory = inventory
@@ -119,11 +120,13 @@ func _ready() -> void:
     %BtnAdd.icon = _EditorIcons.get_icon("Add")
     %BtnEdit.icon = _EditorIcons.get_icon("Edit")
     %BtnRemove.icon = _EditorIcons.get_icon("Remove")
+    %BtnClear.icon = _EditorIcons.get_icon("Clear")
 
     %PrototreeViewer.prototype_activated.connect(_on_prototype_activated)
     %BtnAdd.pressed.connect(_on_btn_add)
     %BtnEdit.pressed.connect(_on_btn_edit)
     %BtnRemove.pressed.connect(_on_btn_remove)
+    %BtnClear.pressed.connect(_on_btn_clear)
     _refresh()
 
 
@@ -155,11 +158,18 @@ func _on_btn_edit() -> void:
 
 func _on_btn_remove() -> void:
     var selected_items: Array[InventoryItem] = _inventory_control.get_selected_inventory_items()
-    for selected_item in selected_items:
-        if selected_item != null:
-            _Undoables.undoable_action(inventory, "Remove Inventory Item", func():
-                return inventory.remove_item(selected_item)
-            )
+    _Undoables.undoable_action(inventory, "Remove Inventory Item", func():
+        for selected_item in selected_items:
+            inventory.remove_item(selected_item)
+        return true
+    )
+
+
+func _on_btn_clear() -> void:
+    _Undoables.undoable_action(inventory, "Clear Inventory", func():
+        inventory.clear()
+        return true
+    )
 
 
 static func _select_node(node: Node) -> void:
