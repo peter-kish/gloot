@@ -23,7 +23,6 @@ func constructor_test() -> void:
 
 func child_prototypes_test() -> void:
     var prototype := Prototype.new(TEST_PROTOTYPE_NAME)
-    assert(!prototype.is_inherited_by(TEST_PROTOTYPE_NAME))
     assert(prototype.get_derived_prototypes().is_empty())
 
     var new_prototype := prototype.inherit(TEST_PROTOTYPE_NAME2)
@@ -33,10 +32,6 @@ func child_prototypes_test() -> void:
 
     assert(new_prototype.inherits(TEST_PROTOTYPE_NAME))
     assert(new_prototype.inherits(TEST_PROTOTYPE_NAME2))
-
-    prototype.remove_derived_prototype(TEST_PROTOTYPE_NAME2)
-    assert(!prototype.is_inherited_by(TEST_PROTOTYPE_NAME2))
-    assert(prototype.get_derived_prototypes().is_empty())
 
 
 func properties_test() -> void:

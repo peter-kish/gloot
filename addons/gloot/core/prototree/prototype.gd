@@ -12,6 +12,8 @@ var _id: String
 var _properties: Dictionary
 var _parent: Prototype
 var _prototypes: Dictionary
+var _all_prototypes: Dictionary
+var _root: Prototype
 
 
 func _init(id: String) -> void:
@@ -25,6 +27,8 @@ func get_id() -> String:
 
 ## Checks if the prototype inherits the prototype with the given ID.
 func inherits(prototype_id: String) -> bool:
+    assert(_prototype_id_taken(prototype_id), "Prototype '%s' not found!" % prototype_id)
+
     var x = self
     while x:
         if x._id == prototype_id:
@@ -97,10 +101,17 @@ func is_inherited_by(prototype_id: String) -> bool:
 ## Creates a child prototype with the given ID that inherits the prototype.
 func inherit(prototype_id: String) -> Prototype:
     # TODO: Consider using a prototype as input
-    assert(!is_inherited_by(prototype_id), "'%s' already inherits '%s'" % [prototype_id, _id])
+    assert(!_prototype_id_taken(prototype_id), "Prototype '%s' already defined!" % prototype_id)
     var new_prototype := Prototype.new(prototype_id)
     new_prototype._parent = self
+    if _root:
+        new_prototype._root = _root
+    else:
+        new_prototype._root = self
+
     _prototypes[prototype_id] = new_prototype
+    new_prototype._root._all_prototypes[prototype_id] = new_prototype
+
     return new_prototype
 
 
@@ -113,6 +124,7 @@ func get_derived_prototype(prototype_id: String) -> Prototype:
 
 
 func _find_derived_prototype(prototype_id: String) -> Prototype:
+    assert(_prototype_id_taken(prototype_id), "Prototype '%s' not found!" % prototype_id)
     if _prototypes.has(prototype_id):
         return _prototypes[prototype_id]
     for p in _prototypes:
@@ -136,21 +148,16 @@ func get_derived_prototypes() -> Array:
     return _prototypes.values().duplicate()
 
 
-## Removes the derived prototype with the given ID.
-func remove_derived_prototype(prototype_id: String) -> void:
-    var prototype = get_derived_prototype(prototype_id)
-    var parent = prototype._parent
-    assert(parent != null, "Derived prototype has no parent!")
-    parent._prototypes.erase(prototype.get_id())
-
-
-func _get_root() -> Prototype:
-    var root = self
-    while is_instance_valid(root._parent):
-        root = root._parent
-    return root
+func _prototype_id_taken(prototype_id: String) -> bool:
+    if _root:
+        if prototype_id == _root._id:
+            return true
+        return _root._all_prototypes.has(prototype_id)
+    else:
+        return _all_prototypes.has(prototype_id)
 
 
 func _clear() -> void:
     _properties.clear()
     _prototypes.clear()
+    _all_prototypes.clear()

@@ -31,7 +31,7 @@ func get_prototypes() -> Array:
 
 ## Checks if the prototree contains the prototype with the given ID.
 func has_prototype(prototype_id: String) -> bool:
-    return _root.is_inherited_by(prototype_id)
+    return _root._prototype_id_taken(prototype_id)
 
 
 ## Checks if the prototype with the given ID has the given property defined.

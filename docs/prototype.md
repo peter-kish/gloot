@@ -24,5 +24,4 @@ An item prototype contains a set of properties and is identified with an ID stri
 * `get_derived_prototype(prototype_id: String) -> Prototype` - Returns the derived prototype with the given ID.
 * `get_prototype_id() -> String` - Returns the ID of the prototype.
 * `get_derived_prototypes() -> Array` - Returns an array of all derived prototypes.
-* `remove_derived_prototype(prototype_id: String) -> void` - Removes the derived prototype with the given ID.
 
