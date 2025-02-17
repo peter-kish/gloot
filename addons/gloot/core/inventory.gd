@@ -172,6 +172,11 @@ func add_item(item: InventoryItem) -> bool:
     if !can_add_item(item):
         return false
 
+    _add_item_unsafe(item)
+    return true
+
+
+func _add_item_unsafe(item: InventoryItem):
     if item.get_inventory() != null:
         item.get_inventory().remove_item(item)
 
@@ -184,7 +189,6 @@ func add_item(item: InventoryItem) -> bool:
     if !is_instance_valid(item):
         item = null
     item_added.emit(item)
-    return true
 
 
 ## Checks if the given item can be added to the inventory.
@@ -333,8 +337,7 @@ func deserialize(source: Dictionary) -> bool:
             var item = InventoryItem.new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            var success = add_item(item)
-            assert(success, "Failed to add item '%s'. Inventory full?" % item.get_title())
+            _add_item_unsafe(item)
     if source.has(_KEY_CONSTRAINTS):
         if !_constraint_manager.deserialize(source[_KEY_CONSTRAINTS]):
             return false
@@ -363,8 +366,7 @@ func _deserialize_undoable(source: Dictionary) -> bool:
             var item = InventoryItem.new()
             # TODO: Check return value:
             item.deserialize(item_dict)
-            var success = add_item(item)
-            assert(success, "Failed to add item '%s'. Inventory full?" % item.get_title())
+            _add_item_unsafe(item)
     if source.has(_KEY_CONSTRAINTS):
         if !_constraint_manager._deserialize_undoable(source[_KEY_CONSTRAINTS]):
             return false
