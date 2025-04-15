@@ -54,6 +54,9 @@ func _notification(what: int) -> void:
 
 
 func _get_drag_data(at_position: Vector2) -> Variant:
+    if item == null:
+        return null
+        
     _grab_offset = at_position * get_global_transform().get_scale()
 
     var sub_preview: Control = null
