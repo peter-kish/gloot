@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://dnmcyf6p4gtgp"]
 
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="1_1ie5k"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="2_b7vgs"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
+[ext_resource type="Script" uid="uid://bu5mhp7ayfx4j" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
 [ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="4_yg38y"]
 
 [node name="Control" type="Control"]

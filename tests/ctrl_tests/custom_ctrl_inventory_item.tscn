@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cdfttlpuiy8me"]
 
-[ext_resource type="Script" path="res://tests/ctrl_tests/custom_ctrl_inventory_item.gd" id="1_r7i11"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_item.gd" id="2_b0bd7"]
+[ext_resource type="Script" uid="uid://c7sr85t5dicil" path="res://tests/ctrl_tests/custom_ctrl_inventory_item.gd" id="1_r7i11"]
+[ext_resource type="Script" uid="uid://ehnt7dxa04ne" path="res://addons/gloot/ui/ctrl_inventory_item.gd" id="2_b0bd7"]
 
 [node name="CustomCtrlInventoryItem" type="Control"]
 layout_mode = 3

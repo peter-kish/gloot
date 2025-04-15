@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://de2c4q3rk76nu"]
 
-[ext_resource type="Script" path="res://addons/gloot/editor/item_editor/properties_editor.gd" id="1_4ikx6"]
+[ext_resource type="Script" uid="uid://cv5q4cxv78lcq" path="res://addons/gloot/editor/item_editor/properties_editor.gd" id="1_4ikx6"]
 [ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/common/dict_editor.tscn" id="1_f5dhm"]
 
 [node name="PropertiesEditor" type="Window"]

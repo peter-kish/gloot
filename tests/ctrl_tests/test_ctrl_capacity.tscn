@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://dphh30kym6h7f"]
 
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_ykodk"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="1_ykodk"]
 [ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="2_8vr37"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="3_16p24"]
+[ext_resource type="Script" uid="uid://ba5wmjtc5l8i3" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="3_16p24"]
 [ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="4_uiaq5"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/item_count_constraint.gd" id="5_7dr5d"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="6_40sow"]
+[ext_resource type="Script" uid="uid://c88tils8h0042" path="res://addons/gloot/core/constraints/item_count_constraint.gd" id="5_7dr5d"]
+[ext_resource type="Script" uid="uid://bikhe74xfo7u4" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="6_40sow"]
 
 [node name="TestCtrlCapacity" type="Node2D"]
 

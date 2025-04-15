@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://d1fna7gc68qhq"]
 
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="1_myoia"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="3_61r6v"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3_b3btf"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="1_myoia"]
+[ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="3_61r6v"]
+[ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="3_b3btf"]
 [ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="4_utymg"]
 
 [node name="Control" type="Control"]

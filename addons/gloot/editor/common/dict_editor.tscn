@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://digtudobrw3xb"]
 
-[ext_resource type="Script" path="res://addons/gloot/editor/common/dict_editor.gd" id="1"]
+[ext_resource type="Script" uid="uid://sydt8ogdj6u8" path="res://addons/gloot/editor/common/dict_editor.gd" id="1"]
 
 [node name="DictEditor" type="Control"]
 layout_mode = 3

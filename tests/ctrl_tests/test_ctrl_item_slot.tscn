@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=3 uid="uid://b4iegtrw2clvh"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="1_64wxb"]
+[ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="1_64wxb"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="2_h16kg"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="3_th5bj"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="4_j3nko"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="4_j3nko"]
 [ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="5_46c6m"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="6_qj5xf"]
+[ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="6_qj5xf"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
 texture = ExtResource("2_h16kg")

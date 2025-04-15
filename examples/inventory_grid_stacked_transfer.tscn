@@ -1,14 +1,14 @@
 [gd_scene load_steps=18 format=3 uid="uid://o6g61xdkjii0"]
 
-[ext_resource type="Script" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="2_ptyr5"]
+[ext_resource type="Script" uid="uid://qaysak7mjhy6" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
+[ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="2_ptyr5"]
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="3_lwfya"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
+[ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
 [ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="8_mr2pf"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_6njuc"]
-[ext_resource type="Script" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
+[ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_6njuc"]
+[ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
 
 [sub_resource type="StyleBoxTexture" id="1"]
 texture = ExtResource("3_lwfya")

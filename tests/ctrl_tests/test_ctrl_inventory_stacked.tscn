@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://dcyi3nd2idb5j"]
 
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="2_6ia13"]
-[ext_resource type="Script" path="res://addons/gloot/core/inventory.gd" id="2_25j36"]
+[ext_resource type="Script" uid="uid://bikhe74xfo7u4" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="2_6ia13"]
+[ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="2_25j36"]
 [ext_resource type="Texture2D" uid="uid://b87v12g1icu3u" path="res://images/item_scroll_blue.png" id="4_ijkns"]
 [ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="4_uov1j"]
-[ext_resource type="Script" path="res://addons/gloot/ui/ctrl_inventory.gd" id="5_b1fi0"]
-[ext_resource type="Script" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="6_tm82y"]
+[ext_resource type="Script" uid="uid://bu5mhp7ayfx4j" path="res://addons/gloot/ui/ctrl_inventory.gd" id="5_b1fi0"]
+[ext_resource type="Script" uid="uid://ba5wmjtc5l8i3" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="6_tm82y"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
