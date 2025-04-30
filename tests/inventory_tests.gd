@@ -54,6 +54,12 @@ func test_has_item() -> void:
     assert(!inventory1.has_item(item))
 
 
+func test_create() -> void:
+    var new_item = inventory2.create_item("minimal_item_2")
+    assert(new_item)
+    assert(!inventory2.has_item(new_item))
+
+
 func test_create_and_add() -> void:
     var new_item = inventory2.create_and_add_item("minimal_item_2")
     assert(new_item)

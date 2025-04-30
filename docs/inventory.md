@@ -22,7 +22,8 @@ Supports basic inventory operations (adding, removing, transferring items etc.).
 * `has_item(item: InventoryItem) -> bool` - Checks if the inventory contains the given item.
 * `add_item(item: InventoryItem) -> bool` - Adds the given item to the inventory.
 * `can_add_item(item: InventoryItem) -> bool` - Checks if the given item can be added to the inventory.
-* `create_and_add_item(prototype_id: String) -> InventoryItem` - Creates an `InventoryItem` based on the given prototype ID adds it to the inventory. Returns `null` if the item cannot be added.
+* `create_item(prototype_id: String) -> InventoryItem` - Creates an `InventoryItem` based on the prototype ID.
+* `create_and_add_item(prototype_id: String) -> InventoryItem` - Creates an `InventoryItem` based on the given prototype ID and adds it to the inventory. Returns `null` if the item cannot be added.
 * `remove_item(item: InventoryItem) -> bool` - Removes the given item from the inventory. Returns `false` if the item is not inside the inventory.
 * `get_item_with_prototype_id(prototype_id: String) -> InventoryItem` - Returns the first found item with the given prototype ID.
 * `get_items_with_prototype_id(prototype_id: String) -> InventoryItem[]` - Returns an array of all the items with the given prototype ID.

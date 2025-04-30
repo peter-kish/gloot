@@ -202,7 +202,13 @@ func can_add_item(item: InventoryItem) -> bool:
     return true
 
 
-## Creates an `InventoryItem` based on the given prototype ID adds it to the inventory. Returns `null` if the item
+## Creates an `InventoryItem` based on the prototype ID.
+func create_item(prototype_id: String) ->InventoryItem:
+    var item: InventoryItem = InventoryItem.new(protoset, prototype_id)
+    return item
+
+
+## Creates an `InventoryItem` based on the given prototype ID and adds it to the inventory. Returns `null` if the item
 ## cannot be added.
 func create_and_add_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new(protoset, prototype_id)
