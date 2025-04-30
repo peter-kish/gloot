@@ -23,7 +23,7 @@ func connect_item_slot_signals():
         return
 
     item_slot.item_equipped.connect(_refresh)
-    item_slot.cleared.connect(_refresh)
+    item_slot.cleared.connect(_on_item_slot_cleared)
 
     if !item_slot.protoset:
         return
@@ -36,12 +36,16 @@ func disconnect_item_slot_signals():
         return
         
     item_slot.item_equipped.disconnect(_refresh)
-    item_slot.cleared.disconnect(_refresh)
+    item_slot.cleared.disconnect(_on_item_slot_cleared)
 
     if !item_slot.protoset:
         return
     item_slot.protoset.changed.disconnect(_refresh)
     item_slot.protoset_changed.disconnect(_refresh)
+
+
+func _on_item_slot_cleared(item: InventoryItem) -> void:
+    _refresh()
 
 
 func init(item_slot_: ItemSlot) -> void:

@@ -57,14 +57,18 @@ func _connect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
     _Utils.safe_connect(item_slot.item_equipped, _refresh)
-    _Utils.safe_connect(item_slot.cleared, _refresh)
+    _Utils.safe_connect(item_slot.cleared, _on_item_slot_cleared)
 
 
 func _disconnect_item_slot_signals() -> void:
     if !is_instance_valid(item_slot):
         return
     _Utils.safe_disconnect(item_slot.item_equipped, _refresh)
-    _Utils.safe_disconnect(item_slot.cleared, _refresh)
+    _Utils.safe_disconnect(item_slot.cleared, _on_item_slot_cleared)
+
+
+func _on_item_slot_cleared(item: InventoryItem) -> void:
+    _refresh()
 
 
 func _ready():
