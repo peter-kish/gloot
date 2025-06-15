@@ -81,6 +81,7 @@ func _ready():
     _ctrl_draggable_inventory_item = _CtrlDraggableInventoryItem.new()
     _ctrl_draggable_inventory_item.icon_stretch_mode = icon_stretch_mode
     _ctrl_draggable_inventory_item.size = size
+    _ctrl_draggable_inventory_item.mouse_filter = Control.MOUSE_FILTER_PASS
     add_child(_ctrl_draggable_inventory_item)
 
     resized.connect(func():
