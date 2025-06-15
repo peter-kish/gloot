@@ -292,6 +292,8 @@ func _on_item_dropped(item: InventoryItem, drop_position: Vector2) -> void:
     if item == null:
         return
 
+    item_dropped.emit(item, drop_position)
+
     if !is_instance_valid(inventory):
         return
 
