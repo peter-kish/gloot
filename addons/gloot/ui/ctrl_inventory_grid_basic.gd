@@ -304,6 +304,9 @@ func _on_item_dropped(item: InventoryItem, drop_position: Vector2) -> void:
 
 
 func _handle_item_move(item: InventoryItem, drop_position: Vector2) -> void:
+    if !_is_hovering(drop_position + (field_dimensions / 2)):
+        return
+
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     if _move_item(item, field_coords):
         return
@@ -316,6 +319,10 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
     var source_inventory: Inventory = item.get_inventory()
     
     var grid_constraint: GridConstraint = inventory.get_constraint(GridConstraint)
+
+    if !_is_hovering(drop_position + (field_dimensions / 2)):
+        return
+
     var field_coords = get_field_coords(drop_position + (field_dimensions / 2))
     if source_inventory != null:
         if source_inventory.protoset != inventory.protoset:
@@ -327,6 +334,10 @@ func _handle_item_transfer(item: InventoryItem, drop_position: Vector2) -> void:
         _swap_items(item, field_coords)
     elif !grid_constraint.add_item_at(item, field_coords):
         _swap_items(item, field_coords)
+
+
+func _is_hovering(local_pos: Vector2) -> bool:
+    return get_rect().has_point(local_pos)
 
 
 func get_field_coords(local_pos: Vector2) -> Vector2i:

@@ -443,7 +443,7 @@ func _highlight_grabbed_item(style: StyleBox):
         return
 
     var global_grabbed_item_pos: Vector2 = _get_global_grabbed_item_local_pos()
-    if !_is_hovering(global_grabbed_item_pos):
+    if !_is_hovering(global_grabbed_item_pos + (field_dimensions / 2)):
         _fill_background(_get_field_style(), PriorityPanel.StylePriority.LOW)
         return
 
@@ -458,7 +458,7 @@ func _highlight_grabbed_item(style: StyleBox):
 
 
 func _is_hovering(local_pos: Vector2) -> bool:
-    return get_rect().has_point(local_pos)
+    return _ctrl_inventory_grid_basic._is_hovering(local_pos)
 
 
 func _set_item_background(item: InventoryItem, style: StyleBox, priority: int) -> bool:
