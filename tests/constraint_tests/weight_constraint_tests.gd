@@ -7,7 +7,7 @@ var weight_constraint: WeightConstraint
 const TEST_PROTOSET = preload("res://tests/data/protoset_stacks.json")
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_init",
         "test_capacity",
@@ -85,13 +85,13 @@ func test_get_space_for() -> void:
 
 func test_swap_items() -> void:
     weight_constraint.capacity = 3
-    var small_item = inventory.create_and_add_item("minimal_item")
+    var small_item := inventory.create_and_add_item("minimal_item")
     
-    var inv2 = Inventory.new()
+    var inv2 := Inventory.new()
     inv2.protoset = TEST_PROTOSET
     enable_weight_constraint(inv2, 20.0)
 
-    var big_item = inv2.create_and_add_item("big_item")
+    var big_item := inv2.create_and_add_item("big_item")
 
     assert(!InventoryItem.swap(small_item, big_item))
     WeightConstraint.set_item_weight(big_item, 1)
@@ -104,8 +104,8 @@ func test_swap_items() -> void:
 
 func test_serialize() -> void:
     weight_constraint.capacity = 42.42
-    var constraint_data = weight_constraint.serialize()
-    var capacity = weight_constraint.capacity
+    var constraint_data := weight_constraint.serialize()
+    var capacity := weight_constraint.capacity
 
     weight_constraint.reset()
     assert(weight_constraint.capacity == WeightConstraint.DEFAULT_CAPACITY)
@@ -116,8 +116,8 @@ func test_serialize() -> void:
 
 func test_serialize_json() -> void:
     weight_constraint.capacity = 42.42
-    var constraint_data = weight_constraint.serialize()
-    var capacity = weight_constraint.capacity
+    var constraint_data := weight_constraint.serialize()
+    var capacity := weight_constraint.capacity
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(constraint_data)

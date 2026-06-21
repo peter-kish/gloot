@@ -1,7 +1,7 @@
 extends Node
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
     print("Running tests")
     for test_suite in get_children():
         if test_suite is TestSuite:

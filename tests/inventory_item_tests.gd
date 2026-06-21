@@ -41,9 +41,9 @@ func test_get_inventory() -> void:
 
 
 func test_swap() -> void:
-    var inventory2 = create_inventory(TEST_PROTOSET)
-    var item2 = inventory2.create_and_add_item("minimal_item")
-    var slot2 = ItemSlot.new()
+    var inventory2 := create_inventory(TEST_PROTOSET)
+    var item2 := inventory2.create_and_add_item("minimal_item")
+    var slot2 := ItemSlot.new()
     slot2.protoset = TEST_PROTOSET
 
     # Swap items between two inventories
@@ -54,8 +54,8 @@ func test_swap() -> void:
     # Swap within one inventory
     inventory.add_item(item)
     inventory.add_item(item2)
-    var idx = inventory.get_item_index(item)
-    var idx2 = inventory.get_item_index(item2)
+    var idx := inventory.get_item_index(item)
+    var idx2 := inventory.get_item_index(item2)
     assert(InventoryItem.swap(item, item2))
     assert(item.get_inventory() == inventory)
     assert(item2.get_inventory() == inventory)

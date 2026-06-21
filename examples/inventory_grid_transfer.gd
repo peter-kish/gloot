@@ -29,7 +29,7 @@ func _input(event: InputEvent) -> void:
     %LblInfo.set_global_position(get_global_mouse_position() + info_offset)
 
 
-func _on_btn_sort(ctrl_inventory) -> void:
+func _on_btn_sort(ctrl_inventory: CtrlInventory) -> void:
     if !ctrl_inventory.inventory.get_constraint(GridConstraint).sort():
         print("Warning: GridConstraint.sort() returned false!")
 

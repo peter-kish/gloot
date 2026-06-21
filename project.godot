@@ -19,6 +19,10 @@ run/main_scene="res://tests/gloot_test.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://images/gloot_logo_128x128.png"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=2
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gloot/plugin.cfg")

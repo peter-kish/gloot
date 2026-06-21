@@ -10,7 +10,7 @@ var item2: InventoryItem
 var inventory: Inventory
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_equip_item",
         "test_add_item_to_inventory",
@@ -78,7 +78,7 @@ func test_serialize() -> void:
     var expected_prototype_id := item._prototype.get_prototype_id()
     var expected_properties := item.get_properties()
 
-    var item_slot_data = slot.serialize()
+    var item_slot_data := slot.serialize()
     slot.clear()
     assert(slot.get_item() == null)
     assert(slot.deserialize(item_slot_data))
@@ -93,7 +93,7 @@ func test_serialize_json() -> void:
     var expected_prototype_id := item._prototype.get_prototype_id()
     var expected_properties := item.get_properties()
 
-    var item_slot_data = slot.serialize()
+    var item_slot_data := slot.serialize()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(item_slot_data)

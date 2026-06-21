@@ -15,7 +15,7 @@ const TEST_PROTOSET_G = preload("res://tests/data/protoset_grid.json")
 const TEST_PROTOTYPE_ID_G = "item_2x2"
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_init",
         "test_has_space_for",
@@ -47,18 +47,18 @@ func test_init() -> void:
 
 
 func test_has_space_for() -> void:
-    var item = create_item(TEST_PROTOSET, TEST_PROTOTYPE_ID)
+    var item := create_item(TEST_PROTOSET, TEST_PROTOTYPE_ID)
     assert(constraint_manager.has_space_for(item))
 
 
 func test_w_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_W
-    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
+    var item := create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
 
     enable_weight_constraint(inventory, 10.0)
     assert(constraint_manager.get_constraint(WeightConstraint) != null)
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = 1.0, expected = {has_space = true, space = ItemCount.new(10)}},
         {input = 10.0, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = 11.0, expected = {has_space = false, space = ItemCount.zero()}},
@@ -72,12 +72,12 @@ func test_w_has_space_for() -> void:
 
 func test_g_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
+    var item := create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
-    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
+    var grid_constraint := enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i(1, 1), expected = {has_space = true, space = ItemCount.new(9)}},
         {input = Vector2i(2, 2), expected = {has_space = true, space = ItemCount.new(1)}},
         {input = Vector2i(3, 3), expected = {has_space = true, space = ItemCount.new(1)}},
@@ -92,16 +92,16 @@ func test_g_has_space_for() -> void:
 
 func test_wg_has_space_for() -> void:
     inventory.protoset = TEST_PROTOSET_W
-    var item = create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
+    var item := create_item(TEST_PROTOSET_W, TEST_PROTOTYPE_ID_W)
 
     enable_grid_constraint(inventory, Vector2i(3, 3))
     enable_weight_constraint(inventory, 10.0)
-    var grid_constraint = constraint_manager.get_constraint(GridConstraint)
-    var weight_constraint = constraint_manager.get_constraint(WeightConstraint)
+    var grid_constraint := constraint_manager.get_constraint(GridConstraint) as GridConstraint
+    var weight_constraint := constraint_manager.get_constraint(WeightConstraint) as WeightConstraint
     assert(grid_constraint != null)
     assert(weight_constraint != null)
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {weight = 1.0, size = Vector2i.ONE}, expected = {has_space = true, space = ItemCount.new(9)}},
         {input = {weight = 10.0, size = Vector2i(3, 3)}, expected = {has_space = true, space = ItemCount.new(1)}},
         {input = {weight = 11.0, size = Vector2i.ONE}, expected = {has_space = false, space = ItemCount.zero()}},
@@ -117,15 +117,15 @@ func test_wg_has_space_for() -> void:
 
 func test_g_enforce_constraints() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
+    var item := create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
-    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
+    var grid_constraint := enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(grid_constraint != null)
 
-    var new_item = inventory.create_and_add_item("item_2x2")
+    var new_item := inventory.create_and_add_item("item_2x2")
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Rect2i(0, 0, 2, 2), expected = false},
         {input = Rect2i(0, 0, 1, 1), expected = true},
     ]
@@ -154,7 +154,7 @@ func test_sg_enforce_constraints() -> void:
     # 2. No grid space available, but stack space available
     # 3. Grid space available, but no stack space available
     # 4. No grid space available and no stack space available
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
         {input = {inv_size = Vector2i(3, 3), new_item_stack_size = 1, new_item_max_stack_size = 2}, expected = true},
         {input = {inv_size = Vector2i(4, 4), new_item_stack_size = 1, new_item_max_stack_size = 1}, expected = true},
@@ -198,17 +198,17 @@ func test_sg_wrong_stack_type() -> void:
 
 func test_wg_enforce_constraints() -> void:
     inventory.protoset = TEST_PROTOSET_G
-    var item = create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
+    var item := create_item(TEST_PROTOSET_G, TEST_PROTOTYPE_ID_G)
 
-    var weight_constraint = enable_weight_constraint(inventory, 10.0)
-    var grid_constraint = enable_grid_constraint(inventory, Vector2i(3, 3))
+    var weight_constraint := enable_weight_constraint(inventory, 10.0)
+    var grid_constraint := enable_grid_constraint(inventory, Vector2i(3, 3))
     assert(weight_constraint != null)
     assert(grid_constraint != null)
 
-    var new_item = inventory.create_and_add_item("item_1x1")
+    var new_item := inventory.create_and_add_item("item_1x1")
     assert(grid_constraint.get_item_position(new_item) == Vector2i.ZERO)
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {new_item_rect = Rect2i(0, 0, 2, 2), item_weight = 1.0}, expected = false},
         {input = {new_item_rect = Rect2i(0, 0, 1, 1), item_weight = 11.0}, expected = false},
         {input = {new_item_rect = Rect2i(0, 0, 1, 1), item_weight = 1.0}, expected = true},

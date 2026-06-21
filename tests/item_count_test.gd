@@ -5,7 +5,7 @@ const ItemCount = preload("res://addons/gloot/core/item_count.gd")
 const Inf = ItemCount.Inf
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_init",
         "test_add",
@@ -19,20 +19,20 @@ func init_suite():
 
 
 func test_init() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = 10, expected = {count = 10, inf = false}},
         {input = Inf, expected = {count = Inf, inf = true}},
         {input = -1, expected = {count = Inf, inf = true}},
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input)
+        var count := ItemCount.new(data.input)
         assert(count.count == data.expected.count)
         assert(count.is_inf() == data.expected.inf)
 
 
 func test_add() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 10, right = 10}, expected = {count = 20, inf = false}},
         {input = {left = 10, right = Inf}, expected = {count = Inf, inf = true}},
         {input = {left = Inf, right = 10}, expected = {count = Inf, inf = true}},
@@ -40,15 +40,15 @@ func test_add() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         count.add(count2)
         assert(count.count == data.expected.count)
         assert(count.is_inf() == data.expected.inf)
 
 
 func test_mul() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 10, right = 20}, expected = {count = 200, inf = false}},
         {input = {left = 0, right = 10}, expected = {count = 0, inf = false}},
         {input = {left = 10, right = 0}, expected = {count = 0, inf = false}},
@@ -61,15 +61,15 @@ func test_mul() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         count.mul(count2)
         assert(count.count == data.expected.count)
         assert(count.is_inf() == data.expected.inf)
 
 
 func test_div() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 20, right = 10}, expected = {count = 2, inf = false}},
         {input = {left = 0, right = 10}, expected = {count = 0, inf = false}},
         {input = {left = 10, right = Inf}, expected = {count = 0, inf = false}},
@@ -79,15 +79,15 @@ func test_div() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         count.div(count2)
         assert(count.count == data.expected.count)
         assert(count.is_inf() == data.expected.inf)
 
 
 func test_eq() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 10, right = 10}, expected = true},
         {input = {left = 10, right = 20}, expected = false},
         {input = {left = 10, right = Inf}, expected = false},
@@ -98,13 +98,13 @@ func test_eq() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         assert(count.eq(count2) == data.expected)
 
 
 func test_lt() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 10, right = 20}, expected = true},
         {input = {left = 20, right = 10}, expected = false},
         {input = {left = 10, right = 10}, expected = false},
@@ -114,13 +114,13 @@ func test_lt() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         assert(count.lt(count2) == data.expected)
 
 
 func test_gt() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 20, right = 10}, expected = true},
         {input = {left = 0, right = 10}, expected = false},
         {input = {left = 10, right = 10}, expected = false},
@@ -130,13 +130,13 @@ func test_gt() -> void:
     ]
 
     for data in test_data:
-        var count = ItemCount.new(data.input.left)
-        var count2 = ItemCount.new(data.input.right)
+        var count := ItemCount.new(data.input.left)
+        var count2 := ItemCount.new(data.input.right)
         assert(count.gt(count2) == data.expected)
 
 
 func test_min() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {left = 20, right = 10}, expected = {count = 10, inf = false}},
         {input = {left = 10, right = 20}, expected = {count = 10, inf = false}},
         {input = {left = Inf, right = 20}, expected = {count = 20, inf = false}},
@@ -145,8 +145,8 @@ func test_min() -> void:
     ]
 
     for data in test_data:
-        var left = ItemCount.new(data.input.left)
-        var right = ItemCount.new(data.input.right)
+        var left := ItemCount.new(data.input.left)
+        var right := ItemCount.new(data.input.right)
         var result := ItemCount.min(left, right)
         assert(result.count == data.expected.count)
         assert(result.is_inf() == data.expected.inf)

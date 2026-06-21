@@ -23,7 +23,7 @@ func can_subdivide_test() -> void:
 
 
 func get_quadrant_rects_test() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Rect2i(0, 0, 2, 2), expected = [Rect2i(0, 0, 1, 1), Rect2i(1, 0, 1, 1), Rect2i(0, 1, 1, 1), Rect2i(1, 1, 1, 1)]},
         {input = Rect2i(0, 0, 5, 5), expected = [Rect2i(0, 0, 3, 3), Rect2i(3, 0, 2, 3), Rect2i(0, 3, 3, 2), Rect2i(3, 3, 2, 2)]},
         {input = Rect2i(2, 2, 4, 4), expected = [Rect2i(2, 2, 2, 2), Rect2i(4, 2, 2, 2), Rect2i(2, 4, 2, 2), Rect2i(4, 4, 2, 2)]},

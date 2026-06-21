@@ -8,7 +8,7 @@ var item_2x2_2: InventoryItem
 
 const TEST_PROTOSET = preload("res://tests/data/protoset_grid.json")
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_add_item",
         "test_add_item_at",
@@ -24,7 +24,7 @@ func init_suite():
     ]
 
 
-func init_test():
+func init_test() -> void:
     inventory_3x3 = create_inventory_grid(TEST_PROTOSET, Vector2i(3, 3))
     inventory_3x3_2 = create_inventory_grid(TEST_PROTOSET, Vector2i(3, 3))
     
@@ -81,7 +81,7 @@ func test_change_size() -> void:
 
 
 func test_create_and_add_item_at() -> void:
-    var new_item = inventory_3x3.get_constraint(GridConstraint).create_and_add_item_at("item_1x1", Vector2i(1, 1))
+    var new_item := (inventory_3x3.get_constraint(GridConstraint) as GridConstraint).create_and_add_item_at("item_1x1", Vector2i(1, 1))
     assert(new_item)
     assert(inventory_3x3.get_item_count() == 1)
     assert(inventory_3x3.has_item(new_item))
@@ -102,7 +102,7 @@ func test_get_item_at() -> void:
 func test_get_items_under() -> void:
     assert(inventory_3x3.add_item(item_1x1))
     assert(inventory_3x3.add_item(item_2x2))
-    var items = inventory_3x3.get_constraint(GridConstraint).get_items_under(Rect2i(0, 0, 2, 2))
+    var items := (inventory_3x3.get_constraint(GridConstraint) as GridConstraint).get_items_under(Rect2i(0, 0, 2, 2))
     assert(items.size() == 2)
     assert(item_1x1 in items)
     assert(item_2x2 in items)
@@ -136,11 +136,11 @@ func test_sort() -> void:
     assert(inventory_3x3.get_constraint(GridConstraint).get_item_at(Vector2i(0, 2)) == item_1x1)
 
 
-func test_serialize():
+func test_serialize() -> void:
     var grid_constraint: GridConstraint = inventory_3x3.get_constraint(GridConstraint)
     assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
     assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
-    var inventory_data = inventory_3x3.serialize()
+    var inventory_data := inventory_3x3.serialize()
 
     inventory_3x3.reset()
     assert(inventory_3x3.get_items().is_empty())
@@ -154,11 +154,11 @@ func test_serialize():
     assert(grid_constraint.get_item_position(inventory_3x3.get_items()[1]) == Vector2i.ONE)
     
 
-func test_serialize_json():
+func test_serialize_json() -> void:
     var grid_constraint: GridConstraint = inventory_3x3.get_constraint(GridConstraint)
     assert(grid_constraint.add_item_at(item_1x1, Vector2i.ZERO))
     assert(grid_constraint.add_item_at(item_2x2, Vector2i.ONE))
-    var inventory_data = inventory_3x3.serialize()
+    var inventory_data := inventory_3x3.serialize()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)

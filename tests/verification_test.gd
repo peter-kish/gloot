@@ -10,7 +10,7 @@ var d: Dictionary = {
 }
 
 
-func init_suite():
+func init_suite() -> void:
     tests = ["test_mandatory", "test_optional", "test_vector_positive", "test_rect_positive"]
 
 

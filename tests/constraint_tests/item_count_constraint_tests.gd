@@ -7,7 +7,7 @@ var item_count_constraint: ItemCountConstraint
 const TEST_PROTOSET = preload("res://tests/data/protoset_basic.json")
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_init",
         "test_capacity",
@@ -73,13 +73,13 @@ func test_get_space_for() -> void:
 
 func test_swap_items() -> void:
     item_count_constraint.capacity = 3
-    var item1 = inventory.create_and_add_item("minimal_item")
+    var item1 := inventory.create_and_add_item("minimal_item")
     
-    var inv2 = Inventory.new()
+    var inv2 := Inventory.new()
     inv2.protoset = TEST_PROTOSET
     enable_item_count_constraint(inv2, 20)
 
-    var item2 = inv2.create_and_add_item("minimal_item")
+    var item2 := inv2.create_and_add_item("minimal_item")
 
     assert(InventoryItem.swap(item1, item2))
     assert(inventory.has_item(item2))
@@ -90,8 +90,8 @@ func test_swap_items() -> void:
 
 func test_serialize() -> void:
     item_count_constraint.capacity = 42
-    var constraint_data = item_count_constraint.serialize()
-    var capacity = item_count_constraint.capacity
+    var constraint_data := item_count_constraint.serialize()
+    var capacity := item_count_constraint.capacity
 
     item_count_constraint.reset()
     assert(item_count_constraint.capacity == 1)
@@ -102,8 +102,8 @@ func test_serialize() -> void:
 
 func test_serialize_json() -> void:
     item_count_constraint.capacity = 42
-    var constraint_data = item_count_constraint.serialize()
-    var capacity = item_count_constraint.capacity
+    var constraint_data := item_count_constraint.serialize()
+    var capacity := item_count_constraint.capacity
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(constraint_data)

@@ -8,7 +8,7 @@ const TEST_PROTOSET = preload("res://tests/data/protoset_grid.json")
 const TEST_PROTOTYPE_ID = "item_2x2"
 
 
-func init_suite():
+func init_suite() -> void:
     tests = [
         "test_set_size",
         "test_item_position",
@@ -50,7 +50,7 @@ func test_item_position() -> void:
     assert(grid_constraint.get_item_position(item) == Vector2i.ZERO)
     assert(inventory.add_item(item))
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i(9, 9), expected = {return_value = false, position = Vector2i.ZERO}},
         {input = Vector2i(-1, -1), expected = {return_value = false, position = Vector2i.ZERO}},
         {input = Vector2i(8, 8), expected = {return_value = true, position = Vector2i(8, 8)}},
@@ -65,7 +65,7 @@ func test_item_size() -> void:
     assert(grid_constraint.get_item_size(item) == Vector2i(2, 2))
     assert(inventory.add_item(item))
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i(-1, -1), expected = {return_value = false, size = Vector2i(2, 2)}},
         {input = Vector2i(4, 4), expected = {return_value = true, size = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, size = Vector2i(4, 4)}},
@@ -80,7 +80,7 @@ func test_item_rect() -> void:
     assert(grid_constraint.get_item_rect(item) == Rect2i(0, 0, 2, 2))
     assert(inventory.add_item(item))
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Rect2i(0, 0, -1, -1), expected = {return_value = false, rect = Rect2i(0, 0, 2, 2)}},
         {input = Rect2i(4, 4, 4, 4), expected = {return_value = true, rect = Rect2i(4, 4, 4, 4)}},
         {input = Rect2i(9, 9, 4, 4), expected = {return_value = false, rect = Rect2i(4, 4, 4, 4)}},
@@ -120,7 +120,7 @@ func test_item_rotation() -> void:
     # Test obstructed rotation
     grid_constraint.set_item_rotation(item, false)
     assert(grid_constraint.get_item_rect(item) == Rect2i(Vector2i.ZERO, ITEM_SIZE))
-    var new_item = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2(0, 1))
+    var new_item := grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2(0, 1))
     assert(new_item != null)
     assert(!grid_constraint.can_rotate_item(item))
     assert(!grid_constraint.set_item_rotation(item, true))
@@ -134,7 +134,7 @@ func test_add_item() -> void:
     assert(inventory.add_item(item))
     assert(grid_constraint.get_item_position(item) == Vector2i.ZERO)
     
-    var item_1x1 = create_item(inventory.protoset, "item_1x1")
+    var item_1x1 := create_item(inventory.protoset, "item_1x1")
     grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_VERTICAL
     assert(inventory.add_item(item_1x1))
     assert(grid_constraint.get_item_position(item_1x1) == Vector2i(0, 2))
@@ -146,7 +146,7 @@ func test_add_item() -> void:
 
 
 func test_add_item_at() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i.ZERO, expected = {return_value = true, has_item = true, position = Vector2i.ZERO}},
         {input = Vector2i(4, 4), expected = {return_value = true, has_item = true, position = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i(4, 4)}},
@@ -163,14 +163,14 @@ func test_add_item_at() -> void:
 
 
 func test_create_and_add_item_at() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i.ZERO, expected = {return_value = true, has_item = true, position = Vector2i.ZERO}},
         {input = Vector2i(4, 4), expected = {return_value = true, has_item = true, position = Vector2i(4, 4)}},
         {input = Vector2i(15, 15), expected = {return_value = false, has_item = false, position = Vector2i.ZERO}},
     ]
 
     for data in test_data:
-        var new_item = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, data.input)
+        var new_item := grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, data.input)
         assert((new_item != null) == data.expected.return_value)
         assert(inventory.has_item(new_item) == data.expected.has_item)
         if (inventory.has_item(new_item)):
@@ -181,7 +181,7 @@ func test_create_and_add_item_at() -> void:
 
 
 func test_get_items_under() -> void:
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(0, 0, 1, 1)}, expected = 1},
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(1, 1, 1, 1)}, expected = 1},
         {input = {item_positions = [Vector2i.ZERO], test_rect = Rect2i(2, 2, 1, 1)}, expected = 0},
@@ -190,7 +190,7 @@ func test_get_items_under() -> void:
 
     for data in test_data:
         var new_items: Array[InventoryItem] = []
-        for item_position in data.input.item_positions:
+        for item_position: Vector2i in data.input.item_positions:
             var new_item := grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, item_position)
             assert(new_item != null)
             new_items.append(new_item)
@@ -204,7 +204,7 @@ func test_get_items_under() -> void:
 func test_move_item_to() -> void:
     grid_constraint.add_item_at(item, Vector2i(2, 2))
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i(1, 0), expected = true},
         {input = Vector2i(1, 1), expected = false},
         {input = Vector2i(4, 4), expected = true},
@@ -212,7 +212,7 @@ func test_move_item_to() -> void:
     ]
 
     for data in test_data:
-        var new_item = inventory.create_and_add_item(TEST_PROTOTYPE_ID)
+        var new_item := inventory.create_and_add_item(TEST_PROTOTYPE_ID)
         assert(new_item != null)
         assert(grid_constraint.move_item_to(new_item, data.input) == data.expected)
         assert((grid_constraint.get_item_position(new_item) == data.input) == data.expected)
@@ -221,9 +221,9 @@ func test_move_item_to() -> void:
 
 
 func test_swap_items() -> void:
-    var new_item_1x1 = grid_constraint.create_and_add_item_at("item_1x1", Vector2i.ZERO)
-    var new_item_2x2 = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2i(1, 0))
-    var new_item_2x2_2 = grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2i(0, 2))
+    var new_item_1x1 := grid_constraint.create_and_add_item_at("item_1x1", Vector2i.ZERO)
+    var new_item_2x2 := grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2i(1, 0))
+    var new_item_2x2_2 := grid_constraint.create_and_add_item_at(TEST_PROTOTYPE_ID, Vector2i(0, 2))
     assert(new_item_1x1 != null)
     assert(new_item_2x2 != null)
     assert(new_item_2x2_2 != null)
@@ -236,7 +236,7 @@ func test_swap_items() -> void:
 func test_rect_free() -> void:
     grid_constraint.add_item_at(item, Vector2i(2, 2))
 
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = {rect = Rect2i(-1, -1, 1, 1), exception = null}, expected = false},
         {input = {rect = Rect2i(0, 0, 1, 1), exception = null}, expected = true},
         {input = {rect = Rect2i(0, 0, 3, 3), exception = null}, expected = false},
@@ -250,9 +250,9 @@ func test_rect_free() -> void:
 
 
 func test_sort() -> void:
-    var item1 = grid_constraint.create_and_add_item_at("item_1x1", Vector2i.ZERO)
-    var item2 = grid_constraint.create_and_add_item_at("item_1x1", Vector2i(1, 0))
-    var item3 = grid_constraint.create_and_add_item_at("item_2x2", Vector2i(0, 1))
+    var item1 := grid_constraint.create_and_add_item_at("item_1x1", Vector2i.ZERO)
+    var item2 := grid_constraint.create_and_add_item_at("item_1x1", Vector2i(1, 0))
+    var item3 := grid_constraint.create_and_add_item_at("item_2x2", Vector2i(0, 1))
 
     grid_constraint.sort()
     assert(grid_constraint.get_item_position(item3) == Vector2i.ZERO)
@@ -266,7 +266,7 @@ func test_sort() -> void:
 
 func test_get_space_for() -> void:
     # Empty inventory
-    var test_data := [
+    var test_data: Array[Dictionary] = [
         {input = Vector2i.ONE, expected = 0},
         {input = Vector2i(2, 2), expected = 1},
         {input = Vector2i(3, 3), expected = 1},
@@ -279,7 +279,7 @@ func test_get_space_for() -> void:
 
     # One item in inventory
     grid_constraint.size = Vector2i(2, 2)
-    var item2 = inventory.create_and_add_item(TEST_PROTOTYPE_ID)
+    var item2 := inventory.create_and_add_item(TEST_PROTOTYPE_ID)
     test_data = [
         {input = Vector2i(2, 2), expected = 0},
         {input = Vector2i(3, 3), expected = 0},
@@ -296,9 +296,9 @@ func test_get_space_for() -> void:
 func test_serialize() -> void:
     grid_constraint.size = Vector2i(4, 2)
     grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_HORIZONTAL
-    var constraint_data = grid_constraint.serialize()
-    var size = grid_constraint.size
-    var insertion_priority = grid_constraint.insertion_priority
+    var constraint_data := grid_constraint.serialize()
+    var size := grid_constraint.size
+    var insertion_priority := grid_constraint.insertion_priority
 
     grid_constraint.reset()
     assert(grid_constraint.size == GridConstraint.DEFAULT_SIZE)
@@ -312,9 +312,9 @@ func test_serialize() -> void:
 func test_serialize_json() -> void:
     grid_constraint.size = Vector2i(4, 2)
     grid_constraint.insertion_priority = GridConstraint.INSERTION_PRIORITY_HORIZONTAL
-    var constraint_data = grid_constraint.serialize()
-    var size = grid_constraint.size
-    var insertion_priority = grid_constraint.insertion_priority
+    var constraint_data := grid_constraint.serialize()
+    var size := grid_constraint.size
+    var insertion_priority := grid_constraint.insertion_priority
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(constraint_data)

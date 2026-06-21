@@ -82,11 +82,11 @@ func test_stack_split_join() -> void:
     assert(inventory.add_item(stackable_item))
     assert(inventory.split_stack(stackable_item, 5) != null)
     assert(inventory.get_item_count() == 2)
-    var item1 = inventory.get_items()[0]
-    var item2 = inventory.get_items()[1]
+    var item1 := inventory.get_items()[0]
+    var item2 := inventory.get_items()[1]
     assert(item1.get_stack_size() == 5)
     assert(item2.get_stack_size() == 5)
-    var joined = item2.merge_into(item1)
+    var joined := item2.merge_into(item1)
     assert(joined)
     assert(item1.get_stack_size() == 10)
     assert(inventory.get_item_count() == 1)
@@ -187,9 +187,9 @@ func test_add_item_autosplitmerge_limited_capacity_with_item() -> void:
 
 func test_serialize() -> void:
     assert(inventory.add_item(item))
-    var inventory_data = inventory.serialize()
-    var capacity = inventory.get_constraint(WeightConstraint).capacity
-    var occupied_space = inventory.get_constraint(WeightConstraint).get_occupied_space()
+    var inventory_data := inventory.serialize()
+    var capacity := (inventory.get_constraint(WeightConstraint) as WeightConstraint).capacity
+    var occupied_space := (inventory.get_constraint(WeightConstraint) as WeightConstraint).get_occupied_space()
     inventory.reset()
     assert(inventory.get_items().is_empty())
     assert(inventory.deserialize(inventory_data))
@@ -200,9 +200,9 @@ func test_serialize() -> void:
 
 func test_serialize_json() -> void:
     assert(inventory.add_item(item))
-    var inventory_data = inventory.serialize()
-    var capacity = inventory.get_constraint(WeightConstraint).capacity
-    var occupied_space = inventory.get_constraint(WeightConstraint).get_occupied_space()
+    var inventory_data := inventory.serialize()
+    var capacity := (inventory.get_constraint(WeightConstraint) as WeightConstraint).capacity
+    var occupied_space := (inventory.get_constraint(WeightConstraint) as WeightConstraint).get_occupied_space()
 
     # To and from JSON serialization
     var json_string: String = JSON.stringify(inventory_data)

@@ -55,13 +55,13 @@ func test_has_item() -> void:
 
 
 func test_create() -> void:
-    var new_item = inventory2.create_item("minimal_item_2")
+    var new_item := inventory2.create_item("minimal_item_2")
     assert(new_item)
     assert(!inventory2.has_item(new_item))
 
 
 func test_create_and_add() -> void:
-    var new_item = inventory2.create_and_add_item("minimal_item_2")
+    var new_item := inventory2.create_and_add_item("minimal_item_2")
     assert(new_item)
     assert(inventory2.get_item_count() == 1)
     assert(inventory2.has_item(new_item))
@@ -75,7 +75,7 @@ func test_remove_item() -> void:
 
 
 func test_serialize() -> void:
-    var inventory_data = inventory1.serialize()
+    var inventory_data := inventory1.serialize()
     inventory1.reset()
     assert(inventory1.get_items().is_empty())
     assert(inventory1.deserialize(inventory_data))
@@ -105,7 +105,7 @@ func test_local_protoset() -> void:
     inv.protoset = json
     assert(inv.create_and_add_item("minimal_item") != null)
 
-    var inv_data = inv.serialize()
+    var inv_data := inv.serialize()
     inv.reset()
     inv.deserialize(inv_data)
 
