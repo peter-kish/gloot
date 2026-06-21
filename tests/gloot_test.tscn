@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://6ij3qlnr0qr3"]
+[gd_scene format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" uid="uid://cicxp1a32ye3s" path="res://tests/item_definitions_test.gd" id="2"]
 [ext_resource type="Script" uid="uid://hfcic3vuiugx" path="res://tests/quadtree_tests.gd" id="2_bbskb"]
@@ -17,50 +17,50 @@
 [ext_resource type="Script" uid="uid://dfpomiy7nh8mm" path="res://tests/item_slot_tests.gd" id="14_3213w"]
 [ext_resource type="Script" uid="uid://v2hlddmvlkm8" path="res://tests/test_runner.gd" id="15"]
 
-[node name="InventorySystemTests" type="Node"]
+[node name="InventorySystemTests" type="Node" unique_id=1494552040]
 script = ExtResource("15")
 
-[node name="QuadtreeTest" type="Node" parent="."]
+[node name="QuadtreeTest" type="Node" parent="." unique_id=1964657207]
 script = ExtResource("2_bbskb")
 
-[node name="PrototreeTest" type="Node" parent="."]
+[node name="PrototreeTest" type="Node" parent="." unique_id=1497833707]
 script = ExtResource("2_ryngl")
 
-[node name="InventorySpaceTest" type="Node" parent="."]
+[node name="InventorySpaceTest" type="Node" parent="." unique_id=982830425]
 script = ExtResource("2_e28iq")
 
-[node name="WeightConstraintTest" type="Node" parent="."]
+[node name="WeightConstraintTest" type="Node" parent="." unique_id=436097740]
 script = ExtResource("3_4otuf")
 
-[node name="GridConstraintTest" type="Node" parent="."]
+[node name="GridConstraintTest" type="Node" parent="." unique_id=40872001]
 script = ExtResource("5_atslo")
 
-[node name="ItemCountConstraintTests" type="Node" parent="."]
+[node name="ItemCountConstraintTests" type="Node" parent="." unique_id=885507915]
 script = ExtResource("7_emexd")
 
-[node name="ConstraintManagerTests" type="Node" parent="."]
+[node name="ConstraintManagerTests" type="Node" parent="." unique_id=670476266]
 script = ExtResource("6_xg0v1")
 
-[node name="VerificationTest" type="Node" parent="."]
+[node name="VerificationTest" type="Node" parent="." unique_id=1413558506]
 script = ExtResource("14")
 
-[node name="ItemDefinitionsTest" type="Node" parent="."]
+[node name="ItemDefinitionsTest" type="Node" parent="." unique_id=992939662]
 script = ExtResource("2")
 
-[node name="InventoryTests" type="Node" parent="."]
+[node name="InventoryTests" type="Node" parent="." unique_id=1099116423]
 script = ExtResource("6")
 
-[node name="InventoryItemTests" type="Node" parent="."]
+[node name="InventoryItemTests" type="Node" parent="." unique_id=1936825770]
 script = ExtResource("10_sgu71")
 
-[node name="InventoryStackedTests" type="Node" parent="."]
+[node name="InventoryStackedTests" type="Node" parent="." unique_id=1599476596]
 script = ExtResource("3")
 
-[node name="InventoryGridTests" type="Node" parent="."]
+[node name="InventoryGridTests" type="Node" parent="." unique_id=732530011]
 script = ExtResource("5")
 
-[node name="InventoryGridStackedTests" type="Node" parent="."]
+[node name="InventoryGridStackedTests" type="Node" parent="." unique_id=749169265]
 script = ExtResource("8_btq38")
 
-[node name="ItemSlotTests" type="Node" parent="."]
+[node name="ItemSlotTests" type="Node" parent="." unique_id=243341303]
 script = ExtResource("14_3213w")

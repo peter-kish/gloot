@@ -73,7 +73,7 @@ func _on_protoset_changed() -> void:
     protoset_changed.emit()
 
     
-func _get_property_list():
+func _get_property_list() -> Array[Dictionary]:
     return [
         {
             "name": "_serialized_format",
@@ -92,7 +92,7 @@ func _get_configuration_warnings() -> PackedStringArray:
     if protoset == null:
         return PackedStringArray([
                 "This inventory node has no prototree. Set the 'protoset' field to be able to " \
-                + "populate the inventory with items."])
+                +"populate the inventory with items."])
     return PackedStringArray()
 
 
@@ -203,7 +203,7 @@ func can_add_item(item: InventoryItem) -> bool:
 
 
 ## Creates an `InventoryItem` based on the prototype ID.
-func create_item(prototype_id: String) ->InventoryItem:
+func create_item(prototype_id: String) -> InventoryItem:
     var item: InventoryItem = InventoryItem.new(protoset, prototype_id)
     return item
 
@@ -355,7 +355,6 @@ func _deserialize_undoable(source: Dictionary) -> bool:
     # ConstraintManager.deserialize() results in weird behavior when used for undo/redo
     # operations due to the creation of new nodes. ConstraintManager._deserialize_undoable()
     # should reuse existing nodes instead, but has some other limitations.
-
     if !_Verify.dict(source, true, _KEY_NODE_NAME, TYPE_STRING) || \
         !_Verify.dict(source, false, _KEY_ITEMS, TYPE_ARRAY, TYPE_DICTIONARY) || \
         !_Verify.dict(source, false, _KEY_CONSTRAINTS, TYPE_DICTIONARY):

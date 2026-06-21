@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://de2c4q3rk76nu"]
+[gd_scene format=3 uid="uid://de2c4q3rk76nu"]
 
 [ext_resource type="Script" uid="uid://cv5q4cxv78lcq" path="res://addons/gloot/editor/item_editor/properties_editor.gd" id="1_4ikx6"]
 [ext_resource type="PackedScene" uid="uid://digtudobrw3xb" path="res://addons/gloot/editor/common/dict_editor.tscn" id="1_f5dhm"]
 
-[node name="PropertiesEditor" type="Window"]
+[node name="PropertiesEditor" type="Window" unique_id=552121067]
 title = "Edit Item Properties"
 position = Vector2i(0, 36)
 size = Vector2i(800, 300)
@@ -12,7 +12,7 @@ exclusive = true
 min_size = Vector2i(400, 200)
 script = ExtResource("1_4ikx6")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=137920951]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -25,5 +25,5 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="DictEditor" parent="MarginContainer" instance=ExtResource("1_f5dhm")]
+[node name="DictEditor" parent="MarginContainer" unique_id=126318518 instance=ExtResource("1_f5dhm")]
 layout_mode = 2

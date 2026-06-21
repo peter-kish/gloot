@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcyi3nd2idb5j"]
+[gd_scene format=3 uid="uid://dcyi3nd2idb5j"]
 
 [ext_resource type="Script" uid="uid://bikhe74xfo7u4" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="2_6ia13"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="2_25j36"]
@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bu5mhp7ayfx4j" path="res://addons/gloot/ui/ctrl_inventory.gd" id="5_b1fi0"]
 [ext_resource type="Script" uid="uid://ba5wmjtc5l8i3" path="res://addons/gloot/core/constraints/weight_constraint.gd" id="6_tm82y"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=413351176]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +15,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventory" type="ItemList" parent="." unique_id=1652651369 node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 352.0
 offset_bottom = 240.0
@@ -26,7 +26,7 @@ item_1/icon = ExtResource("4_ijkns")
 script = ExtResource("5_b1fi0")
 inventory = NodePath("../Inventory")
 
-[node name="CtrlInventoryCapacity" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryCapacity" type="Control" parent="." unique_id=2134254257 node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(0, 23)
 anchors_preset = 0
 offset_top = 240.0
@@ -35,7 +35,7 @@ offset_bottom = 263.0
 script = ExtResource("2_6ia13")
 inventory = NodePath("../Inventory")
 
-[node name="Inventory" type="Node" parent="."]
+[node name="Inventory" type="Node" parent="." unique_id=790155201]
 script = ExtResource("2_25j36")
 protoset = ExtResource("4_uov1j")
 _serialized_format = {
@@ -58,6 +58,6 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_stacks.json"
 }
 
-[node name="WeightConstraint" type="Node" parent="Inventory"]
+[node name="WeightConstraint" type="Node" parent="Inventory" unique_id=684863385]
 script = ExtResource("6_tm82y")
 capacity = 20.0

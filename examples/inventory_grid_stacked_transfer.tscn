@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://o6g61xdkjii0"]
+[gd_scene format=3 uid="uid://o6g61xdkjii0"]
 
 [ext_resource type="Script" uid="uid://qaysak7mjhy6" path="res://examples/inventory_grid_stacked_transfer.gd" id="1_yjyyb"]
 [ext_resource type="Script" uid="uid://d0pfc3q6sof8y" path="res://addons/gloot/ui/ctrl_inventory_grid.gd" id="2_ptyr5"]
@@ -50,7 +50,7 @@ region_rect = Rect2(0, 0, 32, 32)
 texture = ExtResource("4_8hltm")
 region_rect = Rect2(0, 0, 32, 32)
 
-[node name="InventoryGridStackedTransfer" type="Control"]
+[node name="InventoryGridStackedTransfer" type="Control" unique_id=1748479937]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -59,23 +59,23 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yjyyb")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1371325236]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1908978503]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1307904855]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=785857882]
 layout_mode = 2
 
-[node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryGridLeft" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer/PanelContainer" unique_id=1139984748 node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
@@ -86,25 +86,25 @@ field_style = SubResource("1")
 field_highlighted_style = SubResource("2")
 selection_style = SubResource("5")
 
-[node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="BtnSortLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1197532920]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sort"
 
-[node name="BtnSplitLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="BtnSplitLeft" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=467351117]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Split"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1135813715]
 layout_mode = 2
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=912524199]
 layout_mode = 2
 
-[node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryGridRight" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer2/PanelContainer2" unique_id=1838137637 node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(160, 160)
@@ -115,30 +115,30 @@ field_style = SubResource("3")
 field_highlighted_style = SubResource("4")
 selection_style = SubResource("6")
 
-[node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="BtnSortRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=535205897]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sort"
 
-[node name="BtnSplitRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="BtnSplitRight" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=2082759244]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Split"
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=17352361]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer3" unique_id=2138717386]
 layout_mode = 2
 text = "Item Slot:"
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/VBoxContainer3" unique_id=315169271]
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer" node_paths=PackedStringArray("item_slot")]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer/VBoxContainer3/PanelContainer" unique_id=1639414283 node_paths=PackedStringArray("item_slot")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -148,12 +148,12 @@ icon_stretch_mode = 5
 slot_style = SubResource("7")
 slot_highlighted_style = SubResource("8")
 
-[node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3"]
+[node name="BtnUnequip" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer3" unique_id=86510362]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Unequip"
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=998141931]
 layout_mode = 2
 text = "Drag and drop items to transfer them from one inventory to the other.
 Press the 'Sort' buttons to sort the inventories.
@@ -161,18 +161,19 @@ Press the 'Split' buttons to split the selected stack in half.
 Drag items from the right inventory onto the item slot to equip it.
 Use the 'Unequip' button to unequip it."
 
-[node name="LblInfo" type="Label" parent="."]
+[node name="LblInfo" type="Label" parent="." unique_id=1670582716]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 14.0
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemSlot" type="Node" parent="." unique_id=1120883804]
 script = ExtResource("10_lyc83")
 protoset = ExtResource("8_mr2pf")
+_serialized_format = {}
 
-[node name="InventoryLeft" type="Node" parent="."]
+[node name="InventoryLeft" type="Node" parent="." unique_id=608133810]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
 protoset = ExtResource("8_mr2pf")
@@ -219,11 +220,11 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_grid.json"
 }
 
-[node name="GridConstraint" type="Node" parent="InventoryLeft"]
+[node name="GridConstraint" type="Node" parent="InventoryLeft" unique_id=2022514139]
 script = ExtResource("10_6njuc")
 size = Vector2i(5, 5)
 
-[node name="InventoryRight" type="Node" parent="."]
+[node name="InventoryRight" type="Node" parent="." unique_id=2137773163]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
 protoset = ExtResource("8_mr2pf")
@@ -270,6 +271,6 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_grid.json"
 }
 
-[node name="GridConstraint" type="Node" parent="InventoryRight"]
+[node name="GridConstraint" type="Node" parent="InventoryRight" unique_id=734838049]
 script = ExtResource("10_6njuc")
 size = Vector2i(5, 5)

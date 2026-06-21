@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwu4vhba7uc2m"]
+[gd_scene format=3 uid="uid://dwu4vhba7uc2m"]
 
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="2_yi3ph"]
@@ -9,7 +9,7 @@
 [ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="6_yy1r8"]
 [ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="8_v60ia"]
 
-[node name="InventoryTransfer" type="Control"]
+[node name="InventoryTransfer" type="Control" unique_id=1743078535]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +18,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=464443436]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,12 +26,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1896694105]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CtrlInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryLeft" type="ItemList" parent="VBoxContainer/HBoxContainer" unique_id=1356530038 node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -43,7 +43,7 @@ item_1/icon = ExtResource("3_ibulh")
 script = ExtResource("4_0by68")
 inventory = NodePath("../../../InventoryLeft")
 
-[node name="CtrlInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer" node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryRight" type="ItemList" parent="VBoxContainer/HBoxContainer" unique_id=95810985 node_paths=PackedStringArray("inventory")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -55,53 +55,53 @@ item_1/icon = ExtResource("3_ibulh")
 script = ExtResource("4_0by68")
 inventory = NodePath("../../../InventoryRight")
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=1053867483]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer3" unique_id=298034409]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=1631026113]
 layout_mode = 2
 
-[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer" node_paths=PackedStringArray("item_slot")]
+[node name="CtrlItemSlot" type="Control" parent="VBoxContainer/HBoxContainer3/HBoxContainer/PanelContainer" unique_id=2078279375 node_paths=PackedStringArray("item_slot")]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 script = ExtResource("6_bfwo4")
 item_slot = NodePath("../../../../../ItemSlot")
 
-[node name="BtnEquipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
+[node name="BtnEquipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=727908908]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Equip"
 
-[node name="BtnUnequipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer"]
+[node name="BtnUnequipL" type="Button" parent="VBoxContainer/HBoxContainer3/HBoxContainer" unique_id=980192664]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Unequip"
 
-[node name="Label" type="Label" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1415363135]
 layout_mode = 2
 text = "Use the buttons above to equip/unequip an item from the left inventory.
 Use the buttons below to transfer items from one inventory to the other."
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=560870046]
 layout_mode = 2
 
-[node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="BtnRToL" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=2020699243]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "<<<"
 
-[node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="BtnLToR" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1239496130]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = ">>>"
 
-[node name="InventoryLeft" type="Node" parent="."]
+[node name="InventoryLeft" type="Node" parent="." unique_id=270500322]
 unique_name_in_owner = true
 script = ExtResource("2")
 protoset = ExtResource("6_yy1r8")
@@ -117,7 +117,7 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_basic.json"
 }
 
-[node name="InventoryRight" type="Node" parent="."]
+[node name="InventoryRight" type="Node" parent="." unique_id=1700666740]
 unique_name_in_owner = true
 script = ExtResource("2")
 protoset = ExtResource("6_yy1r8")
@@ -133,7 +133,8 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_basic.json"
 }
 
-[node name="ItemSlot" type="Node" parent="."]
+[node name="ItemSlot" type="Node" parent="." unique_id=1076419517]
 unique_name_in_owner = true
 script = ExtResource("8_v60ia")
 protoset = ExtResource("6_yy1r8")
+_serialized_format = {}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dphh30kym6h7f"]
+[gd_scene format=3 uid="uid://dphh30kym6h7f"]
 
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="1_ykodk"]
 [ext_resource type="JSON" path="res://tests/data/protoset_stacks.json" id="2_8vr37"]
@@ -7,9 +7,9 @@
 [ext_resource type="Script" uid="uid://c88tils8h0042" path="res://addons/gloot/core/constraints/item_count_constraint.gd" id="5_7dr5d"]
 [ext_resource type="Script" uid="uid://bikhe74xfo7u4" path="res://addons/gloot/ui/ctrl_inventory_capacity.gd" id="6_40sow"]
 
-[node name="TestCtrlCapacity" type="Node2D"]
+[node name="TestCtrlCapacity" type="Node2D" unique_id=1441346327]
 
-[node name="InventoryWeightConstraint" type="Node" parent="."]
+[node name="InventoryWeightConstraint" type="Node" parent="." unique_id=415738794]
 script = ExtResource("1_ykodk")
 protoset = ExtResource("2_8vr37")
 _serialized_format = {
@@ -32,11 +32,11 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_stacks.json"
 }
 
-[node name="WeightConstraint" type="Node" parent="InventoryWeightConstraint"]
+[node name="WeightConstraint" type="Node" parent="InventoryWeightConstraint" unique_id=1601877456]
 script = ExtResource("3_16p24")
 capacity = 50.0
 
-[node name="InventoryItemCountConstraint" type="Node" parent="."]
+[node name="InventoryItemCountConstraint" type="Node" parent="." unique_id=615010228]
 script = ExtResource("1_ykodk")
 protoset = ExtResource("4_uiaq5")
 _serialized_format = {
@@ -59,11 +59,11 @@ _serialized_format = {
 "protoset": "res://tests/data/protoset_basic.json"
 }
 
-[node name="ItemCountConstraint" type="Node" parent="InventoryItemCountConstraint"]
+[node name="ItemCountConstraint" type="Node" parent="InventoryItemCountConstraint" unique_id=1072523905]
 script = ExtResource("5_7dr5d")
 capacity = 3
 
-[node name="CtrlInventoryCapacity" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryCapacity" type="Control" parent="." unique_id=851256528 node_paths=PackedStringArray("inventory")]
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 3
 anchors_preset = 0
@@ -72,7 +72,7 @@ offset_bottom = 23.0
 script = ExtResource("6_40sow")
 inventory = NodePath("../InventoryWeightConstraint")
 
-[node name="CtrlInventoryCapacity2" type="Control" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventoryCapacity2" type="Control" parent="." unique_id=1243404295 node_paths=PackedStringArray("inventory")]
 visible = false
 custom_minimum_size = Vector2(0, 23)
 layout_mode = 3

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnmcyf6p4gtgp"]
+[gd_scene format=3 uid="uid://dnmcyf6p4gtgp"]
 
 [ext_resource type="Texture2D" uid="uid://marv3em7xope" path="res://images/item_book_blue.png" id="1_1ie5k"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="2"]
@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bu5mhp7ayfx4j" path="res://addons/gloot/ui/ctrl_inventory.gd" id="2_vyj5s"]
 [ext_resource type="JSON" path="res://tests/data/protoset_basic.json" id="4_yg38y"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1411184403]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CtrlInventory" type="ItemList" parent="." node_paths=PackedStringArray("inventory")]
+[node name="CtrlInventory" type="ItemList" parent="." unique_id=420520967 node_paths=PackedStringArray("inventory")]
 layout_mode = 0
 offset_right = 350.0
 offset_bottom = 235.0
@@ -26,7 +26,7 @@ item_1/icon = ExtResource("2_b7vgs")
 script = ExtResource("2_vyj5s")
 inventory = NodePath("../Inventory")
 
-[node name="Inventory" type="Node" parent="."]
+[node name="Inventory" type="Node" parent="." unique_id=1819851850]
 script = ExtResource("2")
 protoset = ExtResource("4_yg38y")
 _serialized_format = {

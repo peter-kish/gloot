@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://digtudobrw3xb"]
+[gd_scene format=3 uid="uid://digtudobrw3xb"]
 
 [ext_resource type="Script" uid="uid://sydt8ogdj6u8" path="res://addons/gloot/editor/common/dict_editor.gd" id="1"]
 
-[node name="DictEditor" type="Control"]
+[node name="DictEditor" type="Control" unique_id=1285926227]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,7 +16,7 @@ dictionary = {
 "name": "John Doe"
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=542937420]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,43 +24,43 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=871730561]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer" unique_id=913388299]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 4
 
-[node name="LblTitleName" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+[node name="LblTitleName" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer" unique_id=1267598636]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Name"
 
-[node name="LblTitleType" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+[node name="LblTitleType" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer" unique_id=1767406539]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Type"
 
-[node name="LblTitleValue" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer"]
+[node name="LblTitleValue" type="Label" parent="VBoxContainer/ScrollContainer/GridContainer" unique_id=1809841440]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "Value"
 
-[node name="CtrlDummy" type="Control" parent="VBoxContainer/ScrollContainer/GridContainer"]
+[node name="CtrlDummy" type="Control" parent="VBoxContainer/ScrollContainer/GridContainer" unique_id=1323404537]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1776427432]
 layout_mode = 2
 
-[node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="EdtPropertyName" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=551151796]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="OptType" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=1470954857]
 layout_mode = 2
 selected = 3
 item_count = 14
@@ -93,6 +93,6 @@ popup/item_12/id = 16
 popup/item_13/text = "Color"
 popup/item_13/id = 20
 
-[node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="BtnAdd" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1538968710]
 layout_mode = 2
 text = "Add Property"
