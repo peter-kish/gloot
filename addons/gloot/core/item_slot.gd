@@ -30,6 +30,29 @@ var _inventory: Inventory = null:
         _disconnect_inventory_signals()
         _inventory = new_inventory
         _connect_inventory_signals()
+var _serialized_format: Dictionary:
+    set(new_serialized_format):
+        _serialized_format = new_serialized_format
+
+
+func _update_serialized_format() -> void:
+    if Engine.is_editor_hint():
+        _serialized_format = serialize()
+
+
+func _get_property_list() -> Array[Dictionary]:
+    return [
+        {
+            "name": "_serialized_format",
+            "type": TYPE_DICTIONARY,
+            "usage": PROPERTY_USAGE_STORAGE
+        },
+    ]
+
+
+func _ready() -> void:
+    if !_serialized_format.is_empty():
+        deserialize(_serialized_format)
 
     
 func _connect_inventory_signals() -> void:
@@ -37,6 +60,7 @@ func _connect_inventory_signals() -> void:
         return
     _inventory.item_added.connect(_on_item_added)
     _inventory.item_removed.connect(_on_item_removed)
+    _inventory.item_property_changed.connect(_on_item_property_changed)
 
 
 func _disconnect_inventory_signals() -> void:
@@ -44,6 +68,7 @@ func _disconnect_inventory_signals() -> void:
         return
     _inventory.item_added.disconnect(_on_item_added)
     _inventory.item_removed.disconnect(_on_item_removed)
+    _inventory.item_property_changed.disconnect(_on_item_property_changed)
 
 
 func _init() -> void:
@@ -55,11 +80,17 @@ func _init() -> void:
 
 
 func _on_item_added(item: InventoryItem) -> void:
+    _update_serialized_format()
     item_equipped.emit()
 
 
 func _on_item_removed(item: InventoryItem) -> void:
+    _update_serialized_format()
     cleared.emit(item)
+
+
+func _on_item_property_changed(_item: InventoryItem, _property: String) -> void:
+    _update_serialized_format()
 
 
 func _get_configuration_warnings() -> PackedStringArray:
