@@ -32,6 +32,22 @@ const _Utils = preload("res://addons/gloot/core/utils.gd")
         icon_stretch_mode = new_icon_stretch_mode
         if is_instance_valid(_ctrl_draggable_inventory_item):
             _ctrl_draggable_inventory_item.icon_stretch_mode = icon_stretch_mode
+## If `true`, the icon is flipped horizontally
+@export var icon_flip_h: bool = false:
+    set(new_icon_flip_h):
+        if icon_flip_h == new_icon_flip_h:
+            return
+        icon_flip_h = new_icon_flip_h
+        if is_instance_valid(_ctrl_draggable_inventory_item):
+            _ctrl_draggable_inventory_item.icon_flip_h = icon_flip_h
+## If `true`, the icon is flipped vertically
+@export var icon_flip_v: bool = false:
+    set(new_icon_flip_v):
+        if icon_flip_v == new_icon_flip_v:
+            return
+        icon_flip_v = new_icon_flip_v
+        if is_instance_valid(_ctrl_draggable_inventory_item):
+            _ctrl_draggable_inventory_item.icon_flip_v = icon_flip_v
 
 @export_group("Custom Styles")
 ## The slot background style.
@@ -80,6 +96,8 @@ func _ready():
 
     _ctrl_draggable_inventory_item = _CtrlDraggableInventoryItem.new()
     _ctrl_draggable_inventory_item.icon_stretch_mode = icon_stretch_mode
+    _ctrl_draggable_inventory_item.icon_flip_h = icon_flip_h
+    _ctrl_draggable_inventory_item.icon_flip_v = icon_flip_v
     _ctrl_draggable_inventory_item.size = size
     _ctrl_draggable_inventory_item.mouse_filter = Control.MOUSE_FILTER_PASS
     add_child(_ctrl_draggable_inventory_item)

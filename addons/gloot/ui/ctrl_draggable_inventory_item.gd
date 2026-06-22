@@ -13,12 +13,26 @@ var item: InventoryItem:
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.item = item
 var icon_stretch_mode: TextureRect.StretchMode = TextureRect.StretchMode.STRETCH_SCALE:
-    set(new_stretch_mode):
-        if icon_stretch_mode == new_stretch_mode:
+    set(new_icon_stretch_mode):
+        if icon_stretch_mode == new_icon_stretch_mode:
             return
-        icon_stretch_mode = new_stretch_mode
+        icon_stretch_mode = new_icon_stretch_mode
         if is_instance_valid(_ctrl_inventory_item):
             _ctrl_inventory_item.icon_stretch_mode = icon_stretch_mode
+var icon_flip_h: bool = false:
+    set(new_icon_flip_h):
+        if icon_flip_h == new_icon_flip_h:
+            return
+        icon_flip_h = new_icon_flip_h
+        if is_instance_valid(_ctrl_inventory_item):
+            _ctrl_inventory_item.icon_flip_h = icon_flip_h
+var icon_flip_v: bool = false:
+    set(new_icon_flip_v):
+        if icon_flip_v == new_icon_flip_v:
+            return
+        icon_flip_v = new_icon_flip_v
+        if is_instance_valid(_ctrl_inventory_item):
+            _ctrl_inventory_item.icon_flip_v = icon_flip_v
 var drag_tint := Color.WHITE
 var ctrl_inventory_item_scene: PackedScene = null
 var _ctrl_inventory_item: CtrlInventoryItemBase
@@ -36,6 +50,8 @@ func _ready() -> void:
     _ctrl_inventory_item.size = size
     _ctrl_inventory_item.item = item
     _ctrl_inventory_item.icon_stretch_mode = icon_stretch_mode
+    _ctrl_inventory_item.icon_flip_h = icon_flip_h
+    _ctrl_inventory_item.icon_flip_v = icon_flip_v
     _ctrl_inventory_item.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
     add_child(_ctrl_inventory_item)
@@ -64,7 +80,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
     if sub_preview == null:
         return null
     var preview = Control.new()
-    sub_preview.position = -_grab_offset
+    sub_preview.position = - _grab_offset
     preview.add_child(sub_preview)
     set_drag_preview(preview)
 
@@ -84,6 +100,8 @@ func _create_preview() -> Control:
     preview.item = item
     preview.size = size
     preview.icon_stretch_mode = icon_stretch_mode
+    preview.icon_flip_h = icon_flip_h
+    preview.icon_flip_v = icon_flip_v
     return preview
 
 

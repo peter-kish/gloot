@@ -39,11 +39,15 @@ func _get_item_position() -> Vector2:
 func _ready() -> void:
     item_changed.connect(_on_item_changed)
     icon_stretch_mode_changed.connect(_on_icon_stretch_mode_changed)
+    icon_flip_h_changed.connect(_on_icon_flip_h_changed)
+    icon_flip_v_changed.connect(_on_icon_flip_v_changed)
 
     _texture_rect = TextureRect.new()
     _texture_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
     _texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
     _texture_rect.stretch_mode = icon_stretch_mode
+    _texture_rect.flip_h = icon_flip_h
+    _texture_rect.flip_v = icon_flip_v
 
     _stack_size_label = Label.new()
     _stack_size_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -73,6 +77,16 @@ func _on_icon_stretch_mode_changed() -> void:
         _texture_rect.stretch_mode = icon_stretch_mode
 
 
+func _on_icon_flip_h_changed() -> void:
+    if is_instance_valid(_texture_rect):
+        _texture_rect.flip_h = icon_flip_h
+
+
+func _on_icon_flip_v_changed() -> void:
+    if is_instance_valid(_texture_rect):
+        _texture_rect.flip_v = icon_flip_v
+
+
 func _update_texture() -> void:
     if !is_instance_valid(_texture_rect):
         return
@@ -90,7 +104,7 @@ func _update_texture() -> void:
             _texture_rect.rotation = PI / 2
         else:
             _texture_rect.position = Vector2(0, _texture_rect.size.x)
-            _texture_rect.rotation = -PI / 2
+            _texture_rect.rotation = - PI / 2
 
     else:
         _texture_rect.size = size
