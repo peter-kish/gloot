@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bpmdtgysdm2tp" path="res://images/field_background.png" id="3_lwfya"]
 [ext_resource type="Texture2D" uid="uid://cdhuw0juxw3up" path="res://images/field_highlighted_background.png" id="4_8hltm"]
 [ext_resource type="Script" uid="uid://trghhrgo3fax" path="res://addons/gloot/ui/ctrl_item_slot.gd" id="6_wlx5u"]
-[ext_resource type="JSON" path="res://tests/data/protoset_grid.json" id="8_mr2pf"]
+[ext_resource type="JSON" path="res://tests/data/protoset_grid_stacks.json" id="7_2va08"]
 [ext_resource type="Script" uid="uid://5hfig5q3x8it" path="res://addons/gloot/core/inventory.gd" id="9_a6m37"]
 [ext_resource type="Script" uid="uid://b8hbvp4kl88cn" path="res://addons/gloot/core/constraints/grid_constraint.gd" id="10_6njuc"]
 [ext_resource type="Script" uid="uid://c6wangdtwc4m7" path="res://addons/gloot/core/item_slot.gd" id="10_lyc83"]
@@ -170,19 +170,19 @@ offset_bottom = 14.0
 
 [node name="ItemSlot" type="Node" parent="." unique_id=1120883804]
 script = ExtResource("10_lyc83")
-protoset = ExtResource("8_mr2pf")
+protoset = ExtResource("7_2va08")
 _serialized_format = {}
 
 [node name="InventoryLeft" type="Node" parent="." unique_id=608133810]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
-protoset = ExtResource("8_mr2pf")
+protoset = ExtResource("7_2va08")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/grid_constraint.gd": {
 "data": {
 "item_positions": {
-"1": "Vector2i(0, 1)"
+"0": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
 },
@@ -191,49 +191,41 @@ _serialized_format = {
 },
 "items": [{
 "properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
 "stack_size": {
 "type": 2,
 "value": "2"
 }
 },
-"protoset": "res://tests/data/protoset_grid.json",
-"prototype_id": "item_1x1"
+"protoset": "res://tests/data/protoset_grid_stacks.json",
+"prototype_id": "item_2x2"
 }, {
 "properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
 "stack_size": {
 "type": 2,
 "value": "2"
 }
 },
-"protoset": "res://tests/data/protoset_grid.json",
-"prototype_id": "item_2x2"
+"protoset": "res://tests/data/protoset_grid_stacks.json",
+"prototype_id": "item_1x1"
 }],
 "node_name": "InventoryLeft",
-"protoset": "res://tests/data/protoset_grid.json"
+"protoset": "res://tests/data/protoset_grid_stacks.json"
 }
 
-[node name="GridConstraint" type="Node" parent="InventoryLeft" unique_id=2022514139]
+[node name="GridConstraint" type="Node" parent="InventoryLeft" unique_id=1095223720]
 script = ExtResource("10_6njuc")
 size = Vector2i(5, 5)
 
 [node name="InventoryRight" type="Node" parent="." unique_id=2137773163]
 unique_name_in_owner = true
 script = ExtResource("9_a6m37")
-protoset = ExtResource("8_mr2pf")
+protoset = ExtResource("7_2va08")
 _serialized_format = {
 "constraints": {
 "res://addons/gloot/core/constraints/grid_constraint.gd": {
 "data": {
 "item_positions": {
-"1": "Vector2i(0, 1)"
+"0": "Vector2i(0, 1)"
 },
 "size": "Vector2i(5, 5)"
 },
@@ -242,35 +234,27 @@ _serialized_format = {
 },
 "items": [{
 "properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
 "stack_size": {
 "type": 2,
 "value": "2"
 }
 },
-"protoset": "res://tests/data/protoset_grid.json",
-"prototype_id": "item_1x1"
+"protoset": "res://tests/data/protoset_grid_stacks.json",
+"prototype_id": "item_2x2"
 }, {
 "properties": {
-"max_stack_size": {
-"type": 2,
-"value": "5"
-},
 "stack_size": {
 "type": 2,
 "value": "2"
 }
 },
-"protoset": "res://tests/data/protoset_grid.json",
-"prototype_id": "item_2x2"
+"protoset": "res://tests/data/protoset_grid_stacks.json",
+"prototype_id": "item_1x1"
 }],
 "node_name": "InventoryRight",
-"protoset": "res://tests/data/protoset_grid.json"
+"protoset": "res://tests/data/protoset_grid_stacks.json"
 }
 
-[node name="GridConstraint" type="Node" parent="InventoryRight" unique_id=734838049]
+[node name="GridConstraint" type="Node" parent="InventoryRight" unique_id=367586909]
 script = ExtResource("10_6njuc")
 size = Vector2i(5, 5)
