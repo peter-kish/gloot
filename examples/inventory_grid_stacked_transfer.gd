@@ -30,12 +30,12 @@ func _input(event: InputEvent) -> void:
     %LblInfo.set_global_position(get_global_mouse_position() + info_offset)
 
 
-func _on_btn_sort(ctrl_inventory: CtrlInventory) -> void:
+func _on_btn_sort(ctrl_inventory: CtrlInventoryGrid) -> void:
     if !ctrl_inventory.inventory.get_constraint(GridConstraint).sort():
         print("Warning: GridConstraint.sort() returned false!")
 
 
-func _on_btn_split(ctrl_inventory: CtrlInventory) -> void:
+func _on_btn_split(ctrl_inventory: CtrlInventoryGrid) -> void:
     var selected_items: Array[InventoryItem] = ctrl_inventory.get_selected_inventory_items()
     if selected_items.is_empty():
         return
