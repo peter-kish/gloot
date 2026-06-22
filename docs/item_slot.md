@@ -25,5 +25,5 @@ An item slot that can hold an inventory item.
 
 * `protoset_changed()` - Emitted when the protoset property has been changed.
 * `item_equipped()` - Emitted when an item is placed in the slot.
-* `cleared()` - Emitted when the slot is cleared.Emitted when the slot is cleared.
+* `cleared(item)` - Emitted when the slot is cleared.
 

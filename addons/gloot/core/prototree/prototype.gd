@@ -87,7 +87,7 @@ func get_properties() -> Dictionary:
 
 
 ## Sets the given property for the prototype.
-func set_property(property: String, value: Variant):
+func set_property(property: String, value: Variant) -> void:
     if get_property(property) == value:
         return
     _properties[property] = value

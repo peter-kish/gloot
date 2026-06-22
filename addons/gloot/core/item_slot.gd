@@ -8,7 +8,7 @@ extends Node
 
 signal protoset_changed ## Emitted when the protoset property has been changed.
 signal item_equipped ## Emitted when an item is placed in the slot.
-signal cleared(item: InventoryItem) ## Emitted when the slot is cleared.Emitted when the slot is cleared.
+signal cleared(item: InventoryItem) ## Emitted when the slot is cleared.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _KEY_ITEM: String = "item"
