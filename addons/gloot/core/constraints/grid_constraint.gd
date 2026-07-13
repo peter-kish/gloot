@@ -8,6 +8,7 @@ class_name GridConstraint
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
 const _QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
+const _OccupancyMap = preload("res://addons/gloot/core/constraints/occupancy_map.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
 ## Default size of the 2d grid.
@@ -22,8 +23,8 @@ const _KEY_INSERTION_PRIORITY: String = "insertion_priority"
 enum {INSERTION_PRIORITY_HORIZONTAL = 0, INSERTION_PRIORITY_VERTICAL = 1}
 
 var _swap_positions: Array[Vector2i]
-var _item_positions := {}
-var _quad_tree := _QuadTree.new(size)
+var _item_positions: Dictionary
+var _occupancy_map: _OccupancyMap
 var _inventory_set_stack: Array[Callable]
 
 ## The size of the 2d grid.
@@ -37,7 +38,7 @@ var _inventory_set_stack: Array[Callable]
             if _bounds_broken():
                 size = old_size
         if size != old_size:
-            _refresh_quad_tree()
+            _refresh_occupancy_map()
             changed.emit()
 ## Insertion priority. Defines whether items will be stacked horizontally-first or vertically-first when inserted into
 ## the 2d grid.
@@ -49,42 +50,49 @@ var _inventory_set_stack: Array[Callable]
         changed.emit()
 
 
+func _init() -> void:
+    _swap_positions = []
+    _item_positions = {}
+    _occupancy_map = _OccupancyMap.new(size)
+    _inventory_set_stack = []
+
+
 func _push_inventory_set_operation(c: Callable) -> void:
     _inventory_set_stack.push_back(c)
 
 
-func _refresh_quad_tree() -> void:
-    _quad_tree = _QuadTree.new(size)
+func _refresh_occupancy_map() -> void:
+    _occupancy_map = _OccupancyMap.new(size)
     if !is_instance_valid(inventory):
         return
     for item in inventory.get_items():
-        _quad_tree.add(get_item_rect(item), item)
+        _occupancy_map.add(get_item_rect(item), item)
 
 
 func _on_inventory_set() -> void:
     _item_positions.clear()
     while !_inventory_set_stack.is_empty():
         _inventory_set_stack.pop_back().call()
-    _refresh_quad_tree()
+    _refresh_occupancy_map()
 
 
 func _on_item_added(item: InventoryItem) -> void:
     if item == null:
         return
     if move_item_to_free_spot(item):
-        _quad_tree.add(get_item_rect(item), item)
+        _occupancy_map.add(get_item_rect(item), item)
     else:
         inventory.pack_item(item)
 
 
 func _on_item_removed(item: InventoryItem) -> void:
-    _quad_tree.remove(item)
+    _occupancy_map.remove(item)
     _item_positions.erase(item)
 
     
 func _on_item_property_changed(item: InventoryItem, property: String) -> void:
     if property == _KEY_SIZE:
-        _refresh_quad_tree()
+        _refresh_occupancy_map()
 
 
 func _on_pre_item_swap(item1: InventoryItem, item2: InventoryItem) -> bool:
@@ -152,7 +160,7 @@ func set_item_position_unsafe(item: InventoryItem, new_position: Vector2i) -> vo
         return
 
     _item_positions[item] = new_position
-    _refresh_quad_tree()
+    _refresh_occupancy_map()
     changed.emit()
 
 
@@ -290,10 +298,10 @@ func create_and_add_item_at(prototype_id: String, position: Vector2i) -> Invento
 ## Returns the item at the given grid position. Returns `null` if no item can be found at that position.
 func get_item_at(position: Vector2i) -> InventoryItem:
     assert(inventory != null, "Inventory not set!")
-    var first = _quad_tree.get_first(position)
+    var first = _occupancy_map.get_first(position)
     if first == null:
         return null
-    return first.metadata
+    return first
 
 
 ## Returns an array of items under the given rectangle.
@@ -373,7 +381,7 @@ func rect_free(rect: Rect2i, exception: InventoryItem = null) -> bool:
     if rect.position.y + rect.size.y > size.y:
         return false
 
-    return _quad_tree.get_first(rect, exception) == null
+    return _occupancy_map.get_first(rect, exception) == null
 
 
 # TODO: Check if this is needed after adding find_free_space
@@ -422,13 +430,13 @@ func sort() -> bool:
     item_array.sort_custom(_compare_items)
 
     for item in item_array:
-        set_item_position_unsafe(item, -get_item_size(item))
+        inventory.remove_item(item)
 
     for item in item_array:
         var free_place := find_free_place(item)
         if !free_place.success:
             return false
-        move_item_to(item, free_place.position)
+        add_item_at(item, free_place.position)
 
     return true
 
@@ -496,7 +504,7 @@ static func _rect_intersects_rect_array(rect: Rect2i, occupied_rects: Array[Rect
 ## Resets the constraint, i.e. sets its size to default (`Vector2i(10, 10)`).
 func reset() -> void:
     size = DEFAULT_SIZE
-    _quad_tree = _QuadTree.new(size)
+    _occupancy_map = _OccupancyMap.new(size)
     _item_positions.clear()
     insertion_priority = INSERTION_PRIORITY_VERTICAL
 
