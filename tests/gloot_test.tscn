@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://j5h4fm8yobsf" path="res://tests/inventory_stacked_tests.gd" id="3"]
 [ext_resource type="Script" uid="uid://cnfb5urkuq4a4" path="res://tests/constraint_tests/weight_constraint_tests.gd" id="3_4otuf"]
 [ext_resource type="Script" uid="uid://m7p5eobadncy" path="res://tests/occupancy_map_tests.gd" id="3_x50js"]
+[ext_resource type="Script" uid="uid://dn2u4v7hbpj6y" path="res://tests/stress_tests.gd" id="4_ft0jp"]
 [ext_resource type="Script" uid="uid://bjlqr5eulcmh4" path="res://tests/inventory_grid_tests.gd" id="5"]
 [ext_resource type="Script" uid="uid://d3stwpm3t6jsj" path="res://tests/constraint_tests/grid_constraint_tests.gd" id="5_atslo"]
 [ext_resource type="Script" uid="uid://j81v4w6tgyyx" path="res://tests/inventory_tests.gd" id="6"]
@@ -26,6 +27,9 @@ script = ExtResource("2_bbskb")
 
 [node name="OccupancyMapTest" type="Node" parent="." unique_id=1972146927]
 script = ExtResource("3_x50js")
+
+[node name="StressTests" type="Node" parent="." unique_id=535752273]
+script = ExtResource("4_ft0jp")
 
 [node name="PrototreeTest" type="Node" parent="." unique_id=1497833707]
 script = ExtResource("2_ryngl")
