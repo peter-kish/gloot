@@ -7,7 +7,6 @@ class_name GridConstraint
 ## The constraint implements a grid-based inventory of a configurable size.
 
 const _Verify = preload("res://addons/gloot/core/verify.gd")
-const _QuadTree = preload("res://addons/gloot/core/constraints/quadtree.gd")
 const _OccupancyMap = preload("res://addons/gloot/core/constraints/occupancy_map.gd")
 const _Utils = preload("res://addons/gloot/core/utils.gd")
 
