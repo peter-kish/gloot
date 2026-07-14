@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://6ij3qlnr0qr3"]
 
 [ext_resource type="Script" uid="uid://cicxp1a32ye3s" path="res://tests/item_definitions_test.gd" id="2"]
-[ext_resource type="Script" uid="uid://hfcic3vuiugx" path="res://tests/quadtree_tests.gd" id="2_bbskb"]
 [ext_resource type="Script" uid="uid://dvgjslx6jg2do" path="res://tests/item_count_test.gd" id="2_e28iq"]
 [ext_resource type="Script" uid="uid://cu0x1147qss5" path="res://tests/prototree_tests.gd" id="2_ryngl"]
 [ext_resource type="Script" uid="uid://j5h4fm8yobsf" path="res://tests/inventory_stacked_tests.gd" id="3"]
 [ext_resource type="Script" uid="uid://cnfb5urkuq4a4" path="res://tests/constraint_tests/weight_constraint_tests.gd" id="3_4otuf"]
+[ext_resource type="Script" uid="uid://m7p5eobadncy" path="res://tests/occupancy_map_tests.gd" id="3_x50js"]
+[ext_resource type="Script" uid="uid://dn2u4v7hbpj6y" path="res://tests/stress_tests.gd" id="4_ft0jp"]
 [ext_resource type="Script" uid="uid://bjlqr5eulcmh4" path="res://tests/inventory_grid_tests.gd" id="5"]
 [ext_resource type="Script" uid="uid://d3stwpm3t6jsj" path="res://tests/constraint_tests/grid_constraint_tests.gd" id="5_atslo"]
 [ext_resource type="Script" uid="uid://j81v4w6tgyyx" path="res://tests/inventory_tests.gd" id="6"]
@@ -20,8 +21,11 @@
 [node name="InventorySystemTests" type="Node" unique_id=1494552040]
 script = ExtResource("15")
 
-[node name="QuadtreeTest" type="Node" parent="." unique_id=1964657207]
-script = ExtResource("2_bbskb")
+[node name="OccupancyMapTest" type="Node" parent="." unique_id=1972146927]
+script = ExtResource("3_x50js")
+
+[node name="StressTests" type="Node" parent="." unique_id=535752273]
+script = ExtResource("4_ft0jp")
 
 [node name="PrototreeTest" type="Node" parent="." unique_id=1497833707]
 script = ExtResource("2_ryngl")
